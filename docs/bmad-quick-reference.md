@@ -1,10 +1,6 @@
-# BMad Method v6 - Quick Reference: Level 3-4
+# BMad Method v6 - Workflow quick Reference
 
-Essential command sequences for Level 3-4 projects (12+ stories, 2+ epics).
-
----
-
-## Command Format
+## Anytime
 
 ```bash
 /bmad:module:agents:name     # Load agent (once per session)
@@ -20,93 +16,121 @@ Essential command sequences for Level 3-4 projects (12+ stories, 2+ epics).
 ### Project Initialization (Once)
 
 ```bash
-# PHASE 1: ANALYSIS
-/bmad:bmm:agents:analyst
-*workflow-status             # Check status and plan approach
-*brainstorm-project          # Ideation with multiple methodologies
-*research                    # Comprehensive market/technical research
-*product-brief               # Strategic planning document
+# PHASE 1: ANALYSIS / NEW PROJECT
+/bmad:bmm:agents:analyst *workflow-status
+
+# Optional
+/bmad:bmm:agents:analyst *brainstorm-project
+
+# Optional
+/bmad:bmm:agents:analyst *research Market Research
+/bmad:bmm:agents:analyst *research Deep Research Prompt Generator
+/bmad:bmm:agents:analyst *research Technical/Architecture Research
+/bmad:bmm:agents:analyst *research Competitive Intelligence
+/bmad:bmm:agents:analyst *research User Research
+/bmad:bmm:agents:analyst *research Domain/Industry Research
+
+/bmad:bmm:agents:analyst *product-brief
 
 # PHASE 2: PLANNING
-/bmad:bmm:agents:pm
-*prd                         # Creates PRD.md + epics.md + bmm-workflow-status.md
+/bmad:bmm:agents:pm *prd
 
-/bmad:bmm:agents:ux-expert
-*ux-spec                     # UI/UX specification (optional)
+# Optional
+/bmad:bmm:agents:ux-expert *ux-spec
 
 # PHASE 3: ARCHITECTURE (Once)
-/bmad:bmm:agents:architect
-*solution-architecture       # Complete system architecture with ADRs
+/bmad:bmm:agents:architect *solution-architecture
+/menon:analyze-bmad-gaps
 
-/bmad:bmm:agents:sm
-*assess-project-ready        # Validate ready for Phase 4
+/bmad:bmm:agents:sm *assess-project-ready
 ```
 
 ---
 
-## Epic Loop (JIT - Repeat for Each Epic)
+## Epic Loop (Just in Time - Repeat for Each Epic)
 
 ### Epic N: Solutioning (JIT)
 
 ```bash
-/bmad:bmm:agents:architect
-*tech-spec                   # Epic-specific technical specification
-
-/bmad:bmm:agents:tea
-*test-design                 # Epic-specific test strategy (risk assessment, P0-P3)
+/bmad:bmm:agents:architect *tech-spec epic X
+/bmad:bmm:agents:tea *test-design epic X
 ```
 
 ### Epic N: Story Loop (Repeat for Each Story)
 
 ```bash
 # 1. Story Creation
-/bmad:bmm:agents:sm
-*create-story                # Draft story from BACKLOG
+/bmad:bmm:agents:sm *create-story X.X
 # [User reviews]
-*story-ready                 # Approve story (TODO → IN PROGRESS)
-*story-context               # Generate context XML (recommended)
+/bmad:bmm:agents:sm *story-ready X.X
+/bmad:bmm:agents:sm *story-context X.X
 
 # 2. Testing (ATDD - recommended for P0/P1)
-/bmad:bmm:agents:tea
-*atdd                        # Generate E2E tests FIRST (red phase)
+/bmad:bmm:agents:tea *atdd X.X
 
 # 3. Implementation
-/bmad:bmm:agents:dev
-*develop                     # Implement story (make tests pass)
+/bmad:bmm:agents:dev *develop X.X
+/menon:ensure-quality
 
 # 4. Quality Checks
-/bmad:bmm:agents:tea
-*test-review                 # Review test quality
+/bmad:bmm:agents:tea *test-review X.X
 
 # 5. Quality Gate (P0/P1 stories)
-*trace                       # Traceability + gate decision
-*nfr-assess                  # NFR validation
+/bmad:bmm:agents:tea *trace X.X
+/bmad:bmm:agents:tea *nfr-assess X.X
 
 # 6. If have some issue, back to 3 (Implementation)
 
 # 7. Finish
-/bmad:bmm:agents:dev
-*review                      # Code review
+/bmad:bmm:agents:dev *review X.X
 
 # If have some issue, back to 3 (Implementation)
 
 # [User verifies DoD]
-*story-approved              # Mark done (IN PROGRESS → DONE)
+/bmad:bmm:agents:dev *story-approved
+
+#atualiza o bmad6
+node /Users/menoncello/repos/oss/bmad6/tools/cli/bmad-cli.js install
+
+/menon:analyze-bmad-gaps
+/menon:finalize-story
 ```
+
+---
+
+## 📋 Quality Gates (Mandatory)
+
+All stories MUST pass these gates before completion:
+- ✅ **TypeScript**: 0 errors (`bun run type-check`)
+- ✅ **ESLint**: 0 errors (`bun run lint`)
+- ✅ **Tests**: 100% pass rate (`bun test`)
+- ✅ **Formatting**: Prettier compliant
+- ❌ **NEVER** use `eslint-disable` or `@ts-ignore`
+
+Quality gates run automatically in `*develop` workflow.
+
+---
+
+## 💡 Quality Tips
+
+- **DEV agent** enforces zero-tolerance quality standards
+- **Fix root causes** instead of disabling rules
+- **All code examples** in stories/ADRs must compile
+- **Review workflow** scans for policy violations
+- **No shortcuts** - quality is non-negotiable
+
+---
 
 ### Epic N: Epic-Level Validation
 
 ```bash
 # After all stories in epic complete
-/bmad:bmm:agents:tea
-*trace                       # Epic-level traceability
-*nfr-assess                  # Epic-level NFR assessment
+/bmad:bmm:agents:tea *trace epic X
+/bmad:bmm:agents:tea *nfr-assess epic X
 
-/bmad:bmm:agents:architect
-*validate-tech-spec          # Validate tech-spec was followed
+/bmad:bmm:agents:architect *validate-tech-spec epic X
 
-/bmad:bmm:agents:sm
-*retrospective               # Epic learnings
+/bmad:bmm:agents:sm *retrospective epic X
 ```
 
 **Repeat epic loop for all remaining epics**
@@ -117,57 +141,19 @@ Essential command sequences for Level 3-4 projects (12+ stories, 2+ epics).
 
 ```bash
 # After all epics complete
-/bmad:bmm:agents:tea
-*trace                       # Project-level traceability
-*nfr-assess                  # Final NFR assessment
+/bmad:bmm:agents:tea *trace
+/bmad:bmm:agents:tea *nfr-assess
 
-/bmad:bmm:agents:architect
-*validate-architecture       # Architecture integrity
+/bmad:bmm:agents:architect *validate-architecture
 
-/bmad:bmm:agents:pm
-*validate                    # PRD completion
+/bmad:bmm:agents:pm *validate
 
-/bmad:bmm:agents:sm
-*retrospective               # Project-level lessons learned
+/bmad:bmm:agents:sm *retrospective
 ```
 
 ---
 
-## Optional: Initial Setup (Once per Project)
-
-```bash
-# Test framework setup
-/bmad:bmm:agents:tea
-*framework                   # Initialize test framework (Playwright/Cypress)
-*ci                          # Scaffold CI/CD pipeline
-
-# Brownfield projects
-/bmad:bmm:agents:analyst
-*document-project            # Generate documentation of existing codebase
-```
-
----
-
-## Extra Commands
-
-### Universal (All Agents)
-
-```bash
-*workflow-status             # Check status and get recommendations
-*help                        # Show agent menu
-*exit                        # Exit agent
-```
-
-### BMad Master
-
-```bash
-/bmad:core:agents:bmad-master
-*list-tasks                  # List all available tasks
-*list-workflows              # List all available workflows
-*party-mode                  # Group chat with all agents
-```
-
-### Course Correction (Any Phase)
+## Course Correction (Any Phase)
 
 ```bash
 /bmad:bmm:agents:sm
@@ -179,144 +165,3 @@ Essential command sequences for Level 3-4 projects (12+ stories, 2+ epics).
 /bmad:bmm:agents:architect
 *correct-course              # Technical perspective on changes
 ```
-
-### Validation Commands
-
-```bash
-# Validate Architecture
-/bmad:bmm:agents:architect
-*validate-architecture       # Validate solution-architecture.md
-*validate-tech-spec          # Validate tech-spec.md
-
-# Validate Planning
-/bmad:bmm:agents:pm
-*validate                    # Validate any document against checklist
-
-# Validate Story Context
-/bmad:bmm:agents:sm
-*validate-story-context      # Validate story context XML
-```
-
-### Alternative TEA Workflows
-
-```bash
-/bmad:bmm:agents:tea
-*automate                    # Comprehensive test automation (alternative to atdd)
-```
-
-### Alternative Command Names
-
-```bash
-# Same workflow, different trigger names:
-*develop         = *dev-story
-*review          = *review-story
-*retrospective   = *retro
-*solution-architecture = *solutioning
-```
-
----
-
-## Game Development (Level 3-4)
-
-```bash
-# PHASE 1
-/bmad:bmm:agents:game-designer
-*brainstorm-game             # Game ideation
-*game-brief                  # Game design foundation
-
-# PHASE 2
-/bmad:bmm:agents:game-designer
-*gdd                         # Game Design Document
-*narrative                   # Narrative design (optional)
-
-# Then follow same epic loop as above
-```
-
----
-
-## Quick Agent Reference
-
-### Core
-
-- `/bmad:core:agents:bmad-master` - Universal orchestrator
-
-### BMM (Software Development)
-
-- `/bmad:bmm:agents:analyst` - Analysis & research
-- `/bmad:bmm:agents:pm` - Planning & PRD
-- `/bmad:bmm:agents:architect` - Architecture & design
-- `/bmad:bmm:agents:ux-expert` - UX/UI design
-- `/bmad:bmm:agents:sm` - Story management
-- `/bmad:bmm:agents:dev` - Implementation
-- `/bmad:bmm:agents:tea` - Test architecture & quality
-
-### BMM (Game Development)
-
-- `/bmad:bmm:agents:game-designer` - Game design & GDD
-
-### BMB (Meta)
-
-- `/bmad:bmb:agents:bmad-builder` - Build BMad components
-
----
-
-## Tips for Efficiency
-
-### 1. Stay in Agent Session
-
-```bash
-/bmad:bmm:agents:sm          # Load once
-*create-story
-*story-ready
-*story-context               # All in same session
-```
-
-### 2. Follow State Machine
-
-Trust `bmm-workflow-status.md`:
-
-- BACKLOG → TODO → IN PROGRESS → DONE
-- Agents read from it automatically
-
-### 3. JIT Principle
-
-- Create tech-spec when epic starts (not all upfront)
-- Create test-design when epic starts
-- Create stories one at a time
-
-### 4. Quality Gates
-
-- **Story-level**: P0/P1 stories
-- **Epic-level**: After all stories
-- **Project-level**: Before release
-
-### 5. ATDD for Critical Paths
-
-```bash
-/bmad:bmm:agents:tea
-*atdd                        # Tests first (red phase)
-
-/bmad:bmm:agents:dev
-*develop                     # Make tests pass (green phase)
-```
-
----
-
-## Typical Timeline (Level 3-4)
-
-- **Week 1**: Analysis (3 days)
-- **Week 1**: Planning (2 days)
-- **Week 2**: Architecture (3 days)
-- **Week 2-5**: Epic 1 (3 weeks)
-- **Week 6+**: Epic 2+...
-
-**Per Story**: 1-3 days (depending on complexity)
-
----
-
-## Related Documentation
-
-- [Complete Workflow Commands](./complete-workflow-commands.md) - All levels detailed
-- [Agent Commands Reference](./agents-commands-reference.md) - All agent commands
-- [Agent Workflow Mapping](./agents-workflow-mapping.mermaid.md) - Visual mapping
-- [Complete Workflow Overview](./complete-workflow-overview.mermaid.md) - 4-phase diagram

@@ -15,14 +15,28 @@ persona:
   principles: []
 
 # Add custom critical actions (appended after standard config loading)
-critical_actions: []
+critical_actions:
+  - name: template-quality
+    description: Ensure story templates demonstrate correct patterns and meet production quality
+    instruction: |
+      Story templates and code examples must demonstrate correct patterns and meet production quality standards:
+      - Proper TypeScript types (no 'any', correct inference)
+      - ESLint compliance (no-unused-vars, proper async handling)
+      - Correct formatting (Prettier conventions)
+
+      Templates guide developers - they must be copy-paste ready and exemplify best practices.
+
+      Before saving stories with code examples:
+      1. Validate TypeScript snippets compile
+      2. Validate ESLint compliance
+      3. Apply formatting
+
+      I validate template code before saving stories.
 
 # Add persistent memories for the agent
-memories: []
-# Example:
-# memories:
-#   - "User prefers detailed technical explanations"
-#   - "Current project uses React and TypeScript"
+memories:
+  - "Stories are technical contracts - code examples must be production-ready"
+  - "Project uses Bun Test, TypeScript strict, ESLint zero-tolerance"
 
 # Add custom menu items (appended to base menu)
 # Don't include * prefix or help/exit - auto-injected
