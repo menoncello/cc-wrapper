@@ -1,41 +1,32 @@
 # Senior Developer Review - Workflow Instructions
 
-````xml
+```xml
 <critical>The workflow execution engine is governed by: {project_root}/bmad/core/tasks/workflow.xml</critical>
 <critical>You MUST have already loaded and processed: {installed_path}/workflow.yaml</critical>
-<critical>Communicate all responses in {communication_language}</critical>
+<critical>Communicate all responses in {communication_language} and language MUST be tailored to {user_skill_level}</critical>
+<critical>Generate all documents in {document_output_language}</critical>
 <critical>This workflow performs a Senior Developer Review on a story flagged Ready for Review, appends structured review notes, and can update the story status based on the outcome.</critical>
 <critical>Default execution mode: #yolo (non-interactive). Only ask if {{non_interactive}} == false. If auto-discovery of the target story fails, HALT with a clear message to provide 'story_path' or 'story_dir'.</critical>
 <critical>Only modify the story file in these areas: Status (optional per settings), Dev Agent Record (Completion Notes), File List (if corrections are needed), Change Log, and the appended "Senior Developer Review (AI)" section at the end of the document.</critical>
 <critical>Execute ALL steps in exact order; do NOT skip steps</critical>
 
+<critical>DOCUMENT OUTPUT: Technical review reports. Structured findings with severity levels and action items. User skill level ({user_skill_level}) affects conversation style ONLY, not review content.</critical>
+
 <workflow>
 
-  <step n="1" goal="Check and load workflow status file">
-    <action>Search {output_folder}/ for files matching pattern: bmm-workflow-status.md</action>
-    <action>Find the most recent file (by date in filename: bmm-workflow-status.md)</action>
+  <step n="1" goal="Check workflow status">
+    <invoke-workflow path="{project-root}/bmad/bmm/workflows/workflow-status">
+      <param>mode: init-check</param>
+    </invoke-workflow>
 
-    <check if="exists">
-      <action>Load the status file</action>
-      <action>Set status_file_found = true</action>
-      <action>Store status_file_path for later updates</action>
+    <check if="status_exists == false">
+      <output>⚠️ {{suggestion}}
+
+Running in standalone mode - no progress tracking.</output>
+      <action>Set standalone_mode = true</action>
     </check>
 
-    <check if="not exists">
-      <ask>**No workflow status file found.**
-
-This workflow performs Senior Developer Review on a story (optional Phase 4 workflow).
-
-Options:
-1. Run workflow-status first to create the status file (recommended for progress tracking)
-2. Continue in standalone mode (no progress tracking)
-3. Exit
-
-What would you like to do?</ask>
-      <action>If user chooses option 1 → HALT with message: "Please run workflow-status first, then return to review-story"</action>
-      <action>If user chooses option 2 → Set standalone_mode = true and continue</action>
-      <action>If user chooses option 3 → HALT</action>
-    </check>
+    <action>Store {{status_file_path}} for later updates (if exists)</action>
   </step>
 
   <step n="2" goal="Locate story and verify review status">
@@ -164,6 +155,27 @@ What would you like to do?</ask>
     <action>Capture concrete, actionable suggestions with severity (High/Med/Low) and rationale. When possible, suggest specific code-level changes (filenames + line ranges) without rewriting large sections.</action>
   </step>
 
+  <step n="5.5" goal="Verify quality gates enforcement">
+    <critical>Quality gates are MANDATORY - verify strict enforcement</critical>
+
+    <action>Scan ALL modified files for eslint-disable comments (eslint-disable, eslint-disable-next-line)</action>
+    <check>If eslint-disable found → Flag as HIGH SEVERITY violation with file path and line number</check>
+
+    <action>Scan ALL modified files for @ts-ignore/@ts-expect-error</action>
+    <check>If @ts-ignore found → Flag as HIGH SEVERITY violation with file path and line number</check>
+
+    <action>Verify TypeScript compilation was run (check for tsc/type-check in Dev Agent Record, CI logs, or completion notes)</action>
+    <check>If no evidence of TypeScript check → Flag as MEDIUM SEVERITY with recommendation to run bun run type-check</check>
+
+    <action>Verify ESLint was run (check for lint command in Dev Agent Record, CI logs, or completion notes)</action>
+    <check>If no evidence of ESLint check → Flag as MEDIUM SEVERITY with recommendation to run bun run lint</check>
+
+    <action>Verify all tests pass (check test output, CI logs, or completion notes)</action>
+    <check>If test failures present or no evidence of test execution → Flag as HIGH SEVERITY blocker</check>
+
+    <critical>Quality gate violations are BLOCKING issues - must be fixed before approval</critical>
+  </step>
+
   <step n="6" goal="Decide review outcome and prepare notes">
     <action>Determine outcome: Approve, Changes Requested, or Blocked.</action>
     <action>Prepare a structured review report with sections: Summary, Outcome, Key Findings (by severity), Acceptance Criteria Coverage, Test Coverage and Gaps, Architectural Alignment, Security Notes, Best-Practices and References, Action Items.</action>
@@ -205,23 +217,15 @@ What would you like to do?</ask>
     <action>Find the most recent file (by date in filename)</action>
 
     <check if="status file exists">
-      <action>Load the status file</action>
+      <invoke-workflow path="{project-root}/bmad/bmm/workflows/workflow-status">
+        <param>mode: update</param>
+        <param>action: set_current_workflow</param>
+        <param>workflow_name: review-story</param>
+      </invoke-workflow>
 
-      <template-output file="{{status_file_path}}">current_step</template-output>
-      <action>Set to: "review-story (Story {{epic_num}}.{{story_num}})"</action>
-
-      <template-output file="{{status_file_path}}">current_workflow</template-output>
-      <action>Set to: "review-story (Story {{epic_num}}.{{story_num}}) - Complete"</action>
-
-      <template-output file="{{status_file_path}}">progress_percentage</template-output>
-      <action>Calculate per-story weight: remaining_40_percent / total_stories / 5</action>
-      <action>Increment by: {{per_story_weight}} * 2 (review-story ~2% per story)</action>
-
-      <template-output file="{{status_file_path}}">decisions_log</template-output>
-      <action>Add entry:</action>
-      ```
-      - **{{date}}**: Completed review-story for Story {{epic_num}}.{{story_num}}. Review outcome: {{outcome}}. Action items: {{action_item_count}}. Next: Address review feedback if needed, then continue with story-approved when ready.
-      ```
+      <check if="success == true">
+        <output>✅ Status updated: Story {{epic_num}}.{{story_num}} reviewed</output>
+      </check>
 
       <output>**✅ Story Review Complete, {user_name}!**
 
@@ -260,4 +264,4 @@ Note: Running in standalone mode (no status file).
   </step>
 
 </workflow>
-````
+```

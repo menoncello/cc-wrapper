@@ -1,0 +1,93 @@
+<story-context id="bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>0</epicId>
+    <storyId>0.1</storyId>
+    <title>Development Environment Setup</title>
+    <status>Ready</status>
+    <generatedAt>2025-10-19</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/stories/story-0.1.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>developer</asA>
+    <iWant>run a setup script that automatically configures the complete development environment</iWant>
+    <soThat>I have all dependencies, tools, and services ready for productive development within 60 seconds</soThat>
+    <tasks>Create setup script with automated environment detection; Set up development tools installation; Implement service health check system; Configure code editor integration; Create configuration validation system; Write comprehensive setup documentation</tasks>
+  </story>
+
+  <acceptanceCriteria>1. Developer can run setup script and have fully configured development environment within 60 seconds
+2. All required development tools are installed and configured with correct versions (Bun 1.3.0, TypeScript 5.9.3, Docker 28.5.1, PostgreSQL 18.0, Redis 8.2.2)
+3. Development services start successfully and pass health checks within 5 seconds
+4. Code editor configuration is applied automatically (VS Code extensions and settings)
+5. Environment variables are properly configured and validated
+6. Documentation provides clear troubleshooting guidance for common setup issues</acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc path="docs/tech-spec-epic-0.md" title="Technical Specification: Project Bootstrap & Development Infrastructure" section="Overview and Objectives" snippet="Epic 0 establishes the foundational development infrastructure and tooling required to begin CC Wrapper implementation. Primary objectives include Development Environment Configuration, Project Structure Establishment, Build and Automation Systems, Quality Assurance Infrastructure, and Documentation and Guidelines." />
+      <doc path="docs/solution-architecture.md" title="CC Wrapper Solution Architecture Document" section="Technology Stack and Decisions" snippet="Technology stack decisions include Bun 1.3.0 runtime, TypeScript 5.9.3, Docker 28.5.1, PostgreSQL 18.0, Redis 8.2.2. Architecture employs microservices with event-driven patterns for scalability and real-time capabilities, deployed in a monorepo structure." />
+      <doc path="docs/PRD.md" title="Product Requirements Document" section="Functional Requirements" snippet="Foundation infrastructure requirements include real-time synchronization, context-aware workspace management, and role-based access control as the foundation for all subsequent features." />
+    </docs>
+    <code>
+      <!-- This is a greenfield project - no existing code artifacts yet -->
+    </code>
+    <dependencies>
+    <ecosystem name="javascript">
+      <package name="bun" version="1.3.0" purpose="Runtime and package manager" />
+      <package name="typescript" version="5.9.3" purpose="Static typing and compilation" />
+      <package name="eslint" version="latest" purpose="Code quality and linting" />
+      <package name="prettier" version="latest" purpose="Code formatting" />
+      <package name="vite" version="7.0.0" purpose="Build tool and dev server" />
+      <package name="prisma" version="6.17.0" purpose="Database ORM" />
+    </ecosystem>
+    <ecosystem name="container">
+      <package name="docker" version="28.5.1" purpose="Container platform" />
+      <package name="docker-compose" version="2.27.0" purpose="Multi-container orchestration" />
+    </ecosystem>
+    <ecosystem name="database">
+      <package name="postgresql" version="18.0" purpose="Primary database" />
+      <package name="redis" version="8.2.2" purpose="Caching and session storage" />
+    </ecosystem>
+    <ecosystem name="testing">
+      <package name="bun-test" version="native" purpose="Unit and integration testing" />
+      <package name="playwright" version="1.56.0" purpose="End-to-end testing" />
+    </ecosystem>
+  </dependencies>
+  </artifacts>
+
+  <constraints>
+    - **Bun-Exclusive Runtime**: All development and build processes must use Bun 1.3.0 for maximum performance and simplicity
+    - **Monorepo Structure**: Must follow apps/, packages/, services/ directory layout for organized development
+    - **TypeScript Strict Mode**: All code must use TypeScript 5.9.3 with strict typing enabled
+    - **Container-First Development**: All development services must run in Docker containers matching production patterns
+    - **60-Second Setup Target**: Complete development environment must be configurable within 60 seconds from repository clone
+    - **Zero-Configuration Principle**: Development tools should work out-of-the-box with minimal manual configuration
+    - **Security Standards**: All development configurations must follow enterprise security best practices
+    - **Cross-Platform Support**: Setup script must work on macOS, Linux, and Windows
+  </constraints>
+  <interfaces>
+    - **Health Check Interface**: REST endpoints for service health monitoring with dependency status
+    - **Configuration Management Interface**: CLI commands for environment validation and setup verification
+    - **Package Manager Interface**: Bun package management with monorepo workspace support
+    - **Container Service Interface**: Docker Compose service definitions for development environment
+    - **Editor Integration Interface**: VS Code settings and extensions configuration for automatic setup
+  </interfaces>
+  <tests>
+    <standards>Use Bun Test for all unit and integration testing with 90% coverage target. Playwright for end-to-end testing of setup workflow. All tests must be automated and run in CI/CD pipeline. Performance tests must verify 60-second setup target. Security tests must validate environment variable protection.</standards>
+    <locations>
+      <location type="unit" pattern="**/*.test.ts" />
+      <location type="integration" pattern="**/*.integration.test.ts" />
+      <location type="e2e" pattern="tests/e2e/**/*.spec.ts" />
+      <location type="performance" pattern="tests/performance/**/*.bench.ts" />
+    </locations>
+    <ideas>
+      <test idea="Setup script execution from repository clone to ready environment" acceptanceCriteria="AC 0.1.1" />
+      <test idea="Development tools version verification and installation validation" acceptanceCriteria="AC 0.1.2" />
+      <test idea="Service health check endpoint response time validation" acceptanceCriteria="AC 0.1.3" />
+      <test idea="VS Code extension and settings configuration application" acceptanceCriteria="AC 0.1.4" />
+      <test idea="Environment variable schema validation and error handling" acceptanceCriteria="AC 0.1.5" />
+      <test idea="Documentation completeness and troubleshooting guidance validation" acceptanceCriteria="AC 0.1.6" />
+    </ideas>
+  </tests>
+</story-context>

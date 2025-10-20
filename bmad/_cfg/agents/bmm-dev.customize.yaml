@@ -15,28 +15,90 @@ persona:
   principles: []
 
 # Add custom critical actions (appended after standard config loading)
-critical_actions: []
+critical_actions:
+  - name: quality-gates-enforcement
+    description: Enforce zero-tolerance quality gates (TypeScript 0, ESLint 0, Tests 100%)
+    instruction: |
+      I enforce ZERO-TOLERANCE quality gates before marking any task complete:
+      - TypeScript must compile with 0 errors in strict mode (bun run type-check)
+      - ESLint must pass with 0 errors (bun run lint)
+      - All tests must pass 100% (bun test)
+      - Code must be properly formatted (check with prettier if configured)
+
+      I NEVER add eslint-disable comments or @ts-ignore/@ts-expect-error - I fix the underlying code issues.
+      When I encounter linting or type errors, I refactor the code to comply with the rules.
+
+      Quality checks are MANDATORY, not optional. There are no shortcuts.
 
 # Add persistent memories for the agent
-memories: []
-# Example:
-# memories:
-#   - "User prefers detailed technical explanations"
-#   - "Current project uses React and TypeScript"
+memories:
+  - "This project uses Bun 1.3.0+ as exclusive runtime with Bun Test as test runner"
+  - "TypeScript 5.9.3 strict mode is mandatory - noUnusedLocals, noUnusedParameters, noImplicitReturns all enabled"
+  - "ESLint 9.14.0 with @typescript-eslint enforces zero errors - NEVER disable rules"
+  - "Quality gates: TypeScript 0, ESLint 0, Tests 100%, Formatting 100%"
+  - "Project does NOT use mutation testing currently"
 
 # Add custom menu items (appended to base menu)
 # Don't include * prefix or help/exit - auto-injected
-menu: []
-# Example:
-# menu:
-#   - trigger: my-workflow
-#     workflow: "{project-root}/custom/my.yaml"
-#     description: My custom workflow
+menu:
+  - trigger: quality-check
+    description: Run complete quality gates validation (type-check + lint + test)
+    action: "#quality-check-full"
 
 # Add custom prompts (for action="#id" handlers)
-prompts: []
-# Example:
-# prompts:
-# - id: my-prompt
-#   content: |
-#     Prompt instructions here
+prompts:
+  - id: quality-check-full
+    content: |
+      Run complete quality validation for this project:
+
+      1. TypeScript type checking:
+         ```bash
+         bun run type-check
+         ```
+         Expect: 0 errors
+
+      2. ESLint validation:
+         ```bash
+         bun run lint
+         ```
+         Expect: 0 errors
+
+      3. Test execution:
+         ```bash
+         bun test
+         ```
+         Expect: All tests pass
+
+      4. Format check (if script exists):
+         ```bash
+         bun run format:check
+         ```
+
+      Report results with PASS/FAIL for each gate.
+      If any gate fails, provide specific errors and DO NOT PROCEED.
+
+# Code Quality Standards
+quality_standards:
+  eslint_rules:
+    - "no-unused-vars: error"
+    - "no-undef: error"
+    - "@typescript-eslint/no-unused-vars: error"
+    - "@typescript-eslint/no-explicit-any: warn"
+
+  typescript_rules:
+    - "strict: true"
+    - "noUnusedLocals: true"
+    - "noUnusedParameters: true"
+    - "noImplicitReturns: true"
+
+  testing_requirements:
+    - "Always write tests for new functionality"
+    - "Ensure 80%+ code coverage"
+    - "Test error paths and edge cases"
+    - "Never disable ESLint rules with comments"
+
+  code_style:
+    - "Use descriptive variable names"
+    - "Add JSDoc comments for public methods"
+    - "Handle all error conditions"
+    - "Validate input parameters"
