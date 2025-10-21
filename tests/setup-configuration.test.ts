@@ -286,18 +286,16 @@ describe('Environment Configuration - P0 Critical Setup Validation', () => {
       expect(fs.existsSync('packages')).toBe(true);
       expect(fs.existsSync('services')).toBe(true);
 
-      // Cleanup
-      ['.env.local', 'docker-compose.dev.yml', '.vscode', 'apps', 'packages', 'services'].forEach(
-        path => {
-          if (fs.existsSync(path)) {
-            if (fs.statSync(path).isDirectory()) {
-              fs.rmSync(path, { recursive: true, force: true });
-            } else {
-              fs.unlinkSync(path);
-            }
+      // Cleanup - keep workspace directories as they are git-tracked
+      ['.env.local', 'docker-compose.dev.yml', '.vscode'].forEach(path => {
+        if (fs.existsSync(path)) {
+          if (fs.statSync(path).isDirectory()) {
+            fs.rmSync(path, { recursive: true, force: true });
+          } else {
+            fs.unlinkSync(path);
           }
         }
-      );
+      });
     });
   });
 });
