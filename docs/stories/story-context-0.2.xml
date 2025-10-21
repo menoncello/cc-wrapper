@@ -1,0 +1,302 @@
+<story-context id="bmad/bmm/workflows/4-implementation/story-context/0.2" v="1.0">
+  <metadata>
+    <epicId>0</epicId>
+    <storyId>0.2</storyId>
+    <title>Initial Project Structure & Build System</title>
+    <status>Ready</status>
+    <generatedAt>2025-10-20</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/stories/story-0.2.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>developer</asA>
+    <iWant>a well-organized monorepo structure with automated build and testing systems</iWant>
+    <soThat>I can develop features efficiently with consistent code quality and automated workflows</soThat>
+    <tasks>
+      <task id="1" ac="1">Create monorepo structure with workspace configuration</task>
+      <task id="2" ac="2">Implement build system for all services</task>
+      <task id="3" ac="3">Set up automated testing framework</task>
+      <task id="4" ac="4">Configure code quality tools</task>
+      <task id="5" ac="5">Create CI/CD pipeline configuration</task>
+      <task id="6" ac="6">Develop convenience development scripts</task>
+      <task id="7" ac="7">Establish documentation structure</task>
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    <criterion id="1">Monorepo structure is established with proper workspace configuration</criterion>
+    <criterion id="2">Build system successfully compiles all services and applications</criterion>
+    <criterion id="3">Automated testing framework is configured with sample tests</criterion>
+    <criterion id="4">Code quality tools enforce consistent formatting and linting</criterion>
+    <criterion id="5">CI/CD pipeline automatically builds and tests on code changes</criterion>
+    <criterion id="6">Development scripts provide convenient commands for common tasks</criterion>
+    <criterion id="7">Documentation structure is established with contribution guidelines</criterion>
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/tech-spec-epic-0.md</path>
+        <title>Technical Specification: Project Bootstrap & Development Infrastructure</title>
+        <section>System Architecture Alignment</section>
+        <snippet>Epic 0 aligns with the established microservices architecture by providing the foundational development infrastructure that supports the planned technology stack: Bun Runtime Environment, TypeScript Configuration, Monorepo Structure, and Package Management.</snippet>
+      </doc>
+      <doc>
+        <path>docs/tech-spec-epic-0.md</path>
+        <title>Technical Specification: Project Bootstrap & Development Infrastructure</title>
+        <section>Detailed Design - Services and Modules</section>
+        <snippet>Development Infrastructure Modules including Environment Setup, Project Structure, Build System, Quality Tools, Testing Framework, and CI/CD Pipeline with complete traceability mapping.</snippet>
+      </doc>
+      <doc>
+        <path>docs/tech-spec-epic-0.md</path>
+        <title>Technical Specification: Project Bootstrap & Development Infrastructure</title>
+        <section>Data Models and Contracts</section>
+        <snippet>Configuration data models including ProjectStructureConfig defining workspaces structure (packages/*, services/*, apps/*), BuildConfig with Vite configuration, and QualityConfig with ESLint, Prettier, and TypeScript settings.</snippet>
+      </doc>
+      <doc>
+        <path>docs/tech-spec-epic-0.md</path>
+        <title>Technical Specification: Project Bootstrap & Development Infrastructure</title>
+        <section>Performance Requirements</section>
+        <snippet>Development Environment Performance targets: Build time under 30 seconds, hot reload under 200ms frontend / 1s backend, test execution under 2 minutes, CLI response under 500ms.</snippet>
+      </doc>
+      <doc>
+        <path>docs/tech-spec-epic-0.md</path>
+        <title>Technical Specification: Project Bootstrap & Development Infrastructure</title>
+        <section>Test Strategy Summary</section>
+        <snippet>Comprehensive testing approach with Unit Tests (Bun Test, 90% coverage), Integration Tests (service health checks), E2E Tests (Playwright), and Performance Tests (timing verification).</snippet>
+      </doc>
+      <doc>
+        <path>docs/solution-architecture.md</path>
+        <title>Solution Architecture</title>
+        <section>Technology Stack</section>
+        <snippet>Bun-only architecture strategy with Bun 1.3.0 runtime, TypeScript 5.9.3, Vite 7.0.0 build system, and Playwright 1.56.0 for testing.</snippet>
+      </doc>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>Requirements - Phase 1: Foundation Infrastructure</section>
+        <snippet>Core infrastructure requirements including real-time synchronization, context-aware workspace management, and role-based access control as foundation for all features.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epic Breakdown</title>
+        <section>Epic 0: Project Bootstrap</section>
+        <snippet>Story 0.2 focuses on establishing monorepo structure with workspace configuration, build system compilation, automated testing framework, code quality tools, CI/CD pipeline, and documentation structure.</snippet>
+      </doc>
+    </docs>
+
+    <code>
+      <artifact>
+        <path>package.json</path>
+        <kind>config</kind>
+        <symbol>root package.json</symbol>
+        <lines>1-56</lines>
+        <reason>Existing package.json with basic scripts and dependencies. Story 0.2 will enhance this with monorepo workspace configuration and additional build/test scripts.</reason>
+      </artifact>
+      <artifact>
+        <path>eslint.config.js</path>
+        <kind>config</kind>
+        <symbol>ESLint configuration</symbol>
+        <lines>all</lines>
+        <reason>Existing ESLint configuration from Story 0.1. Story 0.2 may need to adjust for monorepo structure with multiple workspaces.</reason>
+      </artifact>
+      <artifact>
+        <path>prettier.config.js</path>
+        <kind>config</kind>
+        <symbol>Prettier configuration</symbol>
+        <lines>all</lines>
+        <reason>Existing Prettier configuration from Story 0.1. Should work across monorepo structure.</reason>
+      </artifact>
+      <artifact>
+        <path>scripts/health-check.ts</path>
+        <kind>script</kind>
+        <symbol>health check infrastructure</symbol>
+        <lines>all</lines>
+        <reason>Existing health check system from Story 0.1. Can be used as reference for creating development scripts in Story 0.2.</reason>
+      </artifact>
+      <artifact>
+        <path>tests/</path>
+        <kind>directory</kind>
+        <symbol>test infrastructure</symbol>
+        <lines>n/a</lines>
+        <reason>Existing test directory from Story 0.1. Story 0.2 will establish testing framework patterns for monorepo structure.</reason>
+      </artifact>
+    </code>
+
+    <dependencies>
+      <ecosystem name="bun">
+        <package name="bun" version=">=1.3.0" type="runtime">Primary JavaScript runtime and package manager</package>
+      </ecosystem>
+      <ecosystem name="typescript">
+        <package name="typescript" version="^5.9.3" type="devDependency">Static typing and compilation</package>
+        <package name="@types/node" version="^22.9.0" type="devDependency">Node.js type definitions</package>
+        <package name="bun-types" version="latest" type="devDependency">Bun runtime type definitions</package>
+      </ecosystem>
+      <ecosystem name="build">
+        <package name="vite" version="^7.0.0" type="devDependency">Frontend build tool (to be added)</package>
+      </ecosystem>
+      <ecosystem name="testing">
+        <package name="playwright" version="^1.56.0" type="devDependency">E2E testing framework</package>
+        <package name="@playwright/test" version="^1.56.0" type="devDependency">Playwright test runner</package>
+        <package name="@stryker-mutator/core" version="latest" type="devDependency">Mutation testing (to be added)</package>
+      </ecosystem>
+      <ecosystem name="quality">
+        <package name="eslint" version="^9.14.0" type="devDependency">JavaScript/TypeScript linting</package>
+        <package name="@typescript-eslint/eslint-plugin" version="^8.14.0" type="devDependency">TypeScript ESLint rules</package>
+        <package name="@typescript-eslint/parser" version="^8.14.0" type="devDependency">TypeScript parser for ESLint</package>
+        <package name="prettier" version="^3.3.3" type="devDependency">Code formatting</package>
+      </ecosystem>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint type="architecture">Monorepo structure must follow apps/, services/, packages/ layout as specified in solution architecture</constraint>
+    <constraint type="architecture">Bun-exclusive runtime strategy - no Node.js-specific dependencies</constraint>
+    <constraint type="performance">Build time must be under 30 seconds for complete project build</constraint>
+    <constraint type="performance">Hot reload must be under 200ms for frontend, under 1s for backend services</constraint>
+    <constraint type="quality">Zero ESLint violations - no inline disable comments allowed per user preferences</constraint>
+    <constraint type="quality">TypeScript strict mode must be enabled across all services</constraint>
+    <constraint type="quality">Minimum 90% test coverage target for all code</constraint>
+    <constraint type="quality">Mutation testing thresholds must never be reduced - always improve test quality instead</constraint>
+    <constraint type="testing">Unit tests use Bun Test framework</constraint>
+    <constraint type="testing">E2E tests use Playwright 1.56.0</constraint>
+    <constraint type="testing">Test execution must complete in under 2 minutes</constraint>
+    <constraint type="cicd">GitHub Actions for CI/CD pipeline</constraint>
+    <constraint type="cicd">Quality gates: all tests pass, zero linting errors, successful builds required</constraint>
+    <constraint type="cicd">Branch protection requires passing checks before merge</constraint>
+  </constraints>
+
+  <interfaces>
+    <interface>
+      <name>Bun Workspace Configuration</name>
+      <kind>package.json workspace config</kind>
+      <signature>
+{
+  "workspaces": [
+    "packages/*",
+    "services/*",
+    "apps/*"
+  ]
+}
+      </signature>
+      <path>package.json</path>
+    </interface>
+    <interface>
+      <name>Development Scripts Interface</name>
+      <kind>npm scripts</kind>
+      <signature>
+{
+  "scripts": {
+    "dev": "start development environment",
+    "build": "build all services",
+    "build:all": "build all workspaces",
+    "build:watch": "build with watch mode",
+    "test": "run all tests",
+    "test:coverage": "run tests with coverage",
+    "test:watch": "run tests in watch mode",
+    "lint": "run linting",
+    "lint:fix": "run linting with auto-fix",
+    "format": "format code with prettier",
+    "type-check": "TypeScript type checking"
+  }
+}
+      </signature>
+      <path>package.json</path>
+    </interface>
+    <interface>
+      <name>Vite Build Configuration</name>
+      <kind>vite.config.ts</kind>
+      <signature>
+export default defineConfig({
+  root: string,
+  build: {
+    outDir: string,
+    target: string[],
+    minify: boolean
+  },
+  server: {
+    port: number,
+    host: string
+  }
+})
+      </signature>
+      <path>vite.config.ts (to be created)</path>
+    </interface>
+    <interface>
+      <name>TypeScript Configuration</name>
+      <kind>tsconfig.json</kind>
+      <signature>
+{
+  "compilerOptions": {
+    "strict": true,
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  }
+}
+      </signature>
+      <path>tsconfig.json</path>
+    </interface>
+    <interface>
+      <name>GitHub Actions Workflow</name>
+      <kind>CI/CD workflow</kind>
+      <signature>
+name: CI/CD Pipeline
+on: [push, pull_request]
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+      - run: bun install
+      - run: bun run lint
+      - run: bun run type-check
+      - run: bun test
+      - run: bun run build
+      </signature>
+      <path>.github/workflows/ci.yml (to be created)</path>
+    </interface>
+  </interfaces>
+
+  <tests>
+    <standards>
+      Unit tests must use Bun Test framework with 90% minimum coverage. Integration tests for service health checks and build system validation. E2E tests using Playwright 1.56.0 for complete development workflow automation. Performance tests to verify build timing under 30 seconds and test execution under 2 minutes. Mutation testing with Stryker to validate test quality - never reduce thresholds, always improve tests. All tests must follow established patterns from Story 0.1 test infrastructure.
+    </standards>
+
+    <locations>
+      <location>tests/ - Root test directory for shared test utilities</location>
+      <location>packages/*/tests/ - Package-specific tests within monorepo</location>
+      <location>services/*/tests/ - Service-specific tests within monorepo</location>
+      <location>apps/*/tests/ - App-specific tests within monorepo</location>
+      <location>test-utils/ - Shared test utilities and fixtures</location>
+    </locations>
+
+    <ideas>
+      <idea ac="1">
+        Test monorepo workspace configuration: verify workspaces are correctly configured, packages can be referenced across workspaces, dependency hoisting works correctly, workspace-specific scripts execute properly
+      </idea>
+      <idea ac="2">
+        Test build system: verify Vite builds frontend applications successfully, TypeScript compiles backend services without errors, build artifacts are generated in correct output directories, production builds include proper minification, source maps are generated for debugging
+      </idea>
+      <idea ac="3">
+        Test testing framework: verify Bun Test runs unit tests successfully, Playwright executes E2E tests, coverage reporting generates accurate reports, test watch mode detects file changes, tests can be run for specific workspaces
+      </idea>
+      <idea ac="4">
+        Test code quality tools: verify ESLint catches violations, Prettier formats code consistently, pre-commit hooks execute quality checks, TypeScript strict mode prevents type errors, mutation testing validates test quality
+      </idea>
+      <idea ac="5">
+        Test CI/CD pipeline: verify GitHub Actions workflow triggers on push/PR, build and test steps execute successfully, quality gates prevent merging failing code, status notifications are sent, branch protection rules are enforced
+      </idea>
+      <idea ac="6">
+        Test development scripts: verify all npm scripts execute without errors, scripts work across all workspaces, watch modes detect changes correctly, scripts have proper error handling, script execution times are reasonable
+      </idea>
+      <idea ac="7">
+        Test documentation structure: verify CONTRIBUTING.md exists with clear guidelines, CODE_OF_CONDUCT.md is present, development workflow is documented, build/deployment processes are explained, troubleshooting guide covers common issues
+      </idea>
+    </ideas>
+  </tests>
+</story-context>
