@@ -36,7 +36,8 @@ memories:
   - "TypeScript 5.9.3 strict mode is mandatory - noUnusedLocals, noUnusedParameters, noImplicitReturns all enabled"
   - "ESLint 9.14.0 with @typescript-eslint enforces zero errors - NEVER disable rules"
   - "Quality gates: TypeScript 0, ESLint 0, Tests 100%, Formatting 100%"
-  - "Project does NOT use mutation testing currently"
+  - "Project uses Stryker 8.x for mutation testing with 80%+ high threshold, 60%+ low threshold"
+  - "Mutation testing thresholds are NEVER lowered - only test quality is improved (per user standards)"
 
 # Add custom menu items (appended to base menu)
 # Don't include * prefix or help/exit - auto-injected

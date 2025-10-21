@@ -75,29 +75,36 @@
       <action>Run: bun run type-check</action>
       <check>ZERO TypeScript errors required - no exceptions</check>
       <critical>NEVER use @ts-ignore or @ts-expect-error - fix the actual type issue</critical>
+      <check>If TypeScript errors exist → STOP and fix before continuing</check>
     </substep>
 
     <substep n="4.2" goal="ESLint validation">
       <action>Run: bun run lint</action>
       <check>ZERO ESLint errors required</check>
       <critical>NEVER add eslint-disable comments - refactor code to satisfy the rule</critical>
+      <check>If ESLint errors exist → STOP and fix before continuing</check>
     </substep>
 
-    <substep n="4.3" goal="Code formatting verification">
-      <action>Verify code is properly formatted (check if format:check script exists in package.json)</action>
-      <action>If format:check exists, run it; otherwise visually verify Prettier compliance</action>
-      <check>All code follows Prettier standards</check>
+    <substep n="4.3" goal="Code formatting">
+      <action>Run: bun run format:check (or apply formatting with bun run format)</action>
+      <check>All code must follow Prettier conventions</check>
     </substep>
 
     <substep n="4.4" goal="Test execution">
-      <action>Run: bun test</action>
-      <check>ALL tests must pass (100% pass rate)</check>
-      <check>No flaky tests or intermittent failures</check>
-      <action>Validate implementation meets ALL story acceptance criteria; if ACs include quantitative thresholds (e.g., test pass rate), ensure they are met before marking complete</action>
+      <action>Determine how to run tests for this repo (infer or use {{run_tests_command}} if provided, default: bun test)</action>
+      <action>Run all existing tests to ensure no regressions</action>
+      <action>Run the new tests to verify implementation correctness</action>
+      <check>If regression tests fail → STOP and fix before continuing</check>
+      <check>If new tests fail → STOP and fix before continuing</check>
+      <check>100% test pass rate required - no exceptions</check>
     </substep>
 
-    <check>If ANY substep fails → HALT and fix before proceeding</check>
-    <check>No shortcuts or workarounds allowed - fix the root cause</check>
+    <substep n="4.5" goal="Validate acceptance criteria">
+      <action>Validate implementation meets ALL story acceptance criteria</action>
+      <action>If ACs include quantitative thresholds (e.g., test pass rate, coverage), ensure they are met before marking complete</action>
+    </substep>
+
+    <note>Mutation testing (Stryker) is configured for this project but typically run as part of quality review or CI pipeline, not during story development</note>
   </step>
 
   <step n="5" goal="Mark task complete and update story">

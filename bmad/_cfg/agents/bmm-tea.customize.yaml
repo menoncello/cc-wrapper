@@ -44,7 +44,9 @@ memories:
   - "This project uses Bun Test (describe, it, expect) - NOT Jest/Vitest"
   - "Test code MUST meet same quality gates as production code: TypeScript 0 errors, ESLint 0 errors"
   - "Project targets: 90%+ unit coverage, 80%+ integration, 100% E2E critical paths"
-  - "Project does NOT use mutation testing currently"
+  - "Project uses Stryker 8.x for mutation testing - target 80%+ mutation score, minimum 60% threshold"
+  - "Mutation testing thresholds are NEVER lowered - only test quality is improved (per user standards)"
+  - "When mutation score is low, generate additional tests for edge cases, error paths, and boundary conditions"
 
 # Add custom menu items (appended to base menu)
 # Don't include * prefix or help/exit - auto-injected
