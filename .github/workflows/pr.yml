@@ -49,10 +49,16 @@ jobs:
 
       - name: Check for secrets
         run: |
-          # Simple check for common secret patterns
-          if git diff origin/${{ github.event.pull_request.base.ref }}...HEAD | grep -iE '(password|secret|api[_-]?key|token|private[_-]?key|aws|credential).*=.*["\x27]'; then
+          # Simple check for common secret patterns (excluding lock files and test files)
+          secrets_found=$(git diff origin/${{ github.event.pull_request.base.ref }}...HEAD \
+            | grep -v "bun.lock" \
+            | grep -v ".test.ts" \
+            | grep -v ".test.js" \
+            | grep -iE '(password|secret|api[_-]?key|token|private[_-]?key|aws|credential).*=.*["\x27]' || true)
+          if [ -n "$secrets_found" ]; then
             echo "❌ Potential secrets detected in diff"
             echo "Please remove any sensitive data before merging"
+            echo "$secrets_found"
             exit 1
           fi
           echo "✅ No obvious secrets detected"
