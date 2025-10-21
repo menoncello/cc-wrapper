@@ -3,33 +3,76 @@
   "version": "0.1.0",
   "description": "CC Wrapper - AI Productivity Optimization Platform",
   "type": "module",
+  "packageManager": "bun@1.3.0",
+  "workspaces": [
+    "packages/*",
+    "services/*",
+    "apps/*"
+  ],
   "scripts": {
     "setup": "bun run setup.ts",
-    "dev": "bun run --watch src/index.ts",
-    "build": "bun build src/index.ts --outdir dist --target bun",
-    "test": "bun test",
-    "lint": "bunx eslint . --ext .ts",
-    "lint:fix": "bunx eslint src/**/*.ts --fix",
-    "format": "bunx prettier --write src/**/*.ts",
-    "type-check": "bunx tsc --noEmit",
+    "dev": "turbo run dev",
+    "dev:backend": "bun run --watch src/index.ts",
+    "dev:all": "turbo run dev:all",
+    "build": "turbo run build",
+    "build:all": "turbo run build:frontend build:backend build:packages",
+    "build:frontend": "vite build",
+    "build:backend": "bun build src/index.ts --outdir dist --target bun --sourcemap",
+    "build:packages": "bun run --filter './packages/*' build",
+    "build:watch": "vite build --watch",
+    "preview": "vite preview",
+    "clean": "rm -rf dist coverage .bun-cache packages/*/dist .turbo",
+    "clean:all": "bun run clean && rm -rf node_modules packages/*/node_modules services/*/node_modules apps/*/node_modules",
+    "test": "turbo run test",
+    "test:unit": "turbo run test:unit",
+    "test:integration": "turbo run test:integration",
+    "test:e2e": "turbo run test:e2e",
+    "test:coverage": "turbo run test:coverage",
+    "test:mutate": "turbo run test:mutate",
+    "test:mutation": "stryker run",
+    "test:watch": "bun test --watch",
+    "test:watch:unit": "bun test --watch tests/unit",
+    "lint": "turbo run lint",
+    "lint:fix": "turbo run lint:fix",
+    "format": "turbo run format",
+    "format:check": "turbo run format:check",
+    "type-check": "turbo run type-check",
+    "validate": "turbo run validate",
+    "health": "turbo run health",
     "services:up": "docker compose -f docker-compose.dev.yml up -d",
     "services:down": "docker compose -f docker-compose.dev.yml down",
     "services:logs": "docker compose -f docker-compose.dev.yml logs -f",
-    "health": "bun run scripts/health-check.ts"
+    "services:restart": "turbo run services:restart",
+    "prepare": "husky",
+    "prestart": "turbo run validate health && bun run services:up",
+    "start": "bun run services:up && turbo run dev:all"
   },
   "dependencies": {
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
   },
   "devDependencies": {
-    "typescript": "^5.9.3",
+    "@eslint/js": "^9.38.0",
+    "@playwright/test": "^1.56.0",
+    "@stryker-mutator/core": "^9.2.0",
+    "@stryker-mutator/typescript-checker": "^9.2.0",
     "@types/node": "^22.9.0",
-    "eslint": "^9.14.0",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
     "@typescript-eslint/eslint-plugin": "^8.14.0",
     "@typescript-eslint/parser": "^8.14.0",
-    "prettier": "^3.3.3",
+    "@vitejs/plugin-react": "^5.0.4",
     "bun-types": "latest",
+    "eslint": "^9.14.0",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.4",
     "playwright": "^1.56.0",
-    "@playwright/test": "^1.56.0"
+    "prettier": "^3.3.3",
+    "turbo": "^2.5.8",
+    "typescript": "^5.9.3",
+    "vite": "^7.0.0"
   },
   "engines": {
     "bun": ">=1.3.0",
@@ -52,5 +95,18 @@
   "bugs": {
     "url": "https://github.com/ccwrapper/cc-wrapper/issues"
   },
-  "homepage": "https://github.com/ccwrapper/cc-wrapper#readme"
+  "homepage": "https://github.com/ccwrapper/cc-wrapper#readme",
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "bunx eslint --fix",
+      "bunx prettier --write"
+    ],
+    "*.{js,jsx}": [
+      "bunx eslint --fix",
+      "bunx prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "bunx prettier --write"
+    ]
+  }
 }
