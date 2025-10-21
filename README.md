@@ -1,18 +1,22 @@
 # CC Wrapper - AI Productivity Optimization Platform
 
-CC Wrapper is a comprehensive AI productivity optimization platform designed to minimize wait times and maximize developer efficiency when working with multiple AI tools.
+CC Wrapper is a comprehensive AI productivity optimization platform designed to
+minimize wait times and maximize developer efficiency when working with multiple
+AI tools.
 
 ## Quick Start
 
 ### Prerequisites
 
 Before you begin, ensure you have the following basic tools:
+
 - Git for cloning the repository
 - Administrative access for installing development tools
 
 ### Automatic Setup (Recommended)
 
-The automated setup script will configure your entire development environment in under 60 seconds:
+The automated setup script will configure your entire development environment in
+under 60 seconds:
 
 ```bash
 # Clone the repository
@@ -24,7 +28,9 @@ bun run setup
 ```
 
 That's it! The setup script will:
-- ✅ Install and configure all required dependencies (Bun, TypeScript, Docker, PostgreSQL, Redis)
+
+- ✅ Install and configure all required dependencies (Bun, TypeScript, Docker,
+  PostgreSQL, Redis)
 - ✅ Set up development services with health monitoring
 - ✅ Configure VS Code extensions and settings
 - ✅ Create and validate environment configuration
@@ -37,6 +43,7 @@ If you prefer manual setup or encounter issues with the automated script:
 #### 1. Install Runtime Dependencies
 
 **macOS (using Homebrew):**
+
 ```bash
 # Install Bun
 curl -fsSL https://bun.sh/install | bash
@@ -51,6 +58,7 @@ brew services start redis
 ```
 
 **Linux (Ubuntu/Debian):**
+
 ```bash
 # Install Bun
 curl -fsSL https://bun.sh/install | bash
@@ -66,6 +74,7 @@ sudo systemctl start redis-server
 ```
 
 **Windows:**
+
 ```bash
 # Install Bun (PowerShell)
 powershell -c "irm bun.sh/install.ps1 | iex"
@@ -180,6 +189,7 @@ cc-wrapper/
 #### Docker Issues
 
 **Problem:** Docker commands fail with permission errors
+
 ```bash
 # Solution: Add your user to docker group (Linux)
 sudo usermod -aG docker $USER
@@ -187,6 +197,7 @@ sudo usermod -aG docker $USER
 ```
 
 **Problem:** Docker Desktop won't start
+
 ```bash
 # Solution: Check system requirements and restart Docker Desktop
 # Ensure virtualization is enabled in BIOS
@@ -195,6 +206,7 @@ sudo usermod -aG docker $USER
 #### Database Issues
 
 **Problem:** PostgreSQL connection fails
+
 ```bash
 # Check if PostgreSQL is running
 brew services list | grep postgresql  # macOS
@@ -206,6 +218,7 @@ sudo systemctl start postgresql       # Linux
 ```
 
 **Problem:** Database doesn't exist
+
 ```bash
 # Create development database
 createdb ccwrapper_dev
@@ -217,6 +230,7 @@ CREATE DATABASE ccwrapper_dev;
 #### Node.js/Bun Issues
 
 **Problem:** Bun command not found
+
 ```bash
 # Ensure Bun is in your PATH
 echo 'export PATH="$HOME/.bun/bin:$PATH"' >> ~/.bashrc
@@ -228,6 +242,7 @@ source ~/.bashrc  # or ~/.zshrc
 ```
 
 **Problem:** Permission denied during package installation
+
 ```bash
 # Fix npm permissions (if using npm)
 npm config set prefix ~/.npm-global
@@ -239,6 +254,7 @@ echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.bashrc
 #### Port Conflicts
 
 **Problem:** Port 3000 is already in use
+
 ```bash
 # Find what's using the port
 lsof -i :3000
@@ -294,6 +310,7 @@ MIT License - see LICENSE file for details.
 ## Support
 
 For support and questions:
+
 - Create an issue in the GitHub repository
 - Check the troubleshooting section above
 - Review the health check output for specific error details

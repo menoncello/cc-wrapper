@@ -4,11 +4,20 @@ _Generated on 2025-10-19 by Eduardo Menoncello_
 
 ## Executive Summary
 
-CC Wrapper is a Level 3 enterprise SaaS platform that revolutionizes AI-assisted development productivity through intelligent wait-time optimization and multi-AI tool orchestration. The hybrid TUI/web interface features a revolutionary three-column layout (terminal, browser, AI context) that seamlessly integrates with developer workflows while delivering measurable productivity improvements within the first 5 minutes of use.
+CC Wrapper is a Level 3 enterprise SaaS platform that revolutionizes AI-assisted
+development productivity through intelligent wait-time optimization and multi-AI
+tool orchestration. The hybrid TUI/web interface features a revolutionary
+three-column layout (terminal, browser, AI context) that seamlessly integrates
+with developer workflows while delivering measurable productivity improvements
+within the first 5 minutes of use.
 
-**Key Innovation:** Wait-time optimization that converts unproductive AI wait periods into valuable parallel task execution, addressing $2.1B annual productivity losses in the developer community.
+**Key Innovation:** Wait-time optimization that converts unproductive AI wait
+periods into valuable parallel task execution, addressing $2.1B annual
+productivity losses in the developer community.
 
-**Target Market:** Enterprise developers, SMB teams, and independent developers using multiple AI tools, with projected $31.2M SOM in the AI orchestration platform market.
+**Target Market:** Enterprise developers, SMB teams, and independent developers
+using multiple AI tools, with projected $31.2M SOM in the AI orchestration
+platform market.
 
 ---
 
@@ -17,33 +26,47 @@ CC Wrapper is a Level 3 enterprise SaaS platform that revolutionizes AI-assisted
 ### 1.1 Target User Personas
 
 **Primary Persona: Enterprise Alex**
+
 - **Role:** Senior Developer at large enterprise
-- **Goals:** Optimize team productivity, maintain security compliance, manage multiple projects
-- **Pain Points:** Context switching between AI tools, security restrictions, budget management
-- **Needs:** Role-based access control, audit trails, cost optimization, team collaboration
+- **Goals:** Optimize team productivity, maintain security compliance, manage
+  multiple projects
+- **Pain Points:** Context switching between AI tools, security restrictions,
+  budget management
+- **Needs:** Role-based access control, audit trails, cost optimization, team
+  collaboration
 
 **Secondary Persona: SMB Sarah**
+
 - **Role:** Solo developer at small business
 - **Goals:** Rapid development, cost control, simple setup
 - **Pain Points:** Limited AI tool budget, solo productivity, technical overhead
 - **Needs:** Budget alerts, simplified interface, quick project setup
 
 **Tertiary Persona: Independent Ian**
+
 - **Role:** Independent developer/consultant
-- **Goals:** Cross-platform compatibility, tool flexibility, performance optimization
+- **Goals:** Cross-platform compatibility, tool flexibility, performance
+  optimization
 - **Pain Points:** Tool fragmentation, device switching, performance constraints
 - **Needs:** Multi-device sync, AI tool integration, performance monitoring
 
 ### 1.2 Usability Goals
 
 **Primary Usability Objectives:**
-- **5-Minute Wow:** 90% of new users experience measurable productivity benefits within first session
-- **Zero Learning Curve:** Intuitive interface that matches existing terminal workflows
-- **Sub-100ms Response:** Instant feedback for all terminal interactions and interface elements
-- **60% Wait-Time Recovery:** Convert unproductive AI wait periods into productive parallel tasks
-- **Enterprise-Grade Simplicity:** Simple interface for individuals, powerful features for enterprises
+
+- **5-Minute Wow:** 90% of new users experience measurable productivity benefits
+  within first session
+- **Zero Learning Curve:** Intuitive interface that matches existing terminal
+  workflows
+- **Sub-100ms Response:** Instant feedback for all terminal interactions and
+  interface elements
+- **60% Wait-Time Recovery:** Convert unproductive AI wait periods into
+  productive parallel tasks
+- **Enterprise-Grade Simplicity:** Simple interface for individuals, powerful
+  features for enterprises
 
 **Success Metrics:**
+
 - 85% onboarding completion rate in first session
 - 70% user retention after first week
 - +40 Net Promoter Score for new users
@@ -52,30 +75,35 @@ CC Wrapper is a Level 3 enterprise SaaS platform that revolutionizes AI-assisted
 ### 1.3 Design Principles
 
 **1. Reliability-First Design**
+
 - System continues functioning when individual components fail
 - Automatic detection and recovery from common failure scenarios
 - Redundant pathways for accomplishing critical tasks
 - State validation and corruption prevention
 
 **2. Terminal-Native Experience**
+
 - Sub-100ms response times for all terminal interactions
 - Keyboard-first accessibility for power users
 - Predictable behavior consistent with terminal conventions
 - Minimal distraction design that preserves developer flow
 
 **3. Progressive Enhancement**
+
 - Core functionality works under any conditions
 - Advanced capabilities revealed gradually as users gain expertise
 - Performance tiers adapt to available device capabilities
 - Offline capabilities for critical functionality
 
 **4. Context-Aware Assistance**
+
 - Intelligent suggestions that match current workflow and context
 - Non-intrusive notifications that respect user concentration
 - Adaptive interface that adjusts based on user type and current task
 - Smart defaults optimized for usage patterns
 
 **5. Universal Accessibility**
+
 - WCAG 2.1 AA compliance with full keyboard navigation
 - High contrast support for users with visual impairments
 - Large touch targets and voice control alternatives
@@ -124,21 +152,28 @@ CC Wrapper Application
 ### 2.2 Navigation Structure
 
 **Primary Navigation:**
-- **Workspace Selector** (top-left) - Quick project switching with recent workspaces
+
+- **Workspace Selector** (top-left) - Quick project switching with recent
+  workspaces
 - **Main Menu** (top-center) - Dashboard, Projects, Analytics, Settings
 - **User Profile** (top-right) - Account settings, preferences, logout
 
 **Secondary Navigation:**
+
 - **Panel Controls** (column headers) - Minimize/maximize/resize panels
-- **Context Tabs** (within panels) - Terminal sessions, browser tabs, AI conversations
-- **Quick Actions** (floating) - New workspace, AI tool toggle, settings shortcut
+- **Context Tabs** (within panels) - Terminal sessions, browser tabs, AI
+  conversations
+- **Quick Actions** (floating) - New workspace, AI tool toggle, settings
+  shortcut
 
 **Mobile Navigation:**
+
 - **Hamburger Menu** (top-left) - Collapsible navigation drawer
 - **Tab Bar** (bottom) - Single-column navigation with gesture support
 - **Floating Action Button** - Primary actions and AI interactions
 
 **Keyboard Navigation:**
+
 - **Ctrl+`** - Focus terminal panel
 - **Ctrl+1/2/3** - Switch between columns
 - **Ctrl+Tab** - Cycle through open tabs/sessions
@@ -172,12 +207,16 @@ graph TD
 ```
 
 **Critical Steps:**
+
 1. **User Type Detection** - Simple question determines interface complexity
-2. **AI Tool Selection** - Max 2 tools initially, progressive disclosure for more
+2. **AI Tool Selection** - Max 2 tools initially, progressive disclosure for
+   more
 3. **5-Minute Demo** - Demonstrates wait-time optimization with immediate value
-4. **Progressive Complexity** - Advanced features revealed as user gains expertise
+4. **Progressive Complexity** - Advanced features revealed as user gains
+   expertise
 
 **Success Criteria:**
+
 - 90% completion rate within 10 minutes
 - Immediate productivity value demonstrated
 - User can accomplish meaningful task in first session
@@ -213,6 +252,7 @@ graph TD
 ```
 
 **Key Interactions:**
+
 - **Intelligent Wait Detection** - Monitors AI response times
 - **Contextual Suggestions** - Task recommendations based on current project
 - **Non-Intrusive Notifications** - Toast notifications for AI responses
@@ -244,6 +284,7 @@ graph TD
 ```
 
 **Enterprise Features:**
+
 - **Role-Based Access** - Granular permissions with time-based controls
 - **Audit Trail** - Immutable logging of all collaboration activities
 - **Security Controls** - File restrictions, IP limitations, compliance checks
@@ -275,6 +316,7 @@ graph TD
 ```
 
 **Cost Optimization Features:**
+
 - **Real-Time Monitoring** - Continuous cost calculation and budget tracking
 - **Smart Tool Selection** - Automatic switching based on cost vs. performance
 - **Budget Controls** - Alerts, limits, and override capabilities
@@ -306,6 +348,7 @@ graph TD
 ```
 
 **Cross-Platform Features:**
+
 - **Adaptive Interface** - Layout adjusts to device capabilities
 - **State Preservation** - Complete workspace state maintained across devices
 - **Performance Optimization** - Interface adapts to available resources
@@ -317,9 +360,11 @@ graph TD
 
 ### 4.1 Design System Approach
 
-**Hybrid Approach:** Custom component library built on modern web standards with Material Design 3.0 principles for accessibility and consistency.
+**Hybrid Approach:** Custom component library built on modern web standards with
+Material Design 3.0 principles for accessibility and consistency.
 
 **Technology Stack:**
+
 - **Base Framework:** Custom Web Components with TypeScript
 - **Design Tokens:** CSS Custom Properties for theming and consistency
 - **Animation Library:** Framer Motion for smooth interactions
@@ -327,21 +372,26 @@ graph TD
 - **Typography:** Inter font family for optimal readability
 
 **Component Philosophy:**
+
 - **Terminal Components:** Emulate terminal behavior with web capabilities
-- **Progressive Enhancement:** Core functionality works, enhanced features added progressively
+- **Progressive Enhancement:** Core functionality works, enhanced features added
+  progressively
 - **Performance First:** Lightweight components optimized for speed
 - **Accessibility Built-In:** WCAG 2.1 AA compliance by default
 
 ### 4.2 Core Components
 
 **Terminal Component (`cc-terminal`)**
+
 - **Purpose:** Full terminal emulation with web integration capabilities
 - **States:** Default, Focus, Error, Offline, Loading
 - **Variants:** Standard, Compact, Full-screen
 - **Features:** Command history, syntax highlighting, web link detection
-- **Accessibility:** Full keyboard navigation, screen reader support, high contrast mode
+- **Accessibility:** Full keyboard navigation, screen reader support, high
+  contrast mode
 
 **Browser Panel (`cc-browser`)**
+
 - **Purpose:** Integrated web browser for documentation and AI interactions
 - **States:** Loading, Loaded, Error, Offline
 - **Variants:** Standard, Reader mode, Dev tools
@@ -349,6 +399,7 @@ graph TD
 - **Accessibility:** Zoom controls, reading mode, keyboard navigation
 
 **AI Context Panel (`cc-ai-context`)**
+
 - **Purpose:** AI conversation history and contextual suggestions
 - **States:** Active, Processing, Error, Offline
 - **Variants:** Expanded, Collapsed, Minimal
@@ -356,6 +407,7 @@ graph TD
 - **Accessibility:** Voice input support, screen reader optimization
 
 **Notification System (`cc-notification`)**
+
 - **Purpose:** Non-intrusive alerts and AI response notifications
 - **States:** Info, Success, Warning, Error
 - **Variants:** Toast, Banner, Inline, Modal
@@ -363,20 +415,25 @@ graph TD
 - **Accessibility:** ARIA live regions, keyboard dismissal, high contrast
 
 **Workspace Manager (`cc-workspace`)**
+
 - **Purpose:** Project workspace creation and management
 - **States:** Setup, Active, Archived, Error
 - **Variants:** Grid view, List view, Card view
 - **Features:** Templates, quick access, collaboration indicators
-- **Accessibility:** Semantic landmarks, keyboard navigation, screen reader support
+- **Accessibility:** Semantic landmarks, keyboard navigation, screen reader
+  support
 
 **Productivity Dashboard (`cc-analytics`)**
+
 - **Purpose:** Visualize productivity metrics and cost analytics
 - **States:** Loading, Data available, No data, Error
 - **Variants:** Summary, Detailed, Comparison
 - **Features:** Time savings charts, cost breakdowns, trend analysis
-- **Accessibility:** Data tables as fallback, color-blind friendly palettes, keyboard navigation
+- **Accessibility:** Data tables as fallback, color-blind friendly palettes,
+  keyboard navigation
 
 **AI Tool Integration (`cc-ai-tool`)**
+
 - **Purpose:** Connect and manage multiple AI service integrations
 - **States:** Connected, Disconnected, Error, Rate-limited
 - **Variants:** Card, List, Compact
@@ -384,13 +441,16 @@ graph TD
 - **Accessibility:** Clear status indicators, keyboard controls, error messaging
 
 **Cost Management (`cc-cost-manager`)**
+
 - **Purpose:** Monitor and control AI tool spending
 - **States:** Within budget, Warning, Over budget, Error
 - **Variants:** Summary, Detailed, Alerts only
 - **Features:** Budget controls, spending alerts, optimization suggestions
-- **Accessibility:** Clear financial indicators, keyboard controls, alert alternatives
+- **Accessibility:** Clear financial indicators, keyboard controls, alert
+  alternatives
 
 **Settings Panel (`cc-settings`)**
+
 - **Purpose:** Application configuration and preferences
 - **States:** Default, Modified, Error, Saving
 - **Variants:** Tabbed, Categorized, Search
@@ -404,6 +464,7 @@ graph TD
 ### 5.1 Color Palette
 
 **Primary Colors (Dark Theme)**
+
 - **Background Primary:** #0D1117 (GitHub Dark)
 - **Background Secondary:** #161B22
 - **Background Tertiary:** #21262D
@@ -411,6 +472,7 @@ graph TD
 - **Border Muted:** #21262D
 
 **Accent Colors**
+
 - **Primary Blue:** #0969DA (Primary actions, links)
 - **Success Green:** #1A7F37 (Success states, positive indicators)
 - **Warning Orange:** #D19A66 (Warnings, cost alerts)
@@ -418,12 +480,14 @@ graph TD
 - **Info Purple:** #8B5CF6 (Information, AI suggestions)
 
 **Text Colors**
+
 - **Text Primary:** #F0F6FC (High contrast text)
 - **Text Secondary:** #8B949E (Secondary text, descriptions)
 - **Text Tertiary:** #6E7681 (Muted text, placeholders)
 - **Text Link:** #58A6FF (Links, interactive elements)
 
 **Terminal Colors**
+
 - **Terminal Background:** #000000
 - **Terminal Text:** #FFFFFF
 - **Terminal Green:** #00FF00 (Success output)
@@ -432,6 +496,7 @@ graph TD
 - **Terminal Blue:** #0000FF (Information)
 
 **Semantic Color Meanings**
+
 - **Blue:** Primary actions, navigation, active states
 - **Green:** Success, completed tasks, positive metrics
 - **Orange/Amber:** Warnings, budget alerts, attention needed
@@ -442,6 +507,7 @@ graph TD
 ### 5.2 Typography
 
 **Font Families:**
+
 ```css
 --font-primary: 'Inter', system-ui, -apple-system, sans-serif;
 --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
@@ -449,6 +515,7 @@ graph TD
 ```
 
 **Type Scale:**
+
 - **Display Large:** 32px / 48px (Hero titles, major headings)
 - **Display Medium:** 24px / 32px (Page titles, section headers)
 - **Headline Large:** 20px / 28px (Card titles, major headings)
@@ -462,11 +529,13 @@ graph TD
 - **Label Medium:** 12px / 16px (Small labels, tags)
 
 **Terminal Typography:**
+
 - **Terminal Text:** 14px / 20px (Readable terminal font size)
 - **Terminal Title:** 12px / 16px (Tab labels, status indicators)
 - **Terminal Input:** 14px / 20px (User input area)
 
 **Font Weights:**
+
 - **Light (300):** Large display text, decorative elements
 - **Regular (400):** Body text, standard content
 - **Medium (500):** Emphasis, subheadings
@@ -476,6 +545,7 @@ graph TD
 ### 5.3 Spacing and Layout
 
 **Spacing Scale (8px base):**
+
 - **Space 0:** 0px (No spacing)
 - **Space 1:** 4px (Micro spacing)
 - **Space 2:** 8px (Base spacing unit)
@@ -488,6 +558,7 @@ graph TD
 - **Space 24:** 96px (Major sections)
 
 **Layout Grid:**
+
 - **Container Max Width:** 1920px (4K displays)
 - **Standard Container:** 1200px (desktop)
 - **Narrow Container:** 800px (focused content)
@@ -495,6 +566,7 @@ graph TD
 - **Column Count:** 12-column responsive grid
 
 **Three-Column Layout:**
+
 - **Terminal Panel:** 30% width (minimum 400px)
 - **Browser Panel:** 40% width (minimum 600px)
 - **AI Context Panel:** 30% width (minimum 300px)
@@ -502,6 +574,7 @@ graph TD
 - **Resizable Panels:** Drag to resize with minimum constraints
 
 **Component Spacing:**
+
 - **Component Padding:** 16px (standard padding)
 - **Component Margin:** 8px (component spacing)
 - **Card Padding:** 24px (content cards)
@@ -509,12 +582,14 @@ graph TD
 - **Input Padding:** 12px 16px (form inputs)
 
 **Border Radius:**
+
 - **Radius Small:** 4px (buttons, inputs, small elements)
 - **Radius Medium:** 8px (cards, panels)
 - **Radius Large:** 12px (modals, large containers)
 - **Radius Full:** 50% (circular elements, avatars)
 
 **Shadows:**
+
 - **Shadow Small:** 0 1px 3px rgba(0,0,0,0.12) (subtle elevation)
 - **Shadow Medium:** 0 4px 12px rgba(0,0,0,0.15) (cards, panels)
 - **Shadow Large:** 0 8px 24px rgba(0,0,0,0.18) (modals, overlays)
@@ -527,6 +602,7 @@ graph TD
 ### 6.1 Breakpoints
 
 **Device-Based Breakpoints:**
+
 - **Mobile:** 320px - 767px (Smartphones, small tablets)
 - **Tablet:** 768px - 1023px (Tablets, large phones)
 - **Laptop:** 1024px - 1439px (Small laptops, large tablets)
@@ -534,12 +610,14 @@ graph TD
 - **Large Desktop:** 1920px+ (Large displays, 4K monitors)
 
 **Container-Based Breakpoints:**
+
 - **Compact:** < 600px (Mobile layout)
 - **Standard:** 600px - 1024px (Tablet layout)
 - **Expanded:** 1024px - 1440px (Laptop layout)
 - **Wide:** > 1440px (Desktop layout)
 
 **Performance-Based Breakpoints:**
+
 - **Low Performance:** < 4GB RAM, < 2 CPU cores
 - **Medium Performance:** 4-8GB RAM, 2-4 CPU cores
 - **High Performance:** > 8GB RAM, > 4 CPU cores
@@ -547,6 +625,7 @@ graph TD
 ### 6.2 Adaptation Patterns
 
 **Mobile Layout (< 768px):**
+
 - **Single Column:** Vertical stacking of all panels
 - **Bottom Navigation:** Tab bar for switching between terminal, browser, AI
 - **Floating Action Button:** Quick access to primary actions
@@ -555,6 +634,7 @@ graph TD
 - **Simplified Interface:** Progressive disclosure of advanced features
 
 **Tablet Layout (768px - 1023px):**
+
 - **Two Column:** Terminal + Browser/Browser + AI (user selectable)
 - **Side Navigation:** Collapsible drawer for secondary navigation
 - **Adaptive Panels:** Automatic panel prioritization based on context
@@ -562,24 +642,30 @@ graph TD
 - **Split-Screen Mode:** Support for tablet split-screen multitasking
 
 **Laptop Layout (1024px - 1439px):**
+
 - **Three Column Compressed:** Full three-column with reduced spacing
 - **Collapsible Panels:** Ability to minimize non-essential panels
 - **Keyboard Optimization:** Enhanced keyboard shortcuts and navigation
 - **Window Management:** Support for window snapping and resizing
 
 **Desktop Layout (> 1440px):**
+
 - **Full Three Column:** Optimal three-column layout with maximum space
 - **Advanced Features:** All features and panels visible
 - **Multi-Monitor Support:** Panel distribution across multiple monitors
 - **Performance Optimization:** Full feature set with enhanced animations
 
 **Performance Adaptation:**
-- **Low Performance Mode:** Disabled animations, reduced visual effects, simplified layouts
+
+- **Low Performance Mode:** Disabled animations, reduced visual effects,
+  simplified layouts
 - **Background Processing:** Intelligent task scheduling during idle time
 - **Resource Monitoring:** Real-time performance tracking and optimization
-- **Progressive Loading:** Content loaded based on priority and available resources
+- **Progressive Loading:** Content loaded based on priority and available
+  resources
 
 **Accessibility Adaptation:**
+
 - **High Contrast Mode:** Enhanced contrast ratios for visibility
 - **Large Text Mode:** Scalable text up to 200% without layout break
 - **Reduced Motion:** Option to disable animations and transitions
@@ -591,30 +677,40 @@ graph TD
 
 ### 7.1 Compliance Target
 
-**WCAG 2.1 AA Compliance** - Full adherence to Web Content Accessibility Guidelines
+**WCAG 2.1 AA Compliance** - Full adherence to Web Content Accessibility
+Guidelines
 
 **Key Compliance Areas:**
+
 - **Perceivable:** Information must be presentable in ways users can perceive
 - **Operable:** Interface components must be operable and keyboard accessible
 - **Understandable:** Information and operation must be understandable
 - **Robust:** Content must be robust enough for various assistive technologies
 
 **Target User Groups:**
-- **Visual Impairments:** Screen reader users, low vision users, color blind users
+
+- **Visual Impairments:** Screen reader users, low vision users, color blind
+  users
 - **Motor Impairments:** Keyboard-only users, voice control users
-- **Cognitive Disabilities:** Users with attention disorders, learning disabilities
-- **Temporary Disabilities:** Users with temporary injuries or situational limitations
+- **Cognitive Disabilities:** Users with attention disorders, learning
+  disabilities
+- **Temporary Disabilities:** Users with temporary injuries or situational
+  limitations
 
 ### 7.2 Key Requirements
 
 **Visual Accessibility:**
-- **Color Contrast:** Minimum 4.5:1 contrast ratio for normal text, 3:1 for large text
-- **Focus Indicators:** Visible focus indicators on all interactive elements (2px minimum)
+
+- **Color Contrast:** Minimum 4.5:1 contrast ratio for normal text, 3:1 for
+  large text
+- **Focus Indicators:** Visible focus indicators on all interactive elements
+  (2px minimum)
 - **Text Scaling:** Support for 200% zoom without horizontal scrolling
 - **Color Independence:** Information not conveyed through color alone
 - **High Contrast Mode:** Alternative high contrast theme available
 
 **Keyboard Accessibility:**
+
 - **Full Keyboard Navigation:** All functionality accessible via keyboard
 - **Tab Order:** Logical tab order following visual layout
 - **Keyboard Shortcuts:** Comprehensive keyboard shortcuts for power users
@@ -622,6 +718,7 @@ graph TD
 - **Focus Management:** Proper focus management in dynamic interfaces
 
 **Screen Reader Support:**
+
 - **Semantic HTML:** Proper use of headings, landmarks, and semantic elements
 - **ARIA Labels:** Descriptive ARIA labels for custom components
 - **Live Regions:** ARIA live regions for dynamic content updates
@@ -629,6 +726,7 @@ graph TD
 - **Status Announcements:** Status updates and progress indicators
 
 **Motor Accessibility:**
+
 - **Large Touch Targets:** Minimum 44px touch targets for mobile devices
 - **Click Targets:** Minimum 24px click targets for mouse interactions
 - **Voice Control:** Voice command support for major functions
@@ -636,6 +734,7 @@ graph TD
 - **Timing Controls:** Ability to extend or disable time limits
 
 **Cognitive Accessibility:**
+
 - **Clear Language:** Simple, direct language for all interface elements
 - **Consistent Layout:** Predictable placement of controls and information
 - **Error Prevention:** Confirmation dialogs for destructive actions
@@ -643,6 +742,7 @@ graph TD
 - **Progressive Disclosure:** Complex information revealed gradually
 
 **Technical Implementation:**
+
 - **Semantic HTML5:** Proper use of header, nav, main, section, article elements
 - **ARIA Implementation:** Comprehensive ARIA support for custom components
 - **Testing Protocol:** Regular accessibility testing with screen readers
@@ -655,17 +755,23 @@ graph TD
 
 ### 8.1 Motion Principles
 
-**Purposeful Animation:** All animations serve a functional purpose, not decorative
+**Purposeful Animation:** All animations serve a functional purpose, not
+decorative
 
-**Performance First:** Animations run at 60fps on target devices, with graceful degradation
+**Performance First:** Animations run at 60fps on target devices, with graceful
+degradation
 
-**Accessibility Aware:** Motion can be reduced or disabled based on user preferences
+**Accessibility Aware:** Motion can be reduced or disabled based on user
+preferences
 
-**Contextual Timing:** Animation duration matches user expectations and task importance
+**Contextual Timing:** Animation duration matches user expectations and task
+importance
 
-**Consistent Easing:** Natural easing functions that feel responsive and intuitive
+**Consistent Easing:** Natural easing functions that feel responsive and
+intuitive
 
 **Motion Guidelines:**
+
 - **Micro Interactions:** 150-200ms (button clicks, hover states)
 - **State Changes:** 200-300ms (panel switches, tab changes)
 - **Layout Updates:** 300-500ms (panel resizing, content loading)
@@ -675,51 +781,61 @@ graph TD
 ### 8.2 Key Animations
 
 **Terminal Typing Animation:**
+
 - **Duration:** 0ms (instant character appearance for performance)
 - **Purpose:** Maintain terminal responsiveness
 - **Implementation:** CSS text-shadow for cursor blink
 
 **Panel Switching:**
+
 - **Duration:** 250ms with ease-in-out timing
 - **Purpose:** Smooth transitions between panels
 - **Implementation:** CSS transform and opacity transitions
 - **Accessibility:** Respects prefers-reduced-motion
 
 **AI Response Notification:**
+
 - **Duration:** 300ms slide-in, 5000ms auto-dismiss
 - **Purpose:** Non-intrusive alert for AI responses
 - **Implementation:** CSS transform from right with bounce effect
 - **User Control:** Manual dismiss, snooze, disable options
 
 **Workspace Loading:**
+
 - **Duration:** 800ms staggered animation
 - **Purpose:** Visual feedback during workspace restoration
 - **Implementation:** Progressive loading with skeleton screens
 - **Performance GPU acceleration:** CSS transform3d for smooth animation
 
 **Error Recovery:**
+
 - **Duration:** 400ms shake animation for critical errors
 - **Purpose:** Draw attention to error states
 - **Implementation:** CSS keyframe animation with reduced motion support
-- **Accessibility:** Visual indication with accompanying screen reader announcement
+- **Accessibility:** Visual indication with accompanying screen reader
+  announcement
 
 **Cost Alert Animation:**
+
 - **Duration:** 600ms pulse animation
 - **Purpose:** Draw attention to budget warnings
 - **Implementation:** CSS animation with color transitions
 - **Frequency:** Limited to prevent alert fatigue
 
 **Sync Status Animation:**
+
 - **Duration:** 2000ms rotating animation
 - **Purpose:** Indicate ongoing synchronization
 - **Implementation:** CSS animation with linear timing
 - **States:** Active, success, error with different colors
 
 **Progressive Enhancement:**
+
 - **No Motion:** Instant state changes for reduced motion preference
 - **Standard Motion:** Default animations for enhanced experience
 - **Enhanced Motion:** Additional animations for high-performance devices
-- **Performance Monitoring:** Automatic quality adjustment based on device capabilities
+- **Performance Monitoring:** Automatic quality adjustment based on device
+  capabilities
 
 ---
 
@@ -728,6 +844,7 @@ graph TD
 ### 9.1 Design Files
 
 **Design Tool Strategy:**
+
 - **Primary Tool:** Figma for comprehensive design system and wireframes
 - **Component Library:** Standalone Figma library for design tokens
 - **Prototyping:** Figma interactive prototypes for user testing
@@ -735,6 +852,7 @@ graph TD
 - **Developer Handoff:** Figma Dev Mode for implementation specifications
 
 **Design File Structure:**
+
 ```
 CC Wrapper Design System/
 ├── Design Tokens/
@@ -765,6 +883,7 @@ CC Wrapper Design System/
 ### 9.2 Key Screen Layouts
 
 **Screen Layout 1: Onboarding - User Type Detection**
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │ CC Wrapper                                    [Skip] [Help] │
@@ -789,12 +908,14 @@ CC Wrapper Design System/
 ```
 
 **Key Features:**
+
 - Clear visual hierarchy with card-based layout
 - Icons representing each user type
 - Progressive disclosure of complexity based on selection
 - Accessibility support with semantic HTML and ARIA labels
 
 **Screen Layout 2: Main Interface - Three Column Layout**
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │ CC Wrapper │ [Project Alpha] │ [Dashboard] [Analytics] [Settings] │ [👤 Alex] │
@@ -822,6 +943,7 @@ CC Wrapper Design System/
 ```
 
 **Key Features:**
+
 - Resizable three-column layout with minimum width constraints
 - Real-time AI response processing with wait-time detection
 - Parallel task suggestions based on current context
@@ -829,6 +951,7 @@ CC Wrapper Design System/
 - Terminal-native experience with web capabilities
 
 **Screen Layout 3: Mobile Interface - Adaptive Layout**
+
 ```
 ┌─────────────────────────────┐
 │ ☰ CC Wrapper       [🔧] [👤] │
@@ -865,6 +988,7 @@ CC Wrapper Design System/
 ```
 
 **Key Features:**
+
 - Single-column layout optimized for mobile devices
 - Bottom navigation for quick panel switching
 - Touch-optimized interface with large touch targets
@@ -872,6 +996,7 @@ CC Wrapper Design System/
 - Swipe gestures for enhanced mobile interaction
 
 **Screen Layout 4: Analytics Dashboard**
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │ CC Wrapper │ Analytics │ Time Range: [Last 7 Days ▼] │ [Export] │
@@ -912,6 +1037,7 @@ CC Wrapper Design System/
 ```
 
 **Key Features:**
+
 - Comprehensive productivity metrics with trend analysis
 - Real-time cost tracking with budget alerts
 - AI tool performance comparison and optimization suggestions
@@ -951,6 +1077,7 @@ CC Wrapper Design System/
    - Establish performance monitoring and reporting
 
 **Design Handoff Preparation:**
+
 - Finalize design tokens and component specifications
 - Create comprehensive component documentation
 - Prepare responsive design specifications
@@ -960,6 +1087,7 @@ CC Wrapper Design System/
 ### 10.2 Design Handoff Checklist
 
 **Component Library Complete:**
+
 - [ ] All core components designed with multiple states
 - [ ] Design tokens established for colors, typography, spacing
 - [ ] Component variants defined (primary, secondary, tertiary)
@@ -968,6 +1096,7 @@ CC Wrapper Design System/
 - [ ] Responsive behavior defined for each component
 
 **User Interface Documentation:**
+
 - [ ] Complete user flow documentation with decision points
 - [ ] Wireframes for all major screens and states
 - [ ] Responsive design specifications for all breakpoints
@@ -976,6 +1105,7 @@ CC Wrapper Design System/
 - [ ] Animation and transition specifications
 
 **Accessibility Documentation:**
+
 - [ ] WCAG 2.1 AA compliance checklist completed
 - [ ] Screen reader testing protocol established
 - [ ] Keyboard navigation specification
@@ -984,6 +1114,7 @@ CC Wrapper Design System/
 - [ ] Reduced motion alternatives designed
 
 **Technical Specifications:**
+
 - [ ] Component prop interfaces defined
 - [ ] State management patterns documented
 - [ ] Performance optimization guidelines
@@ -992,6 +1123,7 @@ CC Wrapper Design System/
 - [ ] Progressive enhancement approach documented
 
 **Testing Strategy:**
+
 - [ ] Component testing library setup
 - [ ] Accessibility testing tools integrated
 - [ ] Performance testing benchmarks established
@@ -1000,6 +1132,7 @@ CC Wrapper Design System/
 - [ ] A/B testing framework prepared
 
 **Developer Resources:**
+
 - [ ] Component library documentation site
 - [ ] Usage examples and code samples
 - [ ] Design system guidelines
@@ -1016,17 +1149,19 @@ CC Wrapper Design System/
 - **PRD:** `./PRD.md` - Comprehensive product requirements document
 - **Epics:** `./epics.md` - Detailed epic breakdown with story specifications
 - **Architecture:** `./solution-architecture.md` - Technical architecture design
-- **Research:** `./research-*.md` - Market, technical, and user research findings
+- **Research:** `./research-*.md` - Market, technical, and user research
+  findings
 
 ### Version History
 
-| Date     | Version | Changes                      | Author        |
-| -------- | ------- | ---------------------------- | ------------- |
-| 2025-10-19 | 1.0     | Initial UX specification     | Eduardo Menoncello |
+| Date       | Version | Changes                  | Author             |
+| ---------- | ------- | ------------------------ | ------------------ |
+| 2025-10-19 | 1.0     | Initial UX specification | Eduardo Menoncello |
 
 ### Implementation Notes
 
 **Technology Stack Recommendations:**
+
 - **Frontend Framework:** React 18 with TypeScript for component development
 - **State Management:** Zustand or Redux Toolkit for application state
 - **Styling:** Tailwind CSS with custom design system tokens
@@ -1036,6 +1171,7 @@ CC Wrapper Design System/
 - **Accessibility:** axe-core for automated accessibility testing
 
 **Performance Considerations:**
+
 - Implement code splitting for optimal loading performance
 - Use Web Workers for intensive computations
 - Optimize bundle size with tree shaking and compression
@@ -1043,6 +1179,7 @@ CC Wrapper Design System/
 - Monitor Core Web Vitals for performance optimization
 
 **Security Considerations:**
+
 - Implement content security policy for XSS protection
 - Use secure storage for API keys and sensitive data
 - Implement proper authentication and authorization flows
@@ -1051,4 +1188,6 @@ CC Wrapper Design System/
 
 ---
 
-*This UX specification serves as the comprehensive guide for designing and implementing the CC Wrapper user interface, ensuring a consistent, accessible, and delightful user experience across all platforms and devices.*
+_This UX specification serves as the comprehensive guide for designing and
+implementing the CC Wrapper user interface, ensuring a consistent, accessible,
+and delightful user experience across all platforms and devices._

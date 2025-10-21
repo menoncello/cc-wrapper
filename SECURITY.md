@@ -2,7 +2,8 @@
 
 ## Security Status
 
-This document outlines the security practices and policies for the CC Wrapper project.
+This document outlines the security practices and policies for the CC Wrapper
+project.
 
 ## Security Practices
 
@@ -171,6 +172,7 @@ For security issues, contact the project maintainers through private channels.
 ### Standards
 
 This project aims to comply with:
+
 - OWASP Secure Coding Practices
 - Common security standards for web applications
 - Industry best practices for development tools

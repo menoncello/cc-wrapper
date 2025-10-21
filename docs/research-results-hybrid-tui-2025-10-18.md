@@ -1,15 +1,16 @@
 # Research Results: Hybrid TUI Implementation Strategies
 
-**Date:** 2025-10-18
-**AI Platform:** ChatGPT
-**Research Prompt:** Hybrid TUI implementation strategies for web interfaces that mirror terminal applications
+**Date:** 2025-10-18 **AI Platform:** ChatGPT **Research Prompt:** Hybrid TUI
+implementation strategies for web interfaces that mirror terminal applications
 **Source:** https://chatgpt.com/s/dr_68f40dd82ac481919123d36d993c77b3
 
 ---
 
 ## Executive Summary
 
-This research explores web-based terminal implementations using Xterm.js and related technologies to create hybrid text user interfaces (TUIs) that replicate terminal application experiences in browsers.
+This research explores web-based terminal implementations using Xterm.js and
+related technologies to create hybrid text user interfaces (TUIs) that replicate
+terminal application experiences in browsers.
 
 ## Key Findings
 
@@ -21,6 +22,7 @@ This research explores web-based terminal implementations using Xterm.js and rel
 ## Implementation Patterns
 
 ### Backend Architecture
+
 ```python
 # Example Python implementation with multiple client support
 import select
@@ -37,6 +39,7 @@ server = eventlet.websocket.WebSocketWSGI(server, async_mode=async_mode)
 ```
 
 ### Flow Control Implementation
+
 ```javascript
 // Flow control mechanism from Xterm.js documentation
 let watermark = 0;
@@ -58,6 +61,7 @@ if (watermark > 128 * 1024) {
 ## Code Examples
 
 ### JavaScript Setup
+
 ```javascript
 const term = new Terminal();
 term.open(document.getElementById('terminal'));
@@ -65,6 +69,7 @@ term.write('Hello from \x1B[1;3;31mXterm.js\x1B[0m\r\n');
 ```
 
 ### Multiple Client Handling
+
 ```python
 # Terminal server implementation
 terminals = {}
@@ -103,10 +108,14 @@ def handle_websocket(ws):
 
 ### Key Insights for Implementation:
 
-1. **Architecture Foundation**: Xterm.js + WebSockets + Python backend with session management
-2. **Critical Performance Consideration**: Implement flow control early to prevent memory issues
-3. **Session Management**: Use token-based authentication for multi-terminal isolation
-4. **Persistence Strategy**: Integrate with tmux or similar for session persistence
+1. **Architecture Foundation**: Xterm.js + WebSockets + Python backend with
+   session management
+2. **Critical Performance Consideration**: Implement flow control early to
+   prevent memory issues
+3. **Session Management**: Use token-based authentication for multi-terminal
+   isolation
+4. **Persistence Strategy**: Integrate with tmux or similar for session
+   persistence
 
 ### Immediate Action Items:
 
@@ -125,4 +134,5 @@ def handle_websocket(ws):
 
 ---
 
-*Research completed using BMad Method Research Workflow - Deep Research Prompt Generator*
+_Research completed using BMad Method Research Workflow - Deep Research Prompt
+Generator_
