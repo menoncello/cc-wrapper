@@ -7,9 +7,8 @@
  */
 
 import { $ } from 'bun';
-import * as fs from 'fs';
 import { config } from 'dotenv';
-
+import * as fs from 'fs';
 // Import URL constructor
 import { URL } from 'url';
 

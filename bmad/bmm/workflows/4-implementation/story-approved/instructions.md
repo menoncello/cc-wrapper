@@ -1,15 +1,19 @@
 # Story Approved Workflow Instructions (DEV Agent)
 
-<critical>The workflow execution engine is governed by: {project_root}/bmad/core/tasks/workflow.xml</critical>
-<critical>You MUST have already loaded and processed: {installed_path}/workflow.yaml</critical>
-<critical>Communicate all responses in {communication_language} and language MUST be tailored to {user_skill_level}</critical>
-<critical>Generate all documents in {document_output_language}</critical>
+<critical>The workflow execution engine is governed by:
+{project_root}/bmad/core/tasks/workflow.xml</critical> <critical>You MUST have
+already loaded and processed: {installed_path}/workflow.yaml</critical>
+<critical>Communicate all responses in {communication_language} and language
+MUST be tailored to {user_skill_level}</critical> <critical>Generate all
+documents in {document_output_language}</critical>
 
 <workflow>
 
-<critical>This workflow is run by DEV agent AFTER user confirms a story is approved (Definition of Done is complete)</critical>
-<critical>NO SEARCHING - DEV agent reads status file IN PROGRESS section to know which story was being worked on</critical>
-<critical>Workflow: Update story file status, move story IN PROGRESS → DONE, move TODO → IN PROGRESS, move BACKLOG → TODO</critical>
+<critical>This workflow is run by DEV agent AFTER user confirms a story is
+approved (Definition of Done is complete)</critical> <critical>NO SEARCHING -
+DEV agent reads status file IN PROGRESS section to know which story was being
+worked on</critical> <critical>Workflow: Update story file status, move story IN
+PROGRESS → DONE, move TODO → IN PROGRESS, move BACKLOG → TODO</critical>
 
 <step n="1" goal="Get story queue from status file">
 
@@ -23,9 +27,8 @@
 
 This workflow requires an active status file with an IN PROGRESS story.
 
-Run `workflow-status` to check your project state.</output>
-<action>Exit workflow</action>
-</check>
+Run `workflow-status` to check your project state.</output> <action>Exit
+workflow</action> </check>
 
 <action>Use extracted story queue:</action>
 
@@ -92,10 +95,11 @@ Find "## Dev Agent Record" section and add:
 
 **Story Approved and Marked Done, {user_name}!**
 
-✅ Story file updated: `{{current_story_file}}` → Status: Done
-✅ Status file updated: Story moved IN PROGRESS → DONE
-{{#if todo_story}}✅ Next story moved: TODO → IN PROGRESS ({{todo_story_id}}: {{todo_story_title}}){{/if}}
-{{#if next_backlog_story}}✅ Next story moved: BACKLOG → TODO ({{next_backlog_story_id}}: {{next_backlog_story_title}}){{/if}}
+✅ Story file updated: `{{current_story_file}}` → Status: Done ✅ Status file
+updated: Story moved IN PROGRESS → DONE {{#if todo_story}}✅ Next story moved:
+TODO → IN PROGRESS ({{todo_story_id}}: {{todo_story_title}}){{/if}}
+{{#if next_backlog_story}}✅ Next story moved: BACKLOG → TODO
+({{next_backlog_story_id}}: {{next_backlog_story_title}}){{/if}}
 
 **Completed Story:**
 
@@ -111,40 +115,32 @@ Find "## Dev Agent Record" section and add:
 - **Points Completed:** {{done_points}} / {{total_points}}
 - **Progress:** {{progress_percentage}}%
 
-{{#if all_stories_complete}}
-**🎉 ALL STORIES COMPLETE!**
+{{#if all_stories_complete}} **🎉 ALL STORIES COMPLETE!**
 
 Congratulations! You have completed all stories for this project.
 
 **Next Steps:**
 
-1. Run `retrospective` workflow with PM agent to review the project
+1. Run `retrospective` workflow with SM agent to review the project
 2. Close out the project
-3. Celebrate! 🎊
-   {{/if}}
+3. Celebrate! 🎊 {{/if}}
 
-{{#if todo_story}}
-**Next Story (IN PROGRESS):**
+{{#if todo_story}} **Next Story (IN PROGRESS):**
 
 - **ID:** {{todo_story_id}}
 - **Title:** {{todo_story_title}}
 - **File:** `{{todo_story_file}}`
 - **Status:** {{todo_story_status}}
 
-**Next Steps:**
-{{#if todo_story_status == 'Draft'}}
+**Next Steps:** {{#if todo_story_status == 'Draft'}}
 
 1. Review the drafted story {{todo_story_file}}
 2. Load SM agent and run `story-ready` workflow to approve it
-3. Then return to DEV agent to implement
-   {{else}}
+3. Then return to DEV agent to implement {{else}}
 4. Stay with DEV agent and run `dev-story` workflow
-5. Implement story {{todo_story_id}}
-   {{/if}}
-   {{/if}}
+5. Implement story {{todo_story_id}} {{/if}} {{/if}}
 
-{{#if backlog_not_empty AND todo_empty}}
-**Next Story (TODO):**
+{{#if backlog_not_empty AND todo_empty}} **Next Story (TODO):**
 
 - **ID:** {{next_backlog_story_id}}
 - **Title:** {{next_backlog_story_title}}
@@ -152,8 +148,7 @@ Congratulations! You have completed all stories for this project.
 **Next Steps:**
 
 1. Load SM agent
-2. Run `create-story` workflow to draft story {{next_backlog_story_id}}
-   {{/if}}
+2. Run `create-story` workflow to draft story {{next_backlog_story_id}} {{/if}}
 
 </step>
 

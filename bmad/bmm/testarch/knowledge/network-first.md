@@ -2,11 +2,15 @@
 
 ## Principle
 
-Register network interceptions **before** any navigation or user action. Store the interception promise and await it immediately after the triggering step. Replace implicit waits with deterministic signals based on network responses, spinner disappearance, or event hooks.
+Register network interceptions **before** any navigation or user action. Store
+the interception promise and await it immediately after the triggering step.
+Replace implicit waits with deterministic signals based on network responses,
+spinner disappearance, or event hooks.
 
 ## Rationale
 
-The most common source of flaky E2E tests is **race conditions** between navigation and network interception:
+The most common source of flaky E2E tests is **race conditions** between
+navigation and network interception:
 
 - Navigate then intercept = missed requests (too late)
 - No explicit wait = assertion runs before response arrives
@@ -16,14 +20,17 @@ Network-first patterns provide:
 
 - **Zero race conditions**: Intercept is active before triggering action
 - **Deterministic waits**: Wait for actual response, not arbitrary timeouts
-- **Actionable failures**: Assert on response status/body, not generic "element not found"
+- **Actionable failures**: Assert on response status/body, not generic "element
+  not found"
 - **Speed**: No padding with extra wait time
 
 ## Pattern Examples
 
 ### Example 1: Intercept Before Navigate Pattern
 
-**Context**: The foundational pattern for all E2E tests. Always register route interception **before** the action that triggers the request (navigation, click, form submit).
+**Context**: The foundational pattern for all E2E tests. Always register route
+interception **before** the action that triggers the request (navigation, click,
+form submit).
 
 **Implementation**:
 
@@ -31,7 +38,9 @@ Network-first patterns provide:
 // ✅ CORRECT: Intercept BEFORE navigate
 test('user can view dashboard data', async ({ page }) => {
   // Step 1: Register interception FIRST
-  const usersPromise = page.waitForResponse((resp) => resp.url().includes('/api/users') && resp.status() === 200);
+  const usersPromise = page.waitForResponse(
+    resp => resp.url().includes('/api/users') && resp.status() === 200
+  );
 
   // Step 2: THEN trigger the request
   await page.goto('/dashboard');
@@ -55,7 +64,7 @@ describe('Dashboard', () => {
     cy.visit('/dashboard');
 
     // Step 3: THEN await
-    cy.wait('@getUsers').then((interception) => {
+    cy.wait('@getUsers').then(interception => {
       // Step 4: Assert on structured data
       expect(interception.response.statusCode).to.equal(200);
       expect(interception.response.body).to.have.length(10);
@@ -75,14 +84,17 @@ test('flaky test example', async ({ page }) => {
 
 **Key Points**:
 
-- Playwright: Use `page.waitForResponse()` with URL pattern or predicate **before** `page.goto()` or `page.click()`
+- Playwright: Use `page.waitForResponse()` with URL pattern or predicate
+  **before** `page.goto()` or `page.click()`
 - Cypress: Use `cy.intercept().as()` **before** `cy.visit()` or `cy.click()`
 - Store promise/alias, trigger action, **then** await response
 - This prevents 95% of race-condition flakiness in E2E tests
 
 ### Example 2: HAR Capture for Debugging
 
-**Context**: When debugging flaky tests or building deterministic mocks, capture real network traffic with HAR files. Replay them in tests for consistent, offline-capable test runs.
+**Context**: When debugging flaky tests or building deterministic mocks, capture
+real network traffic with HAR files. Replay them in tests for consistent,
+offline-capable test runs.
 
 **Implementation**:
 
@@ -91,10 +103,10 @@ test('flaky test example', async ({ page }) => {
 export default defineConfig({
   use: {
     // Record HAR on first run
-    recordHar: { path: './hars/', mode: 'minimal' },
+    recordHar: { path: './hars/', mode: 'minimal' }
     // Or replay HAR in tests
     // serviceWorkers: 'block',
-  },
+  }
 });
 
 // Capture HAR for specific test
@@ -102,7 +114,7 @@ test('capture network for order flow', async ({ page, context }) => {
   // Start recording
   await context.routeFromHAR('./hars/order-flow.har', {
     url: '**/api/**',
-    update: true, // Update HAR with new requests
+    update: true // Update HAR with new requests
   });
 
   await page.goto('/checkout');
@@ -118,7 +130,7 @@ test('replay order flow from HAR', async ({ page, context }) => {
   // Replay captured HAR
   await context.routeFromHAR('./hars/order-flow.har', {
     url: '**/api/**',
-    update: false, // Read-only mode
+    update: false // Read-only mode
   });
 
   // Test runs with exact recorded responses - fully deterministic
@@ -131,16 +143,16 @@ test('replay order flow from HAR', async ({ page, context }) => {
 // Custom mock based on HAR insights
 test('mock order response based on HAR', async ({ page }) => {
   // After analyzing HAR, create focused mock
-  await page.route('**/api/orders', (route) =>
+  await page.route('**/api/orders', route =>
     route.fulfill({
       status: 200,
       contentType: 'application/json',
       body: JSON.stringify({
         orderId: '12345',
         status: 'confirmed',
-        total: 99.99,
-      }),
-    }),
+        total: 99.99
+      })
+    })
   );
 
   await page.goto('/checkout');
@@ -158,19 +170,20 @@ test('mock order response based on HAR', async ({ page }) => {
 
 ### Example 3: Network Stub with Edge Cases
 
-**Context**: When testing error handling, timeouts, and edge cases, stub network responses to simulate failures. Test both happy path and error scenarios.
+**Context**: When testing error handling, timeouts, and edge cases, stub network
+responses to simulate failures. Test both happy path and error scenarios.
 
 **Implementation**:
 
 ```typescript
 // Test happy path
 test('order succeeds with valid data', async ({ page }) => {
-  await page.route('**/api/orders', (route) =>
+  await page.route('**/api/orders', route =>
     route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: JSON.stringify({ orderId: '123', status: 'confirmed' }),
-    }),
+      body: JSON.stringify({ orderId: '123', status: 'confirmed' })
+    })
   );
 
   await page.goto('/checkout');
@@ -182,17 +195,17 @@ test('order succeeds with valid data', async ({ page }) => {
 test('order fails with server error', async ({ page }) => {
   // Listen for console errors (app should log gracefully)
   const consoleErrors: string[] = [];
-  page.on('console', (msg) => {
+  page.on('console', msg => {
     if (msg.type() === 'error') consoleErrors.push(msg.text());
   });
 
   // Stub 500 error
-  await page.route('**/api/orders', (route) =>
+  await page.route('**/api/orders', route =>
     route.fulfill({
       status: 500,
       contentType: 'application/json',
-      body: JSON.stringify({ error: 'Internal Server Error' }),
-    }),
+      body: JSON.stringify({ error: 'Internal Server Error' })
+    })
   );
 
   await page.goto('/checkout');
@@ -203,7 +216,7 @@ test('order fails with server error', async ({ page }) => {
   await expect(page.getByText('Please try again')).toBeVisible();
 
   // Verify error logged (not thrown)
-  expect(consoleErrors.some((e) => e.includes('Order failed'))).toBeTruthy();
+  expect(consoleErrors.some(e => e.includes('Order failed'))).toBeTruthy();
 });
 
 // Test network timeout
@@ -211,25 +224,27 @@ test('order times out after 10 seconds', async ({ page }) => {
   // Stub delayed response (never resolves within timeout)
   await page.route(
     '**/api/orders',
-    (route) => new Promise(() => {}), // Never resolves - simulates timeout
+    route => new Promise(() => {}) // Never resolves - simulates timeout
   );
 
   await page.goto('/checkout');
   await page.click('[data-testid="submit-order"]');
 
   // App should show timeout message after configured timeout
-  await expect(page.getByText('Request timed out')).toBeVisible({ timeout: 15000 });
+  await expect(page.getByText('Request timed out')).toBeVisible({
+    timeout: 15000
+  });
 });
 
 // Test partial data response
 test('order handles missing optional fields', async ({ page }) => {
-  await page.route('**/api/orders', (route) =>
+  await page.route('**/api/orders', route =>
     route.fulfill({
       status: 200,
       contentType: 'application/json',
       // Missing optional fields like 'trackingNumber', 'estimatedDelivery'
-      body: JSON.stringify({ orderId: '123', status: 'confirmed' }),
-    }),
+      body: JSON.stringify({ orderId: '123', status: 'confirmed' })
+    })
   );
 
   await page.goto('/checkout');
@@ -245,7 +260,7 @@ describe('Order Edge Cases', () => {
   it('should handle 500 error', () => {
     cy.intercept('POST', '**/api/orders', {
       statusCode: 500,
-      body: { error: 'Internal Server Error' },
+      body: { error: 'Internal Server Error' }
     }).as('orderFailed');
 
     cy.visit('/checkout');
@@ -255,7 +270,7 @@ describe('Order Edge Cases', () => {
   });
 
   it('should handle timeout', () => {
-    cy.intercept('POST', '**/api/orders', (req) => {
+    cy.intercept('POST', '**/api/orders', req => {
       req.reply({ delay: 20000 }); // Delay beyond app timeout
     }).as('orderTimeout');
 
@@ -275,14 +290,17 @@ describe('Order Edge Cases', () => {
 
 ### Example 4: Deterministic Waiting
 
-**Context**: Never use hard waits (`waitForTimeout(3000)`). Always wait for explicit signals: network responses, element state changes, or custom events.
+**Context**: Never use hard waits (`waitForTimeout(3000)`). Always wait for
+explicit signals: network responses, element state changes, or custom events.
 
 **Implementation**:
 
 ```typescript
 // ✅ GOOD: Wait for response with predicate
 test('wait for specific response', async ({ page }) => {
-  const responsePromise = page.waitForResponse((resp) => resp.url().includes('/api/users') && resp.status() === 200);
+  const responsePromise = page.waitForResponse(
+    resp => resp.url().includes('/api/users') && resp.status() === 200
+  );
 
   await page.goto('/dashboard');
   const response = await responsePromise;
@@ -300,7 +318,11 @@ test('wait for all required data', async ({ page }) => {
   await page.goto('/dashboard');
 
   // Wait for all in parallel
-  const [users, products, orders] = await Promise.all([usersPromise, productsPromise, ordersPromise]);
+  const [users, products, orders] = await Promise.all([
+    usersPromise,
+    productsPromise,
+    ordersPromise
+  ]);
 
   expect(users.status()).toBe(200);
   expect(products.status()).toBe(200);
@@ -319,7 +341,7 @@ test('wait for loading indicator', async ({ page }) => {
 // ✅ GOOD: Wait for custom event (advanced)
 test('wait for custom ready event', async ({ page }) => {
   let appReady = false;
-  page.on('console', (msg) => {
+  page.on('console', msg => {
     if (msg.text() === 'App ready') appReady = true;
   });
 
@@ -380,11 +402,11 @@ test('flaky test - navigate then mock', async ({ page }) => {
   await page.goto('/dashboard'); // Request to /api/users fires NOW
 
   // Mock registered too late - request already sent
-  await page.route('**/api/users', (route) =>
+  await page.route('**/api/users', route =>
     route.fulfill({
       status: 200,
-      body: JSON.stringify([{ id: 1, name: 'Test User' }]),
-    }),
+      body: JSON.stringify([{ id: 1, name: 'Test User' }])
+    })
   );
 
   // Test randomly passes/fails depending on timing
@@ -393,7 +415,9 @@ test('flaky test - navigate then mock', async ({ page }) => {
 
 // ❌ BAD: No wait for response
 test('flaky test - no explicit wait', async ({ page }) => {
-  await page.route('**/api/users', (route) => route.fulfill({ status: 200, body: JSON.stringify([]) }));
+  await page.route('**/api/users', route =>
+    route.fulfill({ status: 200, body: JSON.stringify([]) })
+  );
 
   await page.goto('/dashboard');
 
@@ -412,9 +436,12 @@ test('flaky test - hard wait', async ({ page }) => {
 
 **Why It Fails**:
 
-- **Mock after navigate**: Request fires during navigation, mock isn't active yet (race condition)
-- **No explicit wait**: Assertion runs before response arrives (timing-dependent)
-- **Hard waits**: Slow tests, brittle (fails if < timeout, wastes time if > timeout)
+- **Mock after navigate**: Request fires during navigation, mock isn't active
+  yet (race condition)
+- **No explicit wait**: Assertion runs before response arrives
+  (timing-dependent)
+- **Hard waits**: Slow tests, brittle (fails if < timeout, wastes time if >
+  timeout)
 - **Non-deterministic**: Passes locally, fails in CI (different speeds)
 
 **Better Approach**: Always intercept → trigger → await
@@ -423,12 +450,12 @@ test('flaky test - hard wait', async ({ page }) => {
 // ✅ GOOD: Intercept BEFORE navigate
 test('deterministic test', async ({ page }) => {
   // Step 1: Register mock FIRST
-  await page.route('**/api/users', (route) =>
+  await page.route('**/api/users', route =>
     route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: JSON.stringify([{ id: 1, name: 'Test User' }]),
-    }),
+      body: JSON.stringify([{ id: 1, name: 'Test User' }])
+    })
   );
 
   // Step 2: Store response promise BEFORE trigger
@@ -454,7 +481,8 @@ test('deterministic test', async ({ page }) => {
 
 ## Integration Points
 
-- **Used in workflows**: `*atdd` (test generation), `*automate` (test expansion), `*framework` (network setup)
+- **Used in workflows**: `*atdd` (test generation), `*automate` (test
+  expansion), `*framework` (network setup)
 - **Related fragments**:
   - `fixture-architecture.md` - Network fixture patterns
   - `data-factories.md` - API-first setup with network
@@ -474,13 +502,14 @@ When network tests fail, check:
 // Debug network issues with logging
 test('debug network', async ({ page }) => {
   // Log all requests
-  page.on('request', (req) => console.log('→', req.method(), req.url()));
+  page.on('request', req => console.log('→', req.method(), req.url()));
 
   // Log all responses
-  page.on('response', (resp) => console.log('←', resp.status(), resp.url()));
+  page.on('response', resp => console.log('←', resp.status(), resp.url()));
 
   await page.goto('/dashboard');
 });
 ```
 
-_Source: Murat Testing Philosophy (lines 94-137), Playwright network patterns, Cypress intercept best practices._
+_Source: Murat Testing Philosophy (lines 94-137), Playwright network patterns,
+Cypress intercept best practices._

@@ -2,9 +2,9 @@
 
 <workflow>
 
-<critical>This workflow performs exhaustive deep-dive documentation of specific areas</critical>
-<critical>Called by: ../document-project/instructions.md router</critical>
-<critical>Handles: deep_dive mode only</critical>
+<critical>This workflow performs exhaustive deep-dive documentation of specific
+areas</critical> <critical>Called by: ../document-project/instructions.md
+router</critical> <critical>Handles: deep_dive mode only</critical>
 
 <step n="13" goal="Deep-dive documentation of specific area" if="workflow_mode == deep_dive">
 <critical>Deep-dive mode requires literal full-file review. Sampling, guessing, or relying solely on tooling output is FORBIDDEN.</critical>
@@ -22,37 +22,29 @@
 
 ### API Routes ({{api_route_count}} endpoints found)
 
-{{#each api_route_groups}}
-{{group_index}}. {{group_name}} - {{endpoint_count}} endpoints in `{{path}}`
-{{/each}}
-{{/if}}
+{{#each api_route_groups}} {{group_index}}. {{group_name}} - {{endpoint_count}}
+endpoints in `{{path}}` {{/each}} {{/if}}
 
 {{#if has_feature_modules}}
 
 ### Feature Modules ({{feature_count}} features)
 
-{{#each feature_modules}}
-{{module_index}}. {{module_name}} - {{file_count}} files in `{{path}}`
-{{/each}}
-{{/if}}
+{{#each feature_modules}} {{module_index}}. {{module_name}} - {{file_count}}
+files in `{{path}}` {{/each}} {{/if}}
 
 {{#if has_ui_components}}
 
 ### UI Component Areas
 
-{{#each component_groups}}
-{{group_index}}. {{group_name}} - {{component_count}} components in `{{path}}`
-{{/each}}
-{{/if}}
+{{#each component_groups}} {{group_index}}. {{group_name}} - {{component_count}}
+components in `{{path}}` {{/each}} {{/if}}
 
 {{#if has_services}}
 
 ### Services/Business Logic
 
-{{#each service_groups}}
-{{service_index}}. {{service_name}} - `{{path}}`
-{{/each}}
-{{/if}}
+{{#each service_groups}} {{service_index}}. {{service_name}} - `{{path}}`
+{{/each}} {{/if}}
 
 **Or specify custom:**
 
@@ -60,25 +52,22 @@
 - File path (e.g., "server/src/api/users.ts")
 - Feature name (e.g., "authentication system")
 
-Enter your choice (number or custom path):
-</ask>
+Enter your choice (number or custom path): </ask>
 
-<action>Parse user input to determine: - target_type: "folder" | "file" | "feature" | "api_group" | "component_group" - target_path: Absolute path to scan - target_name: Human-readable name for documentation - target_scope: List of all files to analyze
-</action>
+<action>Parse user input to determine: - target_type: "folder" | "file" |
+"feature" | "api_group" | "component_group" - target_path: Absolute path to
+scan - target_name: Human-readable name for documentation - target_scope: List
+of all files to analyze </action>
 
 <action>Store as {{deep_dive_target}}</action>
 
-<action>Display confirmation:
-Target: {{target_name}}
-Type: {{target_type}}
-Path: {{target_path}}
-Estimated files to analyze: {{estimated_file_count}}
+<action>Display confirmation: Target: {{target_name}} Type: {{target_type}}
+Path: {{target_path}} Estimated files to analyze: {{estimated_file_count}}
 
-This will read EVERY file in this area. Proceed? [y/n]
-</action>
+This will read EVERY file in this area. Proceed? [y/n] </action>
 
-<action if="user confirms 'n'">Return to Step 13a (select different area)</action>
-</step>
+<action if="user confirms 'n'">Return to Step 13a (select different
+area)</action> </step>
 
 <step n="13b" goal="Comprehensive exhaustive scan of target area">
   <action>Set scan_mode = "exhaustive"</action>
@@ -134,16 +123,22 @@ This will read EVERY file in this area. Proceed? [y/n]
     <action>Store all in file_inventory</action>
   </check>
 
-<action>For each file in file\*inventory, document: - **File Path:** Full path - **Purpose:** What this file does (1-2 sentences) - **Lines of Code:** Total LOC - **Exports:** Complete list with signatures
+<action>For each file in file\*inventory, document: - **File Path:** Full path -
+**Purpose:** What this file does (1-2 sentences) - **Lines of Code:** Total
+LOC - **Exports:** Complete list with signatures
 
-- Functions: `functionName(param: Type): ReturnType` - Description
-  _ Classes: `ClassName` - Description with key methods
-  _ Types/Interfaces: `TypeName` - Description
-  \_ Constants: `CONSTANT_NAME: Type` - Description - **Imports/Dependencies:** What it uses and why - **Used By:** Files that import this (dependents) - **Key Implementation Details:** Important logic, algorithms, patterns - **State Management:** If applicable (Redux, Context, local state) - **Side Effects:** API calls, database queries, file I/O, external services - **Error Handling:** Try/catch blocks, error boundaries, validation - **Testing:** Associated test files and coverage - **Comments/TODOs:** Any inline documentation or planned work
-  </action>
+- Functions: `functionName(param: Type): ReturnType` - Description _ Classes:
+  `ClassName` - Description with key methods _ Types/Interfaces: `TypeName` -
+  Description \_ Constants: `CONSTANT_NAME: Type` - Description -
+  **Imports/Dependencies:** What it uses and why - **Used By:** Files that
+  import this (dependents) - **Key Implementation Details:** Important logic,
+  algorithms, patterns - **State Management:** If applicable (Redux, Context,
+  local state) - **Side Effects:** API calls, database queries, file I/O,
+  external services - **Error Handling:** Try/catch blocks, error boundaries,
+  validation - **Testing:** Associated test files and coverage -
+  **Comments/TODOs:** Any inline documentation or planned work </action>
 
-<template-output>comprehensive_file_inventory</template-output>
-</step>
+<template-output>comprehensive_file_inventory</template-output> </step>
 
 <step n="13c" goal="Analyze relationships and data flow">
   <action>Build dependency graph for scanned area:
@@ -154,16 +149,17 @@ This will read EVERY file in this area. Proceed? [y/n]
     - Find leaf nodes (files that don't import others in scope)
   </action>
 
-<action>Trace data flow through the system: - Follow function calls and data transformations - Track API calls and their responses - Document state updates and propagation - Map database queries and mutations
-</action>
+<action>Trace data flow through the system: - Follow function calls and data
+transformations - Track API calls and their responses - Document state updates
+and propagation - Map database queries and mutations </action>
 
-<action>Identify integration points: - External APIs consumed - Internal APIs/services called - Shared state accessed - Events published/subscribed - Database tables accessed
-</action>
+<action>Identify integration points: - External APIs consumed - Internal
+APIs/services called - Shared state accessed - Events published/subscribed -
+Database tables accessed </action>
 
 <template-output>dependency_graph</template-output>
 <template-output>data_flow_analysis</template-output>
-<template-output>integration_points</template-output>
-</step>
+<template-output>integration_points</template-output> </step>
 
 <step n="13d" goal="Find related code and similar patterns">
   <action>Search codebase OUTSIDE scanned area for:
@@ -174,15 +170,16 @@ This will read EVERY file in this area. Proceed? [y/n]
     - Reusable utilities that could be used
   </action>
 
-<action>Identify code reuse opportunities: - Shared utilities available - Design patterns used elsewhere - Component libraries available - Helper functions that could apply
-</action>
+<action>Identify code reuse opportunities: - Shared utilities available - Design
+patterns used elsewhere - Component libraries available - Helper functions that
+could apply </action>
 
-<action>Find reference implementations: - Similar features in other parts of codebase - Established patterns to follow - Testing approaches used elsewhere
+<action>Find reference implementations: - Similar features in other parts of
+codebase - Established patterns to follow - Testing approaches used elsewhere
 </action>
 
 <template-output>related_code_references</template-output>
-<template-output>reuse_opportunities</template-output>
-</step>
+<template-output>reuse_opportunities</template-output> </step>
 
 <step n="13e" goal="Generate comprehensive deep-dive documentation">
   <action>Create documentation filename: deep-dive-{{sanitized_target_name}}.md</action>
@@ -192,16 +189,19 @@ This will read EVERY file in this area. Proceed? [y/n]
     - Combine recommended test commands into {{suggested_tests}}
   </action>
 
-<action>Load complete deep-dive template from: {installed_path}/templates/deep-dive-template.md</action>
-<action>Fill template with all collected data from steps 13b-13d</action>
-<action>Write filled template to: {output_folder}/deep-dive-{{sanitized_target_name}}.md</action>
+<action>Load complete deep-dive template from:
+{installed_path}/templates/deep-dive-template.md</action> <action>Fill template
+with all collected data from steps 13b-13d</action> <action>Write filled
+template to: {output_folder}/deep-dive-{{sanitized_target_name}}.md</action>
 <action>Validate deep-dive document completeness</action>
 
 <template-output>deep_dive_documentation</template-output>
 
-<action>Update state file: - Add to deep_dive_targets array: {"target_name": "{{target_name}}", "target_path": "{{target_path}}", "files_analyzed": {{file_count}}, "output_file": "deep-dive-{{sanitized_target_name}}.md", "timestamp": "{{now}}"} - Add output to outputs_generated - Update last_updated timestamp
-</action>
-</step>
+<action>Update state file: - Add to deep_dive_targets array: {"target_name":
+"{{target_name}}", "target_path": "{{target_path}}", "files_analyzed":
+{{file_count}}, "output_file": "deep-dive-{{sanitized_target_name}}.md",
+"timestamp": "{{now}}"} - Add output to outputs_generated - Update last_updated
+timestamp </action> </step>
 
 <step n="13f" goal="Update master index with deep-dive link">
   <action>Read existing index.md</action>
@@ -221,18 +221,16 @@ Detailed exhaustive analysis of specific areas:
 
 <action>Add link to new deep-dive doc:
 
-- [{{target_name}} Deep-Dive](./deep-dive-{{sanitized_target_name}}.md) - Comprehensive analysis of {{target_description}} ({{file_count}} files, {{total_loc}} LOC) - Generated {{date}}
-  </action>
+- [{{target_name}} Deep-Dive](./deep-dive-{{sanitized_target_name}}.md) -
+  Comprehensive analysis of {{target_description}} ({{file_count}} files,
+  {{total_loc}} LOC) - Generated {{date}} </action>
 
-  <action>Update index metadata:
-  Last Updated: {{date}}
-  Deep-Dives: {{deep_dive_count}}
-  </action>
+  <action>Update index metadata: Last Updated: {{date}} Deep-Dives:
+  {{deep_dive_count}} </action>
 
   <action>Save updated index.md</action>
 
-  <template-output>updated_index</template-output>
-  </step>
+  <template-output>updated_index</template-output> </step>
 
 <step n="13g" goal="Offer to continue or complete">
   <action>Display summary:
@@ -241,10 +239,9 @@ Detailed exhaustive analysis of specific areas:
 
 ## Deep-Dive Documentation Complete! ✓
 
-**Generated:** {output_folder}/deep-dive-{{target_name}}.md
-**Files Analyzed:** {{file_count}}
-**Lines of Code Scanned:** {{total_loc}}
-**Time Taken:** ~{{duration}}
+**Generated:** {output_folder}/deep-dive-{{target_name}}.md **Files Analyzed:**
+{{file_count}} **Lines of Code Scanned:** {{total_loc}} **Time Taken:**
+~{{duration}}
 
 **Documentation Includes:**
 
@@ -257,16 +254,14 @@ Detailed exhaustive analysis of specific areas:
 
 **Index Updated:** {output_folder}/index.md now includes link to this deep-dive
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-</action>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ </action>
 
 <ask>Would you like to:
 
 1. **Deep-dive another area** - Analyze another feature/module/folder
 2. **Finish** - Complete workflow
 
-Your choice [1/2]:
-</ask>
+Your choice [1/2]: </ask>
 
   <action if="user selects 1">
     <action>Clear current deep_dive_target</action>
@@ -278,8 +273,8 @@ Your choice [1/2]:
 
 All deep-dive documentation complete!
 
-**Master Index:** {output_folder}/index.md
-**Deep-Dives Generated:** {{deep_dive_count}}
+**Master Index:** {output_folder}/index.md **Deep-Dives Generated:**
+{{deep_dive_count}}
 
 These comprehensive docs are now ready for:
 
@@ -288,11 +283,7 @@ These comprehensive docs are now ready for:
 - Code understanding
 - Brownfield PRD creation
 
-Thank you for using the document-project workflow!
-</action>
-<action>Exit workflow</action>
-</action>
-</step>
-</step>
+Thank you for using the document-project workflow! </action> <action>Exit
+workflow</action> </action> </step> </step>
 
 </workflow>

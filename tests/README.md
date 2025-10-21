@@ -1,6 +1,7 @@
 # Test Suite
 
-This directory contains the complete test suite for the CC Wrapper development environment setup.
+This directory contains the complete test suite for the CC Wrapper development
+environment setup.
 
 ## Structure
 
@@ -22,20 +23,27 @@ tests/
 ## Test Categories
 
 ### Unit Tests
-- **setup-platform-detection.test.ts**: Tests platform detection logic for macOS, Linux, Windows
+
+- **setup-platform-detection.test.ts**: Tests platform detection logic for
+  macOS, Linux, Windows
 - **setup-dependencies.test.ts**: Tests version checking for all required tools
 - **setup-configuration.test.ts**: Tests environment file and directory setup
 - **health-check.test.ts**: Tests individual health check components
 
 ### Integration Tests
+
 - **setup-integration.test.ts**: Tests complete setup workflow integration
 - **health-check-integration.test.ts**: Tests health check system integration
-- **setup-performance.test.ts**: Tests performance requirements and SLA compliance
+- **setup-performance.test.ts**: Tests performance requirements and SLA
+  compliance
 
 ### Error Handling Tests
-- **setup-error-handling.test.ts**: Tests error scenarios, edge cases, and graceful degradation
+
+- **setup-error-handling.test.ts**: Tests error scenarios, edge cases, and
+  graceful degradation
 
 ### End-to-End Tests
+
 - **e2e/setup-workflow.test.ts**: Tests complete real-world setup scenarios
 
 ## Test ID Convention
@@ -48,6 +56,7 @@ Tests follow the structured ID format: `{story}.{category}-{type}-{sequence}`
 - **Sequence**: Sequential numbering within category
 
 Examples:
+
 - `1.1-E2E-001`: Story 1.1, E2E test #001
 - `2.4-E2E-001`: Story 2.4, E2E test #001
 
@@ -63,23 +72,27 @@ Tests are classified by priority using P0-P3 system:
 ## Running Tests
 
 ### Run All Tests
+
 ```bash
 bun test
 ```
 
 ### Run Specific Test Files
+
 ```bash
 bun test tests/setup-platform-detection.test.ts
 bun test tests/health-check.test.ts
 ```
 
 ### Run Tests by Pattern
+
 ```bash
 bun test tests/setup-*.test.ts    # Run all setup tests
 bun test tests/*-integration.test.ts  # Run integration tests
 ```
 
 ### Run Tests with Coverage
+
 ```bash
 bun test --coverage
 ```
@@ -88,12 +101,11 @@ bun test --coverage
 
 All tests in this suite follow these quality standards:
 
-✅ **Deterministic**: No random data or conditionals
-✅ **Isolated**: Clean setup/teardown, no shared state
-✅ **Explicit**: Clear assertions with specific expectations
-✅ **Maintainable**: Use factories and fixtures, avoid duplication
-✅ **Fast**: Complete within reasonable time limits
-✅ **Descriptive**: Clear test names and documentation
+✅ **Deterministic**: No random data or conditionals ✅ **Isolated**: Clean
+setup/teardown, no shared state ✅ **Explicit**: Clear assertions with specific
+expectations ✅ **Maintainable**: Use factories and fixtures, avoid duplication
+✅ **Fast**: Complete within reasonable time limits ✅ **Descriptive**: Clear
+test names and documentation
 
 ## Test Utilities
 
@@ -104,7 +116,7 @@ import {
   createMockSetupEnvironment,
   setupTestEnvironment,
   setupMockConsole
-} from '../test-utils'
+} from '../test-utils';
 ```
 
 See `/test-utils/README.md` for detailed usage information.
@@ -113,7 +125,8 @@ See `/test-utils/README.md` for detailed usage information.
 
 The test suite has been recently refactored to improve maintainability:
 
-1. **Split large test files**: Original files >300 lines split into focused modules
+1. **Split large test files**: Original files >300 lines split into focused
+   modules
 2. **Added data factories**: Centralized test data generation with overrides
 3. **Extracted common fixtures**: Reusable setup/teardown functionality
 4. **Improved organization**: Logical grouping by functionality
@@ -156,23 +169,30 @@ When adding new tests:
 ## Troubleshooting
 
 ### Tests Fail with Permission Errors
+
 Ensure test files have execute permissions:
+
 ```bash
 chmod +x tests/*.test.ts
 ```
 
 ### Tests Take Too Long
+
 Check for:
+
 - Hard waits instead of deterministic waits
 - External network calls instead of mocks
 - Inefficient file operations
 - Missing cleanup causing state pollution
 
 ### Flaky Tests
+
 Check for:
+
 - Race conditions in async operations
 - Dependency on external services
 - Non-deterministic test data
 - Missing proper isolation
 
-For more detailed troubleshooting, see the test quality review documents in `/docs/`.
+For more detailed troubleshooting, see the test quality review documents in
+`/docs/`.

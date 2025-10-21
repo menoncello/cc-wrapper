@@ -1,18 +1,22 @@
 # Non-Functional Requirements Assessment Workflow
 
-**Workflow ID:** `testarch-nfr`
-**Agent:** Test Architect (TEA)
-**Command:** `bmad tea *nfr-assess`
+**Workflow ID:** `testarch-nfr` **Agent:** Test Architect (TEA) **Command:**
+`bmad tea *nfr-assess`
 
 ---
 
 ## Overview
 
-The **nfr-assess** workflow performs a comprehensive assessment of non-functional requirements (NFRs) to validate that the implementation meets performance, security, reliability, and maintainability standards before release. It uses evidence-based validation with deterministic PASS/CONCERNS/FAIL rules and provides actionable recommendations for remediation.
+The **nfr-assess** workflow performs a comprehensive assessment of
+non-functional requirements (NFRs) to validate that the implementation meets
+performance, security, reliability, and maintainability standards before
+release. It uses evidence-based validation with deterministic PASS/CONCERNS/FAIL
+rules and provides actionable recommendations for remediation.
 
 **Key Features:**
 
-- Assess multiple NFR categories (performance, security, reliability, maintainability, custom)
+- Assess multiple NFR categories (performance, security, reliability,
+  maintainability, custom)
 - Validate NFRs against defined thresholds from tech specs, PRD, or defaults
 - Classify status deterministically (PASS/CONCERNS/FAIL) based on evidence
 - Never guess thresholds - mark as CONCERNS if unknown
@@ -108,7 +112,8 @@ bmad tea *nfr-assess \
 3. **Gather Evidence** - Read test results, metrics, logs, CI results
 4. **Assess NFRs** - Apply deterministic PASS/CONCERNS/FAIL rules
 5. **Identify Actions** - Quick wins, recommended actions, monitoring hooks
-6. **Generate Deliverables** - NFR assessment report, gate YAML, evidence checklist
+6. **Generate Deliverables** - NFR assessment report, gate YAML, evidence
+   checklist
 
 ---
 
@@ -164,21 +169,23 @@ nfr_assessment:
 - CPU usage: < 70%
 - Memory usage: < 80%
 
-**Evidence Sources:** Load test results, APM data, Lighthouse reports, Playwright traces
+**Evidence Sources:** Load test results, APM data, Lighthouse reports,
+Playwright traces
 
 ---
 
 ### Security
 
-**Criteria:** Authentication, authorization, data protection, vulnerability management
-**Thresholds (Default):**
+**Criteria:** Authentication, authorization, data protection, vulnerability
+management **Thresholds (Default):**
 
 - Security score: >= 85/100
 - Critical vulnerabilities: 0
 - High vulnerabilities: < 3
 - MFA enabled
 
-**Evidence Sources:** SAST results, DAST results, dependency scanning, pentest reports
+**Evidence Sources:** SAST results, DAST results, dependency scanning, pentest
+reports
 
 ---
 
@@ -192,7 +199,8 @@ nfr_assessment:
 - MTTR: < 15 minutes
 - CI burn-in: 100 consecutive runs
 
-**Evidence Sources:** Uptime monitoring, error logs, CI burn-in results, chaos tests
+**Evidence Sources:** Uptime monitoring, error logs, CI burn-in results, chaos
+tests
 
 ---
 
@@ -206,7 +214,8 @@ nfr_assessment:
 - Technical debt: < 5%
 - Documentation: >= 90%
 
-**Evidence Sources:** Coverage reports, static analysis, documentation audit, test review
+**Evidence Sources:** Coverage reports, static analysis, documentation audit,
+test review
 
 ---
 
@@ -382,11 +391,13 @@ bmad tea *nfr-assess \
 
 - Check evidence directories (test-results, metrics, logs)
 - Check CI/CD pipeline for test results
-- If evidence truly missing, mark NFR as "NO EVIDENCE" and recommend generating it
+- If evidence truly missing, mark NFR as "NO EVIDENCE" and recommend generating
+  it
 
 ### "CONCERNS status but no threshold exceeded"
 
-- CONCERNS is correct when threshold is UNKNOWN or evidence is MISSING/INCOMPLETE
+- CONCERNS is correct when threshold is UNKNOWN or evidence is
+  MISSING/INCOMPLETE
 - CONCERNS is also correct when evidence is close to threshold (within 10%)
 - Document why CONCERNS was assigned in assessment report
 
@@ -400,11 +411,15 @@ bmad tea *nfr-assess \
 
 ## Integration with Other Workflows
 
-- **testarch-test-design** → `*nfr-assess` - Define NFR requirements, then assess
+- **testarch-test-design** → `*nfr-assess` - Define NFR requirements, then
+  assess
 - **testarch-framework** → `*nfr-assess` - Set up frameworks, then validate NFRs
-- **testarch-ci** → `*nfr-assess` - Configure CI, then assess reliability with burn-in
-- `*nfr-assess` → **testarch-trace (Phase 2)** - Assess NFRs, then apply quality gates
-- `*nfr-assess` → **testarch-test-review** - Assess maintainability, then review tests
+- **testarch-ci** → `*nfr-assess` - Configure CI, then assess reliability with
+  burn-in
+- `*nfr-assess` → **testarch-trace (Phase 2)** - Assess NFRs, then apply quality
+  gates
+- `*nfr-assess` → **testarch-test-review** - Assess maintainability, then review
+  tests
 
 ---
 

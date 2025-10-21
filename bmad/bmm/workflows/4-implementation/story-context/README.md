@@ -2,13 +2,18 @@
 
 ## Overview
 
-Assembles a dynamic Story Context XML by pulling latest documentation and existing code/library artifacts relevant to a drafted story. Creates comprehensive development context for AI agents and developers working on specific stories.
+Assembles a dynamic Story Context XML by pulling latest documentation and
+existing code/library artifacts relevant to a drafted story. Creates
+comprehensive development context for AI agents and developers working on
+specific stories.
 
 ## Key Features
 
-- **Automated Context Discovery** - Scans documentation and codebase for relevant artifacts
+- **Automated Context Discovery** - Scans documentation and codebase for
+  relevant artifacts
 - **XML Output Format** - Structured context optimized for LLM consumption
-- **Dependency Detection** - Identifies frameworks, packages, and technical dependencies
+- **Dependency Detection** - Identifies frameworks, packages, and technical
+  dependencies
 - **Interface Mapping** - Locates existing APIs and interfaces to reuse
 - **Testing Integration** - Includes testing standards and generates test ideas
 - **Status Tracking** - Updates story status and maintains context references
@@ -34,7 +39,8 @@ workflow story-context --story_path "docs/stories/1.2.feature-name.md"
 ### Configuration
 
 - **story_path**: Path to target story markdown file (defaults to latest.md)
-- **auto_update_status**: Whether to automatically update story status (default: false)
+- **auto_update_status**: Whether to automatically update story status (default:
+  false)
 
 ## Workflow Structure
 
@@ -54,7 +60,8 @@ story-context/
 ### Phase 1: Story Analysis (Steps 1-2)
 
 - **Story Location**: Finds and loads target story markdown file
-- **Content Parsing**: Extracts epic ID, story ID, title, acceptance criteria, and tasks
+- **Content Parsing**: Extracts epic ID, story ID, title, acceptance criteria,
+  and tasks
 - **Template Initialization**: Creates initial XML context structure
 - **User Story Extraction**: Parses "As a... I want... So that..." components
 
@@ -160,23 +167,30 @@ story-context/
 
 ## Requirements
 
-- **Story File**: Valid story markdown with proper structure (epic.story.title.md format)
+- **Story File**: Valid story markdown with proper structure
+  (epic.story.title.md format)
 - **Repository Access**: Ability to scan documentation and source code
-- **Documentation**: Project documentation in standard locations (docs/, src/, etc.)
+- **Documentation**: Project documentation in standard locations (docs/, src/,
+  etc.)
 
 ## Best Practices
 
 ### Before Starting
 
-1. **Ensure Story Quality**: Verify story has clear acceptance criteria and tasks
+1. **Ensure Story Quality**: Verify story has clear acceptance criteria and
+   tasks
 2. **Update Documentation**: Ensure relevant docs are current and discoverable
-3. **Clean Repository**: Remove obsolete code that might confuse context assembly
+3. **Clean Repository**: Remove obsolete code that might confuse context
+   assembly
 
 ### During Execution
 
-1. **Review Extracted Context**: Verify that discovered artifacts are actually relevant
-2. **Check Interface Accuracy**: Ensure identified APIs and interfaces are current
-3. **Validate Dependencies**: Confirm dependency information matches project state
+1. **Review Extracted Context**: Verify that discovered artifacts are actually
+   relevant
+2. **Check Interface Accuracy**: Ensure identified APIs and interfaces are
+   current
+3. **Validate Dependencies**: Confirm dependency information matches project
+   state
 
 ### After Completion
 
@@ -200,17 +214,22 @@ story-context/
 
 **Issue**: Dependency information is incomplete or wrong
 
-- **Solution**: Check for multiple package manifests or unusual project structure
+- **Solution**: Check for multiple package manifests or unusual project
+  structure
 - **Check**: Verify dependency files are in expected locations and formats
 
 ## Customization
 
 To customize this workflow:
 
-1. **Modify Search Patterns**: Update instructions.md to adjust code and doc discovery
-2. **Extend XML Schema**: Customize context-template.xml for additional context types
-3. **Add Validation**: Extend checklist.md with project-specific quality criteria
-4. **Configure Dependencies**: Adjust dependency detection for specific tech stacks
+1. **Modify Search Patterns**: Update instructions.md to adjust code and doc
+   discovery
+2. **Extend XML Schema**: Customize context-template.xml for additional context
+   types
+3. **Add Validation**: Extend checklist.md with project-specific quality
+   criteria
+4. **Configure Dependencies**: Adjust dependency detection for specific tech
+   stacks
 
 ## Version History
 
@@ -224,7 +243,8 @@ To customize this workflow:
 
 For issues or questions:
 
-- Review the workflow creation guide at `/bmad/bmb/workflows/create-workflow/workflow-creation-guide.md`
+- Review the workflow creation guide at
+  `/bmad/bmb/workflows/create-workflow/workflow-creation-guide.md`
 - Validate output using `checklist.md`
 - Ensure story files follow expected markdown structure
 - Check that repository structure supports automated discovery

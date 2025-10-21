@@ -1,18 +1,23 @@
 # CC Wrapper AI Frontend Development Prompt
 
 **Optimized for:** Vercel v0, Lovable.ai, and other AI frontend generation tools
-**Target:** Modern web application with TypeScript and React
-**Generated:** 2025-10-19
+**Target:** Modern web application with TypeScript and React **Generated:**
+2025-10-19
 
 ---
 
 ## Prompt Overview
 
-Create a revolutionary AI developer productivity platform called "CC Wrapper" that optimizes wait-time productivity through intelligent task orchestration and multi-AI tool integration. The application features a unique three-column layout (terminal, browser, AI context) that delivers measurable productivity improvements within the first 5 minutes of use.
+Create a revolutionary AI developer productivity platform called "CC Wrapper"
+that optimizes wait-time productivity through intelligent task orchestration and
+multi-AI tool integration. The application features a unique three-column layout
+(terminal, browser, AI context) that delivers measurable productivity
+improvements within the first 5 minutes of use.
 
 ## Core Application Architecture
 
 ### Technology Stack Requirements
+
 - **Framework:** React 18 with TypeScript
 - **Styling:** Tailwind CSS with custom design system tokens
 - **State Management:** Zustand for global state
@@ -27,21 +32,21 @@ Create a revolutionary AI developer productivity platform called "CC Wrapper" th
 /* Color Palette - Dark Developer Theme */
 :root {
   /* Backgrounds */
-  --bg-primary: #0D1117;
-  --bg-secondary: #161B22;
-  --bg-tertiary: #21262D;
+  --bg-primary: #0d1117;
+  --bg-secondary: #161b22;
+  --bg-tertiary: #21262d;
 
   /* Accent Colors */
-  --accent-primary: #0969DA;
-  --accent-success: #1A7F37;
-  --accent-warning: #D19A66;
-  --accent-error: #DA3633;
-  --accent-ai: #8B5CF6;
+  --accent-primary: #0969da;
+  --accent-success: #1a7f37;
+  --accent-warning: #d19a66;
+  --accent-error: #da3633;
+  --accent-ai: #8b5cf6;
 
   /* Text Colors */
-  --text-primary: #F0F6FC;
-  --text-secondary: #8B949E;
-  --text-tertiary: #6E7681;
+  --text-primary: #f0f6fc;
+  --text-secondary: #8b949e;
+  --text-tertiary: #6e7681;
 
   /* Typography */
   --font-primary: 'Inter', system-ui, sans-serif;
@@ -60,13 +65,16 @@ Create a revolutionary AI developer productivity platform called "CC Wrapper" th
 ## Key Features to Implement
 
 ### 1. Three-Column Layout (Desktop)
+
 - **Left Panel (30%):** Terminal interface with xterm.js integration
 - **Center Panel (40%):** Web browser for documentation and AI interactions
-- **Right Panel (30%):** AI context panel with conversation history and suggestions
+- **Right Panel (30%):** AI context panel with conversation history and
+  suggestions
 - **Resizable Panels:** Drag-to-resize with minimum width constraints
 - **Responsive Adaptation:** Single column on mobile, two columns on tablet
 
 ### 2. Progressive Onboarding Flow
+
 ```typescript
 interface OnboardingData {
   userType: 'solo' | 'team' | 'enterprise';
@@ -77,18 +85,21 @@ interface OnboardingData {
 ```
 
 ### 3. AI Tool Integration Interface
+
 - Multi-AI service connections (Claude, ChatGPT, GitHub Copilot)
 - Real-time status indicators and rate limit monitoring
 - Unified chat interface with conversation threading
 - Intelligent tool switching based on context and cost
 
 ### 4. Wait-Time Optimization System
+
 - AI response time monitoring (detects >30 seconds)
 - Parallel task suggestions based on current project context
 - Smart notification system for AI responses
 - Productivity metrics tracking and visualization
 
 ### 5. Workspace Management
+
 - Multiple workspace support with project isolation
 - Session persistence and automatic recovery
 - Workspace templates for different project types
@@ -99,6 +110,7 @@ interface OnboardingData {
 ### Phase 1: Core Infrastructure (High Priority)
 
 #### Layout Component
+
 ```typescript
 interface LayoutProps {
   children: React.ReactNode;
@@ -108,6 +120,7 @@ interface LayoutProps {
 ```
 
 #### Terminal Component
+
 ```typescript
 interface TerminalProps {
   onCommand: (command: string) => void;
@@ -117,6 +130,7 @@ interface TerminalProps {
 ```
 
 #### AI Context Panel
+
 ```typescript
 interface AIContextProps {
   conversations: Conversation[];
@@ -127,6 +141,7 @@ interface AIContextProps {
 ```
 
 #### Notification System
+
 ```typescript
 interface NotificationProps {
   type: 'success' | 'warning' | 'error' | 'info';
@@ -139,6 +154,7 @@ interface NotificationProps {
 ### Phase 2: User Experience Features (Medium Priority)
 
 #### Analytics Dashboard
+
 ```typescript
 interface AnalyticsData {
   timeSaved: number;
@@ -150,6 +166,7 @@ interface AnalyticsData {
 ```
 
 #### Settings Panel
+
 ```typescript
 interface SettingsProps {
   userPreferences: UserPreferences;
@@ -159,6 +176,7 @@ interface SettingsProps {
 ```
 
 #### Cost Management
+
 ```typescript
 interface CostManagerProps {
   budget: Budget;
@@ -171,6 +189,7 @@ interface CostManagerProps {
 ## Critical User Interactions
 
 ### 1. AI Response Wait-Time Detection
+
 ```typescript
 // Monitor AI response times and trigger suggestions
 const useAIOptimization = () => {
@@ -179,7 +198,8 @@ const useAIOptimization = () => {
   const [suggestions, setSuggestions] = useState<TaskSuggestion[]>([]);
 
   useEffect(() => {
-    if (isWaiting && waitTime > 30000) { // 30 seconds
+    if (isWaiting && waitTime > 30000) {
+      // 30 seconds
       generateParallelTaskSuggestions();
     }
   }, [isWaiting, waitTime]);
@@ -187,6 +207,7 @@ const useAIOptimization = () => {
 ```
 
 ### 2. Parallel Task Suggestions
+
 ```typescript
 interface TaskSuggestion {
   id: string;
@@ -199,6 +220,7 @@ interface TaskSuggestion {
 ```
 
 ### 3. Session Persistence
+
 ```typescript
 interface SessionData {
   workspace: Workspace;
@@ -212,6 +234,7 @@ interface SessionData {
 ## Responsive Design Requirements
 
 ### Mobile Layout (< 768px)
+
 - Single-column vertical stacking
 - Bottom navigation for panel switching
 - Touch-optimized interface (44px minimum touch targets)
@@ -219,12 +242,14 @@ interface SessionData {
 - Progressive disclosure of advanced features
 
 ### Tablet Layout (768px - 1023px)
+
 - Two-column layout with collapsible panels
 - Adaptive panel prioritization based on context
 - Touch + keyboard input support
 - Split-screen multitasking support
 
 ### Desktop Layout (> 1024px)
+
 - Full three-column layout with resizable panels
 - Keyboard-first navigation for power users
 - Multi-monitor support capabilities
@@ -233,6 +258,7 @@ interface SessionData {
 ## Accessibility Requirements
 
 ### WCAG 2.1 AA Compliance
+
 - **Color Contrast:** Minimum 4.5:1 for normal text
 - **Keyboard Navigation:** Full interface accessible via keyboard
 - **Screen Reader Support:** Semantic HTML with ARIA labels
@@ -240,6 +266,7 @@ interface SessionData {
 - **Reduced Motion:** Respect prefers-reduced-motion setting
 
 ### Implementation Checklist
+
 - [ ] Semantic HTML5 elements (header, nav, main, section)
 - [ ] ARIA labels for custom components
 - [ ] Skip navigation links
@@ -249,6 +276,7 @@ interface SessionData {
 ## Performance Optimization
 
 ### Performance Targets
+
 - **First Contentful Paint:** < 1.5 seconds
 - **Time to Interactive:** < 3 seconds
 - **Terminal Response Time:** < 100ms
@@ -256,6 +284,7 @@ interface SessionData {
 - **Bundle Size:** < 2MB initial load
 
 ### Optimization Strategies
+
 - Code splitting with React.lazy()
 - Service Worker for offline functionality
 - Image optimization and lazy loading
@@ -265,6 +294,7 @@ interface SessionData {
 ## Implementation Guidelines
 
 ### 1. Component Architecture
+
 ```
 src/
 ├── components/
@@ -281,6 +311,7 @@ src/
 ```
 
 ### 2. State Management Pattern
+
 ```typescript
 // Global state with Zustand
 interface AppStore {
@@ -307,6 +338,7 @@ interface AppStore {
 ```
 
 ### 3. Error Handling Strategy
+
 ```typescript
 // Error boundary for component-level error handling
 class ErrorBoundary extends React.Component {
@@ -336,18 +368,21 @@ class ErrorBoundary extends React.Component {
 ## Testing Strategy
 
 ### Unit Testing (Jest + React Testing Library)
+
 - Component rendering and interaction tests
 - Hook behavior validation
 - Utility function testing
 - State management tests
 
 ### Integration Testing
+
 - Component integration scenarios
 - API integration mock testing
 - User flow testing
 - Cross-component state synchronization
 
 ### E2E Testing (Playwright)
+
 - Critical user journeys
 - Cross-browser compatibility
 - Mobile responsiveness testing
@@ -356,18 +391,21 @@ class ErrorBoundary extends React.Component {
 ## Deployment Considerations
 
 ### Build Optimization
+
 - Tree shaking for unused code elimination
 - Code compression with Terser
 - Image optimization and format conversion
 - CSS optimization and purging
 
 ### Security Implementation
+
 - Content Security Policy (CSP) headers
 - XSS protection with input sanitization
 - Secure storage for API keys and tokens
 - HTTPS enforcement and secure cookies
 
 ### Monitoring and Analytics
+
 - Performance monitoring with Core Web Vitals
 - Error tracking and reporting
 - User behavior analytics
@@ -378,6 +416,7 @@ class ErrorBoundary extends React.Component {
 ## Getting Started with Development
 
 ### 1. Initialize Project
+
 ```bash
 npx create-react-app cc-wrapper --template typescript
 cd cc-wrapper
@@ -388,14 +427,18 @@ npm install -D tailwindcss @types/node
 ```
 
 ### 2. Setup Tailwind CSS
+
 ```bash
 npx tailwindcss init -p
 ```
 
 ### 3. Configure Design System
-Create `tailwind.config.js` with custom design tokens from the specification above.
+
+Create `tailwind.config.js` with custom design tokens from the specification
+above.
 
 ### 4. Component Development Order
+
 1. Layout components and design system setup
 2. Terminal integration with xterm.js
 3. AI context panel and chat interface
@@ -404,6 +447,7 @@ Create `tailwind.config.js` with custom design tokens from the specification abo
 6. Settings and configuration panels
 
 ### 5. Integration Testing
+
 - Test three-column layout responsiveness
 - Verify terminal functionality
 - Test AI tool integration flows
@@ -413,12 +457,14 @@ Create `tailwind.config.js` with custom design tokens from the specification abo
 ## Success Metrics
 
 ### Technical Metrics
+
 - **Performance:** Lighthouse scores > 90 across all categories
 - **Accessibility:** WCAG 2.1 AA compliance with 100% keyboard accessibility
 - **Bundle Size:** < 2MB initial load, < 500KB per additional route
 - **Error Rate:** < 0.1% JavaScript errors in production
 
 ### User Experience Metrics
+
 - **Time to First Value:** < 5 minutes for new users
 - **Onboarding Completion:** > 85% within first session
 - **User Retention:** > 70% after first week
@@ -434,10 +480,11 @@ Create `tailwind.config.js` with custom design tokens from the specification abo
 4. **Testing Expansion:** Comprehensive accessibility and cross-browser testing
 5. **Deployment:** CI/CD pipeline setup and production deployment
 
-This AI Frontend Prompt provides a comprehensive foundation for building the CC Wrapper application with modern web technologies, ensuring a delightful user experience while maintaining high performance and accessibility standards.
+This AI Frontend Prompt provides a comprehensive foundation for building the CC
+Wrapper application with modern web technologies, ensuring a delightful user
+experience while maintaining high performance and accessibility standards.
 
 ---
 
-**Generated with:** CC Wrapper UX/UI Specification
-**Last Updated:** 2025-10-19
+**Generated with:** CC Wrapper UX/UI Specification **Last Updated:** 2025-10-19
 **Author:** Eduardo Menoncello

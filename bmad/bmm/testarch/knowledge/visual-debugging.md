@@ -2,13 +2,21 @@
 
 ## Principle
 
-Fast feedback loops and transparent debugging artifacts are critical for maintaining test reliability and developer confidence. Visual debugging tools (trace viewers, screenshots, videos, HAR files) turn cryptic test failures into actionable insights, reducing triage time from hours to minutes.
+Fast feedback loops and transparent debugging artifacts are critical for
+maintaining test reliability and developer confidence. Visual debugging tools
+(trace viewers, screenshots, videos, HAR files) turn cryptic test failures into
+actionable insights, reducing triage time from hours to minutes.
 
 ## Rationale
 
-**The Problem**: CI failures often provide minimal context—a timeout, a selector mismatch, or a network error—forcing developers to reproduce issues locally (if they can). This wastes time and discourages test maintenance.
+**The Problem**: CI failures often provide minimal context—a timeout, a selector
+mismatch, or a network error—forcing developers to reproduce issues locally (if
+they can). This wastes time and discourages test maintenance.
 
-**The Solution**: Capture rich debugging artifacts **only on failure** to balance storage costs with diagnostic value. Modern tools like Playwright Trace Viewer, Cypress Debug UI, and HAR recordings provide interactive, time-travel debugging that reveals exactly what the test saw at each step.
+**The Solution**: Capture rich debugging artifacts **only on failure** to
+balance storage costs with diagnostic value. Modern tools like Playwright Trace
+Viewer, Cypress Debug UI, and HAR recordings provide interactive, time-travel
+debugging that reveals exactly what the test saw at each step.
 
 **Why This Matters**:
 
@@ -21,7 +29,8 @@ Fast feedback loops and transparent debugging artifacts are critical for maintai
 
 ### Example 1: Playwright Trace Viewer Configuration (Production Pattern)
 
-**Context**: Capture traces on first retry only (balances storage and diagnostics)
+**Context**: Capture traces on first retry only (balances storage and
+diagnostics)
 
 **Implementation**:
 
@@ -41,19 +50,19 @@ export default defineConfig({
 
     // Timeout context
     actionTimeout: 15_000, // 15s for clicks/fills
-    navigationTimeout: 30_000, // 30s for page loads
+    navigationTimeout: 30_000 // 30s for page loads
   },
 
   // CI-specific artifact retention
   reporter: [
     ['html', { outputFolder: 'playwright-report', open: 'never' }],
     ['junit', { outputFile: 'results.xml' }],
-    ['list'], // Console output
+    ['list'] // Console output
   ],
 
   // Failure handling
   retries: process.env.CI ? 2 : 0, // Retry in CI to capture trace
-  workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI ? 1 : undefined
 });
 ```
 
@@ -97,12 +106,18 @@ import { test, expect } from '@playwright/test';
 import path from 'path';
 
 test.describe('Checkout Flow with HAR Recording', () => {
-  test('should complete payment with full network capture', async ({ page, context }) => {
+  test('should complete payment with full network capture', async ({
+    page,
+    context
+  }) => {
     // Start HAR recording BEFORE navigation
-    await context.routeFromHAR(path.join(__dirname, '../fixtures/checkout.har'), {
-      url: '**/api/**', // Only capture API calls
-      update: true, // Update HAR if file exists
-    });
+    await context.routeFromHAR(
+      path.join(__dirname, '../fixtures/checkout.har'),
+      {
+        url: '**/api/**', // Only capture API calls
+        update: true // Update HAR if file exists
+      }
+    );
 
     await page.goto('/checkout');
 
@@ -131,7 +146,7 @@ test('should replay checkout flow from HAR', async ({ page, context }) => {
   // Replay network from HAR (no real API calls)
   await context.routeFromHAR(path.join(__dirname, '../fixtures/checkout.har'), {
     url: '**/api/**',
-    update: false, // Read-only mode
+    update: false // Read-only mode
   });
 
   await page.goto('/checkout');
@@ -147,7 +162,8 @@ test('should replay checkout flow from HAR', async ({ page, context }) => {
 
 **Key Points**:
 
-- **`update: true`** records new HAR or updates existing (for flaky API debugging)
+- **`update: true`** records new HAR or updates existing (for flaky API
+  debugging)
 - **`update: false`** replays from HAR (deterministic, no real API)
 - Filter by URL pattern (`**/api/**`) to avoid capturing static assets
 - HAR files are human-readable JSON (easy to inspect/modify)
@@ -180,24 +196,28 @@ type DebugFixture = {
 export const test = base.extend<DebugFixture>({
   captureDebugArtifacts: async ({ page }, use, testInfo) => {
     const consoleLogs: string[] = [];
-    const networkRequests: Array<{ url: string; status: number; method: string }> = [];
+    const networkRequests: Array<{
+      url: string;
+      status: number;
+      method: string;
+    }> = [];
 
     // Capture console messages
-    page.on('console', (msg) => {
+    page.on('console', msg => {
       consoleLogs.push(`[${msg.type()}] ${msg.text()}`);
     });
 
     // Capture network requests
-    page.on('request', (request) => {
+    page.on('request', request => {
       networkRequests.push({
         url: request.url(),
         method: request.method(),
-        status: 0, // Will be updated on response
+        status: 0 // Will be updated on response
       });
     });
 
-    page.on('response', (response) => {
-      const req = networkRequests.find((r) => r.url === response.url());
+    page.on('response', response => {
+      const req = networkRequests.find(r => r.url === response.url());
       if (req) req.status = response.status();
     });
 
@@ -212,14 +232,22 @@ export const test = base.extend<DebugFixture>({
       fs.mkdirSync(artifactDir, { recursive: true });
 
       // Save console logs
-      fs.writeFileSync(path.join(artifactDir, 'console.log'), consoleLogs.join('\n'), 'utf-8');
+      fs.writeFileSync(
+        path.join(artifactDir, 'console.log'),
+        consoleLogs.join('\n'),
+        'utf-8'
+      );
 
       // Save network summary
-      fs.writeFileSync(path.join(artifactDir, 'network.json'), JSON.stringify(networkRequests, null, 2), 'utf-8');
+      fs.writeFileSync(
+        path.join(artifactDir, 'network.json'),
+        JSON.stringify(networkRequests, null, 2),
+        'utf-8'
+      );
 
       console.log(`Debug artifacts saved to: ${artifactDir}`);
     }
-  },
+  }
 });
 ```
 
@@ -229,12 +257,17 @@ export const test = base.extend<DebugFixture>({
 // tests/e2e/payment-with-debug.spec.ts
 import { test, expect } from '../support/fixtures/debug-fixture';
 
-test('payment flow captures debug artifacts on failure', async ({ page, captureDebugArtifacts }) => {
+test('payment flow captures debug artifacts on failure', async ({
+  page,
+  captureDebugArtifacts
+}) => {
   await page.goto('/checkout');
 
   // Test will automatically capture console + network on failure
   await page.getByTestId('submit-payment').click();
-  await expect(page.getByTestId('success-message')).toBeVisible({ timeout: 5000 });
+  await expect(page.getByTestId('success-message')).toBeVisible({
+    timeout: 5000
+  });
 
   // If this fails, console.log and network.json saved automatically
 });
@@ -306,16 +339,22 @@ export const test = base.extend<A11yFixture>({
 
       // Attach results to test report (visible in trace viewer)
       if (results.violations.length > 0) {
-        console.log(`Found ${results.violations.length} accessibility violations:`);
-        results.violations.forEach((violation) => {
-          console.log(`- [${violation.impact}] ${violation.id}: ${violation.description}`);
+        console.log(
+          `Found ${results.violations.length} accessibility violations:`
+        );
+        results.violations.forEach(violation => {
+          console.log(
+            `- [${violation.impact}] ${violation.id}: ${violation.description}`
+          );
           console.log(`  Help: ${violation.helpUrl}`);
         });
 
-        throw new Error(`Accessibility violations found: ${results.violations.length}`);
+        throw new Error(
+          `Accessibility violations found: ${results.violations.length}`
+        );
       }
     });
-  },
+  }
 });
 ```
 
@@ -343,7 +382,8 @@ test('checkout page is accessible', async ({ page, checkA11y }) => {
 
 **Trace Viewer Benefits**:
 
-- **Screenshot shows visual context** of accessibility issue (contrast, missing labels)
+- **Screenshot shows visual context** of accessibility issue (contrast, missing
+  labels)
 - **Console tab shows axe-core violations** with impact level and helpUrl
 - **DOM snapshot** allows inspecting ARIA attributes at failure point
 - **Network tab** reveals if icon fonts or images failed (common a11y issue)
@@ -356,11 +396,14 @@ import 'cypress-axe';
 
 Cypress.Commands.add('checkA11y', (context = null, options = {}) => {
   cy.injectAxe(); // Inject axe-core
-  cy.checkA11y(context, options, (violations) => {
+  cy.checkA11y(context, options, violations => {
     if (violations.length) {
       cy.task('log', `Found ${violations.length} accessibility violations`);
-      violations.forEach((violation) => {
-        cy.task('log', `- [${violation.impact}] ${violation.id}: ${violation.description}`);
+      violations.forEach(violation => {
+        cy.task(
+          'log',
+          `- [${violation.impact}] ${violation.id}: ${violation.description}`
+        );
       });
     }
   });
@@ -506,19 +549,29 @@ test('debug state mutation', async ({ page }) => {
 
 Before deploying tests to CI, ensure:
 
-- [ ] **Artifact configuration**: `trace: 'on-first-retry'`, `screenshot: 'only-on-failure'`, `video: 'retain-on-failure'`
-- [ ] **CI artifact upload**: GitHub Actions/GitLab CI configured to upload `test-results/` and `playwright-report/`
-- [ ] **HAR recording**: Set up for flaky API tests (record once, replay deterministically)
-- [ ] **Custom debug fixtures**: Console logs + network summary captured on failure
+- [ ] **Artifact configuration**: `trace: 'on-first-retry'`,
+      `screenshot: 'only-on-failure'`, `video: 'retain-on-failure'`
+- [ ] **CI artifact upload**: GitHub Actions/GitLab CI configured to upload
+      `test-results/` and `playwright-report/`
+- [ ] **HAR recording**: Set up for flaky API tests (record once, replay
+      deterministically)
+- [ ] **Custom debug fixtures**: Console logs + network summary captured on
+      failure
 - [ ] **Accessibility integration**: axe-core violations visible in trace viewer
-- [ ] **Trace viewer docs**: README explains how to open traces locally (`npx playwright show-trace`)
+- [ ] **Trace viewer docs**: README explains how to open traces locally
+      (`npx playwright show-trace`)
 - [ ] **Inspector workflow**: Document `--debug` flag for interactive debugging
-- [ ] **Storage optimization**: Artifacts deleted after 30 days (CI retention policy)
+- [ ] **Storage optimization**: Artifacts deleted after 30 days (CI retention
+      policy)
 
 ## Integration Points
 
-- **Used in workflows**: `*framework` (initial setup), `*ci` (artifact upload), `*test-review` (validate artifact config)
-- **Related fragments**: `playwright-config.md` (artifact configuration), `ci-burn-in.md` (CI artifact upload), `test-quality.md` (debugging best practices)
+- **Used in workflows**: `*framework` (initial setup), `*ci` (artifact upload),
+  `*test-review` (validate artifact config)
+- **Related fragments**: `playwright-config.md` (artifact configuration),
+  `ci-burn-in.md` (CI artifact upload), `test-quality.md` (debugging best
+  practices)
 - **Tools**: Playwright Trace Viewer, Cypress Debug UI, axe-core, HAR files
 
-_Source: Playwright official docs, Murat testing philosophy (visual debugging manifesto), SEON production debugging patterns_
+_Source: Playwright official docs, Murat testing philosophy (visual debugging
+manifesto), SEON production debugging patterns_

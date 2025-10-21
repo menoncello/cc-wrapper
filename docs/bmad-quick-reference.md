@@ -101,11 +101,14 @@ node /Users/menoncello/repos/oss/bmad6/tools/cli/bmad-cli.js install
 ## 📋 Quality Gates (Mandatory)
 
 All stories MUST pass these gates before completion:
+
 - ✅ **TypeScript**: 0 errors (`bun run type-check`)
 - ✅ **ESLint**: 0 errors (`bun run lint`)
 - ✅ **Tests**: 100% pass rate (`bun test`)
+- ✅ **Mutation Score**: 80%+ target, 60%+ minimum (`bun run test:mutation`)
 - ✅ **Formatting**: Prettier compliant
 - ❌ **NEVER** use `eslint-disable` or `@ts-ignore`
+- ❌ **NEVER** lower mutation thresholds - improve test quality instead
 
 Quality gates run automatically in `*develop` workflow.
 

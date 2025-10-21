@@ -69,6 +69,32 @@ Running in standalone mode - no progress tracking.</output>
     <action>Capture concrete, actionable suggestions with severity (High/Med/Low) and rationale. When possible, suggest specific code-level changes (filenames + line ranges) without rewriting large sections.</action>
   </step>
 
+  <step n="5.5" goal="Verify quality gates enforcement">
+    <critical>Quality gates are MANDATORY - verify strict enforcement</critical>
+
+    <action>Scan ALL modified files for eslint-disable comments (eslint-disable, eslint-disable-next-line)</action>
+    <check>If eslint-disable found → Flag as HIGH SEVERITY violation with file path and line number</check>
+
+    <action>Scan ALL modified files for @ts-ignore/@ts-expect-error</action>
+    <check>If @ts-ignore found → Flag as HIGH SEVERITY violation with file path and line number</check>
+
+    <action>Verify TypeScript compilation was run (check for tsc/type-check in Dev Agent Record, CI logs, or completion notes)</action>
+    <check>If no evidence of TypeScript check → Flag as MEDIUM SEVERITY with recommendation to run bun run type-check</check>
+
+    <action>Verify ESLint was run (check for lint command in Dev Agent Record, CI logs, or completion notes)</action>
+    <check>If no evidence of ESLint check → Flag as MEDIUM SEVERITY with recommendation to run bun run lint</check>
+
+    <action>Verify all tests pass (check test output, CI logs, or completion notes)</action>
+    <check>If test failures present or no evidence of test execution → Flag as HIGH SEVERITY blocker</check>
+
+    <action>Check if mutation testing was run (optional - look for Stryker reports, mutation score in completion notes, or reports/mutation/ directory)</action>
+    <check>If mutation score below 60% threshold → Flag as MEDIUM SEVERITY with recommendation to improve test quality</check>
+    <check>If mutation score below 80% high threshold → Suggest test improvements for better mutation coverage (edge cases, error paths, boundary conditions)</check>
+    <critical>NEVER recommend lowering mutation thresholds - only improving test quality (per user standards)</critical>
+
+    <critical>Quality gate violations are BLOCKING issues - must be fixed before approval</critical>
+  </step>
+
   <step n="6" goal="Decide review outcome and prepare notes">
     <action>Determine outcome: Approve, Changes Requested, or Blocked.</action>
     <action>Prepare a structured review report with sections: Summary, Outcome, Key Findings (by severity), Acceptance Criteria Coverage, Test Coverage and Gaps, Architectural Alignment, Security Notes, Best-Practices and References, Action Items.</action>
@@ -153,27 +179,6 @@ Running in standalone mode - no progress tracking.</output>
     <action>Perform security review: injection risks, authZ/authN handling, secret management, unsafe defaults, unvalidated redirects, CORS misconfig, dependency vulnerabilities (based on manifests).</action>
     <action>Check tests quality: assertions are meaningful, edge cases covered, deterministic behavior, proper fixtures, no flakiness patterns.</action>
     <action>Capture concrete, actionable suggestions with severity (High/Med/Low) and rationale. When possible, suggest specific code-level changes (filenames + line ranges) without rewriting large sections.</action>
-  </step>
-
-  <step n="5.5" goal="Verify quality gates enforcement">
-    <critical>Quality gates are MANDATORY - verify strict enforcement</critical>
-
-    <action>Scan ALL modified files for eslint-disable comments (eslint-disable, eslint-disable-next-line)</action>
-    <check>If eslint-disable found → Flag as HIGH SEVERITY violation with file path and line number</check>
-
-    <action>Scan ALL modified files for @ts-ignore/@ts-expect-error</action>
-    <check>If @ts-ignore found → Flag as HIGH SEVERITY violation with file path and line number</check>
-
-    <action>Verify TypeScript compilation was run (check for tsc/type-check in Dev Agent Record, CI logs, or completion notes)</action>
-    <check>If no evidence of TypeScript check → Flag as MEDIUM SEVERITY with recommendation to run bun run type-check</check>
-
-    <action>Verify ESLint was run (check for lint command in Dev Agent Record, CI logs, or completion notes)</action>
-    <check>If no evidence of ESLint check → Flag as MEDIUM SEVERITY with recommendation to run bun run lint</check>
-
-    <action>Verify all tests pass (check test output, CI logs, or completion notes)</action>
-    <check>If test failures present or no evidence of test execution → Flag as HIGH SEVERITY blocker</check>
-
-    <critical>Quality gate violations are BLOCKING issues - must be fixed before approval</critical>
   </step>
 
   <step n="6" goal="Decide review outcome and prepare notes">

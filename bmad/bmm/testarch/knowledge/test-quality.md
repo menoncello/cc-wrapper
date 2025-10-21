@@ -2,17 +2,27 @@
 
 ## Principle
 
-Tests must be deterministic, isolated, explicit, focused, and fast. Every test should execute in under 1.5 minutes, contain fewer than 300 lines, avoid hard waits and conditionals, keep assertions visible in test bodies, and clean up after itself for parallel execution.
+Tests must be deterministic, isolated, explicit, focused, and fast. Every test
+should execute in under 1.5 minutes, contain fewer than 300 lines, avoid hard
+waits and conditionals, keep assertions visible in test bodies, and clean up
+after itself for parallel execution.
 
 ## Rationale
 
-Quality tests provide reliable signal about application health. Flaky tests erode confidence and waste engineering time. Tests that use hard waits (`waitForTimeout(3000)`) are non-deterministic and slow. Tests with hidden assertions or conditional logic become unmaintainable. Large tests (>300 lines) are hard to understand and debug. Slow tests (>1.5 min) block CI pipelines. Self-cleaning tests prevent state pollution in parallel runs.
+Quality tests provide reliable signal about application health. Flaky tests
+erode confidence and waste engineering time. Tests that use hard waits
+(`waitForTimeout(3000)`) are non-deterministic and slow. Tests with hidden
+assertions or conditional logic become unmaintainable. Large tests (>300 lines)
+are hard to understand and debug. Slow tests (>1.5 min) block CI pipelines.
+Self-cleaning tests prevent state pollution in parallel runs.
 
 ## Pattern Examples
 
 ### Example 1: Deterministic Test Pattern
 
-**Context**: When writing tests, eliminate all sources of non-determinism: hard waits, conditionals controlling flow, try-catch for flow control, and random data without seeds.
+**Context**: When writing tests, eliminate all sources of non-determinism: hard
+waits, conditionals controlling flow, try-catch for flow control, and random
+data without seeds.
 
 **Implementation**:
 
@@ -48,7 +58,9 @@ test('user can view dashboard', async ({ page, apiRequest }) => {
   await apiRequest.post('/api/users', { data: user });
 
   // Network-first: Intercept BEFORE navigate
-  const dashboardPromise = page.waitForResponse((resp) => resp.url().includes('/api/dashboard') && resp.status() === 200);
+  const dashboardPromise = page.waitForResponse(
+    resp => resp.url().includes('/api/dashboard') && resp.status() === 200
+  );
 
   await page.goto('/dashboard');
 
@@ -58,7 +70,9 @@ test('user can view dashboard', async ({ page, apiRequest }) => {
 
   // Explicit assertions with controlled data
   await expect(page.getByText(`Welcome, ${user.name}`)).toBeVisible();
-  await expect(page.getByTestId('dashboard-items')).toHaveCount(dashboard.items.length);
+  await expect(page.getByTestId('dashboard-items')).toHaveCount(
+    dashboard.items.length
+  );
 
   // No conditionals - test always executes same path
   // No try-catch - failures bubble up clearly
@@ -67,7 +81,10 @@ test('user can view dashboard', async ({ page, apiRequest }) => {
 // Cypress equivalent
 describe('Dashboard', () => {
   it('should display user dashboard', () => {
-    const user = createUser({ email: 'test@example.com', hasSeenWelcome: true });
+    const user = createUser({
+      email: 'test@example.com',
+      hasSeenWelcome: true
+    });
 
     // Setup via task (fast, controlled)
     cy.task('db:seed', { users: [user] });
@@ -78,12 +95,15 @@ describe('Dashboard', () => {
     cy.visit('/dashboard');
 
     // Deterministic wait for response
-    cy.wait('@getDashboard').then((interception) => {
+    cy.wait('@getDashboard').then(interception => {
       const dashboard = interception.response.body;
 
       // Explicit assertions
       cy.contains(`Welcome, ${user.name}`).should('be.visible');
-      cy.get('[data-cy="dashboard-items"]').should('have.length', dashboard.items.length);
+      cy.get('[data-cy="dashboard-items"]').should(
+        'have.length',
+        dashboard.items.length
+      );
     });
   });
 });
@@ -99,7 +119,9 @@ describe('Dashboard', () => {
 
 ### Example 2: Isolated Test with Cleanup
 
-**Context**: When tests create data, they must clean up after themselves to prevent state pollution in parallel runs. Use fixture auto-cleanup or explicit teardown.
+**Context**: When tests create data, they must clean up after themselves to
+prevent state pollution in parallel runs. Use fixture auto-cleanup or explicit
+teardown.
 
 **Implementation**:
 
@@ -145,7 +167,7 @@ export const test = base.extend<DatabaseFixture>({
       await deleteRecord('users', userId);
     }
     createdUsers.length = 0;
-  },
+  }
 });
 
 // Use the fixture
@@ -153,7 +175,7 @@ test('admin can create user', async ({ page, seedUser }) => {
   // Create admin with unique data
   const admin = await seedUser({
     email: faker.internet.email(), // Unique each run
-    role: 'admin',
+    role: 'admin'
   });
 
   await page.goto('/admin/users');
@@ -178,7 +200,7 @@ describe('Admin User Management', () => {
 
   afterEach(() => {
     // Cleanup: Delete all users created during test
-    createdUserIds.forEach((userId) => {
+    createdUserIds.forEach(userId => {
       cy.task('db:delete', { table: 'users', id: userId });
     });
     createdUserIds.length = 0;
@@ -217,14 +239,19 @@ describe('Admin User Management', () => {
 
 ### Example 3: Explicit Assertions in Tests
 
-**Context**: When validating test results, keep assertions visible in test bodies. Never hide assertions in helper functions - this obscures test intent and makes failures harder to diagnose.
+**Context**: When validating test results, keep assertions visible in test
+bodies. Never hide assertions in helper functions - this obscures test intent
+and makes failures harder to diagnose.
 
 **Implementation**:
 
 ```typescript
 // ❌ BAD: Assertions hidden in helper functions
 // helpers/api-validators.ts
-export async function validateUserCreation(response: Response, expectedEmail: string) {
+export async function validateUserCreation(
+  response: Response,
+  expectedEmail: string
+) {
   const user = await response.json();
   expect(response.status()).toBe(201);
   expect(user.email).toBe(expectedEmail);
@@ -265,7 +292,9 @@ test('create user via API', async ({ request }) => {
 
 // ✅ ACCEPTABLE: Helper for data extraction, NOT assertions
 // helpers/api-extractors.ts
-export async function extractUserFromResponse(response: Response): Promise<User> {
+export async function extractUserFromResponse(
+  response: Response
+): Promise<User> {
   const user = await response.json();
   return user; // Just extracts, no assertions
 }
@@ -289,7 +318,7 @@ describe('User API', () => {
   it('should create user with explicit assertions', () => {
     const userData = createUser({ email: 'test@example.com' });
 
-    cy.request('POST', '/api/users', userData).then((response) => {
+    cy.request('POST', '/api/users', userData).then(response => {
       // All assertions visible in test
       expect(response.status).to.equal(201);
       expect(response.body.id).to.exist;
@@ -308,7 +337,7 @@ test.describe('User creation validation', () => {
     { field: 'email', value: 'test@example.com', expected: 'test@example.com' },
     { field: 'name', value: 'Test User', expected: 'Test User' },
     { field: 'role', value: 'admin', expected: 'admin' },
-    { field: 'isActive', value: true, expected: true },
+    { field: 'isActive', value: true, expected: true }
   ];
 
   for (const { field, value, expected } of testCases) {
@@ -335,7 +364,9 @@ test.describe('User creation validation', () => {
 
 ### Example 4: Test Length Limits
 
-**Context**: When tests grow beyond 300 lines, they become hard to understand, debug, and maintain. Refactor long tests by extracting setup helpers, splitting scenarios, or using fixtures.
+**Context**: When tests grow beyond 300 lines, they become hard to understand,
+debug, and maintain. Refactor long tests by extracting setup helpers, splitting
+scenarios, or using fixtures.
 
 **Implementation**:
 
@@ -389,7 +420,7 @@ export const test = base.extend({
     await use(page); // Provide logged-in page
 
     // Cleanup handled by fixture
-  },
+  }
 });
 
 // Test 1: User creation (50 lines)
@@ -431,7 +462,10 @@ test('admin can assign permissions', async ({ adminPage, seedUser }) => {
 });
 
 // Test 3: Notification preferences (70 lines)
-test('admin can update notification preferences', async ({ adminPage, seedUser }) => {
+test('admin can update notification preferences', async ({
+  adminPage,
+  seedUser
+}) => {
   const user = await seedUser({ email: faker.internet.email() });
 
   await adminPage.goto(`/admin/users/${user.id}/notifications`);
@@ -443,7 +477,9 @@ test('admin can update notification preferences', async ({ adminPage, seedUser }
   await expect(adminPage.getByText('Preferences saved')).toBeVisible();
 
   // Verify preferences
-  const response = await adminPage.request.get(`/api/users/${user.id}/preferences`);
+  const response = await adminPage.request.get(
+    `/api/users/${user.id}/preferences`
+  );
   const prefs = await response.json();
   expect(prefs.emailEnabled).toBe(true);
   expect(prefs.smsEnabled).toBe(false);
@@ -459,12 +495,15 @@ test('admin can update notification preferences', async ({ adminPage, seedUser }
 - Split monolithic tests into focused scenarios (<300 lines each)
 - Extract common setup into fixtures (auto-runs for each test)
 - Each test validates one concern (user creation, permissions, preferences)
-- Failures are easier to diagnose: "Permission assignment failed" vs "Complete journey failed"
+- Failures are easier to diagnose: "Permission assignment failed" vs "Complete
+  journey failed"
 - Tests can run in parallel (isolated concerns)
 
 ### Example 5: Execution Time Optimization
 
-**Context**: When tests take longer than 1.5 minutes, they slow CI pipelines and feedback loops. Optimize by using API setup instead of UI navigation, parallelizing independent operations, and avoiding unnecessary waits.
+**Context**: When tests take longer than 1.5 minutes, they slow CI pipelines and
+feedback loops. Optimize by using API setup instead of UI navigation,
+parallelizing independent operations, and avoiding unnecessary waits.
 
 **Implementation**:
 
@@ -517,10 +556,10 @@ test('user completes order', async ({ page, apiRequest }) => {
       .post('/api/users', {
         data: createUser({
           email: 'buyer@example.com',
-          emailVerified: true, // Skip verification
-        }),
+          emailVerified: true // Skip verification
+        })
       })
-      .then((r) => r.json()),
+      .then(r => r.json()),
 
     // Create product via API (fast)
     apiRequest
@@ -528,10 +567,10 @@ test('user completes order', async ({ page, apiRequest }) => {
         data: createProduct({
           name: 'Widget',
           price: 29.99,
-          stock: 10,
-        }),
+          stock: 10
+        })
       })
-      .then((r) => r.json()),
+      .then(r => r.json())
   ]);
 
   // Step 2: Auth setup via storage state (instant, 0 seconds)
@@ -540,8 +579,8 @@ test('user completes order', async ({ page, apiRequest }) => {
       name: 'auth_token',
       value: user.token,
       domain: 'localhost',
-      path: '/',
-    },
+      path: '/'
+    }
   ]);
 
   // Step 3: Network-first interception BEFORE navigation (10 seconds)
@@ -641,7 +680,8 @@ test('admin action', async ({ page }) => {
 
 ## Integration Points
 
-- **Used in workflows**: `*atdd` (test generation quality), `*automate` (test expansion quality), `*test-review` (quality validation)
+- **Used in workflows**: `*atdd` (test generation quality), `*automate` (test
+  expansion quality), `*test-review` (quality validation)
 - **Related fragments**:
   - `network-first.md` - Deterministic waiting strategies
   - `data-factories.md` - Isolated, parallel-safe data patterns
@@ -652,13 +692,22 @@ test('admin action', async ({ page }) => {
 
 Every test must pass these criteria:
 
-- [ ] **No Hard Waits** - Use `waitForResponse`, `waitForLoadState`, or element state (not `waitForTimeout`)
-- [ ] **No Conditionals** - Tests execute the same path every time (no if/else, try/catch for flow control)
-- [ ] **< 300 Lines** - Keep tests focused; split large tests or extract setup to fixtures
-- [ ] **< 1.5 Minutes** - Optimize with API setup, parallel operations, and shared auth
-- [ ] **Self-Cleaning** - Use fixtures with auto-cleanup or explicit `afterEach()` teardown
-- [ ] **Explicit Assertions** - Keep `expect()` calls in test bodies, not hidden in helpers
-- [ ] **Unique Data** - Use `faker` for dynamic data; never hardcode IDs or emails
-- [ ] **Parallel-Safe** - Tests don't share state; run successfully with `--workers=4`
+- [ ] **No Hard Waits** - Use `waitForResponse`, `waitForLoadState`, or element
+      state (not `waitForTimeout`)
+- [ ] **No Conditionals** - Tests execute the same path every time (no if/else,
+      try/catch for flow control)
+- [ ] **< 300 Lines** - Keep tests focused; split large tests or extract setup
+      to fixtures
+- [ ] **< 1.5 Minutes** - Optimize with API setup, parallel operations, and
+      shared auth
+- [ ] **Self-Cleaning** - Use fixtures with auto-cleanup or explicit
+      `afterEach()` teardown
+- [ ] **Explicit Assertions** - Keep `expect()` calls in test bodies, not hidden
+      in helpers
+- [ ] **Unique Data** - Use `faker` for dynamic data; never hardcode IDs or
+      emails
+- [ ] **Parallel-Safe** - Tests don't share state; run successfully with
+      `--workers=4`
 
-_Source: Murat quality checklist, Definition of Done requirements (lines 370-381, 406-422)._
+_Source: Murat quality checklist, Definition of Done requirements (lines
+370-381, 406-422)._

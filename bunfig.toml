@@ -1,0 +1,29 @@
+# Bun Configuration File
+# https://bun.sh/docs/runtime/bunfig
+
+[test]
+# Test timeout in milliseconds (5 seconds default)
+timeout = 5000
+
+# Coverage configuration
+coverage = true
+coverageDir = "coverage"
+coverageReporter = ["text", "lcov"]
+
+# Coverage thresholds (≥80% for critical paths)
+coverageThreshold = 80
+
+# Run tests in parallel
+concurrent = true
+
+# Maximum number of concurrent tests
+maxConcurrency = 20
+
+[install]
+# Package manager configuration
+registry = "https://registry.npmjs.org/"
+exact = false
+
+[install.cache]
+# Enable caching for faster installs
+disable = false

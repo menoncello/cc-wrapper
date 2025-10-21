@@ -1,6 +1,7 @@
 # UX/UI Specification Workflow Validation Checklist
 
-**Purpose**: Validate UX workflow outputs are complete, actionable, and ready for development.
+**Purpose**: Validate UX workflow outputs are complete, actionable, and ready
+for development.
 
 **Scope**: Can run standalone or integrated with PRD/GDD workflows
 
@@ -131,7 +132,8 @@
 - [ ] ❌ **No information architecture** (site structure missing)
 - [ ] ❌ **No component approach** (design system not defined)
 - [ ] ❌ **No visual foundation** (colors/typography missing)
-- [ ] ❌ **No responsive strategy** (adaptation not addressed for multi-platform)
+- [ ] ❌ **No responsive strategy** (adaptation not addressed for
+      multi-platform)
 - [ ] ❌ **Contradicts requirements** (UX fights PRD/GDD if they exist)
 
 ---
@@ -140,7 +142,8 @@
 
 **Document any findings:**
 
-- UX quality: [Production-ready / Good foundation / Needs refinement / Incomplete]
+- UX quality: [Production-ready / Good foundation / Needs refinement /
+  Incomplete]
 - Strengths:
 - Issues to address:
 - Recommended actions:
@@ -149,4 +152,5 @@
 
 ---
 
-_Adapt based on whether this is standalone or integrated, and platform requirements._
+_Adapt based on whether this is standalone or integrated, and platform
+requirements._

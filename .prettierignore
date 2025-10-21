@@ -1,0 +1,55 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build outputs
+dist/
+**/dist/
+build/
+coverage/
+*.min.js
+*.min.css
+
+# Generated files
+*.d.ts
+
+# Lock files
+package-lock.json
+yarn.lock
+bun.lockb
+
+# Logs
+*.log
+
+# Cache
+.cache/
+.parcel-cache/
+.next/
+.nuxt/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Test snapshots
+**/__snapshots__/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Git
+.git/
+.gitignore
+
+# Environment
+.env
+.env.local
+.env.*.local

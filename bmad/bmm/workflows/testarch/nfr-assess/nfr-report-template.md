@@ -1,8 +1,7 @@
 # NFR Assessment - {FEATURE_NAME}
 
-**Date:** {DATE}
-**Story:** {STORY_ID} (if applicable)
-**Overall Status:** {OVERALL_STATUS} {STATUS_ICON}
+**Date:** {DATE} **Story:** {STORY_ID} (if applicable) **Overall Status:**
+{OVERALL_STATUS} {STATUS_ICON}
 
 ---
 
@@ -90,9 +89,12 @@
 ### Vulnerability Management
 
 - **Status:** {STATUS} {STATUS_ICON}
-- **Threshold:** {THRESHOLD_DESCRIPTION} (e.g., "0 critical, <3 high vulnerabilities")
-- **Actual:** {ACTUAL_DESCRIPTION} (e.g., "0 critical, 1 high, 5 medium vulnerabilities")
-- **Evidence:** {EVIDENCE_SOURCE} (e.g., "Snyk scan results - scan-2025-10-14.json")
+- **Threshold:** {THRESHOLD_DESCRIPTION} (e.g., "0 critical, <3 high
+  vulnerabilities")
+- **Actual:** {ACTUAL_DESCRIPTION} (e.g., "0 critical, 1 high, 5 medium
+  vulnerabilities")
+- **Evidence:** {EVIDENCE_SOURCE} (e.g., "Snyk scan results -
+  scan-2025-10-14.json")
 - **Findings:** {FINDINGS_DESCRIPTION}
 
 ### Compliance (if applicable)
@@ -112,7 +114,8 @@
 - **Status:** {STATUS} {STATUS_ICON}
 - **Threshold:** {THRESHOLD_VALUE} (e.g., "99.9%")
 - **Actual:** {ACTUAL_VALUE} (e.g., "99.95%")
-- **Evidence:** {EVIDENCE_SOURCE} (e.g., "Uptime monitoring - uptime-report-2025-10-14.csv")
+- **Evidence:** {EVIDENCE_SOURCE} (e.g., "Uptime monitoring -
+  uptime-report-2025-10-14.csv")
 - **Findings:** {FINDINGS_DESCRIPTION}
 
 ### Error Rate
@@ -144,7 +147,8 @@
 - **Status:** {STATUS} {STATUS_ICON}
 - **Threshold:** {THRESHOLD_VALUE} (e.g., "100 consecutive successful runs")
 - **Actual:** {ACTUAL_VALUE} (e.g., "150 consecutive successful runs")
-- **Evidence:** {EVIDENCE_SOURCE} (e.g., "CI burn-in results - ci-burn-in-2025-10-14.log")
+- **Evidence:** {EVIDENCE_SOURCE} (e.g., "CI burn-in results -
+  ci-burn-in-2025-10-14.log")
 - **Findings:** {FINDINGS_DESCRIPTION}
 
 ### Disaster Recovery (if applicable)
@@ -170,7 +174,8 @@
 - **Status:** {STATUS} {STATUS_ICON}
 - **Threshold:** {THRESHOLD_VALUE} (e.g., ">=80%")
 - **Actual:** {ACTUAL_VALUE} (e.g., "87%")
-- **Evidence:** {EVIDENCE_SOURCE} (e.g., "Coverage report - coverage/lcov-report/index.html")
+- **Evidence:** {EVIDENCE_SOURCE} (e.g., "Coverage report -
+  coverage/lcov-report/index.html")
 - **Findings:** {FINDINGS_DESCRIPTION}
 
 ### Code Quality
@@ -178,7 +183,8 @@
 - **Status:** {STATUS} {STATUS_ICON}
 - **Threshold:** {THRESHOLD_VALUE} (e.g., ">=85/100")
 - **Actual:** {ACTUAL_VALUE} (e.g., "92/100")
-- **Evidence:** {EVIDENCE_SOURCE} (e.g., "SonarQube analysis - sonarqube-report-2025-10-14.pdf")
+- **Evidence:** {EVIDENCE_SOURCE} (e.g., "SonarQube analysis -
+  sonarqube-report-2025-10-14.pdf")
 - **Findings:** {FINDINGS_DESCRIPTION}
 
 ### Technical Debt
@@ -186,7 +192,8 @@
 - **Status:** {STATUS} {STATUS_ICON}
 - **Threshold:** {THRESHOLD_VALUE} (e.g., "<5% debt ratio")
 - **Actual:** {ACTUAL_VALUE} (e.g., "3.2% debt ratio")
-- **Evidence:** {EVIDENCE_SOURCE} (e.g., "CodeClimate analysis - codeclimate-2025-10-14.json")
+- **Evidence:** {EVIDENCE_SOURCE} (e.g., "CodeClimate analysis -
+  codeclimate-2025-10-14.json")
 - **Findings:** {FINDINGS_DESCRIPTION}
 
 ### Documentation Completeness
@@ -194,7 +201,8 @@
 - **Status:** {STATUS} {STATUS_ICON}
 - **Threshold:** {THRESHOLD_VALUE} (e.g., ">=90%")
 - **Actual:** {ACTUAL_VALUE} (e.g., "95%")
-- **Evidence:** {EVIDENCE_SOURCE} (e.g., "Documentation audit - docs-audit-2025-10-14.md")
+- **Evidence:** {EVIDENCE_SOURCE} (e.g., "Documentation audit -
+  docs-audit-2025-10-14.md")
 - **Findings:** {FINDINGS_DESCRIPTION}
 
 ### Test Quality (from test-review, if available)
@@ -202,7 +210,8 @@
 - **Status:** {STATUS} {STATUS_ICON}
 - **Threshold:** {THRESHOLD_DESCRIPTION}
 - **Actual:** {ACTUAL_DESCRIPTION}
-- **Evidence:** {EVIDENCE_SOURCE} (e.g., "Test review report - test-review-2025-10-14.md")
+- **Evidence:** {EVIDENCE_SOURCE} (e.g., "Test review report -
+  test-review-2025-10-14.md")
 - **Findings:** {FINDINGS_DESCRIPTION}
 
 ---
@@ -271,7 +280,8 @@
 
 ## Monitoring Hooks
 
-{MONITORING_HOOK_COUNT} monitoring hooks recommended to detect issues before failures:
+{MONITORING_HOOK_COUNT} monitoring hooks recommended to detect issues before
+failures:
 
 ### Performance Monitoring
 
@@ -435,8 +445,7 @@ nfr_assessment:
 - If CONCERNS ⚠️: Address HIGH/CRITICAL issues, re-run `*nfr-assess`
 - If FAIL ❌: Resolve FAIL status NFRs, re-run `*nfr-assess`
 
-**Generated:** {DATE}
-**Workflow:** testarch-nfr v4.0
+**Generated:** {DATE} **Workflow:** testarch-nfr v4.0
 
 ---
 

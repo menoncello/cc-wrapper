@@ -1,10 +1,12 @@
 # Tech-Spec Workflow Validation Checklist
 
-**Purpose**: Validate tech-spec workflow outputs are definitive, complete, and implementation-ready.
+**Purpose**: Validate tech-spec workflow outputs are definitive, complete, and
+implementation-ready.
 
 **Scope**: Levels 0-1 software projects
 
-**Expected Outputs**: tech-spec.md + story files (1 for Level 0, 2-3 for Level 1)
+**Expected Outputs**: tech-spec.md + story files (1 for Level 0, 2-3 for
+Level 1)
 
 ---
 
@@ -23,8 +25,10 @@
 
 ### No Ambiguity Allowed
 
-- [ ] **Zero "or" statements**: NO "use X or Y", "either A or B", "options include"
-- [ ] **Specific versions**: All frameworks, libraries, tools have EXACT versions
+- [ ] **Zero "or" statements**: NO "use X or Y", "either A or B", "options
+      include"
+- [ ] **Specific versions**: All frameworks, libraries, tools have EXACT
+      versions
   - ✅ GOOD: "Python 3.11", "React 18.2.0", "winston v3.8.2"
   - ❌ BAD: "Python 2 or 3", "React 18+", "a logger like pino or winston"
 - [ ] **Definitive decisions**: Every technical choice is final, not a proposal
@@ -42,7 +46,8 @@
 
 ### Story Format
 
-- [ ] All stories use "As a [role], I want [capability], so that [benefit]" format
+- [ ] All stories use "As a [role], I want [capability], so that [benefit]"
+      format
 - [ ] Each story has numbered acceptance criteria
 - [ ] Tasks reference AC numbers: (AC: #1), (AC: #2)
 - [ ] Dev Notes section links back to tech-spec.md
@@ -82,11 +87,15 @@
 
 ## 6. Critical Failures (Auto-Fail)
 
-- [ ] ❌ **Non-definitive technical decisions** (any "option A or B" or vague choices)
+- [ ] ❌ **Non-definitive technical decisions** (any "option A or B" or vague
+      choices)
 - [ ] ❌ **Missing versions** (framework/library without specific version)
-- [ ] ❌ **Stories don't match template** (incompatible with story-context/dev-story workflows)
-- [ ] ❌ **Missing tech-spec sections** (required section missing from tech-spec.md)
-- [ ] ❌ **Stories have forward dependencies** (would break sequential implementation)
+- [ ] ❌ **Stories don't match template** (incompatible with
+      story-context/dev-story workflows)
+- [ ] ❌ **Missing tech-spec sections** (required section missing from
+      tech-spec.md)
+- [ ] ❌ **Stories have forward dependencies** (would break sequential
+      implementation)
 - [ ] ❌ **Vague source tree** (file changes not specific)
 
 ---
@@ -95,7 +104,8 @@
 
 **Document any findings:**
 
-- Definitiveness score: [All definitive / Some ambiguity / Significant ambiguity]
+- Definitiveness score: [All definitive / Some ambiguity / Significant
+  ambiguity]
 - Strengths:
 - Issues to address:
 - Recommended actions:

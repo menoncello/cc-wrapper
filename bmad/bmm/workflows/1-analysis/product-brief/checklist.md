@@ -3,7 +3,8 @@
 ## Document Structure
 
 - [ ] All required sections are present (Executive Summary through Appendices)
-- [ ] No placeholder text remains (e.g., [TODO], [NEEDS CONFIRMATION], {{variable}})
+- [ ] No placeholder text remains (e.g., [TODO], [NEEDS CONFIRMATION],
+      {{variable}})
 - [ ] Document follows the standard brief template format
 - [ ] Sections are properly numbered and formatted with headers
 - [ ] Cross-references between sections are accurate
@@ -46,7 +47,8 @@
 - [ ] Business objectives include measurable outcomes with targets
 - [ ] User success metrics focus on behaviors, not features
 - [ ] 3-5 KPIs are defined with clear definitions
-- [ ] All goals follow SMART criteria (Specific, Measurable, Achievable, Relevant, Time-bound)
+- [ ] All goals follow SMART criteria (Specific, Measurable, Achievable,
+      Relevant, Time-bound)
 - [ ] Success metrics align with problem statement
 
 ## MVP Scope

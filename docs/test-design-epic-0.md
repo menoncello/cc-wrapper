@@ -1,14 +1,13 @@
 # Test Design: Epic 0 - Project Bootstrap & Development Infrastructure
 
-**Date:** 2025-10-19
-**Author:** Eduardo Menoncello
-**Status:** Draft
+**Date:** 2025-10-19 **Author:** Eduardo Menoncello **Status:** Draft
 
 ---
 
 ## Executive Summary
 
-**Scope:** Full test design for Epic 0 - Project Bootstrap & Development Infrastructure
+**Scope:** Full test design for Epic 0 - Project Bootstrap & Development
+Infrastructure
 
 **Risk Summary:**
 
@@ -29,24 +28,24 @@
 
 ### High-Priority Risks (Score ≥6)
 
-| Risk ID | Category | Description | Probability | Impact | Score | Mitigation | Owner | Timeline |
-|---------|----------|-------------|-------------|--------|-------|------------|-------|----------|
-| R-001 | TECH | Setup script complexity across platforms | 2 | 3 | 6 | Automated setup with platform detection | DevOps | 2025-10-26 |
-| R-002 | TECH | Dependency version conflicts in monorepo | 2 | 3 | 6 | Pinned dependencies + automated scanning | Build Engineer | 2025-10-26 |
+| Risk ID | Category | Description                              | Probability | Impact | Score | Mitigation                               | Owner          | Timeline   |
+| ------- | -------- | ---------------------------------------- | ----------- | ------ | ----- | ---------------------------------------- | -------------- | ---------- |
+| R-001   | TECH     | Setup script complexity across platforms | 2           | 3      | 6     | Automated setup with platform detection  | DevOps         | 2025-10-26 |
+| R-002   | TECH     | Dependency version conflicts in monorepo | 2           | 3      | 6     | Pinned dependencies + automated scanning | Build Engineer | 2025-10-26 |
 
 ### Medium-Priority Risks (Score 3-4)
 
-| Risk ID | Category | Description | Probability | Impact | Score | Mitigation | Owner |
-|---------|----------|-------------|-------------|--------|-------|------------|-------|
-| R-003 | OPS | CI/CD pipeline configuration errors | 2 | 2 | 4 | Staging environment testing | DevOps |
-| R-004 | TECH | Development tool incompatibility across machines | 2 | 2 | 4 | Container-based dev environment | Dev Lead |
-| R-005 | TECH | External service dependency failures | 1 | 3 | 3 | Package mirrors + local caching | DevOps |
+| Risk ID | Category | Description                                      | Probability | Impact | Score | Mitigation                      | Owner    |
+| ------- | -------- | ------------------------------------------------ | ----------- | ------ | ----- | ------------------------------- | -------- |
+| R-003   | OPS      | CI/CD pipeline configuration errors              | 2           | 2      | 4     | Staging environment testing     | DevOps   |
+| R-004   | TECH     | Development tool incompatibility across machines | 2           | 2      | 4     | Container-based dev environment | Dev Lead |
+| R-005   | TECH     | External service dependency failures             | 1           | 3      | 3     | Package mirrors + local caching | DevOps   |
 
 ### Low-Priority Risks (Score 1-2)
 
-| Risk ID | Category | Description | Probability | Impact | Score | Action |
-|---------|----------|-------------|-------------|--------|-------|--------|
-| (None identified) | | | | | | |
+| Risk ID           | Category | Description | Probability | Impact | Score | Action |
+| ----------------- | -------- | ----------- | ----------- | ------ | ----- | ------ |
+| (None identified) |          |             |             |        |       |        |
 
 ### Risk Category Legend
 
@@ -65,14 +64,14 @@
 
 **Criteria**: Blocks core journey + High risk (≥6) + No workaround
 
-| Requirement | Test Level | Risk Link | Test Count | Owner | Notes |
-|-------------|------------|-----------|------------|-------|-------|
-| Setup script execution (AC 0.1.1) | E2E | R-001 | 3 | QA | Complete workflow validation |
-| Development tools installation (AC 0.1.2) | Integration | R-001, R-004 | 5 | QA | Version verification for all tools |
-| Service health checks (AC 0.1.3) | Integration | R-002 | 4 | QA | All services respond within 5s |
-| Build system compilation (AC 0.2.2) | Integration | R-002 | 6 | Dev | Full build + incremental builds |
-| Code quality enforcement (AC 0.2.4) | Unit | R-002 | 3 | Dev | ESLint, Prettier, TypeScript |
-| Environment variable validation (AC 0.1.5) | Unit | R-001 | 2 | Dev | Configuration validation scripts |
+| Requirement                                | Test Level  | Risk Link    | Test Count | Owner | Notes                              |
+| ------------------------------------------ | ----------- | ------------ | ---------- | ----- | ---------------------------------- |
+| Setup script execution (AC 0.1.1)          | E2E         | R-001        | 3          | QA    | Complete workflow validation       |
+| Development tools installation (AC 0.1.2)  | Integration | R-001, R-004 | 5          | QA    | Version verification for all tools |
+| Service health checks (AC 0.1.3)           | Integration | R-002        | 4          | QA    | All services respond within 5s     |
+| Build system compilation (AC 0.2.2)        | Integration | R-002        | 6          | Dev   | Full build + incremental builds    |
+| Code quality enforcement (AC 0.2.4)        | Unit        | R-002        | 3          | Dev   | ESLint, Prettier, TypeScript       |
+| Environment variable validation (AC 0.1.5) | Unit        | R-001        | 2          | Dev   | Configuration validation scripts   |
 
 **Total P0**: 23 tests, 28 hours
 
@@ -80,12 +79,12 @@
 
 **Criteria**: Important features + Medium risk (3-4) + Common workflows
 
-| Requirement | Test Level | Risk Link | Test Count | Owner | Notes |
-|-------------|------------|-----------|------------|-------|-------|
-| Configuration management | Unit | R-001 | 4 | Dev | Environment variable loading |
-| CI/CD pipeline execution | Integration | R-003 | 2 | DevOps | GitHub Actions workflows |
-| Project structure validation | Unit | R-002 | 2 | Dev | Monorepo workspace configuration |
-| Development scripts functionality | Unit | R-004 | 1 | Dev | CLI command testing |
+| Requirement                       | Test Level  | Risk Link | Test Count | Owner  | Notes                            |
+| --------------------------------- | ----------- | --------- | ---------- | ------ | -------------------------------- |
+| Configuration management          | Unit        | R-001     | 4          | Dev    | Environment variable loading     |
+| CI/CD pipeline execution          | Integration | R-003     | 2          | DevOps | GitHub Actions workflows         |
+| Project structure validation      | Unit        | R-002     | 2          | Dev    | Monorepo workspace configuration |
+| Development scripts functionality | Unit        | R-004     | 1          | Dev    | CLI command testing              |
 
 **Total P1**: 9 tests, 11 hours
 
@@ -93,11 +92,11 @@
 
 **Criteria**: Secondary features + Low risk (1-2) + Edge cases
 
-| Requirement | Test Level | Risk Link | Test Count | Owner | Notes |
-|-------------|------------|-----------|------------|-------|-------|
-| Performance benchmarks | Performance | R-001 | 3 | QA | Setup <60s, build <30s requirements |
-| Documentation completeness | Manual | - | 2 | QA | Setup guides and troubleshooting |
-| External service resilience | Integration | R-005 | 2 | DevOps | Offline installation scenarios |
+| Requirement                 | Test Level  | Risk Link | Test Count | Owner  | Notes                               |
+| --------------------------- | ----------- | --------- | ---------- | ------ | ----------------------------------- |
+| Performance benchmarks      | Performance | R-001     | 3          | QA     | Setup <60s, build <30s requirements |
+| Documentation completeness  | Manual      | -         | 2          | QA     | Setup guides and troubleshooting    |
+| External service resilience | Integration | R-005     | 2          | DevOps | Offline installation scenarios      |
 
 **Total P2**: 7 tests, 4 hours
 
@@ -105,11 +104,11 @@
 
 **Criteria**: Nice-to-have + Exploratory + Performance benchmarks
 
-| Requirement | Test Level | Test Count | Owner | Notes |
-|-------------|------------|------------|-------|-------|
-| Cross-platform compatibility | Manual | 1 | QA | Windows, macOS, Linux variations |
-| IDE integration testing | Manual | 1 | QA | VS Code extension configuration |
-| Advanced troubleshooting scenarios | Manual | 1 | QA | Complex setup failure resolution |
+| Requirement                        | Test Level | Test Count | Owner | Notes                            |
+| ---------------------------------- | ---------- | ---------- | ----- | -------------------------------- |
+| Cross-platform compatibility       | Manual     | 1          | QA    | Windows, macOS, Linux variations |
+| IDE integration testing            | Manual     | 1          | QA    | VS Code extension configuration  |
+| Advanced troubleshooting scenarios | Manual     | 1          | QA    | Complex setup failure resolution |
 
 **Total P3**: 3 tests, 2 hours
 
@@ -166,28 +165,31 @@
 
 ### Test Development Effort
 
-| Priority | Count | Hours/Test | Total Hours | Notes |
-|----------|-------|------------|-------------|-------|
-| P0 | 23 | 1.2 | 28 | Complex setup, E2E scenarios |
-| P1 | 9 | 1.2 | 11 | Standard coverage, medium complexity |
-| P2 | 7 | 0.6 | 4 | Simple scenarios, performance focus |
-| P3 | 3 | 0.7 | 2 | Manual testing, exploratory |
-| **Total** | **42** | **-** | **45** | **~5.5 days** |
+| Priority  | Count  | Hours/Test | Total Hours | Notes                                |
+| --------- | ------ | ---------- | ----------- | ------------------------------------ |
+| P0        | 23     | 1.2        | 28          | Complex setup, E2E scenarios         |
+| P1        | 9      | 1.2        | 11          | Standard coverage, medium complexity |
+| P2        | 7      | 0.6        | 4           | Simple scenarios, performance focus  |
+| P3        | 3      | 0.7        | 2           | Manual testing, exploratory          |
+| **Total** | **42** | **-**      | **45**      | **~5.5 days**                        |
 
 ### Prerequisites
 
 **Test Data:**
+
 - Development environment factory (faker-based, auto-cleanup)
 - Configuration fixtures (valid/invalid examples)
 - Service mock containers for failure scenarios
 
 **Tooling:**
+
 - Bun Test for unit/integration testing
 - Playwright for E2E setup validation
 - Docker for isolated test environments
 - Performance measurement utilities
 
 **Environment:**
+
 - Fresh Docker containers for each test run
 - Isolated test databases (PostgreSQL, Redis)
 - Mock external services (npm registry, Docker Hub)
@@ -225,19 +227,17 @@
 
 ### R-001: Setup Script Complexity (Score: 6)
 
-**Mitigation Strategy:** Automated setup script with platform detection and comprehensive error handling
-**Owner:** DevOps Engineer
-**Timeline:** 2025-10-26
-**Status:** Planned
-**Verification:** Measure setup success rate across different platforms, target >95%
+**Mitigation Strategy:** Automated setup script with platform detection and
+comprehensive error handling **Owner:** DevOps Engineer **Timeline:** 2025-10-26
+**Status:** Planned **Verification:** Measure setup success rate across
+different platforms, target >95%
 
 ### R-002: Dependency Version Conflicts (Score: 6)
 
-**Mitigation Strategy:** Pinned dependency versions with automated vulnerability scanning
-**Owner:** Build Engineer
-**Timeline:** 2025-10-26
-**Status:** Planned
-**Verification:** Automated dependency scanning in CI/CD pipeline, zero high-severity vulnerabilities
+**Mitigation Strategy:** Pinned dependency versions with automated vulnerability
+scanning **Owner:** Build Engineer **Timeline:** 2025-10-26 **Status:** Planned
+**Verification:** Automated dependency scanning in CI/CD pipeline, zero
+high-severity vulnerabilities
 
 ---
 
@@ -246,9 +246,11 @@
 ### Assumptions
 
 1. Development team has administrative access to install development tools
-2. All development machines meet minimum hardware requirements (8GB RAM, modern CPU)
+2. All development machines meet minimum hardware requirements (8GB RAM, modern
+   CPU)
 3. External services (npm registry, Docker Hub) remain available and stable
-4. Team members have basic familiarity with modern JavaScript/TypeScript development tools
+4. Team members have basic familiarity with modern JavaScript/TypeScript
+   development tools
 
 ### Dependencies
 
@@ -273,9 +275,11 @@
 
 **Test Design Approved By:**
 
-- [ ] Product Manager: __________________ Date: _____________
-- [ ] Tech Lead: ________________________ Date: _____________
-- [ ] QA Lead: __________________________ Date: _____________
+- [ ] Product Manager: **\*\*\*\***\_\_**\*\*\*\*** Date: **\*\***\_**\*\***
+- [ ] Tech Lead: \***\*\*\*\*\***\_\_\_\_\***\*\*\*\*\*** Date:
+      **\*\***\_**\*\***
+- [ ] QA Lead: \***\*\*\*\*\*\*\***\_\_\***\*\*\*\*\*\*\*** Date:
+      **\*\***\_**\*\***
 
 **Comments:**
 
@@ -302,6 +306,5 @@
 
 ---
 
-**Generated by**: BMad TEA Agent - Test Architect Module
-**Workflow**: `bmad/bmm/testarch/test-design`
-**Version**: 4.0 (BMad v6)
+**Generated by**: BMad TEA Agent - Test Architect Module **Workflow**:
+`bmad/bmm/testarch/test-design` **Version**: 4.0 (BMad v6)

@@ -1,0 +1,191 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "ui": "tui",
+  "globalDependencies": [
+    ".env",
+    ".env.local",
+    "tsconfig.json",
+    "eslint.config.js",
+    "prettier.config.js"
+  ],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**", "tsconfig.json", "package.json"],
+      "outputs": ["dist/**", ".next/**", "build/**"],
+      "env": ["NODE_ENV"]
+    },
+    "build:frontend": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**", "index.html", "vite.config.ts"],
+      "outputs": ["dist/**"]
+    },
+    "build:backend": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**", "tsconfig.json"],
+      "outputs": ["dist/**"]
+    },
+    "build:packages": {
+      "dependsOn": ["^build"],
+      "inputs": ["packages/*/src/**", "packages/*/tsconfig.json"],
+      "outputs": ["packages/*/dist/**"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "dev:backend": {
+      "cache": false,
+      "persistent": true
+    },
+    "dev:all": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": true
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "inputs": [
+        "tests/**",
+        "test-utils/**",
+        "src/**",
+        "packages/*/src/**",
+        "tsconfig.json",
+        "tsconfig.test.json"
+      ],
+      "outputs": ["coverage/**"],
+      "env": ["NODE_ENV", "CI"]
+    },
+    "test:unit": {
+      "dependsOn": ["^build"],
+      "inputs": ["tests/unit/**", "src/**", "test-utils/**"],
+      "outputs": ["coverage/**"]
+    },
+    "test:integration": {
+      "dependsOn": ["^build"],
+      "inputs": ["tests/integration/**", "src/**", "test-utils/**"],
+      "outputs": ["coverage/**"]
+    },
+    "test:e2e": {
+      "dependsOn": ["^build"],
+      "inputs": ["tests/e2e/**", "src/**"],
+      "outputs": ["test-results/**", "playwright-report/**"],
+      "cache": false
+    },
+    "test:coverage": {
+      "dependsOn": ["^build"],
+      "inputs": ["tests/**", "src/**", "packages/*/src/**"],
+      "outputs": ["coverage/**"]
+    },
+    "lint": {
+      "inputs": [
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "src/**/*.js",
+        "src/**/*.jsx",
+        "eslint.config.js",
+        ".eslintrc*",
+        "package.json"
+      ],
+      "outputs": [],
+      "cache": true
+    },
+    "lint:fix": {
+      "inputs": [
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "src/**/*.js",
+        "src/**/*.jsx",
+        "eslint.config.js",
+        ".eslintrc*",
+        "package.json"
+      ],
+      "outputs": [],
+      "cache": false
+    },
+    "format": {
+      "inputs": [
+        "src/**/*.{ts,tsx,js,jsx,json,md}",
+        "prettier.config.js",
+        ".prettierrc*",
+        "package.json"
+      ],
+      "outputs": [],
+      "cache": false
+    },
+    "format:check": {
+      "inputs": [
+        "src/**/*.{ts,tsx,js,jsx,json,md}",
+        "prettier.config.js",
+        ".prettierrc*",
+        "package.json"
+      ],
+      "outputs": [],
+      "cache": true
+    },
+    "typecheck": {
+      "dependsOn": ["^build"],
+      "inputs": [
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "tsconfig.json",
+        "tsconfig.*.json",
+        "package.json"
+      ],
+      "outputs": [],
+      "cache": true
+    },
+    "type-check": {
+      "dependsOn": ["^build"],
+      "inputs": ["**/*.ts", "**/*.tsx", "tsconfig.json"],
+      "outputs": []
+    },
+    "test:mutate": {
+      "dependsOn": ["^build"],
+      "inputs": [
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "tests/**/*.ts",
+        "tests/**/*.tsx",
+        "**/*.test.ts",
+        "**/*.test.tsx",
+        "**/*.spec.ts",
+        "**/*.spec.tsx",
+        "stryker.conf.*",
+        "package.json"
+      ],
+      "outputs": ["reports/mutation/**", ".stryker-tmp/**"],
+      "cache": true,
+      "env": ["NODE_ENV"]
+    },
+    "clean": {
+      "cache": false
+    },
+    "clean:all": {
+      "cache": false
+    },
+    "validate": {
+      "dependsOn": ["type-check", "lint"],
+      "inputs": ["scripts/validate-config.ts", "src/**"]
+    },
+    "health": {
+      "inputs": ["scripts/health-check.ts"],
+      "cache": false
+    },
+    "services:up": {
+      "cache": false
+    },
+    "services:down": {
+      "cache": false
+    },
+    "services:logs": {
+      "cache": false
+    },
+    "services:restart": {
+      "dependsOn": ["services:down"],
+      "cache": false
+    }
+  },
+  "globalEnv": ["NODE_ENV", "CI", "DATABASE_URL", "REDIS_URL"],
+  "cacheDir": ".turbo"
+}

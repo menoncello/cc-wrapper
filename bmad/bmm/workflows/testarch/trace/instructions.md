@@ -1,26 +1,33 @@
 # Test Architect Workflow: Requirements Traceability & Quality Gate Decision
 
-**Workflow:** `testarch-trace`
-**Purpose:** Generate requirements-to-tests traceability matrix, analyze coverage gaps, and make quality gate decisions (PASS/CONCERNS/FAIL/WAIVED)
-**Agent:** Test Architect (TEA)
-**Format:** Pure Markdown v4.0 (no XML blocks)
+**Workflow:** `testarch-trace` **Purpose:** Generate requirements-to-tests
+traceability matrix, analyze coverage gaps, and make quality gate decisions
+(PASS/CONCERNS/FAIL/WAIVED) **Agent:** Test Architect (TEA) **Format:** Pure
+Markdown v4.0 (no XML blocks)
 
 ---
 
 ## Overview
 
-This workflow operates in two sequential phases to validate test coverage and deployment readiness:
+This workflow operates in two sequential phases to validate test coverage and
+deployment readiness:
 
-**PHASE 1 - REQUIREMENTS TRACEABILITY:** Create comprehensive traceability matrix mapping acceptance criteria to implemented tests, identify coverage gaps, and provide actionable recommendations.
+**PHASE 1 - REQUIREMENTS TRACEABILITY:** Create comprehensive traceability
+matrix mapping acceptance criteria to implemented tests, identify coverage gaps,
+and provide actionable recommendations.
 
-**PHASE 2 - QUALITY GATE DECISION:** Use traceability results combined with test execution evidence to make gate decisions (PASS/CONCERNS/FAIL/WAIVED) that determine deployment readiness.
+**PHASE 2 - QUALITY GATE DECISION:** Use traceability results combined with test
+execution evidence to make gate decisions (PASS/CONCERNS/FAIL/WAIVED) that
+determine deployment readiness.
 
 **Key Capabilities:**
 
-- Map acceptance criteria to specific test cases across all levels (E2E, API, Component, Unit)
+- Map acceptance criteria to specific test cases across all levels (E2E, API,
+  Component, Unit)
 - Classify coverage status (FULL, PARTIAL, NONE, UNIT-ONLY, INTEGRATION-ONLY)
 - Prioritize gaps by risk level (P0/P1/P2/P3) using test-priorities framework
-- Apply deterministic decision rules based on coverage and test execution results
+- Apply deterministic decision rules based on coverage and test execution
+  results
 - Generate gate decisions with evidence and rationale
 - Support waivers for business-approved exceptions
 - Update workflow status and notify stakeholders
@@ -48,15 +55,18 @@ This workflow operates in two sequential phases to validate test coverage and de
 
 **Halt Conditions:**
 
-- If story lacks any implemented tests AND no gaps are acknowledged, recommend running `*atdd` workflow first
+- If story lacks any implemented tests AND no gaps are acknowledged, recommend
+  running `*atdd` workflow first
 - If acceptance criteria are completely missing, halt and request them
-- If Phase 2 enabled but test execution results missing, warn and skip gate decision
+- If Phase 2 enabled but test execution results missing, warn and skip gate
+  decision
 
 ---
 
 ## PHASE 1: REQUIREMENTS TRACEABILITY
 
-This phase focuses on mapping requirements to tests, analyzing coverage, and identifying gaps.
+This phase focuses on mapping requirements to tests, analyzing coverage, and
+identifying gaps.
 
 ---
 
@@ -64,12 +74,22 @@ This phase focuses on mapping requirements to tests, analyzing coverage, and ide
 
 **Actions:**
 
-1. Load relevant knowledge fragments from `{project-root}/bmad/bmm/testarch/tea-index.csv`:
-   - `test-priorities-matrix.md` - P0/P1/P2/P3 risk framework with automated priority calculation, risk-based mapping, tagging strategy (389 lines, 2 examples)
-   - `risk-governance.md` - Risk-based testing approach: 6 categories (TECH, SEC, PERF, DATA, BUS, OPS), automated scoring, gate decision engine, coverage traceability (625 lines, 4 examples)
-   - `probability-impact.md` - Risk scoring methodology: probability × impact matrix, automated classification, dynamic re-assessment, gate integration (604 lines, 4 examples)
-   - `test-quality.md` - Definition of Done for tests: deterministic, isolated with cleanup, explicit assertions, length/time limits (658 lines, 5 examples)
-   - `selective-testing.md` - Duplicate coverage patterns: tag-based, spec filters, diff-based selection, promotion rules (727 lines, 4 examples)
+1. Load relevant knowledge fragments from
+   `{project-root}/bmad/bmm/testarch/tea-index.csv`:
+   - `test-priorities-matrix.md` - P0/P1/P2/P3 risk framework with automated
+     priority calculation, risk-based mapping, tagging strategy (389 lines, 2
+     examples)
+   - `risk-governance.md` - Risk-based testing approach: 6 categories (TECH,
+     SEC, PERF, DATA, BUS, OPS), automated scoring, gate decision engine,
+     coverage traceability (625 lines, 4 examples)
+   - `probability-impact.md` - Risk scoring methodology: probability × impact
+     matrix, automated classification, dynamic re-assessment, gate integration
+     (604 lines, 4 examples)
+   - `test-quality.md` - Definition of Done for tests: deterministic, isolated
+     with cleanup, explicit assertions, length/time limits (658 lines, 5
+     examples)
+   - `selective-testing.md` - Duplicate coverage patterns: tag-based, spec
+     filters, diff-based selection, promotion rules (727 lines, 4 examples)
 
 2. Read story file (if provided):
    - Extract acceptance criteria
@@ -81,7 +101,8 @@ This phase focuses on mapping requirements to tests, analyzing coverage, and ide
    - `tech-spec.md` - Technical implementation details
    - `PRD.md` - Product requirements context
 
-**Output:** Complete understanding of requirements, priorities, and existing context
+**Output:** Complete understanding of requirements, priorities, and existing
+context
 
 ---
 
@@ -118,7 +139,8 @@ This phase focuses on mapping requirements to tests, analyzing coverage, and ide
 **Actions:**
 
 1. For each acceptance criterion:
-   - Search for explicit references (test IDs, describe blocks mentioning criterion)
+   - Search for explicit references (test IDs, describe blocks mentioning
+     criterion)
    - Map to specific test files and it blocks
    - Use Given-When-Then narrative to verify alignment
    - Document test level (E2E, API, Component, Unit)
@@ -176,7 +198,8 @@ This phase focuses on mapping requirements to tests, analyzing coverage, and ide
    - P1 coverage >= 90% (recommended)
    - Overall coverage >= 80% (recommended)
 
-**Output:** Prioritized gap analysis with actionable recommendations and coverage metrics
+**Output:** Prioritized gap analysis with actionable recommendations and
+coverage metrics
 
 ---
 
@@ -238,7 +261,8 @@ This phase focuses on mapping requirements to tests, analyzing coverage, and ide
    ```
 
 3. Create coverage badge/metric (if enabled):
-   - Generate badge markdown: `![Coverage](https://img.shields.io/badge/coverage-85%25-green)`
+   - Generate badge markdown:
+     `![Coverage](https://img.shields.io/badge/coverage-85%25-green)`
    - Export metrics to JSON for CI/CD integration
 
 4. Update story file (if enabled):
@@ -249,17 +273,21 @@ This phase focuses on mapping requirements to tests, analyzing coverage, and ide
 
 **Output:** Complete Phase 1 traceability deliverables
 
-**Next:** If `enable_gate_decision: true`, proceed to Phase 2. Otherwise, workflow complete.
+**Next:** If `enable_gate_decision: true`, proceed to Phase 2. Otherwise,
+workflow complete.
 
 ---
 
 ## PHASE 2: QUALITY GATE DECISION
 
-This phase uses traceability results to make a quality gate decision (PASS/CONCERNS/FAIL/WAIVED) based on evidence and decision rules.
+This phase uses traceability results to make a quality gate decision
+(PASS/CONCERNS/FAIL/WAIVED) based on evidence and decision rules.
 
-**When Phase 2 Runs:** Automatically after Phase 1 if `enable_gate_decision: true` (default: true)
+**When Phase 2 Runs:** Automatically after Phase 1 if
+`enable_gate_decision: true` (default: true)
 
-**Skip Conditions:** If test execution results (`test_results`) not provided, warn and skip Phase 2.
+**Skip Conditions:** If test execution results (`test_results`) not provided,
+warn and skip Phase 2.
 
 ---
 
@@ -290,7 +318,8 @@ This phase uses traceability results to make a quality gate decision (PASS/CONCE
 4. **Load supporting artifacts**:
    - `test-design.md` → Risk priorities, DoD checklist
    - `story-*.md` or `Epics.md` → Requirements context
-   - `bmm-workflow-status.md` → Workflow completion status (if `check_all_workflows_complete: true`)
+   - `bmm-workflow-status.md` → Workflow completion status (if
+     `check_all_workflows_complete: true`)
 
 5. **Validate evidence freshness** (if `validate_evidence_freshness: true`):
    - Check timestamps of test-design, traceability, NFR assessments
@@ -355,7 +384,8 @@ This phase uses traceability results to make a quality gate decision (PASS/CONCE
 
 - If `allow_p2_failures: true` → P2 test failures do NOT affect gate decision
 - If `allow_p3_failures: true` → P3 test failures do NOT affect gate decision
-- If `escalate_p1_failures: true` → P1 failures require explicit manager/lead approval
+- If `escalate_p1_failures: true` → P1 failures require explicit manager/lead
+  approval
 
 **If `decision_mode: "manual"`:**
 
@@ -373,7 +403,8 @@ This phase uses traceability results to make a quality gate decision (PASS/CONCE
 **Actions:**
 
 1. **Create gate decision document**:
-   - Save to `gate_output_file` (default: `{output_folder}/gate-decision-{gate_type}-{story_id}.md`)
+   - Save to `gate_output_file` (default:
+     `{output_folder}/gate-decision-{gate_type}-{story_id}.md`)
    - Use structure below
 
 2. **Document structure**:
@@ -381,10 +412,8 @@ This phase uses traceability results to make a quality gate decision (PASS/CONCE
 ```markdown
 # Quality Gate Decision: {gate_type} {story_id/epic_num/release_version}
 
-**Decision**: [PASS / CONCERNS / FAIL / WAIVED]
-**Date**: {date}
-**Decider**: {decision_mode} (deterministic | manual)
-**Evidence Date**: {test_results_date}
+**Decision**: [PASS / CONCERNS / FAIL / WAIVED] **Date**: {date} **Decider**:
+{decision_mode} (deterministic | manual) **Evidence Date**: {test_results_date}
 
 ---
 
@@ -505,7 +534,8 @@ This phase uses traceability results to make a quality gate decision (PASS/CONCE
 **Actions:**
 
 1. **Update workflow status** (if `append_to_history: true`):
-   - Append gate decision to `bmm-workflow-status.md` under "Gate History" section
+   - Append gate decision to `bmm-workflow-status.md` under "Gate History"
+     section
    - Format:
 
      ```markdown
@@ -515,7 +545,8 @@ This phase uses traceability results to make a quality gate decision (PASS/CONCE
 
      - **Decision**: CONCERNS
      - **Reason**: P1 coverage 88% (below 90%)
-     - **Document**: [gate-decision-story-1.3.md](bmad/output/gate-decision-story-1.3.md)
+     - **Document**:
+       [gate-decision-story-1.3.md](bmad/output/gate-decision-story-1.3.md)
      - **Action**: Deploy with follow-up story for AC-5
      ```
 
@@ -544,9 +575,11 @@ This phase uses traceability results to make a quality gate decision (PASS/CONCE
    - Document approver name and timestamp in gate decision
    - Block until sign-off received (interactive prompt)
 
-**Output:** Status tracking updated, stakeholders notified, sign-off obtained (if required)
+**Output:** Status tracking updated, stakeholders notified, sign-off obtained
+(if required)
 
-**Workflow Complete**: Both Phase 1 (traceability) and Phase 2 (gate decision) deliverables generated.
+**Workflow Complete**: Both Phase 1 (traceability) and Phase 2 (gate decision)
+deliverables generated.
 
 ---
 
@@ -682,7 +715,9 @@ Action:
 
 ## Non-Prescriptive Approach
 
-**Minimal Examples:** This workflow provides principles and patterns, not rigid templates. Teams should adapt the traceability and gate decision formats to their needs.
+**Minimal Examples:** This workflow provides principles and patterns, not rigid
+templates. Teams should adapt the traceability and gate decision formats to
+their needs.
 
 **Key Patterns to Follow:**
 
@@ -750,11 +785,13 @@ Use selective testing principles from `selective-testing.md`:
 **Acceptable Overlap:**
 
 - Unit tests for business logic + E2E tests for user journey (different aspects)
-- API tests for contract + E2E tests for full workflow (defense in depth for critical paths)
+- API tests for contract + E2E tests for full workflow (defense in depth for
+  critical paths)
 
 **Unacceptable Duplication:**
 
-- Same validation at multiple levels (e.g., E2E testing math logic better suited for unit tests)
+- Same validation at multiple levels (e.g., E2E testing math logic better suited
+  for unit tests)
 - Multiple E2E tests covering identical user path
 - Component tests duplicating unit test logic
 
@@ -772,7 +809,8 @@ Use selective testing principles from `selective-testing.md`:
 ### With test-design.md
 
 - Use risk assessment to prioritize gap remediation
-- Reference test priorities (P0/P1/P2/P3) for severity classification and gate decision
+- Reference test priorities (P0/P1/P2/P3) for severity classification and gate
+  decision
 - Align traceability with originally planned test coverage
 
 ### With tech-spec.md
@@ -828,9 +866,8 @@ Use selective testing principles from `selective-testing.md`:
 ````markdown
 # Traceability Matrix - Story 1.3
 
-**Story:** User Authentication
-**Date:** 2025-10-14
-**Status:** 85% Coverage (1 HIGH gap)
+**Story:** User Authentication **Date:** 2025-10-14 **Status:** 85% Coverage (1
+HIGH gap)
 
 ## Coverage Summary
 
@@ -882,7 +919,8 @@ Use selective testing principles from `selective-testing.md`:
   - Missing: Email delivery validation
   - Missing: Expired token handling
   - Missing: Unit test for token generation
-- **Recommendation:** Add `1.3-API-001` for email service integration and `1.3-UNIT-003` for token logic
+- **Recommendation:** Add `1.3-API-001` for email service integration and
+  `1.3-UNIT-003` for token logic
 
 ## Gap Analysis
 
@@ -894,19 +932,22 @@ Use selective testing principles from `selective-testing.md`:
 
 1. **AC-3: Password reset email edge cases**
    - Missing tests for expired tokens, invalid tokens, email failures
-   - Recommend: `1.3-API-001` (email service integration) and `1.3-E2E-004` (error paths)
+   - Recommend: `1.3-API-001` (email service integration) and `1.3-E2E-004`
+     (error paths)
    - Impact: Users may not be able to recover accounts in error scenarios
 
 ### Medium Priority Gaps (Nightly)
 
-1. **AC-7: Session timeout handling** - UNIT-ONLY coverage (missing E2E validation)
+1. **AC-7: Session timeout handling** - UNIT-ONLY coverage (missing E2E
+   validation)
 
 ## Quality Assessment
 
 ### Tests with Issues
 
 - `1.3-E2E-001` ⚠️ - 145 seconds (exceeds 90s target) - Optimize fixture setup
-- `1.3-UNIT-005` ⚠️ - 320 lines (exceeds 300 line limit) - Split into multiple test files
+- `1.3-UNIT-005` ⚠️ - 320 lines (exceeds 300 line limit) - Split into multiple
+  test files
 
 ### Tests Passing Quality Gates
 
@@ -938,10 +979,12 @@ traceability:
 
 ## Recommendations
 
-1. **Address High Priority Gap:** Add password reset edge case tests before PR merge
+1. **Address High Priority Gap:** Add password reset edge case tests before PR
+   merge
 2. **Optimize Slow Test:** Refactor `1.3-E2E-001` to use faster fixture setup
 3. **Split Large Test:** Break `1.3-UNIT-005` into focused test files
-4. **Enhance P2 Coverage:** Add E2E validation for session timeout (currently UNIT-ONLY)
+4. **Enhance P2 Coverage:** Add E2E validation for session timeout (currently
+   UNIT-ONLY)
 
 ```
 

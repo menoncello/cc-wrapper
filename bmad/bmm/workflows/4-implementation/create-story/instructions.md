@@ -97,30 +97,6 @@
     <template-output file="{default_output_file}">change_log</template-output>
   </step>
 
-  <step n="7.5" goal="Validate code examples in story">
-    <critical>Code examples in stories guide developers - they must be production-ready</critical>
-
-    <action>Extract all code blocks from story markdown (fenced with ```typescript or ```ts)</action>
-
-    <action>For each code block with TypeScript/JavaScript syntax:</action>
-    <substep n="7.5.1">
-      <action>Write code to temporary .ts file in a temp directory</action>
-      <action>Attempt to validate with: bun run type-check (if TypeScript compilation fails, it's acceptable for snippets that are intentionally partial examples)</action>
-      <action>Attempt to validate with: bun run lint (check for obvious errors like unused vars, syntax issues)</action>
-      <check>If code block contains obvious syntax errors → Fix in story before saving</check>
-      <check>If code block uses 'any' type unnecessarily → Replace with proper types in story</check>
-      <check>If code block has eslint-disable comments → Remove and fix code</check>
-    </substep>
-
-    <action>If validation finds issues:</action>
-    <check>Fix code examples in story to meet quality standards</check>
-    <check>Ensure proper TypeScript types (no 'any' unless justified)</check>
-    <check>Ensure ESLint compliance (no-unused-vars, etc.)</check>
-    <check>Apply proper formatting (Prettier conventions)</check>
-
-    <note>Validation is best-effort for code snippets - some partial examples may not compile standalone, which is acceptable if they demonstrate correct patterns</note>
-  </step>
-
   <step n="8" goal="Validate, save, and optionally generate context">
     <invoke-task>Validate against checklist at {installed_path}/checklist.md using bmad/core/tasks/validate-workflow.xml</invoke-task>
     <action>Save document unconditionally (non-interactive default). In interactive mode, allow user confirmation.</action>

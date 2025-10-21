@@ -8,8 +8,19 @@
  * Dependencies: Bun 1.3.0+, TypeScript 5.9.3+, Docker 28.5.1+, PostgreSQL 18.0+, Redis 8.2.2+
  */
 
-import { $, fs } from 'bun';
+import { $ } from 'bun';
+import * as fs from 'fs/promises';
 import { setTimeout } from 'timers/promises';
+
+// Helper function to check if a file/directory exists
+async function fileExists(path: string): Promise<boolean> {
+  try {
+    await fs.access(path);
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 // Configuration constants
 const REQUIRED_VERSIONS = {
@@ -22,7 +33,7 @@ const REQUIRED_VERSIONS = {
 } as const;
 
 // Time constants (in milliseconds)
-const SERVICE_WAIT_TIMEOUT = 1000 // 1 second
+const SERVICE_WAIT_TIMEOUT = 1000; // 1 second
 
 interface PlatformInfo {
   os: 'macos' | 'linux' | 'windows';
@@ -55,10 +66,15 @@ class SetupEnvironment {
     const arch = process.arch;
 
     let platformOS: PlatformInfo['os'];
-    if (os === 'darwin') platformOS = 'macos';
-    else if (os === 'linux') platformOS = 'linux';
-    else if (os === 'win32') platformOS = 'windows';
-    else throw new Error(`Unsupported operating system: ${os}`);
+    if (os === 'darwin') {
+      platformOS = 'macos';
+    } else if (os === 'linux') {
+      platformOS = 'linux';
+    } else if (os === 'win32') {
+      platformOS = 'windows';
+    } else {
+      throw new Error(`Unsupported operating system: ${os}`);
+    }
 
     const shell = process.env.SHELL || process.env.COMSPEC || 'unknown';
 
@@ -389,7 +405,7 @@ COMPOSE_FILE="docker-compose.dev.yml"
     // Check if required directories exist
     const requiredDirs = ['apps', 'packages', 'services'];
     for (const dir of requiredDirs) {
-      if (!(await fs.exists(dir))) {
+      if (!(await fileExists(dir))) {
         await fs.mkdir(dir, { recursive: true });
         console.log(`  📁 Created directory: ${dir}`);
       }
@@ -408,7 +424,7 @@ COMPOSE_FILE="docker-compose.dev.yml"
     await this.createDockerComposeFile();
 
     // Start services
-    if (await fs.exists('docker-compose.dev.yml')) {
+    if (await fileExists('docker-compose.dev.yml')) {
       console.log('  🔄 Starting Docker services...');
       await $`docker compose -f docker-compose.dev.yml up -d`.quiet();
       console.log('  ✅ Docker services started');
@@ -452,7 +468,7 @@ volumes:
   postgres_data:
 `;
 
-    if (!(await fs.exists('docker-compose.dev.yml'))) {
+    if (!(await fileExists('docker-compose.dev.yml'))) {
       await fs.writeFile('docker-compose.dev.yml', composeContent);
       console.log('  📄 Created docker-compose.dev.yml');
     }
@@ -495,7 +511,7 @@ volumes:
     console.log('\n🛠️  Setting up editor integration...');
 
     // Create .vscode directory
-    if (!(await fs.exists('.vscode'))) {
+    if (!(await fileExists('.vscode'))) {
       await fs.mkdir('.vscode');
     }
 

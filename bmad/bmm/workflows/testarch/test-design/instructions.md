@@ -2,20 +2,24 @@
 
 # Test Design and Risk Assessment
 
-**Workflow ID**: `bmad/bmm/testarch/test-design`
-**Version**: 4.0 (BMad v6)
+**Workflow ID**: `bmad/bmm/testarch/test-design` **Version**: 4.0 (BMad v6)
 
 ---
 
 ## Overview
 
-Plans comprehensive test coverage strategy with risk assessment, priority classification, and execution ordering. This workflow generates a test design document that identifies high-risk areas, maps requirements to test levels, prioritizes scenarios (P0-P3), and provides resource estimates for the testing effort.
+Plans comprehensive test coverage strategy with risk assessment, priority
+classification, and execution ordering. This workflow generates a test design
+document that identifies high-risk areas, maps requirements to test levels,
+prioritizes scenarios (P0-P3), and provides resource estimates for the testing
+effort.
 
 ---
 
 ## Preflight Requirements
 
-**Critical:** Verify these requirements before proceeding. If any fail, HALT and notify the user.
+**Critical:** Verify these requirements before proceeding. If any fail, HALT and
+notify the user.
 
 - ✅ Story markdown with acceptance criteria available
 - ✅ PRD or epic documentation exists for context
@@ -48,13 +52,25 @@ Plans comprehensive test coverage strategy with risk assessment, priority classi
 
 4. **Load Knowledge Base Fragments**
 
-   **Critical:** Consult `{project-root}/bmad/bmm/testarch/tea-index.csv` to load:
-   - `risk-governance.md` - Risk classification framework (6 categories: TECH, SEC, PERF, DATA, BUS, OPS), automated scoring, gate decision engine, owner tracking (625 lines, 4 examples)
-   - `probability-impact.md` - Risk scoring methodology (probability × impact matrix, automated classification, dynamic re-assessment, gate integration, 604 lines, 4 examples)
-   - `test-levels-framework.md` - Test level selection guidance (E2E vs API vs Component vs Unit with decision matrix, characteristics, when to use each, 467 lines, 4 examples)
-   - `test-priorities-matrix.md` - P0-P3 prioritization criteria (automated priority calculation, risk-based mapping, tagging strategy, time budgets, 389 lines, 2 examples)
+   **Critical:** Consult `{project-root}/bmad/bmm/testarch/tea-index.csv` to
+   load:
+   - `risk-governance.md` - Risk classification framework (6 categories: TECH,
+     SEC, PERF, DATA, BUS, OPS), automated scoring, gate decision engine, owner
+     tracking (625 lines, 4 examples)
+   - `probability-impact.md` - Risk scoring methodology (probability × impact
+     matrix, automated classification, dynamic re-assessment, gate integration,
+     604 lines, 4 examples)
+   - `test-levels-framework.md` - Test level selection guidance (E2E vs API vs
+     Component vs Unit with decision matrix, characteristics, when to use each,
+     467 lines, 4 examples)
+   - `test-priorities-matrix.md` - P0-P3 prioritization criteria (automated
+     priority calculation, risk-based mapping, tagging strategy, time budgets,
+     389 lines, 2 examples)
 
-**Halt Condition:** If story data or acceptance criteria are missing, check if brownfield exploration is needed. If neither requirements NOR exploration possible, HALT with message: "Test design requires clear requirements, acceptance criteria, or brownfield app URL for exploration"
+**Halt Condition:** If story data or acceptance criteria are missing, check if
+brownfield exploration is needed. If neither requirements NOR exploration
+possible, HALT with message: "Test design requires clear requirements,
+acceptance criteria, or brownfield app URL for exploration"
 
 ---
 
@@ -89,7 +105,8 @@ Plans comprehensive test coverage strategy with risk assessment, priority classi
 
    **A. Check MCP Availability**
 
-   If config.tea_use_mcp_enhancements is true AND Playwright MCP tools available:
+   If config.tea_use_mcp_enhancements is true AND Playwright MCP tools
+   available:
    - Use MCP-assisted exploration (Step 3.B)
 
    If MCP unavailable OR config.tea_use_mcp_enhancements is false:
@@ -132,7 +149,8 @@ Plans comprehensive test coverage strategy with risk assessment, priority classi
    - Transform discoveries into testable requirements
    - Prioritize based on user flow criticality
    - Identify risks from discovered functionality
-   - Continue with Step 2 (Assess and Classify Risks) using discovered requirements
+   - Continue with Step 2 (Assess and Classify Risks) using discovered
+     requirements
 
    **C. Manual Exploration Fallback (If MCP Unavailable)**
 
@@ -156,7 +174,8 @@ Plans comprehensive test coverage strategy with risk assessment, priority classi
 
    4. Provide exploration findings to continue workflow
 
-   **Alternative:** Disable exploratory_mode and provide requirements documentation
+   **Alternative:** Disable exploratory_mode and provide requirements
+   documentation
    ```
 
    Wait for user to provide exploration findings, then:
@@ -168,7 +187,8 @@ Plans comprehensive test coverage strategy with risk assessment, priority classi
 
    After mode selection (Requirements-Based OR Exploratory):
    - Continue to Step 2: Assess and Classify Risks
-   - Use requirements from documentation (Requirements-Based) OR discoveries (Exploratory)
+   - Use requirements from documentation (Requirements-Based) OR discoveries
+     (Exploratory)
 
 ---
 
@@ -237,7 +257,8 @@ Plans comprehensive test coverage strategy with risk assessment, priority classi
 
    Rate severity (1-3):
    - **1 (Minor)**: Cosmetic, workaround exists, limited users
-   - **2 (Degraded)**: Feature impaired, workaround difficult, affects many users
+   - **2 (Degraded)**: Feature impaired, workaround difficult, affects many
+     users
    - **3 (Critical)**: System failure, data loss, no workaround, blocks usage
 
 5. **Calculate Risk Score**
@@ -314,7 +335,8 @@ Plans comprehensive test coverage strategy with risk assessment, priority classi
    - Error handling
    - Fastest, most granular
 
-   **Avoid duplicate coverage**: Don't test same behavior at multiple levels unless necessary.
+   **Avoid duplicate coverage**: Don't test same behavior at multiple levels
+   unless necessary.
 
 3. **Assign Priority Levels**
 
@@ -426,7 +448,8 @@ Plans comprehensive test coverage strategy with risk assessment, priority classi
 
 6. **Write to Output File**
 
-   Save to `{output_folder}/test-design-epic-{epic_num}.md` using template structure.
+   Save to `{output_folder}/test-design-epic-{epic_num}.md` using template
+   structure.
 
 ---
 
@@ -518,15 +541,23 @@ Examples:
 
 **Core Fragments (Auto-loaded in Step 1):**
 
-- `risk-governance.md` - Risk classification (6 categories), automated scoring, gate decision engine, coverage traceability, owner tracking (625 lines, 4 examples)
-- `probability-impact.md` - Probability × impact matrix, automated classification thresholds, dynamic re-assessment, gate integration (604 lines, 4 examples)
-- `test-levels-framework.md` - E2E vs API vs Component vs Unit decision framework with characteristics matrix (467 lines, 4 examples)
-- `test-priorities-matrix.md` - P0-P3 automated priority calculation, risk-based mapping, tagging strategy, time budgets (389 lines, 2 examples)
+- `risk-governance.md` - Risk classification (6 categories), automated scoring,
+  gate decision engine, coverage traceability, owner tracking (625 lines, 4
+  examples)
+- `probability-impact.md` - Probability × impact matrix, automated
+  classification thresholds, dynamic re-assessment, gate integration (604 lines,
+  4 examples)
+- `test-levels-framework.md` - E2E vs API vs Component vs Unit decision
+  framework with characteristics matrix (467 lines, 4 examples)
+- `test-priorities-matrix.md` - P0-P3 automated priority calculation, risk-based
+  mapping, tagging strategy, time budgets (389 lines, 2 examples)
 
 **Reference for Test Planning:**
 
-- `selective-testing.md` - Execution strategy: tag-based, spec filters, diff-based selection, promotion rules (727 lines, 4 examples)
-- `fixture-architecture.md` - Data setup patterns: pure function → fixture → mergeTests, auto-cleanup (406 lines, 5 examples)
+- `selective-testing.md` - Execution strategy: tag-based, spec filters,
+  diff-based selection, promotion rules (727 lines, 4 examples)
+- `fixture-architecture.md` - Data setup patterns: pure function → fixture →
+  mergeTests, auto-cleanup (406 lines, 5 examples)
 
 **Manual Reference (Optional):**
 
@@ -561,8 +592,7 @@ After completing this workflow, provide a summary:
 ```markdown
 ## Test Design Complete
 
-**Epic**: {epic_num}
-**Scope**: {design_level}
+**Epic**: {epic_num} **Scope**: {design_level}
 
 **Risk Assessment**:
 

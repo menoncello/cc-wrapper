@@ -9,5 +9,5 @@ export default {
   bracketSpacing: true,
   bracketSameLine: false,
   arrowParens: 'avoid',
-  endOfLine: 'lf',
-}
+  endOfLine: 'lf'
+};

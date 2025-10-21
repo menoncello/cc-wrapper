@@ -1,19 +1,25 @@
 # Technical Research Report: CC Wrapper Multi-Instance Architecture
 
-**Date:** 2025-10-18
-**Prepared by:** Eduardo Menoncello
-**Research Type:** Technical/Architecture Research
-**Technology Stack:** Bun + Elysia + Docker + Xterm.js + PostgreSQL
+**Date:** 2025-10-18 **Prepared by:** Eduardo Menoncello **Research Type:**
+Technical/Architecture Research **Technology Stack:** Bun + Elysia + Docker +
+Xterm.js + PostgreSQL
 
 ---
 
 ## Executive Summary
 
-This technical research establishes the optimal architecture for CC Wrapper, a multi-instance Claude Code web management platform. The recommended technology stack (Bun + Elysia + Docker + Xterm.js + PostgreSQL) provides exceptional performance, scalability, and developer experience for managing distributed CC instances with real-time synchronization.
+This technical research establishes the optimal architecture for CC Wrapper, a
+multi-instance Claude Code web management platform. The recommended technology
+stack (Bun + Elysia + Docker + Xterm.js + PostgreSQL) provides exceptional
+performance, scalability, and developer experience for managing distributed CC
+instances with real-time synchronization.
 
-**Primary Recommendation:** Implement a container-per-project architecture using Bun's high-performance runtime, Elysia's type-safe WebSocket implementation, and PostgreSQL for session persistence.
+**Primary Recommendation:** Implement a container-per-project architecture using
+Bun's high-performance runtime, Elysia's type-safe WebSocket implementation, and
+PostgreSQL for session persistence.
 
 **Key Benefits:**
+
 - **4x Performance Improvement** over Node.js-based solutions
 - **50% Memory Reduction** through Bun's optimized runtime
 - **Type-Safe Development** with end-to-end TypeScript validation
@@ -27,16 +33,21 @@ This technical research establishes the optimal architecture for CC Wrapper, a m
 
 ### Technical Question
 
-How to architect a multi-instance Claude Code management system using Bun + Elysia for optimized performance, with focus on:
+How to architect a multi-instance Claude Code management system using Bun +
+Elysia for optimized performance, with focus on:
 
-1. **Docker Compose Container Orchestration** - Project/worktree isolation strategy
+1. **Docker Compose Container Orchestration** - Project/worktree isolation
+   strategy
 2. **Elysia WebSocket Implementation** - Real-time communication layer
 3. **Xterm.js Integration** - Terminal emulation with flow control
-4. **PostgreSQL State Management** - Session persistence and real-time synchronization
+4. **PostgreSQL State Management** - Session persistence and real-time
+   synchronization
 
 ### Project Context
 
-**CC Wrapper** is a greenfield web application designed to maximize developer productivity during AI wait times through:
+**CC Wrapper** is a greenfield web application designed to maximize developer
+productivity during AI wait times through:
+
 - Three-column layout (projects list, active project, notifications)
 - Container-per-project isolation (1:1:1 mapping)
 - Web→Tauri evolution strategy
@@ -55,8 +66,10 @@ How to architect a multi-instance Claude Code management system using Bun + Elys
 
 ### Non-Functional Requirements
 
-- **Performance:** <100ms UI response time, handle 10,000 concurrent WebSocket connections
-- **Scalability:** Horizontal scaling across multiple servers, support 10,000+ users
+- **Performance:** <100ms UI response time, handle 10,000 concurrent WebSocket
+  connections
+- **Scalability:** Horizontal scaling across multiple servers, support 10,000+
+  users
 - **Reliability:** 99.9% uptime, graceful handling of container failures
 - **Security:** Multi-tenant isolation, API key management, audit logging
 - **Maintainability:** Clean separation of concerns, modular architecture
@@ -77,7 +90,8 @@ How to architect a multi-instance Claude Code management system using Bun + Elys
 
 #### Architecture Overview
 
-Docker Compose provides the ideal foundation for CC Wrapper's container-per-project architecture, enabling:
+Docker Compose provides the ideal foundation for CC Wrapper's
+container-per-project architecture, enabling:
 
 ```yaml
 # docker-compose.yml structure
@@ -85,7 +99,7 @@ version: '3.8'
 services:
   cc-wrapper-server:
     build: .
-    ports: ["3000:3000"]
+    ports: ['3000:3000']
     environment:
       - DATABASE_URL=postgresql://postgres:password@postgres:5432/ccwrapper
     depends_on:
@@ -93,13 +107,13 @@ services:
 
   cc-instance-project-1:
     image: claude-code:latest
-    volumes: ["./project-1:/workspace"]
+    volumes: ['./project-1:/workspace']
     environment:
       - CC_PROJECT_ID=project-1
 
   cc-instance-project-2:
     image: claude-code:latest
-    volumes: ["./project-2:/workspace"]
+    volumes: ['./project-2:/workspace']
     environment:
       - CC_PROJECT_ID=project-2
 
@@ -111,7 +125,7 @@ services:
       POSTGRES_PASSWORD: password
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    ports: ["5432:5432"]
+    ports: ['5432:5432']
 
 volumes:
   postgres_data:
@@ -120,29 +134,35 @@ volumes:
 #### Key Benefits for CC Wrapper
 
 **Project Isolation Strategy:**
-- **Container-per-Project Pattern**: 1:1:1 mapping (container:user:project/worktree)
+
+- **Container-per-Project Pattern**: 1:1:1 mapping
+  (container:user:project/worktree)
 - **Volume Management**: Bind mounts for project code persistence
 - **Network Isolation**: Custom Docker networks for secure communication
 - **Resource Control**: CPU and memory limits per container
 
 **Development Workflow:**
+
 - **Hot Reload**: Live code changes with bind mounts
 - **Simple Setup**: `docker compose up` for complete environment
 - **Scalable Architecture**: Easy addition/removal of CC instances
-- **Consistent Environment**: Same configuration across development and production
+- **Consistent Environment**: Same configuration across development and
+  production
 
 #### Implementation Considerations
 
 **Multi-Container Communication:**
+
 ```yaml
 # Network configuration for container communication
 networks:
   cc-wrapper-network:
     driver: bridge
-    internal: false  # Allow external access for CC instances
+    internal: false # Allow external access for CC instances
 ```
 
 **Volume Management Strategy:**
+
 ```yaml
 volumes:
   project-1-workspace:
@@ -157,54 +177,58 @@ volumes:
 
 #### Architecture Overview
 
-Elysia's WebSocket implementation provides optimal performance for CC Wrapper's real-time requirements:
+Elysia's WebSocket implementation provides optimal performance for CC Wrapper's
+real-time requirements:
 
 ```typescript
 // Elysia WebSocket server setup
-import { Elysia, ws } from 'elysia'
+import { Elysia, ws } from 'elysia';
 
 const app = new Elysia()
   .use(ws())
   .ws('/ws', {
     // WebSocket connection management
     open(ws) {
-      console.log(`Terminal connected: ${ws.id}`)
+      console.log(`Terminal connected: ${ws.id}`);
       // Initialize session and routing
-      initializeSession(ws.id)
+      initializeSession(ws.id);
     },
 
     close(ws) {
-      console.log(`Terminal disconnected: ${ws.id}`)
+      console.log(`Terminal disconnected: ${ws.id}`);
       // Cleanup session state
-      cleanupSession(ws.id)
+      cleanupSession(ws.id);
     },
 
     message(ws, message) {
       // Handle terminal input/output routing
-      routeMessage(ws.id, message)
+      routeMessage(ws.id, message);
     },
 
     error(ws, error) {
-      console.error(`WebSocket error: ${error}`)
+      console.error(`WebSocket error: ${error}`);
       // Error handling and reconnection logic
-      handleWebSocketError(ws, error)
+      handleWebSocketError(ws, error);
     }
   })
-  .listen(3000)
+  .listen(3000);
 ```
 
 #### Performance Advantages
 
 **µWebSockets Integration:**
-- **Native Bun WebSocket Engine**: Built-in high-performance WebSocket implementation
+
+- **Native Bun WebSocket Engine**: Built-in high-performance WebSocket
+  implementation
 - **Low Latency**: <10ms message processing time
 - **High Concurrency**: 10,000+ concurrent connections support
 - **Memory Efficiency**: 50% less memory usage than Node.js alternatives
 
 **Type Safety Implementation:**
+
 ```typescript
 // Message schema validation
-import { t } from 'elysia'
+import { t } from 'elysia';
 
 app.ws('/ws', {
   body: t.Object({
@@ -221,52 +245,53 @@ app.ws('/ws', {
     // Type-safe message handling
     switch (message.type) {
       case 'terminal-input':
-        forwardToContainer(message.containerId, message.data)
-        break
+        forwardToContainer(message.containerId, message.data);
+        break;
       case 'terminal-resize':
-        resizeTerminal(message.containerId, message.data)
-        break
+        resizeTerminal(message.containerId, message.data);
+        break;
       case 'container-control':
-        controlContainer(message.containerId, message.data)
-        break
+        controlContainer(message.containerId, message.data);
+        break;
     }
   }
-})
+});
 ```
 
 #### Advanced Features
 
 **Message Routing System:**
+
 ```typescript
 // Container-based message routing
-const containerConnections = new Map<string, WebSocket>()
+const containerConnections = new Map<string, WebSocket>();
 
 app.ws('/ws/:containerId', {
   async open(ws, { params: { containerId } }) {
     // Validate container access
-    const user = await authenticateUser(ws.headers.authorization)
-    const instance = await getCCInstance(containerId, user.id)
+    const user = await authenticateUser(ws.headers.authorization);
+    const instance = await getCCInstance(containerId, user.id);
 
     if (!instance) {
-      ws.close(1003, 'Unauthorized container access')
-      return
+      ws.close(1003, 'Unauthorized container access');
+      return;
     }
 
     // Store connection for routing
-    containerConnections.set(containerId, ws)
-    ws.data.containerId = containerId
-    ws.data.userId = user.id
+    containerConnections.set(containerId, ws);
+    ws.data.containerId = containerId;
+    ws.data.userId = user.id;
   },
 
   message(ws, message) {
     // Forward to CC container
-    const container = getContainer(ws.data.containerId)
-    container.stdin.write(message.data)
+    const container = getContainer(ws.data.containerId);
+    container.stdin.write(message.data);
 
     // Store activity for persistence
-    updateLastActivity(ws.id)
+    updateLastActivity(ws.id);
   }
-})
+});
 ```
 
 ### 2.3 Xterm.js - Terminal Emulation
@@ -277,10 +302,10 @@ Xterm.js provides comprehensive terminal emulation capabilities for CC Wrapper:
 
 ```typescript
 // Frontend Xterm.js setup
-import { Terminal } from 'xterm'
-import { AttachAddon } from 'xterm-addon-attach'
-import { FitAddon } from 'xterm-addon-fit'
-import { WebLinksAddon } from 'xterm-addon-web-links'
+import { Terminal } from 'xterm';
+import { AttachAddon } from 'xterm-addon-attach';
+import { FitAddon } from 'xterm-addon-fit';
+import { WebLinksAddon } from 'xterm-addon-web-links';
 
 class CcWrapperTerminal {
   constructor(containerId: string) {
@@ -293,10 +318,10 @@ class CcWrapperTerminal {
         background: '#1e1e1e',
         foreground: '#d4d4d4'
       }
-    })
+    });
 
-    this.setupAddons(containerId)
-    this.connectToServer(containerId)
+    this.setupAddons(containerId);
+    this.connectToServer(containerId);
   }
 
   private setupAddons(containerId: string) {
@@ -304,26 +329,26 @@ class CcWrapperTerminal {
     const attachAddon = new AttachAddon({
       bidirectional: true,
       socket: new WebSocket(`ws://localhost:3000/ws/${containerId}`)
-    })
+    });
 
     // Fit addon for responsive sizing
-    const fitAddon = new FitAddon()
+    const fitAddon = new FitAddon();
 
     // Web links addon for clickable URLs
-    const webLinksAddon = new WebLinksAddon()
+    const webLinksAddon = new WebLinksAddon();
 
-    this.term.loadAddon(attachAddon)
-    this.term.loadAddon(fitAddon)
-    this.term.loadAddon(webLinksAddon)
+    this.term.loadAddon(attachAddon);
+    this.term.loadAddon(fitAddon);
+    this.term.loadAddon(webLinksAddon);
   }
 
   connectToServer(containerId: string) {
-    this.term.open(document.getElementById(`terminal-${containerId}`))
+    this.term.open(document.getElementById(`terminal-${containerId}`));
 
     // Handle terminal resize
     this.term.onResize(({ cols, rows }) => {
-      this.sendResize(containerId, cols, rows)
-    })
+      this.sendResize(containerId, cols, rows);
+    });
   }
 }
 ```
@@ -331,44 +356,47 @@ class CcWrapperTerminal {
 #### Critical Flow Control Implementation
 
 **Memory Management Strategy:**
+
 ```typescript
 // Backend flow control with Elysia
 class FlowControlManager {
-  private buffers = new Map<string, Buffer>()
-  private pausedConnections = new Set<string>()
+  private buffers = new Map<string, Buffer>();
+  private pausedConnections = new Set<string>();
 
   handleOutput(wsId: string, data: Buffer) {
-    const buffer = this.buffers.get(wsId) || Buffer.alloc(0)
-    const newBuffer = Buffer.concat([buffer, data])
+    const buffer = this.buffers.get(wsId) || Buffer.alloc(0);
+    const newBuffer = Buffer.concat([buffer, data]);
 
     // Implement flow control thresholds
-    if (newBuffer.length > 128 * 1024) { // 128KB threshold
-      this.pauseConnection(wsId)
-      return false // Data not processed
+    if (newBuffer.length > 128 * 1024) {
+      // 128KB threshold
+      this.pauseConnection(wsId);
+      return false; // Data not processed
     }
 
-    this.buffers.set(wsId, newBuffer)
-    return true // Data processed
+    this.buffers.set(wsId, newBuffer);
+    return true; // Data processed
   }
 
   pauseConnection(wsId: string) {
-    const ws = getConnection(wsId)
+    const ws = getConnection(wsId);
     if (ws && !this.pausedConnections.has(wsId)) {
-      ws.pause()
-      this.pausedConnections.add(wsId)
+      ws.pause();
+      this.pausedConnections.add(wsId);
 
       // Schedule resume when buffer clears
-      setTimeout(() => this.resumeConnection(wsId), 1000)
+      setTimeout(() => this.resumeConnection(wsId), 1000);
     }
   }
 
   resumeConnection(wsId: string) {
-    const buffer = this.buffers.get(wsId)
-    if (buffer && buffer.length < 64 * 1024) { // Resume threshold
-      const ws = getConnection(wsId)
+    const buffer = this.buffers.get(wsId);
+    if (buffer && buffer.length < 64 * 1024) {
+      // Resume threshold
+      const ws = getConnection(wsId);
       if (ws) {
-        ws.resume()
-        this.pausedConnections.delete(wsId)
+        ws.resume();
+        this.pausedConnections.delete(wsId);
       }
     }
   }
@@ -378,35 +406,37 @@ class FlowControlManager {
 #### Performance Optimization
 
 **Canvas Renderer Benefits:**
+
 - **GPU Acceleration**: Hardware-accelerated terminal rendering
 - **Large Buffer Support**: Efficient handling of large terminal outputs
 - **Smooth Scrolling**: Optimized scrolling performance
 - **Color Support**: 16,777,216 colors with true color support
 
 **Multi-Terminal Management:**
+
 ```typescript
 // Multiple terminal instances per user
 class TerminalManager {
-  private terminals = new Map<string, CcWrapperTerminal>()
+  private terminals = new Map<string, CcWrapperTerminal>();
 
   createTerminal(containerId: string) {
-    const terminal = new CcWrapperTerminal(containerId)
-    this.terminals.set(containerId, terminal)
-    return terminal
+    const terminal = new CcWrapperTerminal(containerId);
+    this.terminals.set(containerId, terminal);
+    return terminal;
   }
 
   resizeTerminal(containerId: string, cols: number, rows: number) {
-    const terminal = this.terminals.get(containerId)
+    const terminal = this.terminals.get(containerId);
     if (terminal) {
-      terminal.term.resize(cols, rows)
+      terminal.term.resize(cols, rows);
     }
   }
 
   destroyTerminal(containerId: string) {
-    const terminal = this.terminals.get(containerId)
+    const terminal = this.terminals.get(containerId);
     if (terminal) {
-      terminal.term.dispose()
-      this.terminals.delete(containerId)
+      terminal.term.dispose();
+      this.terminals.delete(containerId);
     }
   }
 }
@@ -417,6 +447,7 @@ class TerminalManager {
 #### Database Schema Design
 
 **Core Tables for CC Wrapper:**
+
 ```sql
 -- Users and authentication
 CREATE TABLE users (
@@ -502,9 +533,10 @@ CREATE TABLE activity_logs (
 #### Connection Pooling with Bun
 
 **Optimized Database Configuration:**
+
 ```typescript
 // PostgreSQL connection with Bun
-import postgres from 'postgres'
+import postgres from 'postgres';
 
 // Connection pool configuration
 const sql = postgres({
@@ -525,7 +557,7 @@ const sql = postgres({
 
   // Development settings
   debug: process.env.NODE_ENV === 'development'
-})
+});
 
 // Database helper class
 class DatabaseService {
@@ -533,16 +565,16 @@ class DatabaseService {
     const [user] = await sql`
       INSERT INTO users ${sql(userData)}
       RETURNING *
-    `
-    return user
+    `;
+    return user;
   }
 
   async createCCInstance(instanceData: CreateCCInstanceRequest) {
     const [instance] = await sql`
       INSERT INTO cc_instances ${sql(instanceData)}
       RETURNING *
-    `
-    return instance
+    `;
+    return instance;
   }
 
   async getUserInstances(userId: number) {
@@ -552,7 +584,7 @@ class DatabaseService {
       JOIN projects p ON ci.project_name = p.name
       WHERE ci.user_id = ${userId}
       ORDER BY ci.last_activity DESC
-    `
+    `;
   }
 
   async saveTerminalSession(sessionData: TerminalSessionData) {
@@ -565,7 +597,7 @@ class DatabaseService {
         terminal_size = EXCLUDED.terminal_size,
         last_activity = NOW()
       RETURNING *
-    `
+    `;
   }
 }
 ```
@@ -573,74 +605,75 @@ class DatabaseService {
 #### Real-time Features Implementation
 
 **PostgreSQL LISTEN/NOTIFY for Cross-Tab Synchronization:**
+
 ```typescript
 // Real-time synchronization using PostgreSQL
 class RealtimeSyncService {
-  private sql: postgres.Sql
-  private listeners = new Map<string, Set<Function>>()
+  private sql: postgres.Sql;
+  private listeners = new Map<string, Set<Function>>();
 
   constructor(sql: postgres.Sql) {
-    this.sql = sql
-    this.setupListeners()
+    this.sql = sql;
+    this.setupListeners();
   }
 
   private async setupListeners() {
     // Listen for terminal state changes
-    await this.sql`LISTEN terminal_state_changes`
+    await this.sql`LISTEN terminal_state_changes`;
 
     // Listen for container status updates
-    await this.sql`LISTEN container_status_updates`
+    await this.sql`LISTEN container_status_updates`;
 
     // Listen for user activity updates
-    await this.sql`LISTEN user_activity_updates`
+    await this.sql`LISTEN user_activity_updates`;
 
     // Handle notifications
-    this.sql.listen('terminal_state_changes', (payload) => {
-      this.handleTerminalStateChange(JSON.parse(payload))
-    })
+    this.sql.listen('terminal_state_changes', payload => {
+      this.handleTerminalStateChange(JSON.parse(payload));
+    });
 
-    this.sql.listen('container_status_updates', (payload) => {
-      this.handleContainerStatusUpdate(JSON.parse(payload))
-    })
+    this.sql.listen('container_status_updates', payload => {
+      this.handleContainerStatusUpdate(JSON.parse(payload));
+    });
 
-    this.sql.listen('user_activity_updates', (payload) => {
-      this.handleUserActivityUpdate(JSON.parse(payload))
-    })
+    this.sql.listen('user_activity_updates', payload => {
+      this.handleUserActivityUpdate(JSON.parse(payload));
+    });
   }
 
   async notifyTerminalStateChange(sessionId: string, state: any) {
     await this.sql`
       NOTIFY terminal_state_changes, ${JSON.stringify({ sessionId, state })}
-    `
+    `;
   }
 
   async notifyContainerStatusUpdate(containerId: string, status: string) {
     await this.sql`
       NOTIFY container_status_updates, ${JSON.stringify({ containerId, status })}
-    `
+    `;
   }
 
-  private handleTerminalStateChange(data: { sessionId: string, state: any }) {
+  private handleTerminalStateChange(data: { sessionId: string; state: any }) {
     // Notify connected WebSocket clients
-    const listeners = this.listeners.get(data.sessionId) || new Set()
-    listeners.forEach(listener => listener(data.state))
+    const listeners = this.listeners.get(data.sessionId) || new Set();
+    listeners.forEach(listener => listener(data.state));
   }
 
   // Subscribe to updates for specific session
   subscribe(sessionId: string, callback: Function) {
     if (!this.listeners.has(sessionId)) {
-      this.listeners.set(sessionId, new Set())
+      this.listeners.set(sessionId, new Set());
     }
-    this.listeners.get(sessionId)!.add(callback)
+    this.listeners.get(sessionId)!.add(callback);
   }
 
   // Unsubscribe from updates
   unsubscribe(sessionId: string, callback: Function) {
-    const listeners = this.listeners.get(sessionId)
+    const listeners = this.listeners.get(sessionId);
     if (listeners) {
-      listeners.delete(callback)
+      listeners.delete(callback);
       if (listeners.size === 0) {
-        this.listeners.delete(sessionId)
+        this.listeners.delete(sessionId);
       }
     }
   }
@@ -653,32 +686,36 @@ class RealtimeSyncService {
 
 ### 3.1 Performance Comparison
 
-| Technology | Request Handling | Memory Usage | Latency | Concurrent Connections |
-|------------|------------------|--------------|---------|------------------------|
-| **Bun + Elysia** | 52,000 req/sec | 50MB base | <10ms | 10,000+ |
-| Node.js + Express | 12,000 req/sec | 100MB base | 50-100ms | 5,000+ |
-| Node.js + Socket.IO | 8,000 req/sec | 120MB base | 100-200ms | 3,000+ |
+| Technology          | Request Handling | Memory Usage | Latency   | Concurrent Connections |
+| ------------------- | ---------------- | ------------ | --------- | ---------------------- |
+| **Bun + Elysia**    | 52,000 req/sec   | 50MB base    | <10ms     | 10,000+                |
+| Node.js + Express   | 12,000 req/sec   | 100MB base   | 50-100ms  | 5,000+                 |
+| Node.js + Socket.IO | 8,000 req/sec    | 120MB base   | 100-200ms | 3,000+                 |
 
 ### 3.2 Development Experience Comparison
 
-| Feature | Bun + Elysia | Node.js + Express | Node.js + Fastify |
-|---------|---------------|-------------------|-------------------|
-| **Type Safety** | End-to-end | Manual | Good |
-| **Learning Curve** | Low | Low | Medium |
-| **Built-in Tools** | Complete | Limited | Limited |
-| **WebSocket Support** | Native | External | External |
-| **Performance** | Excellent | Good | Very Good |
+| Feature               | Bun + Elysia | Node.js + Express | Node.js + Fastify |
+| --------------------- | ------------ | ----------------- | ----------------- |
+| **Type Safety**       | End-to-end   | Manual            | Good              |
+| **Learning Curve**    | Low          | Low               | Medium            |
+| **Built-in Tools**    | Complete     | Limited           | Limited           |
+| **WebSocket Support** | Native       | External          | External          |
+| **Performance**       | Excellent    | Good              | Very Good         |
 
 ### 3.3 Technology Stack Synergy
 
 **Bun + Elysia Advantages:**
-- **Unified Runtime**: Single toolkit for all needs (bundler, test runner, runtime)
+
+- **Unified Runtime**: Single toolkit for all needs (bundler, test runner,
+  runtime)
 - **Type Safety**: Compile-time and runtime type validation
 - **Performance**: Native WebSocket implementation with µWebSockets
 - **Developer Experience**: Hot reload, fast compilation, excellent debugging
 
 **Integration Benefits:**
-- **Seamless WebSocket Integration**: Built-in WebSocket support with type safety
+
+- **Seamless WebSocket Integration**: Built-in WebSocket support with type
+  safety
 - **PostgreSQL Optimization**: Native SQL client with connection pooling
 - **Container Compatibility**: Excellent Docker integration and support
 - **Frontend Compatibility**: Perfect for React/Vue applications
@@ -690,6 +727,7 @@ class RealtimeSyncService {
 ### Phase 1: Foundation Development (Months 1-3)
 
 **Core Architecture Setup:**
+
 1. **Bun + Elysia Server Setup**
    - Basic server configuration
    - WebSocket implementation
@@ -709,6 +747,7 @@ class RealtimeSyncService {
    - Resource monitoring
 
 **Success Metrics:**
+
 - WebSocket latency <50ms
 - Container startup time <30 seconds
 - Basic terminal functionality working
@@ -717,6 +756,7 @@ class RealtimeSyncService {
 ### Phase 2: Advanced Features (Months 4-6)
 
 **Real-time Synchronization:**
+
 1. **Multi-user Support**
    - Authentication and authorization
    - Multi-terminal management
@@ -736,6 +776,7 @@ class RealtimeSyncService {
    - Session security
 
 **Success Metrics:**
+
 - Support 100+ concurrent users
 - Memory usage <200MB per user
 - 99.9% uptime achieved
@@ -744,6 +785,7 @@ class RealtimeSyncService {
 ### Phase 3: Production Readiness (Months 7-9)
 
 **Production Deployment:**
+
 1. **Scaling Infrastructure**
    - Load balancing setup
    - Database clustering
@@ -763,6 +805,7 @@ class RealtimeSyncService {
    - Complete documentation
 
 **Success Metrics:**
+
 - Handle 1,000+ concurrent users
 - Sub-100ms response times
 - 99.9% uptime SLA
@@ -775,6 +818,7 @@ class RealtimeSyncService {
 ### 5.1 Technical Risks
 
 **Bun Runtime Maturity (Medium Risk)**
+
 - **Risk**: Bun is newer than Node.js, potential stability issues
 - **Impact**: Medium - Runtime issues could affect platform stability
 - **Probability**: Low (30%) - Bun has proven production stability
@@ -784,6 +828,7 @@ class RealtimeSyncService {
   - Regular Bun updates and monitoring
 
 **WebSocket Scaling Challenges (Low Risk)**
+
 - **Risk**: Managing 10,000+ WebSocket connections
 - **Impact**: High - Could limit platform scalability
 - **Probability**: Low (20%) - Bun's WebSocket proven at scale
@@ -793,6 +838,7 @@ class RealtimeSyncService {
   - Progressive scaling approach
 
 **Xterm.js Performance Issues (Medium Risk)**
+
 - **Risk**: Memory usage with large terminal outputs
 - **Impact**: Medium - Could affect user experience
 - **Probability**: Medium (40%) - Known issue with terminal emulation
@@ -804,6 +850,7 @@ class RealtimeSyncService {
 ### 5.2 Implementation Risks
 
 **Docker Container Management Complexity (Medium Risk)**
+
 - **Risk**: Managing hundreds of CC containers
 - **Impact**: High - Could affect platform reliability
 - **Probability**: Medium (35%) - Container orchestration complexity
@@ -813,6 +860,7 @@ class RealtimeSyncService {
   - Resource monitoring and limits
 
 **PostgreSQL Performance Bottlenecks (Low Risk)**
+
 - **Risk**: Database performance under high load
 - **Impact**: High - Could affect real-time features
 - **Probability**: Low (25%) - Proven PostgreSQL scalability
@@ -822,6 +870,7 @@ class RealtimeSyncService {
   - Database clustering plan
 
 **Integration Complexity (Medium Risk)**
+
 - **Risk**: Complex integration between multiple components
 - **Impact**: Medium - Development delays and bugs
 - **Probability**: Medium (40%) - Multiple complex integrations
@@ -833,6 +882,7 @@ class RealtimeSyncService {
 ### 5.3 Business Risks
 
 **Performance Expectations Gap (Low Risk)**
+
 - **Risk**: Actual performance doesn't meet expectations
 - **Impact**: Medium - User satisfaction issues
 - **Probability**: Low (20%) - Performance targets based on benchmarks
@@ -842,6 +892,7 @@ class RealtimeSyncService {
   - Continuous optimization
 
 **Scalability Limitations (Low Risk)**
+
 - **Risk**: Architecture doesn't scale to required levels
 - **Impact**: High - Could limit business growth
 - **Probability**: Low (15%) - Architecture designed for scale
@@ -856,21 +907,25 @@ class RealtimeSyncService {
 
 ### 6.1 Primary Technology Recommendation
 
-**Adopt the Bun + Elysia + Docker + Xterm.js + PostgreSQL stack** for the following reasons:
+**Adopt the Bun + Elysia + Docker + Xterm.js + PostgreSQL stack** for the
+following reasons:
 
 **Performance Excellence:**
+
 - **4x faster** than Node.js alternatives
 - **50% less memory usage** - crucial for container-per-project architecture
 - **Native WebSocket support** with sub-10ms latency
 - **GPU-accelerated terminal rendering** for smooth user experience
 
 **Developer Experience:**
+
 - **End-to-end type safety** reduces bugs and improves maintainability
 - **All-in-one toolkit** eliminates toolchain complexity
 - **Hot reload and fast compilation** for rapid development
 - **Excellent debugging and profiling tools**
 
 **Production Readiness:**
+
 - **Proven technologies** with active communities
 - **Excellent Docker integration** for containerization
 - **Scalable architecture** supporting 10,000+ concurrent users
@@ -879,6 +934,7 @@ class RealtimeSyncService {
 ### 6.2 Implementation Strategy
 
 **Phase 1: Foundation (Months 1-3)**
+
 1. **Setup Bun + Elysia development environment**
 2. **Implement basic WebSocket communication**
 3. **Integrate Xterm.js with flow control**
@@ -887,6 +943,7 @@ class RealtimeSyncService {
 6. **Implement user authentication and session management**
 
 **Phase 2: Core Features (Months 4-6)**
+
 1. **Multi-terminal management system**
 2. **Real-time synchronization across tabs**
 3. **Container lifecycle management**
@@ -895,6 +952,7 @@ class RealtimeSyncService {
 6. **Cross-browser compatibility testing**
 
 **Phase 3: Production Readiness (Months 7-9)**
+
 1. **Load testing and performance optimization**
 2. **Security auditing and hardening**
 3. **Monitoring and alerting setup**
@@ -905,6 +963,7 @@ class RealtimeSyncService {
 ### 6.3 Success Criteria
 
 **Technical Metrics:**
+
 - **WebSocket Latency**: <10ms average
 - **Container Startup Time**: <30 seconds
 - **Concurrent Users**: 1,000+ supported
@@ -912,6 +971,7 @@ class RealtimeSyncService {
 - **Memory Usage**: <200MB per user session
 
 **Business Metrics:**
+
 - **User Satisfaction**: >4.5/5 rating
 - **Feature Adoption**: >80% using core features
 - **Performance Perception**: 95% report "fast" or "very fast"
@@ -921,6 +981,7 @@ class RealtimeSyncService {
 ### 6.4 Future Evolution
 
 **Technology Roadmap:**
+
 - **Tauri Integration**: Desktop application for enhanced performance
 - **Kubernetes Migration**: Container orchestration for enterprise scale
 - **AI Integration**: Learning system for workflow optimization
@@ -928,6 +989,7 @@ class RealtimeSyncService {
 - **Mobile Support**: Tablet and mobile interface optimization
 
 **Architecture Evolution:**
+
 - **Microservices Transition**: Service-based architecture for team scalability
 - **Multi-Region Deployment**: Global deployment for latency optimization
 - **Advanced Security**: Zero-trust architecture and advanced threat protection
@@ -941,10 +1003,12 @@ class RealtimeSyncService {
 
 **Status:** Accepted
 
-**Context:**
-CC Wrapper requires high performance for real-time WebSocket communication and terminal emulation. The runtime choice impacts overall platform performance, developer experience, and operational complexity.
+**Context:** CC Wrapper requires high performance for real-time WebSocket
+communication and terminal emulation. The runtime choice impacts overall
+platform performance, developer experience, and operational complexity.
 
 **Decision Drivers:**
+
 - Performance requirements (sub-100ms response times)
 - WebSocket scalability (10,000+ connections)
 - Developer productivity and type safety
@@ -952,16 +1016,19 @@ CC Wrapper requires high performance for real-time WebSocket communication and t
 - Toolchain simplicity and integration
 
 **Considered Options:**
+
 1. **Bun** - New JavaScript runtime with built-in tools
 2. **Node.js** - Established JavaScript runtime
 3. **Deno** - Secure JavaScript runtime
 
-**Decision:**
-**Selected Bun** for its superior performance (4x faster than Node.js), built-in WebSocket support, excellent TypeScript integration, and all-in-one toolkit approach.
+**Decision:** **Selected Bun** for its superior performance (4x faster than
+Node.js), built-in WebSocket support, excellent TypeScript integration, and
+all-in-one toolkit approach.
 
 **Consequences:**
 
 **Positive:**
+
 - Significant performance improvements over Node.js
 - Built-in WebSocket support with µWebSockets
 - Native TypeScript support without configuration
@@ -970,16 +1037,19 @@ CC Wrapper requires high performance for real-time WebSocket communication and t
 - Excellent Docker integration
 
 **Negative:**
+
 - Newer technology with smaller ecosystem than Node.js
 - Some npm packages may have compatibility issues
 - Team may require learning curve
 
 **Neutral:**
+
 - Similar syntax to Node.js for easy migration
 - Growing community and rapid development
 - Good production adoption evidence
 
 **Implementation Notes:**
+
 - Monitor Bun version updates and stability
 - Test critical npm package compatibility
 - Plan for potential Node.js fallback strategy
@@ -1001,8 +1071,10 @@ CC Wrapper requires high performance for real-time WebSocket communication and t
 
 - **Bun vs Node.js Benchmarks**: https://bun.sh/blog/bun-v1.0
 - **Elysia Performance Analysis**: https://elysiajs.com/blog/elysia-performance
-- **WebSocket Scaling Patterns**: https://blog.logrocket.com/websocket-scaling-techniques/
-- **Docker Container Orchestration Best Practices**: https://docs.docker.com/compose/production/
+- **WebSocket Scaling Patterns**:
+  https://blog.logrocket.com/websocket-scaling-techniques/
+- **Docker Container Orchestration Best Practices**:
+  https://docs.docker.com/compose/production/
 
 ### Community Resources and Tutorials
 
@@ -1014,7 +1086,8 @@ CC Wrapper requires high performance for real-time WebSocket communication and t
 ### Security and Production Resources
 
 - **Docker Security Best Practices**: https://docs.docker.com/engine/security/
-- **WebSocket Security Guidelines**: https://developer.mozilla.org/en-US/docs/Web/API/WebSocket_API
+- **WebSocket Security Guidelines**:
+  https://developer.mozilla.org/en-US/docs/Web/API/WebSocket_API
 - **PostgreSQL Security**: https://www.postgresql.org/docs/current/security.html
 - **Bun Security Features**: https://bun.sh/docs/runtime/security
 
@@ -1022,19 +1095,20 @@ CC Wrapper requires high performance for real-time WebSocket communication and t
 
 ## Document Information
 
-**Workflow:** BMad Method Technical Research Workflow v1.0
-**Generated:** 2025-10-18
-**Technology Stack:** Bun + Elysia + Docker + Xterm.js + PostgreSQL
-**Research Type:** Technical/Architecture Research
-**Next Review:** 2026-01-18
+**Workflow:** BMad Method Technical Research Workflow v1.0 **Generated:**
+2025-10-18 **Technology Stack:** Bun + Elysia + Docker + Xterm.js + PostgreSQL
+**Research Type:** Technical/Architecture Research **Next Review:** 2026-01-18
 **Classification:** Confidential
 
 ### Research Quality Metrics
 
 - **Data Freshness:** Current as of 2025-10-18
-- **Source Reliability:** High (official documentation, benchmarks, case studies)
+- **Source Reliability:** High (official documentation, benchmarks, case
+  studies)
 - **Confidence Level:** 90% (technical feasibility), 85% (performance estimates)
 
 ---
 
-*This technical research report was generated using the BMad Method Technical Research Workflow, combining systematic technology evaluation with real-time performance analysis and implementation patterns.*
+_This technical research report was generated using the BMad Method Technical
+Research Workflow, combining systematic technology evaluation with real-time
+performance analysis and implementation patterns._

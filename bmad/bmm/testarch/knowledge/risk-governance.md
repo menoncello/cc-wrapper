@@ -2,26 +2,38 @@
 
 ## Principle
 
-Risk governance transforms subjective "should we ship?" debates into objective, data-driven decisions. By scoring risk (probability × impact), classifying by category (TECH, SEC, PERF, etc.), and tracking mitigation ownership, teams create transparent quality gates that balance speed with safety.
+Risk governance transforms subjective "should we ship?" debates into objective,
+data-driven decisions. By scoring risk (probability × impact), classifying by
+category (TECH, SEC, PERF, etc.), and tracking mitigation ownership, teams
+create transparent quality gates that balance speed with safety.
 
 ## Rationale
 
-**The Problem**: Without formal risk governance, releases become political—loud voices win, quiet risks hide, and teams discover critical issues in production. "We thought it was fine" isn't a release strategy.
+**The Problem**: Without formal risk governance, releases become political—loud
+voices win, quiet risks hide, and teams discover critical issues in production.
+"We thought it was fine" isn't a release strategy.
 
-**The Solution**: Risk scoring (1-3 scale for probability and impact, total 1-9) creates shared language. Scores ≥6 demand documented mitigation. Scores = 9 mandate gate failure. Every acceptance criterion maps to a test, and gaps require explicit waivers with owners and expiry dates.
+**The Solution**: Risk scoring (1-3 scale for probability and impact, total 1-9)
+creates shared language. Scores ≥6 demand documented mitigation. Scores = 9
+mandate gate failure. Every acceptance criterion maps to a test, and gaps
+require explicit waivers with owners and expiry dates.
 
 **Why This Matters**:
 
-- Removes ambiguity from release decisions (objective scores vs subjective opinions)
-- Creates audit trail for compliance (FDA, SOC2, ISO require documented risk management)
+- Removes ambiguity from release decisions (objective scores vs subjective
+  opinions)
+- Creates audit trail for compliance (FDA, SOC2, ISO require documented risk
+  management)
 - Identifies true blockers early (prevents last-minute production fires)
-- Distributes responsibility (owners, mitigation plans, deadlines for every risk >4)
+- Distributes responsibility (owners, mitigation plans, deadlines for every
+  risk >4)
 
 ## Pattern Examples
 
 ### Example 1: Risk Scoring Matrix with Automated Classification (TypeScript)
 
-**Context**: Calculate risk scores automatically from test results and categorize by risk type
+**Context**: Calculate risk scores automatically from test results and
+categorize by risk type
 
 **Implementation**:
 
@@ -33,7 +45,7 @@ export const RISK_CATEGORIES = {
   PERF: 'PERF', // Performance degradation
   DATA: 'DATA', // Data integrity, corruption
   BUS: 'BUS', // Business logic errors
-  OPS: 'OPS', // Operational issues (deployment, monitoring)
+  OPS: 'OPS' // Operational issues (deployment, monitoring)
 } as const;
 
 export type RiskCategory = keyof typeof RISK_CATEGORIES;
@@ -56,7 +68,10 @@ export type RiskScore = {
 };
 
 // Risk scoring rules
-export function calculateRiskScore(probability: 1 | 2 | 3, impact: 1 | 2 | 3): number {
+export function calculateRiskScore(
+  probability: 1 | 2 | 3,
+  impact: 1 | 2 | 3
+): number {
   return probability * impact;
 }
 
@@ -68,7 +83,9 @@ export function isCriticalBlocker(score: number): boolean {
   return score === 9; // Probability=3 AND Impact=3 → FAIL gate
 }
 
-export function classifyRiskLevel(score: number): 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL' {
+export function classifyRiskLevel(
+  score: number
+): 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL' {
   if (score === 9) return 'CRITICAL';
   if (score >= 6) return 'HIGH';
   if (score >= 4) return 'MEDIUM';
@@ -104,7 +121,7 @@ export function assessTestFailureRisk(failure: {
     impact,
     score,
     owner: 'unassigned',
-    status: score === 9 ? 'OPEN' : 'OPEN',
+    status: score === 9 ? 'OPEN' : 'OPEN'
   };
 }
 ```
@@ -144,13 +161,19 @@ export type GateResult = {
   recommendations: string[];
 };
 
-export function evaluateGate(params: { risks: RiskScore[]; coverageGaps: CoverageGap[]; waiverApprover?: string }): GateResult {
+export function evaluateGate(params: {
+  risks: RiskScore[];
+  coverageGaps: CoverageGap[];
+  waiverApprover?: string;
+}): GateResult {
   const { risks, coverageGaps, waiverApprover } = params;
 
   // Categorize risks
-  const criticalRisks = risks.filter((r) => r.score === 9 && r.status === 'OPEN');
-  const highRisks = risks.filter((r) => r.score >= 6 && r.score < 9 && r.status === 'OPEN');
-  const unresolvedGaps = coverageGaps.filter((g) => !g.reason);
+  const criticalRisks = risks.filter(r => r.score === 9 && r.status === 'OPEN');
+  const highRisks = risks.filter(
+    r => r.score >= 6 && r.score < 9 && r.status === 'OPEN'
+  );
+  const unresolvedGaps = coverageGaps.filter(g => !g.reason);
 
   // Decision logic
   let decision: GateDecision;
@@ -160,11 +183,14 @@ export function evaluateGate(params: { risks: RiskScore[]; coverageGaps: Coverag
     decision = 'FAIL';
   }
   // WAIVED: All risks waived by authorized approver
-  else if (risks.every((r) => r.status === 'WAIVED') && waiverApprover) {
+  else if (risks.every(r => r.status === 'WAIVED') && waiverApprover) {
     decision = 'WAIVED';
   }
   // CONCERNS: High risks (score 6-8) with mitigation plans
-  else if (highRisks.length > 0 && highRisks.every((r) => r.mitigationPlan && r.owner !== 'unassigned')) {
+  else if (
+    highRisks.length > 0 &&
+    highRisks.every(r => r.mitigationPlan && r.owner !== 'unassigned')
+  ) {
     decision = 'CONCERNS';
   }
   // PASS: No critical issues, all risks mitigated or low
@@ -175,16 +201,24 @@ export function evaluateGate(params: { risks: RiskScore[]; coverageGaps: Coverag
   // Generate recommendations
   const recommendations: string[] = [];
   if (criticalRisks.length > 0) {
-    recommendations.push(`🚨 ${criticalRisks.length} CRITICAL risk(s) must be mitigated before release`);
+    recommendations.push(
+      `🚨 ${criticalRisks.length} CRITICAL risk(s) must be mitigated before release`
+    );
   }
   if (unresolvedGaps.length > 0) {
-    recommendations.push(`📋 ${unresolvedGaps.length} acceptance criteria lack test coverage`);
+    recommendations.push(
+      `📋 ${unresolvedGaps.length} acceptance criteria lack test coverage`
+    );
   }
-  if (highRisks.some((r) => !r.mitigationPlan)) {
-    recommendations.push(`⚠️  High risks without mitigation plans: assign owners and deadlines`);
+  if (highRisks.some(r => !r.mitigationPlan)) {
+    recommendations.push(
+      `⚠️  High risks without mitigation plans: assign owners and deadlines`
+    );
   }
   if (decision === 'PASS') {
-    recommendations.push(`✅ All risks mitigated or acceptable. Ready for release.`);
+    recommendations.push(
+      `✅ All risks mitigated or acceptable. Ready for release.`
+    );
   }
 
   return {
@@ -194,14 +228,18 @@ export function evaluateGate(params: { risks: RiskScore[]; coverageGaps: Coverag
     highRisks,
     coverageGaps: unresolvedGaps,
     summary: generateSummary(decision, risks, unresolvedGaps),
-    recommendations,
+    recommendations
   };
 }
 
-function generateSummary(decision: GateDecision, risks: RiskScore[], gaps: CoverageGap[]): string {
+function generateSummary(
+  decision: GateDecision,
+  risks: RiskScore[],
+  gaps: CoverageGap[]
+): string {
   const total = risks.length;
-  const critical = risks.filter((r) => r.score === 9).length;
-  const high = risks.filter((r) => r.score >= 6 && r.score < 9).length;
+  const critical = risks.filter(r => r.score === 9).length;
+  const high = risks.filter(r => r.score >= 6 && r.score < 9).length;
 
   return `Gate Decision: ${decision}. Total Risks: ${total} (${critical} critical, ${high} high). Coverage Gaps: ${gaps.length}.`;
 }
@@ -220,15 +258,15 @@ const risks: RiskScore[] = [
     category: 'BUS',
     affectedUsers: 5000,
     revenueImpact: 50000,
-    securityVulnerability: false,
+    securityVulnerability: false
   }),
   assessTestFailureRisk({
     test: 'SQL injection in search endpoint',
     category: 'SEC',
     affectedUsers: 10000,
     revenueImpact: 0,
-    securityVulnerability: true,
-  }),
+    securityVulnerability: true
+  })
 ];
 
 // Identify coverage gaps
@@ -236,8 +274,8 @@ const coverageGaps: CoverageGap[] = [
   {
     acceptanceCriteria: 'User can reset password via email',
     testMissing: 'e2e/auth/password-reset.spec.ts',
-    reason: '', // Empty = unresolved
-  },
+    reason: '' // Empty = unresolved
+  }
 ];
 
 // Evaluate gate
@@ -257,7 +295,8 @@ console.log(gateResult.recommendations);
 **Key Points**:
 
 - **Automated decision**: No human interpretation required
-- **Clear criteria**: FAIL = critical risks or gaps, CONCERNS = high risks with plans, PASS = low risks
+- **Clear criteria**: FAIL = critical risks or gaps, CONCERNS = high risks with
+  plans, PASS = low risks
 - **Actionable output**: Recommendations drive next steps
 - **Audit trail**: Timestamp, decision, and context for compliance
 
@@ -284,16 +323,23 @@ export type MitigationAction = {
 export class RiskMitigationTracker {
   private risks: Map<string, RiskScore> = new Map();
   private actions: Map<string, MitigationAction[]> = new Map();
-  private history: Array<{ riskId: string; event: string; timestamp: Date }> = [];
+  private history: Array<{ riskId: string; event: string; timestamp: Date }> =
+    [];
 
   // Register a new risk
   addRisk(risk: RiskScore): void {
     this.risks.set(risk.id, risk);
-    this.logHistory(risk.id, `Risk registered: ${risk.title} (Score: ${risk.score})`);
+    this.logHistory(
+      risk.id,
+      `Risk registered: ${risk.title} (Score: ${risk.score})`
+    );
 
     // Auto-assign mitigation requirements for score ≥6
     if (requiresMitigation(risk.score) && !risk.mitigationPlan) {
-      this.logHistory(risk.id, `⚠️  Mitigation required (score ${risk.score}). Assign owner and plan.`);
+      this.logHistory(
+        risk.id,
+        `⚠️  Mitigation required (score ${risk.score}). Assign owner and plan.`
+      );
     }
   }
 
@@ -306,7 +352,10 @@ export class RiskMitigationTracker {
     existingActions.push(action);
     this.actions.set(action.riskId, existingActions);
 
-    this.logHistory(action.riskId, `Mitigation action added: ${action.action} (Owner: ${action.owner})`);
+    this.logHistory(
+      action.riskId,
+      `Mitigation action added: ${action.action} (Owner: ${action.owner})`
+    );
   }
 
   // Complete mitigation action
@@ -317,10 +366,13 @@ export class RiskMitigationTracker {
     actions[actionIndex].status = 'COMPLETED';
     actions[actionIndex].completedAt = new Date();
 
-    this.logHistory(riskId, `Mitigation completed: ${actions[actionIndex].action}`);
+    this.logHistory(
+      riskId,
+      `Mitigation completed: ${actions[actionIndex].action}`
+    );
 
     // If all actions completed, mark risk as MITIGATED
-    if (actions.every((a) => a.status === 'COMPLETED')) {
+    if (actions.every(a => a.status === 'COMPLETED')) {
       const risk = this.risks.get(riskId)!;
       risk.status = 'MITIGATED';
       this.logHistory(riskId, `✅ Risk mitigated. All actions complete.`);
@@ -328,7 +380,12 @@ export class RiskMitigationTracker {
   }
 
   // Request waiver for a risk
-  requestWaiver(riskId: string, reason: string, approver: string, expiryDays: number): void {
+  requestWaiver(
+    riskId: string,
+    reason: string,
+    approver: string,
+    expiryDays: number
+  ): void {
     const risk = this.risks.get(riskId);
     if (!risk) throw new Error(`Risk ${riskId} not found`);
 
@@ -337,16 +394,21 @@ export class RiskMitigationTracker {
     risk.waiverApprover = approver;
     risk.waiverExpiry = new Date(Date.now() + expiryDays * 24 * 60 * 60 * 1000);
 
-    this.logHistory(riskId, `⚠️  Waiver granted by ${approver}. Expires: ${risk.waiverExpiry}`);
+    this.logHistory(
+      riskId,
+      `⚠️  Waiver granted by ${approver}. Expires: ${risk.waiverExpiry}`
+    );
   }
 
   // Generate risk report
   generateReport(): string {
     const allRisks = Array.from(this.risks.values());
-    const critical = allRisks.filter((r) => r.score === 9 && r.status === 'OPEN');
-    const high = allRisks.filter((r) => r.score >= 6 && r.score < 9 && r.status === 'OPEN');
-    const mitigated = allRisks.filter((r) => r.status === 'MITIGATED');
-    const waived = allRisks.filter((r) => r.status === 'WAIVED');
+    const critical = allRisks.filter(r => r.score === 9 && r.status === 'OPEN');
+    const high = allRisks.filter(
+      r => r.score >= 6 && r.score < 9 && r.status === 'OPEN'
+    );
+    const mitigated = allRisks.filter(r => r.status === 'MITIGATED');
+    const waived = allRisks.filter(r => r.status === 'WAIVED');
 
     let report = `# Risk Mitigation Report\n\n`;
     report += `**Generated**: ${new Date().toISOString()}\n\n`;
@@ -359,7 +421,7 @@ export class RiskMitigationTracker {
 
     if (critical.length > 0) {
       report += `## 🚨 Critical Risks (BLOCKERS)\n\n`;
-      critical.forEach((r) => {
+      critical.forEach(r => {
         report += `- **${r.title}** (${r.category})\n`;
         report += `  - Score: ${r.score} (Probability: ${r.probability}, Impact: ${r.impact})\n`;
         report += `  - Owner: ${r.owner}\n`;
@@ -369,7 +431,7 @@ export class RiskMitigationTracker {
 
     if (high.length > 0) {
       report += `## ⚠️  High Risks\n\n`;
-      high.forEach((r) => {
+      high.forEach(r => {
         report += `- **${r.title}** (${r.category})\n`;
         report += `  - Score: ${r.score}\n`;
         report += `  - Owner: ${r.owner}\n`;
@@ -385,7 +447,9 @@ export class RiskMitigationTracker {
   }
 
   getHistory(riskId: string): Array<{ event: string; timestamp: Date }> {
-    return this.history.filter((h) => h.riskId === riskId).map((h) => ({ event: h.event, timestamp: h.timestamp }));
+    return this.history
+      .filter(h => h.riskId === riskId)
+      .map(h => ({ event: h.event, timestamp: h.timestamp }));
   }
 }
 ```
@@ -405,7 +469,7 @@ tracker.addRisk({
   impact: 3,
   score: 9,
   owner: 'security-team',
-  status: 'OPEN',
+  status: 'OPEN'
 });
 
 // Add mitigation actions
@@ -414,7 +478,7 @@ tracker.addMitigationAction({
   action: 'Add parameterized queries to user-search endpoint',
   owner: 'alice@example.com',
   deadline: new Date('2025-10-20'),
-  status: 'IN_PROGRESS',
+  status: 'IN_PROGRESS'
 });
 
 tracker.addMitigationAction({
@@ -422,7 +486,7 @@ tracker.addMitigationAction({
   action: 'Add WAF rule to block SQL injection patterns',
   owner: 'bob@example.com',
   deadline: new Date('2025-10-22'),
-  status: 'PENDING',
+  status: 'PENDING'
 });
 
 // Complete first action
@@ -478,14 +542,19 @@ export type CoverageMatrix = {
   waiverReason?: string;
 };
 
-export function buildCoverageMatrix(criteria: AcceptanceCriterion[], tests: TestCase[]): CoverageMatrix[] {
-  return criteria.map((criterion) => {
-    const matchingTests = tests.filter((t) => t.criteriaIds.includes(criterion.id));
+export function buildCoverageMatrix(
+  criteria: AcceptanceCriterion[],
+  tests: TestCase[]
+): CoverageMatrix[] {
+  return criteria.map(criterion => {
+    const matchingTests = tests.filter(t =>
+      t.criteriaIds.includes(criterion.id)
+    );
 
     return {
       criterion,
       tests: matchingTests,
-      covered: matchingTests.length > 0,
+      covered: matchingTests.length > 0
     };
   });
 }
@@ -494,7 +563,7 @@ export function validateCoverage(matrix: CoverageMatrix[]): {
   gaps: CoverageMatrix[];
   passRate: number;
 } {
-  const gaps = matrix.filter((m) => !m.covered && !m.waiverReason);
+  const gaps = matrix.filter(m => !m.covered && !m.waiverReason);
   const passRate = ((matrix.length - gaps.length) / matrix.length) * 100;
 
   return { gaps, passRate };
@@ -508,13 +577,13 @@ export function extractCriteriaFromTests(testFiles: string[]): TestCase[] {
     {
       file: 'tests/e2e/auth/login.spec.ts',
       name: 'should allow user to login with valid credentials',
-      criteriaIds: ['AC-001', 'AC-002'], // Linked to acceptance criteria
+      criteriaIds: ['AC-001', 'AC-002'] // Linked to acceptance criteria
     },
     {
       file: 'tests/e2e/auth/password-reset.spec.ts',
       name: 'should send password reset email',
-      criteriaIds: ['AC-003'],
-    },
+      criteriaIds: ['AC-003']
+    }
   ];
 }
 
@@ -527,16 +596,16 @@ export function generateTraceabilityReport(matrix: CoverageMatrix[]): string {
 
   report += `## Summary\n`;
   report += `- Total Criteria: ${matrix.length}\n`;
-  report += `- Covered: ${matrix.filter((m) => m.covered).length}\n`;
+  report += `- Covered: ${matrix.filter(m => m.covered).length}\n`;
   report += `- Gaps: ${gaps.length}\n`;
-  report += `- Waived: ${matrix.filter((m) => m.waiverReason).length}\n`;
+  report += `- Waived: ${matrix.filter(m => m.waiverReason).length}\n`;
   report += `- Coverage Rate: ${passRate.toFixed(1)}%\n\n`;
 
   if (gaps.length > 0) {
     report += `## ❌ Coverage Gaps (MUST RESOLVE)\n\n`;
     report += `| Story | Criterion | Priority | Tests |\n`;
     report += `|-------|-----------|----------|-------|\n`;
-    gaps.forEach((m) => {
+    gaps.forEach(m => {
       report += `| ${m.criterion.story} | ${m.criterion.criterion} | ${m.criterion.priority} | None |\n`;
     });
     report += `\n`;
@@ -546,9 +615,9 @@ export function generateTraceabilityReport(matrix: CoverageMatrix[]): string {
   report += `| Story | Criterion | Tests |\n`;
   report += `|-------|-----------|-------|\n`;
   matrix
-    .filter((m) => m.covered)
-    .forEach((m) => {
-      const testList = m.tests.map((t) => `\`${t.file}\``).join(', ');
+    .filter(m => m.covered)
+    .forEach(m => {
+      const testList = m.tests.map(t => `\`${t.file}\``).join(', ');
       report += `| ${m.criterion.story} | ${m.criterion.criterion} | ${testList} |\n`;
     });
 
@@ -561,14 +630,37 @@ export function generateTraceabilityReport(matrix: CoverageMatrix[]): string {
 ```typescript
 // Define acceptance criteria
 const criteria: AcceptanceCriterion[] = [
-  { id: 'AC-001', story: 'US-123', criterion: 'User can login with email', priority: 'P0' },
-  { id: 'AC-002', story: 'US-123', criterion: 'User sees error on invalid password', priority: 'P0' },
-  { id: 'AC-003', story: 'US-124', criterion: 'User receives password reset email', priority: 'P1' },
-  { id: 'AC-004', story: 'US-125', criterion: 'User can update profile', priority: 'P2' }, // NO TEST
+  {
+    id: 'AC-001',
+    story: 'US-123',
+    criterion: 'User can login with email',
+    priority: 'P0'
+  },
+  {
+    id: 'AC-002',
+    story: 'US-123',
+    criterion: 'User sees error on invalid password',
+    priority: 'P0'
+  },
+  {
+    id: 'AC-003',
+    story: 'US-124',
+    criterion: 'User receives password reset email',
+    priority: 'P1'
+  },
+  {
+    id: 'AC-004',
+    story: 'US-125',
+    criterion: 'User can update profile',
+    priority: 'P2'
+  } // NO TEST
 ];
 
 // Extract tests
-const tests: TestCase[] = extractCriteriaFromTests(['tests/e2e/auth/login.spec.ts', 'tests/e2e/auth/password-reset.spec.ts']);
+const tests: TestCase[] = extractCriteriaFromTests([
+  'tests/e2e/auth/login.spec.ts',
+  'tests/e2e/auth/password-reset.spec.ts'
+]);
 
 // Build matrix
 const matrix = buildCoverageMatrix(criteria, tests);
@@ -597,9 +689,11 @@ console.log(report);
 
 Before deploying to production, ensure:
 
-- [ ] **Risk scoring complete**: All identified risks scored (Probability × Impact)
+- [ ] **Risk scoring complete**: All identified risks scored (Probability ×
+      Impact)
 - [ ] **Ownership assigned**: Every risk >4 has owner, mitigation plan, deadline
-- [ ] **Coverage validated**: Every acceptance criterion maps to at least one test
+- [ ] **Coverage validated**: Every acceptance criterion maps to at least one
+      test
 - [ ] **Gate decision documented**: PASS/CONCERNS/FAIL/WAIVED with rationale
 - [ ] **Waivers approved**: All waivers have approver, reason, expiry date
 - [ ] **Audit trail captured**: Risk history log available for compliance review
@@ -608,8 +702,13 @@ Before deploying to production, ensure:
 
 ## Integration Points
 
-- **Used in workflows**: `*trace` (Phase 2: gate decision), `*nfr-assess` (risk scoring), `*test-design` (risk identification)
-- **Related fragments**: `probability-impact.md` (scoring definitions), `test-priorities-matrix.md` (P0-P3 classification), `nfr-criteria.md` (non-functional risks)
-- **Tools**: Risk tracking dashboards (Jira, Linear), gate automation (CI/CD), traceability reports (Markdown, Confluence)
+- **Used in workflows**: `*trace` (Phase 2: gate decision), `*nfr-assess` (risk
+  scoring), `*test-design` (risk identification)
+- **Related fragments**: `probability-impact.md` (scoring definitions),
+  `test-priorities-matrix.md` (P0-P3 classification), `nfr-criteria.md`
+  (non-functional risks)
+- **Tools**: Risk tracking dashboards (Jira, Linear), gate automation (CI/CD),
+  traceability reports (Markdown, Confluence)
 
-_Source: Murat risk governance notes, gate schema guidance, SEON production gate workflows, ISO 31000 risk management standards_
+_Source: Murat risk governance notes, gate schema guidance, SEON production gate
+workflows, ISO 31000 risk management standards_

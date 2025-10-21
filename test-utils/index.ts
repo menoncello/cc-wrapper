@@ -6,7 +6,7 @@
  */
 
 // Data factories for generating test data
-export * from './factories/setup-factory'
+export * from './factories/setup-factory';
 
 // Common test fixtures for setup and teardown
-export * from './fixtures/setup-fixtures'
+export * from './fixtures/setup-fixtures';

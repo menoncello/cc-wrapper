@@ -2,29 +2,33 @@
 
 <workflow>
 
-<critical>This generates epic and user stories for Level 1 projects after tech-spec completion</critical>
-<critical>This is a lightweight story breakdown - not a full PRD</critical>
-<critical>Level 1 = coherent feature, 1-10 stories (prefer 2-3), 1 epic</critical>
-<critical>This workflow runs AFTER tech-spec.md has been completed</critical>
-<critical>Story format MUST match create-story template for compatibility with story-context and dev-story workflows</critical>
+<critical>This generates epic and user stories for Level 1 projects after
+tech-spec completion</critical> <critical>This is a lightweight story
+breakdown - not a full PRD</critical> <critical>Level 1 = coherent feature, 1-10
+stories (prefer 2-3), 1 epic</critical> <critical>This workflow runs AFTER
+tech-spec.md has been completed</critical> <critical>Story format MUST match
+create-story template for compatibility with story-context and dev-story
+workflows</critical>
 
 <step n="1" goal="Load tech spec and extract implementation tasks">
 
-<action>Read the completed tech-spec.md file from {output_folder}/tech-spec.md</action>
-<action>Load bmm-workflow-status.md from {output_folder}/bmm-workflow-status.md</action>
-<action>Extract dev_story_location from config (where stories are stored)</action>
-<action>Identify all implementation tasks from the "Implementation Guide" section</action>
-<action>Identify the overall feature goal from "Technical Approach" section</action>
-<action>Extract time estimates for each implementation phase</action>
-<action>Identify any dependencies between implementation tasks</action>
+<action>Read the completed tech-spec.md file from
+{output_folder}/tech-spec.md</action> <action>Load bmm-workflow-status.md from
+{output_folder}/bmm-workflow-status.md</action> <action>Extract
+dev_story_location from config (where stories are stored)</action>
+<action>Identify all implementation tasks from the "Implementation Guide"
+section</action> <action>Identify the overall feature goal from "Technical
+Approach" section</action> <action>Extract time estimates for each
+implementation phase</action> <action>Identify any dependencies between
+implementation tasks</action>
 
 </step>
 
 <step n="2" goal="Create single epic">
 
-<action>Create 1 epic that represents the entire feature</action>
-<action>Epic title should be user-facing value statement</action>
-<action>Epic goal should describe why this matters to users</action>
+<action>Create 1 epic that represents the entire feature</action> <action>Epic
+title should be user-facing value statement</action> <action>Epic goal should
+describe why this matters to users</action>
 
 <guidelines>
 **Epic Best Practices:**
@@ -38,25 +42,25 @@
 <example>
 **Epic:** JS Library Icon Reliability
 
-**Goal:** Eliminate external dependencies for JS library icons to ensure consistent, reliable display and improve application performance.
+**Goal:** Eliminate external dependencies for JS library icons to ensure
+consistent, reliable display and improve application performance.
 
-**Scope:** Migrate all 14 recommended JS library icons from third-party CDN URLs (GitHub, jsDelivr) to internal static asset hosting.
+**Scope:** Migrate all 14 recommended JS library icons from third-party CDN URLs
+(GitHub, jsDelivr) to internal static asset hosting.
 
 **Success Criteria:**
 
 - All library icons load from internal paths
 - Zero external requests for library icons
 - Icons load 50-200ms faster than baseline
-- No broken icons in production
-  </example>
+- No broken icons in production </example>
 
 <action>Derive epic slug from epic title (kebab-case, 2-3 words max)</action>
 <example>
 
 - "JS Library Icon Reliability" → "icon-reliability"
 - "OAuth Integration" → "oauth-integration"
-- "Admin Dashboard" → "admin-dashboard"
-  </example>
+- "Admin Dashboard" → "admin-dashboard" </example>
 
 <action>Initialize epics.md summary document using epics_template</action>
 
@@ -71,7 +75,8 @@
 
 <step n="3" goal="Determine optimal story count">
 
-<critical>Level 1 should have 2-3 stories maximum - prefer longer stories over more stories</critical>
+<critical>Level 1 should have 2-3 stories maximum - prefer longer stories over
+more stories</critical>
 
 <action>Analyze tech spec implementation tasks and time estimates</action>
 <action>Group related tasks into logical story boundaries</action>
@@ -88,14 +93,15 @@
 **3 Stories (only if necessary):**
 
 - Use when: Feature has distinct setup, build, verify phases
-- Example: Story 1 = Setup, Story 2 = Core implementation, Story 3 = Integration and testing
+- Example: Story 1 = Setup, Story 2 = Core implementation, Story 3 = Integration
+  and testing
 - Typical points: 2-3 points per story
 
 **Never exceed 3 stories for Level 1:**
 
 - If more needed, consider if project should be Level 2
-- Better to have longer stories (5 points) than more stories (5x 1-point stories)
-  </guidelines>
+- Better to have longer stories (5 points) than more stories (5x 1-point
+  stories) </guidelines>
 
 <action>Determine story_count = 2 or 3 based on tech spec complexity</action>
 
@@ -104,7 +110,8 @@
 <step n="4" goal="Generate user stories from tech spec tasks">
 
 <action>For each story (2-3 total), generate separate story file</action>
-<action>Story filename format: "story-{epic_slug}-{n}.md" where n = 1, 2, or 3</action>
+<action>Story filename format: "story-{epic_slug}-{n}.md" where n = 1, 2, or
+3</action>
 
 <guidelines>
 **Story Generation Guidelines:**
@@ -157,7 +164,8 @@
   </template-output>
 </for-each>
 
-<critical>Generate exactly {story_count} story files (2 or 3 based on Step 3 decision)</critical>
+<critical>Generate exactly {story_count} story files (2 or 3 based on Step 3
+decision)</critical>
 
 </step>
 
@@ -165,8 +173,9 @@
 
 <action>Generate visual story map showing epic → stories hierarchy</action>
 <action>Calculate total story points across all stories</action>
-<action>Estimate timeline based on total points (1-2 points per day typical)</action>
-<action>Define implementation sequence considering dependencies</action>
+<action>Estimate timeline based on total points (1-2 points per day
+typical)</action> <action>Define implementation sequence considering
+dependencies</action>
 
 <example>
 ## Story Map
@@ -177,14 +186,12 @@ Epic: Icon Reliability
 └── Story 2: Test and Deploy Icons (2 points)
 ```
 
-**Total Story Points:** 5
-**Estimated Timeline:** 1 sprint (1 week)
+**Total Story Points:** 5 **Estimated Timeline:** 1 sprint (1 week)
 
 ## Implementation Sequence
 
 1. **Story 1** → Build icon infrastructure (setup, download, configure)
-2. **Story 2** → Test and deploy (depends on Story 1)
-   </example>
+2. **Story 2** → Test and deploy (depends on Story 1) </example>
 
 <template-output file="{output_folder}/epics.md">story_summaries</template-output>
 <template-output file="{output_folder}/epics.md">story_map</template-output>
@@ -223,41 +230,35 @@ Epic: Icon Reliability
 
 **Level 1 Planning Complete!**
 
-**Epic:** {{epic_title}}
-**Total Stories:** {{story_count}}
-**Total Story Points:** {{total_points}}
-**Estimated Timeline:** {{estimated_timeline}}
+**Epic:** {{epic_title}} **Total Stories:** {{story_count}} **Total Story
+Points:** {{total_points}} **Estimated Timeline:** {{estimated_timeline}}
 
 **Generated Artifacts:**
 
 - `tech-spec.md` → Technical source of truth
 - `epics.md` → Epic and story summary
 - `story-{epic_slug}-1.md` → First story (ready for implementation)
-- `story-{epic_slug}-2.md` → Second story
-  {{#if story_3}}
-- `story-{epic_slug}-3.md` → Third story
-  {{/if}}
+- `story-{epic_slug}-2.md` → Second story {{#if story_3}}
+- `story-{epic_slug}-3.md` → Third story {{/if}}
 
 **Story Location:** `{dev_story_location}/`
 
 **Next Steps - Iterative Implementation:**
 
-**1. Start with Story 1:**
-a. Load SM agent: `{project-root}/bmad/bmm/agents/sm.md`
-b. Run story-context workflow (select story-{epic_slug}-1.md)
-c. Load DEV agent: `{project-root}/bmad/bmm/agents/dev.md`
-d. Run dev-story workflow to implement story 1
+**1. Start with Story 1:** a. Load SM agent:
+`{project-root}/bmad/bmm/agents/sm.md` b. Run story-context workflow (select
+story-{epic_slug}-1.md) c. Load DEV agent:
+`{project-root}/bmad/bmm/agents/dev.md` d. Run dev-story workflow to implement
+story 1
 
 **2. After Story 1 Complete:**
 
 - Repeat process for story-{epic_slug}-2.md
 - Story context will auto-reference completed story 1
 
-**3. After Story 2 Complete:**
-{{#if story_3}}
+**3. After Story 2 Complete:** {{#if story_3}}
 
-- Repeat process for story-{epic_slug}-3.md
-  {{/if}}
+- Repeat process for story-{epic_slug}-3.md {{/if}}
 - Level 1 feature complete!
 
 **Progress Tracking:**

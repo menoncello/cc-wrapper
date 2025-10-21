@@ -1,11 +1,15 @@
 # Product Brief - Interactive Workflow Instructions
 
-<critical>The workflow execution engine is governed by: {project-root}/bmad/core/tasks/workflow.xml</critical>
-<critical>You MUST have already loaded and processed: {installed_path}/workflow.yaml</critical>
-<critical>Communicate all responses in {communication_language} and language MUST be tailored to {user_skill_level}</critical>
-<critical>Generate all documents in {document_output_language}</critical>
+<critical>The workflow execution engine is governed by:
+{project-root}/bmad/core/tasks/workflow.xml</critical> <critical>You MUST have
+already loaded and processed: {installed_path}/workflow.yaml</critical>
+<critical>Communicate all responses in {communication_language} and language
+MUST be tailored to {user_skill_level}</critical> <critical>Generate all
+documents in {document_output_language}</critical>
 
-<critical>DOCUMENT OUTPUT: Concise, professional, strategically focused. Use tables/lists over prose. User skill level ({user_skill_level}) affects conversation style ONLY, not document content.</critical>
+<critical>DOCUMENT OUTPUT: Concise, professional, strategically focused. Use
+tables/lists over prose. User skill level ({user_skill_level}) affects
+conversation style ONLY, not document content.</critical>
 
 <workflow>
 
@@ -54,20 +58,19 @@
 <action>Engage the user about their core vision: what problem they're solving, who experiences it most acutely, and what sparked this product idea</action>
 <action>Build initial understanding through conversational exploration rather than rigid questioning</action>
 
-<template-output>initial_context</template-output>
-</step>
+<template-output>initial_context</template-output> </step>
 
 <step n="2" goal="Choose collaboration mode">
 <ask>How would you like to work through the brief?
 
-**1. Interactive Mode** - We'll work through each section together, discussing and refining as we go
-**2. YOLO Mode** - I'll generate a complete draft based on our conversation so far, then we'll refine it together
+**1. Interactive Mode** - We'll work through each section together, discussing
+and refining as we go **2. YOLO Mode** - I'll generate a complete draft based on
+our conversation so far, then we'll refine it together
 
 Which approach works best for you?</ask>
 
 <action>Store the user's preference for mode</action>
-<template-output>collaboration_mode</template-output>
-</step>
+<template-output>collaboration_mode</template-output> </step>
 
 <step n="3" goal="Define the problem statement" if="collaboration_mode == 'interactive'">
 <action>Guide deep exploration of the problem: current state frustrations, quantifiable impact (time/money/opportunities), why existing solutions fall short, urgency of solving now</action>
@@ -75,8 +78,7 @@ Which approach works best for you?</ask>
 <action>Help the user articulate measurable pain points with evidence</action>
 <action>Craft a compelling, evidence-based problem statement</action>
 
-<template-output>problem_statement</template-output>
-</step>
+<template-output>problem_statement</template-output> </step>
 
 <step n="4" goal="Develop the proposed solution" if="collaboration_mode == 'interactive'">
 <action>Shape the solution vision by exploring: core approach to solving the problem, key differentiators from existing solutions, why this will succeed, ideal user experience</action>
@@ -84,8 +86,7 @@ Which approach works best for you?</ask>
 <action>Help articulate compelling differentiators that make this solution unique</action>
 <action>Craft a clear, inspiring solution vision</action>
 
-<template-output>proposed_solution</template-output>
-</step>
+<template-output>proposed_solution</template-output> </step>
 
 <step n="5" goal="Identify target users" if="collaboration_mode == 'interactive'">
 <action>Guide detailed definition of primary users: demographic/professional profile, current problem-solving methods, specific pain points, goals they're trying to achieve</action>
@@ -94,8 +95,7 @@ Which approach works best for you?</ask>
 <action>Create specific, actionable user profiles that inform product decisions</action>
 
 <template-output>primary_user_segment</template-output>
-<template-output>secondary_user_segment</template-output>
-</step>
+<template-output>secondary_user_segment</template-output> </step>
 
 <step n="6" goal="Establish goals and success metrics" if="collaboration_mode == 'interactive'">
 <action>Guide establishment of SMART goals across business objectives and user success metrics</action>
@@ -106,8 +106,7 @@ Which approach works best for you?</ask>
 
 <template-output>business_objectives</template-output>
 <template-output>user_success_metrics</template-output>
-<template-output>key_performance_indicators</template-output>
-</step>
+<template-output>key_performance_indicators</template-output> </step>
 
 <step n="7" goal="Define MVP scope" if="collaboration_mode == 'interactive'">
 <action>Be ruthless about MVP scope - identify absolute MUST-HAVE features for launch that validate the core hypothesis</action>
@@ -119,8 +118,7 @@ Which approach works best for you?</ask>
 
 <template-output>core_features</template-output>
 <template-output>out_of_scope</template-output>
-<template-output>mvp_success_criteria</template-output>
-</step>
+<template-output>mvp_success_criteria</template-output> </step>
 
 <step n="8" goal="Assess financial impact and ROI" if="collaboration_mode == 'interactive'">
 <action>Explore financial considerations: development investment, revenue potential, cost savings opportunities, break-even timing, budget alignment</action>
@@ -130,8 +128,7 @@ Which approach works best for you?</ask>
 
 <template-output>financial_impact</template-output>
 <template-output>company_objectives_alignment</template-output>
-<template-output>strategic_initiatives</template-output>
-</step>
+<template-output>strategic_initiatives</template-output> </step>
 
 <step n="9" goal="Explore post-MVP vision" optional="true" if="collaboration_mode == 'interactive'">
 <action>Guide exploration of post-MVP future: Phase 2 features, expansion opportunities, long-term vision (1-2 years)</action>
@@ -139,8 +136,7 @@ Which approach works best for you?</ask>
 
 <template-output>phase_2_features</template-output>
 <template-output>long_term_vision</template-output>
-<template-output>expansion_opportunities</template-output>
-</step>
+<template-output>expansion_opportunities</template-output> </step>
 
 <step n="10" goal="Document technical considerations" if="collaboration_mode == 'interactive'">
 <action>Capture technical context as preferences, not final decisions</action>
@@ -152,8 +148,7 @@ Which approach works best for you?</ask>
 
 <template-output>platform_requirements</template-output>
 <template-output>technology_preferences</template-output>
-<template-output>architecture_considerations</template-output>
-</step>
+<template-output>architecture_considerations</template-output> </step>
 
 <step n="11" goal="Identify constraints and assumptions" if="collaboration_mode == 'interactive'">
 <action>Guide realistic expectations setting around constraints: budget/resource limits, timeline pressures, team size/expertise, technical limitations</action>
@@ -161,8 +156,7 @@ Which approach works best for you?</ask>
 <action>Document constraints clearly and list assumptions that need validation during development</action>
 
 <template-output>constraints</template-output>
-<template-output>key_assumptions</template-output>
-</step>
+<template-output>key_assumptions</template-output> </step>
 
 <step n="12" goal="Assess risks and open questions" optional="true" if="collaboration_mode == 'interactive'">
 <action>Facilitate honest risk assessment: what could derail the project, impact if risks materialize</action>
@@ -172,8 +166,7 @@ Which approach works best for you?</ask>
 
 <template-output>key_risks</template-output>
 <template-output>open_questions</template-output>
-<template-output>research_areas</template-output>
-</step>
+<template-output>research_areas</template-output> </step>
 
 <!-- YOLO Mode - Generate everything then refine -->
 <step n="3" goal="Generate complete brief draft" if="collaboration_mode == 'yolo'">
@@ -206,9 +199,8 @@ Which approach works best for you?</ask>
 <template-output>open_questions</template-output>
 <template-output>research_areas</template-output>
 
-<action>Present the complete draft to the user</action>
-<ask>Here's the complete brief draft. What would you like to adjust or refine?</ask>
-</step>
+<action>Present the complete draft to the user</action> <ask>Here's the complete
+brief draft. What would you like to adjust or refine?</ask> </step>
 
 <step n="4" goal="Refine brief sections" repeat="until-approved" if="collaboration_mode == 'yolo'">
 <ask>Which section would you like to refine?
@@ -224,9 +216,8 @@ Which approach works best for you?</ask>
 10. Risks and Questions
 11. Save and continue</ask>
 
-<action>Work with user to refine selected section</action>
-<action>Update relevant template outputs</action>
-</step>
+<action>Work with user to refine selected section</action> <action>Update
+relevant template outputs</action> </step>
 
 <!-- Final steps for both modes -->
 <step n="13" goal="Create executive summary">
@@ -237,8 +228,7 @@ Which approach works best for you?</ask>
 - Target market identification
 - Key value proposition</action>
 
-<template-output>executive_summary</template-output>
-</step>
+<template-output>executive_summary</template-output> </step>
 
 <step n="14" goal="Compile supporting materials">
 <action>If research documents were provided, create a summary of key findings</action>
@@ -247,8 +237,7 @@ Which approach works best for you?</ask>
 
 <template-output>research_summary</template-output>
 <template-output>stakeholder_input</template-output>
-<template-output>references</template-output>
-</step>
+<template-output>references</template-output> </step>
 
 <step n="15" goal="Final review and handoff">
 <action>Generate the complete product brief document</action>
@@ -262,15 +251,17 @@ Which approach works best for you?</ask>
 3. Generate an executive summary version (3-page limit)
 4. Save and prepare for handoff to PM
 
-This brief will serve as the primary input for creating the Product Requirements Document (PRD).</ask>
+This brief will serve as the primary input for creating the Product Requirements
+Document (PRD).</ask>
 
-<check>If user chooses option 3 (executive summary):</check>
-<action>Create condensed 3-page executive brief focusing on: problem statement, proposed solution, target users, MVP scope, financial impact, and strategic alignment</action>
-<action>Save as: {output_folder}/product-brief-executive-{{project_name}}-{{date}}.md</action>
+<check>If user chooses option 3 (executive summary):</check> <action>Create
+condensed 3-page executive brief focusing on: problem statement, proposed
+solution, target users, MVP scope, financial impact, and strategic
+alignment</action> <action>Save as:
+{output_folder}/product-brief-executive-{{project_name}}-{{date}}.md</action>
 
 <template-output>final_brief</template-output>
-<template-output>executive_brief</template-output>
-</step>
+<template-output>executive_brief</template-output> </step>
 
 <step n="16" goal="Update status file on completion">
 <check if="standalone_mode != true">
@@ -289,16 +280,14 @@ This brief will serve as the primary input for creating the Product Requirements
 
 **Brief Document:**
 
-- Product brief saved to {output_folder}/bmm-product-brief-{{project_name}}-{{date}}.md
+- Product brief saved to
+  {output_folder}/bmm-product-brief-{{project_name}}-{{date}}.md
 
-{{#if standalone_mode != true}}
-**Status Updated:**
+{{#if standalone_mode != true}} **Status Updated:**
 
 - Progress tracking updated
-- Current workflow marked complete
-  {{else}}
-  **Note:** Running in standalone mode (no progress tracking)
-  {{/if}}
+- Current workflow marked complete {{else}} **Note:** Running in standalone mode
+  (no progress tracking) {{/if}}
 
 **Next Steps:**
 
@@ -306,10 +295,7 @@ This brief will serve as the primary input for creating the Product Requirements
 2. Gather any additional stakeholder input
 3. Run `plan-project` workflow to create PRD from this brief
 
-{{#if standalone_mode != true}}
-Check status anytime with: `workflow-status`
-{{/if}}
-</output>
-</step>
+{{#if standalone_mode != true}} Check status anytime with: `workflow-status`
+{{/if}} </output> </step>
 
 </workflow>

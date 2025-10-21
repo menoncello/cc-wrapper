@@ -2,17 +2,30 @@
 
 ## Principle
 
-Email-based authentication (magic links, one-time codes, passwordless login) requires specialized testing with email capture services like Mailosaur or Ethereal. Extract magic links via HTML parsing or use built-in link extraction, preserve browser storage (local/session/cookies) when processing links, cache email payloads to avoid exhausting inbox quotas, and cover negative cases (expired links, reused links, multiple rapid requests). Log email IDs and links for troubleshooting, but scrub PII before committing artifacts.
+Email-based authentication (magic links, one-time codes, passwordless login)
+requires specialized testing with email capture services like Mailosaur or
+Ethereal. Extract magic links via HTML parsing or use built-in link extraction,
+preserve browser storage (local/session/cookies) when processing links, cache
+email payloads to avoid exhausting inbox quotas, and cover negative cases
+(expired links, reused links, multiple rapid requests). Log email IDs and links
+for troubleshooting, but scrub PII before committing artifacts.
 
 ## Rationale
 
-Email authentication introduces unique challenges: asynchronous email delivery, quota limits (AWS Cognito: 50/day), cost per email, and complex state management (session preservation across link clicks). Without proper patterns, tests become slow (wait for email each time), expensive (quota exhaustion), and brittle (timing issues, missing state). Using email capture services + session caching + state preservation patterns makes email auth tests fast, reliable, and cost-effective.
+Email authentication introduces unique challenges: asynchronous email delivery,
+quota limits (AWS Cognito: 50/day), cost per email, and complex state management
+(session preservation across link clicks). Without proper patterns, tests become
+slow (wait for email each time), expensive (quota exhaustion), and brittle
+(timing issues, missing state). Using email capture services + session caching +
+state preservation patterns makes email auth tests fast, reliable, and
+cost-effective.
 
 ## Pattern Examples
 
 ### Example 1: Magic Link Extraction with Mailosaur
 
-**Context**: Passwordless login flow where user receives magic link via email, clicks it, and is authenticated.
+**Context**: Passwordless login flow where user receives magic link via email,
+clicks it, and is authenticated.
 
 **Implementation**:
 
@@ -56,11 +69,11 @@ async function getMagicLinkFromEmail(email: string): Promise<string> {
   const message = await mailosaur.messages.get(
     MAILOSAUR_SERVER_ID,
     {
-      sentTo: email,
+      sentTo: email
     },
     {
-      timeout: 30000, // 30 seconds
-    },
+      timeout: 30000 // 30 seconds
+    }
   );
 
   // Mailosaur extracts links automatically - no parsing needed!
@@ -87,7 +100,9 @@ test.describe('Magic Link Authentication', () => {
 
     // Assert: Success message
     await expect(page.getByTestId('check-email-message')).toBeVisible();
-    await expect(page.getByTestId('check-email-message')).toContainText('Check your email');
+    await expect(page.getByTestId('check-email-message')).toContainText(
+      'Check your email'
+    );
 
     // Retrieve magic link from email
     const magicLink = await getMagicLinkFromEmail(testEmail);
@@ -100,19 +115,24 @@ test.describe('Magic Link Authentication', () => {
     await expect(page.getByTestId('user-email')).toContainText(testEmail);
 
     // Verify session storage preserved
-    const localStorage = await page.evaluate(() => JSON.stringify(window.localStorage));
+    const localStorage = await page.evaluate(() =>
+      JSON.stringify(window.localStorage)
+    );
     expect(localStorage).toContain('authToken');
   });
 
   test('should handle expired magic link', async ({ page }) => {
     // Use pre-expired link (older than 15 minutes)
-    const expiredLink = 'http://localhost:3000/auth/verify?token=expired-token-123';
+    const expiredLink =
+      'http://localhost:3000/auth/verify?token=expired-token-123';
 
     await page.goto(expiredLink);
 
     // Assert: Error message displayed
     await expect(page.getByTestId('error-message')).toBeVisible();
-    await expect(page.getByTestId('error-message')).toContainText('link has expired');
+    await expect(page.getByTestId('error-message')).toContainText(
+      'link has expired'
+    );
 
     // Assert: User NOT authenticated
     await expect(page.getByTestId('user-menu')).not.toBeVisible();
@@ -139,7 +159,9 @@ test.describe('Magic Link Authentication', () => {
     // Try to reuse same link (should fail)
     await page.goto(magicLink);
     await expect(page.getByTestId('error-message')).toBeVisible();
-    await expect(page.getByTestId('error-message')).toContainText('link has already been used');
+    await expect(page.getByTestId('error-message')).toContainText(
+      'link has already been used'
+    );
   });
 });
 ```
@@ -164,7 +186,7 @@ describe('Magic Link Authentication', () => {
     cy.mailosaurGetMessage(serverId, { sentTo: testEmail })
       .its('html.links.0.href') // Mailosaur extracts links automatically!
       .should('exist')
-      .then((magicLink) => {
+      .then(magicLink => {
         cy.log(`Magic link: ${magicLink}`);
         cy.visit(magicLink);
       });
@@ -188,7 +210,8 @@ describe('Magic Link Authentication', () => {
 
 ### Example 2: State Preservation Pattern with cy.session / Playwright storageState
 
-**Context**: Cache authenticated session to avoid requesting magic link on every test.
+**Context**: Cache authenticated session to avoid requesting magic link on every
+test.
 
 **Implementation**:
 
@@ -215,7 +238,9 @@ export const test = base.extend<EmailAuthFixture>({
       await page.goto('/dashboard');
 
       // Validate session is still valid
-      const isAuthenticated = await page.getByTestId('user-menu').isVisible({ timeout: 2000 });
+      const isAuthenticated = await page
+        .getByTestId('user-menu')
+        .isVisible({ timeout: 2000 });
 
       if (isAuthenticated) {
         console.log(`✅ Reusing cached session for ${testEmail}`);
@@ -223,7 +248,9 @@ export const test = base.extend<EmailAuthFixture>({
         return;
       }
     } catch (error) {
-      console.log(`📧 No cached session, requesting magic link for ${testEmail}`);
+      console.log(
+        `📧 No cached session, requesting magic link for ${testEmail}`
+      );
     }
 
     // Request new magic link
@@ -239,7 +266,9 @@ export const test = base.extend<EmailAuthFixture>({
     await expect(page.getByTestId('user-menu')).toBeVisible();
 
     // Extract auth token from localStorage
-    const authToken = await page.evaluate(() => localStorage.getItem('authToken'));
+    const authToken = await page.evaluate(() =>
+      localStorage.getItem('authToken')
+    );
 
     // Save session state for reuse
     await context.storageState({ path: storageStatePath });
@@ -247,7 +276,7 @@ export const test = base.extend<EmailAuthFixture>({
     console.log(`💾 Cached session for ${testEmail}`);
 
     await use({ email: testEmail, token: authToken || '' });
-  },
+  }
 });
 ```
 
@@ -262,7 +291,7 @@ import { dataSession } from 'cypress-data-session';
  * - First run: Requests email, extracts link, authenticates
  * - Subsequent runs: Reuses cached session (no email)
  */
-Cypress.Commands.add('authViaMagicLink', (email) => {
+Cypress.Commands.add('authViaMagicLink', email => {
   return dataSession({
     name: `magic-link-${email}`,
 
@@ -274,11 +303,11 @@ Cypress.Commands.add('authViaMagicLink', (email) => {
 
       // Get magic link from Mailosaur
       cy.mailosaurGetMessage(Cypress.env('MAILOSAUR_SERVERID'), {
-        sentTo: email,
+        sentTo: email
       })
         .its('html.links.0.href')
         .should('exist')
-        .then((magicLink) => {
+        .then(magicLink => {
           cy.visit(magicLink);
         });
 
@@ -286,25 +315,25 @@ Cypress.Commands.add('authViaMagicLink', (email) => {
       cy.get('[data-cy="user-menu"]', { timeout: 10000 }).should('be.visible');
 
       // Preserve authentication state
-      return cy.getAllLocalStorage().then((storage) => {
+      return cy.getAllLocalStorage().then(storage => {
         return { storage, email };
       });
     },
 
     // Validate cached session is still valid
-    validate: (cached) => {
+    validate: cached => {
       return cy.wrap(Boolean(cached?.storage));
     },
 
     // Recreate session from cache (no email needed)
-    recreate: (cached) => {
+    recreate: cached => {
       // Restore localStorage
       cy.setLocalStorage(cached.storage);
       cy.visit('/dashboard');
       cy.get('[data-cy="user-menu"]', { timeout: 5000 }).should('be.visible');
     },
 
-    shareAcrossSpecs: true, // Share session across all tests
+    shareAcrossSpecs: true // Share session across all tests
   });
 });
 ```
@@ -364,8 +393,8 @@ test.describe('Email Auth Negative Flows', () => {
     const expiredToken = Buffer.from(
       JSON.stringify({
         email: 'test@example.com',
-        exp: Date.now() - 24 * 60 * 60 * 1000, // 24 hours ago
-      }),
+        exp: Date.now() - 24 * 60 * 60 * 1000 // 24 hours ago
+      })
     ).toString('base64');
 
     const expiredLink = `http://localhost:3000/auth/verify?token=${expiredToken}`;
@@ -375,7 +404,9 @@ test.describe('Email Auth Negative Flows', () => {
 
     // Assert: Error displayed
     await expect(page.getByTestId('error-message')).toBeVisible();
-    await expect(page.getByTestId('error-message')).toContainText(/link.*expired|expired.*link/i);
+    await expect(page.getByTestId('error-message')).toContainText(
+      /link.*expired|expired.*link/i
+    );
 
     // Assert: Link to request new one
     await expect(page.getByTestId('request-new-link')).toBeVisible();
@@ -385,13 +416,16 @@ test.describe('Email Auth Negative Flows', () => {
   });
 
   test('should reject invalid magic link token', async ({ page }) => {
-    const invalidLink = 'http://localhost:3000/auth/verify?token=invalid-garbage';
+    const invalidLink =
+      'http://localhost:3000/auth/verify?token=invalid-garbage';
 
     await page.goto(invalidLink);
 
     // Assert: Error displayed
     await expect(page.getByTestId('error-message')).toBeVisible();
-    await expect(page.getByTestId('error-message')).toContainText(/invalid.*link|link.*invalid/i);
+    await expect(page.getByTestId('error-message')).toContainText(
+      /invalid.*link|link.*invalid/i
+    );
 
     // Assert: User not authenticated
     await expect(page.getByTestId('user-menu')).not.toBeVisible();
@@ -422,7 +456,9 @@ test.describe('Email Auth Negative Flows', () => {
 
     // Assert: Link already used error
     await expect(page.getByTestId('error-message')).toBeVisible();
-    await expect(page.getByTestId('error-message')).toContainText(/already.*used|link.*used/i);
+    await expect(page.getByTestId('error-message')).toContainText(
+      /already.*used|link.*used/i
+    );
 
     // Assert: User not authenticated
     await expect(page.getByTestId('user-menu')).not.toBeVisible();
@@ -445,7 +481,7 @@ test.describe('Email Auth Negative Flows', () => {
     const mailosaur = new MailosaurClient(process.env.MAILOSAUR_API_KEY);
 
     const messages = await mailosaur.messages.list(MAILOSAUR_SERVER_ID, {
-      sentTo: testEmail,
+      sentTo: testEmail
     });
 
     // Should receive 3 emails
@@ -485,7 +521,9 @@ test.describe('Email Auth Negative Flows', () => {
 
       if (errorVisible) {
         console.log(`Rate limit hit after ${i + 1} requests`);
-        await expect(page.getByTestId('rate-limit-error')).toContainText(/too many.*requests|rate.*limit/i);
+        await expect(page.getByTestId('rate-limit-error')).toContainText(
+          /too many.*requests|rate.*limit/i
+        );
         return;
       }
     }
@@ -508,7 +546,8 @@ test.describe('Email Auth Negative Flows', () => {
 
 ### Example 4: Caching Strategy with cypress-data-session / Playwright Projects
 
-**Context**: Minimize email consumption by sharing authentication state across tests and specs.
+**Context**: Minimize email consumption by sharing authentication state across
+tests and specs.
 
 **Implementation**:
 
@@ -543,7 +582,7 @@ function confirmRegistration(email) {
   return cy
     .mailosaurGetMessage(Cypress.env('MAILOSAUR_SERVERID'), { sentTo: email })
     .its('html.codes.0.value') // Mailosaur auto-extracts codes!
-    .then((code) => {
+    .then(code => {
       cy.intercept('POST', 'https://cognito-idp*').as('cognito');
       cy.get('#verification-code').type(code, { delay: 0 });
       cy.contains('button', 'Confirm registration').click();
@@ -575,23 +614,26 @@ function signIn({ userName, password }) {
  * Register and sign in with email caching
  * ONE EMAIL PER MACHINE (cypress run or cypress open)
  */
-Cypress.Commands.add('registerAndSignIn', ({ fullName, userName, email, password }) => {
-  return dataSession({
-    name: email, // Unique session per email
+Cypress.Commands.add(
+  'registerAndSignIn',
+  ({ fullName, userName, email, password }) => {
+    return dataSession({
+      name: email, // Unique session per email
 
-    // First time: Full registration (form → email → code)
-    init: () => register({ fullName, userName, email, password }),
+      // First time: Full registration (form → email → code)
+      init: () => register({ fullName, userName, email, password }),
 
-    // Subsequent specs: Just check email exists (code already used)
-    setup: () => confirmRegistration(email),
+      // Subsequent specs: Just check email exists (code already used)
+      setup: () => confirmRegistration(email),
 
-    // Always runs after init/setup: Sign in
-    recreate: () => signIn({ userName, password }),
+      // Always runs after init/setup: Sign in
+      recreate: () => signIn({ userName, password }),
 
-    // Share across ALL specs (one email for entire test run)
-    shareAcrossSpecs: true,
-  });
-});
+      // Share across ALL specs (one email for entire test run)
+      shareAcrossSpecs: true
+    });
+  }
+);
 ```
 
 **Usage across multiple specs**:
@@ -605,7 +647,7 @@ describe('Place Order', () => {
       fullName: Cypress.env('fullName'), // From cypress.config
       userName: Cypress.env('userName'),
       email: Cypress.env('email'), // SAME email across all specs
-      password: Cypress.env('password'),
+      password: Cypress.env('password')
     });
   });
 
@@ -625,7 +667,7 @@ describe('User Profile', () => {
       fullName: Cypress.env('fullName'),
       userName: Cypress.env('userName'),
       email: Cypress.env('email'), // SAME email - no new email sent!
-      password: Cypress.env('password'),
+      password: Cypress.env('password')
     });
   });
 
@@ -645,17 +687,17 @@ export default defineConfig({
   projects: [
     {
       name: 'setup',
-      testMatch: /global-setup\.ts/,
+      testMatch: /global-setup\.ts/
     },
     {
       name: 'authenticated',
       testMatch: /.*\.spec\.ts/,
       dependencies: ['setup'],
       use: {
-        storageState: '.auth/user-session.json', // Reuse auth state
-      },
-    },
-  ],
+        storageState: '.auth/user-session.json' // Reuse auth state
+      }
+    }
+  ]
 });
 ```
 
@@ -705,7 +747,8 @@ Before implementing email auth tests, verify:
 - [ ] **Email service**: Mailosaur/Ethereal/MailHog configured with API keys
 - [ ] **Link extraction**: Use built-in parsing (html.links[0].href) over regex
 - [ ] **State preservation**: localStorage/session/cookies saved and restored
-- [ ] **Session caching**: cypress-data-session or storageState prevents redundant emails
+- [ ] **Session caching**: cypress-data-session or storageState prevents
+      redundant emails
 - [ ] **Negative flows**: Expired, invalid, reused, rapid requests tested
 - [ ] **Quota awareness**: One email per run (not per test)
 - [ ] **PII scrubbing**: Email IDs logged for debug, but scrubbed from artifacts
@@ -713,9 +756,12 @@ Before implementing email auth tests, verify:
 
 ## Integration Points
 
-- Used in workflows: `*framework` (email auth setup), `*automate` (email auth test generation)
+- Used in workflows: `*framework` (email auth setup), `*automate` (email auth
+  test generation)
 - Related fragments: `fixture-architecture.md`, `test-quality.md`
-- Email services: Mailosaur (recommended), Ethereal (free), MailHog (self-hosted)
+- Email services: Mailosaur (recommended), Ethereal (free), MailHog
+  (self-hosted)
 - Plugins: cypress-mailosaur, cypress-data-session
 
-_Source: Email authentication blog, Murat testing toolkit, Mailosaur documentation_
+_Source: Email authentication blog, Murat testing toolkit, Mailosaur
+documentation_

@@ -1,6 +1,7 @@
 # GDD Workflow Validation Checklist
 
-**Purpose**: Validate GDD workflow outputs are complete, playable, and ready for solutioning.
+**Purpose**: Validate GDD workflow outputs are complete, playable, and ready for
+solutioning.
 
 **Scope**: All game project levels (0-4)
 
@@ -145,4 +146,5 @@
 
 ---
 
-_Adapt based on game type and narrative complexity. Core gameplay must always be solid._
+_Adapt based on game type and narrative complexity. Core gameplay must always be
+solid._

@@ -1,7 +1,6 @@
 # Brainstorming Session Results
 
-**Session Date:** {{date}}
-**Facilitator:** {{agent_role}} {{agent_name}}
+**Session Date:** {{date}} **Facilitator:** {{agent_role}} {{agent_name}}
 **Participant:** {{user_name}}
 
 ## Executive Summary

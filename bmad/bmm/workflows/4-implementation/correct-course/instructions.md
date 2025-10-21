@@ -1,11 +1,16 @@
 # Correct Course - Sprint Change Management Instructions
 
-<critical>The workflow execution engine is governed by: {project-root}/bmad/core/tasks/workflow.xml</critical>
-<critical>You MUST have already loaded and processed: {project-root}/bmad/bmm/workflows/4-implementation/correct-course/workflow.yaml</critical>
-<critical>Communicate all responses in {communication_language} and language MUST be tailored to {user_skill_level}</critical>
-<critical>Generate all documents in {document_output_language}</critical>
+<critical>The workflow execution engine is governed by:
+{project-root}/bmad/core/tasks/workflow.xml</critical> <critical>You MUST have
+already loaded and processed:
+{project-root}/bmad/bmm/workflows/4-implementation/correct-course/workflow.yaml</critical>
+<critical>Communicate all responses in {communication_language} and language
+MUST be tailored to {user_skill_level}</critical> <critical>Generate all
+documents in {document_output_language}</critical>
 
-<critical>DOCUMENT OUTPUT: Updated epics, stories, or PRD sections. Clear, actionable changes. User skill level ({user_skill_level}) affects conversation style ONLY, not document updates.</critical>
+<critical>DOCUMENT OUTPUT: Updated epics, stories, or PRD sections. Clear,
+actionable changes. User skill level ({user_skill_level}) affects conversation
+style ONLY, not document updates.</critical>
 
 <workflow>
 
@@ -15,8 +20,8 @@
 </invoke-workflow>
 
 <output>Running correct-course workflow for sprint change management.
-{{#if status_exists}}Status tracking enabled.{{else}}Note: No status file - running standalone.{{/if}}</output>
-</step>
+{{#if status_exists}}Status tracking enabled.{{else}}Note: No status file -
+running standalone.{{/if}}</output> </step>
 
 <step n="1" goal="Initialize Change Navigation">
   <action>Confirm change trigger and gather user description of the issue</action>
@@ -31,10 +36,13 @@
     - **Batch**: Present all changes at once for review
   <action>Store mode selection for use throughout workflow</action>
 
-<action if="change trigger is unclear">HALT: "Cannot navigate change without clear understanding of the triggering issue. Please provide specific details about what needs to change and why."</action>
+<action if="change trigger is unclear">HALT: "Cannot navigate change without
+clear understanding of the triggering issue. Please provide specific details
+about what needs to change and why."</action>
 
-<action if="core documents are unavailable">HALT: "Need access to project documents (PRD, Epics, Architecture, UI/UX) to assess change impact. Please ensure these documents are accessible."</action>
-</step>
+<action if="core documents are unavailable">HALT: "Need access to project
+documents (PRD, Epics, Architecture, UI/UX) to assess change impact. Please
+ensure these documents are accessible."</action> </step>
 
 <step n="2" goal="Execute Change Analysis Checklist">
   <action>Load and execute the systematic analysis from: {project-root}/bmad/bmm/workflows/4-implementation/correct-course/checklist.md</action>
@@ -46,8 +54,8 @@
   <action>Maintain running notes of findings and impacts discovered</action>
   <action>Present checklist progress after each major section</action>
 
-<action if="checklist cannot be completed">Identify blocking issues and work with user to resolve before continuing</action>
-</step>
+<action if="checklist cannot be completed">Identify blocking issues and work
+with user to resolve before continuing</action> </step>
 
 <step n="3" goal="Draft Specific Change Proposals">
 <action>Based on checklist findings, create explicit edit proposals for each identified artifact</action>
@@ -97,7 +105,8 @@
   <action>Iterate on each proposal based on user feedback</action>
 </check>
 
-<action if="mode is Batch">Collect all edit proposals and present together at end of step</action>
+<action if="mode is Batch">Collect all edit proposals and present together at
+end of step</action>
 
 </step>
 
@@ -141,9 +150,8 @@
 - Specify handoff recipients and their responsibilities
 - Define success criteria for implementation
 
-<action>Present complete Sprint Change Proposal to user</action>
-<ask>Review complete proposal. Continue [c] or Edit [e]?</ask>
-</step>
+<action>Present complete Sprint Change Proposal to user</action> <ask>Review
+complete proposal. Continue [c] or Edit [e]?</ask> </step>
 
 <step n="5" goal="Finalize and Route for Implementation">
 <action>Get explicit user approval for complete proposal</action>
@@ -184,8 +192,7 @@
   <action>Deliverables: Complete Sprint Change Proposal + escalation notice</action>
 
 <action>Confirm handoff completion and next steps with user</action>
-<action>Document handoff in workflow execution log</action>
-</check>
+<action>Document handoff in workflow execution log</action> </check>
 
 </step>
 
@@ -202,8 +209,8 @@
 - Specific edit proposals with before/after
 - Implementation handoff plan
 
-<action>Report workflow completion to user with personalized message: "✅ Correct Course workflow complete, {user_name}!"</action>
-<action>Remind user of success criteria and next steps for implementation team</action>
-</step>
+<action>Report workflow completion to user with personalized message: "✅
+Correct Course workflow complete, {user_name}!"</action> <action>Remind user of
+success criteria and next steps for implementation team</action> </step>
 
 </workflow>

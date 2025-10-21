@@ -2,17 +2,29 @@
 
 ## Principle
 
-Treat expected failures explicitly: intercept network errors, assert UI fallbacks (error messages visible, retries triggered), and use scoped exception handling to ignore known errors while catching regressions. Test retry/backoff logic by forcing sequential failures (500 → timeout → success) and validate telemetry logging. Log captured errors with context (request payload, user/session) but redact secrets to keep artifacts safe for sharing.
+Treat expected failures explicitly: intercept network errors, assert UI
+fallbacks (error messages visible, retries triggered), and use scoped exception
+handling to ignore known errors while catching regressions. Test retry/backoff
+logic by forcing sequential failures (500 → timeout → success) and validate
+telemetry logging. Log captured errors with context (request payload,
+user/session) but redact secrets to keep artifacts safe for sharing.
 
 ## Rationale
 
-Tests fail for two reasons: genuine bugs or poor error handling in the test itself. Without explicit error handling patterns, tests become noisy (uncaught exceptions cause false failures) or silent (swallowing all errors hides real bugs). Scoped exception handling (Cypress.on('uncaught:exception'), page.on('pageerror')) allows tests to ignore documented, expected errors while surfacing unexpected ones. Resilience testing (retry logic, graceful degradation) ensures applications handle failures gracefully in production.
+Tests fail for two reasons: genuine bugs or poor error handling in the test
+itself. Without explicit error handling patterns, tests become noisy (uncaught
+exceptions cause false failures) or silent (swallowing all errors hides real
+bugs). Scoped exception handling (Cypress.on('uncaught:exception'),
+page.on('pageerror')) allows tests to ignore documented, expected errors while
+surfacing unexpected ones. Resilience testing (retry logic, graceful
+degradation) ensures applications handle failures gracefully in production.
 
 ## Pattern Examples
 
 ### Example 1: Scoped Exception Handling (Expected Errors Only)
 
-**Context**: Handle known errors (Network failures, expected 500s) without masking unexpected bugs.
+**Context**: Handle known errors (Network failures, expected 500s) without
+masking unexpected bugs.
 
 **Implementation**:
 
@@ -28,10 +40,12 @@ import { test, expect } from '@playwright/test';
  */
 
 test.describe('API Error Handling', () => {
-  test('should display error message when API returns 500', async ({ page }) => {
+  test('should display error message when API returns 500', async ({
+    page
+  }) => {
     // Scope error handling to THIS test only
     const consoleErrors: string[] = [];
-    page.on('pageerror', (error) => {
+    page.on('pageerror', error => {
       // Only swallow documented NetworkError
       if (error.message.includes('NetworkError: Failed to fetch')) {
         consoleErrors.push(error.message);
@@ -42,15 +56,15 @@ test.describe('API Error Handling', () => {
     });
 
     // Arrange: Mock 500 error response
-    await page.route('**/api/users', (route) =>
+    await page.route('**/api/users', route =>
       route.fulfill({
         status: 500,
         contentType: 'application/json',
         body: JSON.stringify({
           error: 'Internal server error',
-          code: 'INTERNAL_ERROR',
-        }),
-      }),
+          code: 'INTERNAL_ERROR'
+        })
+      })
     );
 
     // Act: Navigate to page that fetches users
@@ -58,19 +72,23 @@ test.describe('API Error Handling', () => {
 
     // Assert: Error UI displayed
     await expect(page.getByTestId('error-message')).toBeVisible();
-    await expect(page.getByTestId('error-message')).toContainText(/error.*loading|failed.*load/i);
+    await expect(page.getByTestId('error-message')).toContainText(
+      /error.*loading|failed.*load/i
+    );
 
     // Assert: Retry button visible
     await expect(page.getByTestId('retry-button')).toBeVisible();
 
     // Assert: NetworkError was thrown and caught
-    expect(consoleErrors).toContainEqual(expect.stringContaining('NetworkError'));
+    expect(consoleErrors).toContainEqual(
+      expect.stringContaining('NetworkError')
+    );
   });
 
   test('should NOT swallow unexpected errors', async ({ page }) => {
     let unexpectedError: Error | null = null;
 
-    page.on('pageerror', (error) => {
+    page.on('pageerror', error => {
       // Capture but don't swallow - test should fail
       unexpectedError = error;
       throw error;
@@ -103,7 +121,7 @@ test.describe('API Error Handling', () => {
 describe('API Error Handling', () => {
   it('should display error message when API returns 500', () => {
     // Scoped to this test only
-    cy.on('uncaught:exception', (err) => {
+    cy.on('uncaught:exception', err => {
       // Only swallow documented NetworkError
       if (err.message.includes('NetworkError')) {
         return false; // Prevent test failure
@@ -117,8 +135,8 @@ describe('API Error Handling', () => {
       statusCode: 500,
       body: {
         error: 'Internal server error',
-        code: 'INTERNAL_ERROR',
-      },
+        code: 'INTERNAL_ERROR'
+      }
     }).as('getUsers');
 
     // Act
@@ -137,7 +155,7 @@ describe('API Error Handling', () => {
     cy.visit('/dashboard');
 
     // Trigger unexpected error
-    cy.window().then((win) => {
+    cy.window().then(win => {
       // This should fail the test
       win.eval('throw new Error("UNEXPECTED BUG")');
     });
@@ -159,7 +177,8 @@ describe('API Error Handling', () => {
 
 ### Example 2: Retry Validation Pattern (Network Resilience)
 
-**Context**: Test that retry/backoff logic works correctly for transient failures.
+**Context**: Test that retry/backoff logic works correctly for transient
+failures.
 
 **Implementation**:
 
@@ -180,7 +199,7 @@ test.describe('Network Retry Logic', () => {
     const attemptTimestamps: number[] = [];
 
     // Mock API: Fail twice, succeed on third attempt
-    await page.route('**/api/products', (route) => {
+    await page.route('**/api/products', route => {
       attemptCount++;
       attemptTimestamps.push(Date.now());
 
@@ -188,14 +207,14 @@ test.describe('Network Retry Logic', () => {
         // First 2 attempts: 500 error
         route.fulfill({
           status: 500,
-          body: JSON.stringify({ error: 'Server error' }),
+          body: JSON.stringify({ error: 'Server error' })
         });
       } else {
         // 3rd attempt: Success
         route.fulfill({
           status: 200,
           contentType: 'application/json',
-          body: JSON.stringify({ products: [{ id: 1, name: 'Product 1' }] }),
+          body: JSON.stringify({ products: [{ id: 1, name: 'Product 1' }] })
         });
       }
     });
@@ -222,19 +241,21 @@ test.describe('Network Retry Logic', () => {
     }
 
     // Assert: Telemetry logged retry events
-    const telemetryEvents = await page.evaluate(() => (window as any).__TELEMETRY_EVENTS__ || []);
-    expect(telemetryEvents).toContainEqual(
-      expect.objectContaining({
-        event: 'api_retry',
-        attempt: 1,
-        endpoint: '/api/products',
-      }),
+    const telemetryEvents = await page.evaluate(
+      () => (window as any).__TELEMETRY_EVENTS__ || []
     );
     expect(telemetryEvents).toContainEqual(
       expect.objectContaining({
         event: 'api_retry',
-        attempt: 2,
-      }),
+        attempt: 1,
+        endpoint: '/api/products'
+      })
+    );
+    expect(telemetryEvents).toContainEqual(
+      expect.objectContaining({
+        event: 'api_retry',
+        attempt: 2
+      })
     );
   });
 
@@ -242,11 +263,11 @@ test.describe('Network Retry Logic', () => {
     let attemptCount = 0;
 
     // Mock API: Always fail (test retry limit)
-    await page.route('**/api/products', (route) => {
+    await page.route('**/api/products', route => {
       attemptCount++;
       route.fulfill({
         status: 500,
-        body: JSON.stringify({ error: 'Persistent server error' }),
+        body: JSON.stringify({ error: 'Persistent server error' })
       });
     });
 
@@ -258,7 +279,9 @@ test.describe('Network Retry Logic', () => {
 
     // Assert: Error UI displayed after exhausting retries
     await expect(page.getByTestId('error-message')).toBeVisible();
-    await expect(page.getByTestId('error-message')).toContainText(/unable.*load|failed.*after.*retries/i);
+    await expect(page.getByTestId('error-message')).toContainText(
+      /unable.*load|failed.*after.*retries/i
+    );
 
     // Assert: Data not displayed
     await expect(page.getByTestId('product-list')).not.toBeVisible();
@@ -268,11 +291,11 @@ test.describe('Network Retry Logic', () => {
     let attemptCount = 0;
 
     // Mock API: 404 error (should NOT retry)
-    await page.route('**/api/products/999', (route) => {
+    await page.route('**/api/products/999', route => {
       attemptCount++;
       route.fulfill({
         status: 404,
-        body: JSON.stringify({ error: 'Product not found' }),
+        body: JSON.stringify({ error: 'Product not found' })
       });
     });
 
@@ -295,13 +318,16 @@ describe('Network Retry Logic', () => {
   it('should retry on 500 and succeed on 3rd attempt', () => {
     let attemptCount = 0;
 
-    cy.intercept('GET', '**/api/products', (req) => {
+    cy.intercept('GET', '**/api/products', req => {
       attemptCount++;
 
       if (attemptCount <= 2) {
         req.reply({ statusCode: 500, body: { error: 'Server error' } });
       } else {
-        req.reply({ statusCode: 200, body: { products: [{ id: 1, name: 'Product 1' }] } });
+        req.reply({
+          statusCode: 200,
+          body: { products: [{ id: 1, name: 'Product 1' }] }
+        });
       }
     }).as('getProducts');
 
@@ -332,7 +358,8 @@ describe('Network Retry Logic', () => {
 
 ### Example 3: Telemetry Logging with Context (Sentry Integration)
 
-**Context**: Capture errors with full context for production debugging without exposing secrets.
+**Context**: Capture errors with full context for production debugging without
+exposing secrets.
 
 **Implementation**:
 
@@ -366,7 +393,7 @@ test.describe('Error Telemetry', () => {
     const errorLogs: ErrorLog[] = [];
 
     // Capture console errors
-    page.on('console', (msg) => {
+    page.on('console', msg => {
       if (msg.type() === 'error') {
         try {
           const log = JSON.parse(msg.text());
@@ -378,11 +405,11 @@ test.describe('Error Telemetry', () => {
     });
 
     // Mock failing API
-    await page.route('**/api/orders', (route) =>
+    await page.route('**/api/orders', route =>
       route.fulfill({
         status: 500,
-        body: JSON.stringify({ error: 'Payment processor unavailable' }),
-      }),
+        body: JSON.stringify({ error: 'Payment processor unavailable' })
+      })
     );
 
     // Act: Trigger error
@@ -401,9 +428,9 @@ test.describe('Error Telemetry', () => {
           endpoint: '/api/orders',
           method: 'POST',
           statusCode: 500,
-          userId: expect.any(String),
-        }),
-      }),
+          userId: expect.any(String)
+        })
+      })
     );
 
     // Assert: Sensitive data NOT logged
@@ -420,22 +447,26 @@ test.describe('Error Telemetry', () => {
     await page.addInitScript(() => {
       (window as any).Sentry = {
         captureException: (error: Error, context?: any) => {
-          (window as any).__SENTRY_EVENTS__ = (window as any).__SENTRY_EVENTS__ || [];
+          (window as any).__SENTRY_EVENTS__ =
+            (window as any).__SENTRY_EVENTS__ || [];
           (window as any).__SENTRY_EVENTS__.push({
             error: error.message,
             context,
-            timestamp: Date.now(),
+            timestamp: Date.now()
           });
         },
         addBreadcrumb: (breadcrumb: any) => {
-          (window as any).__SENTRY_BREADCRUMBS__ = (window as any).__SENTRY_BREADCRUMBS__ || [];
+          (window as any).__SENTRY_BREADCRUMBS__ =
+            (window as any).__SENTRY_BREADCRUMBS__ || [];
           (window as any).__SENTRY_BREADCRUMBS__.push(breadcrumb);
-        },
+        }
       };
     });
 
     // Mock failing API
-    await page.route('**/api/users', (route) => route.fulfill({ status: 403, body: { error: 'Forbidden' } }));
+    await page.route('**/api/users', route =>
+      route.fulfill({ status: 403, body: { error: 'Forbidden' } })
+    );
 
     // Act
     await page.goto('/users');
@@ -447,17 +478,19 @@ test.describe('Error Telemetry', () => {
       error: expect.stringContaining('403'),
       context: expect.objectContaining({
         endpoint: '/api/users',
-        statusCode: 403,
-      }),
+        statusCode: 403
+      })
     });
 
     // Assert: Breadcrumbs include user actions
-    const breadcrumbs = await page.evaluate(() => (window as any).__SENTRY_BREADCRUMBS__);
+    const breadcrumbs = await page.evaluate(
+      () => (window as any).__SENTRY_BREADCRUMBS__
+    );
     expect(breadcrumbs).toContainEqual(
       expect.objectContaining({
         category: 'navigation',
-        message: '/users',
-      }),
+        message: '/users'
+      })
     );
   });
 });
@@ -472,8 +505,8 @@ describe('Error Telemetry', () => {
     const errorLogs = [];
 
     // Capture console errors
-    cy.on('window:before:load', (win) => {
-      cy.stub(win.console, 'error').callsFake((msg) => {
+    cy.on('window:before:load', win => {
+      cy.stub(win.console, 'error').callsFake(msg => {
         errorLogs.push(msg);
       });
     });
@@ -481,7 +514,7 @@ describe('Error Telemetry', () => {
     // Mock failing API
     cy.intercept('POST', '**/api/orders', {
       statusCode: 500,
-      body: { error: 'Payment failed' },
+      body: { error: 'Payment failed' }
     });
 
     // Act
@@ -525,7 +558,9 @@ function redactSensitiveData(obj: any): any {
   const redacted = { ...obj };
 
   for (const key of Object.keys(redacted)) {
-    if (SENSITIVE_KEYS.some((sensitive) => key.toLowerCase().includes(sensitive))) {
+    if (
+      SENSITIVE_KEYS.some(sensitive => key.toLowerCase().includes(sensitive))
+    ) {
       redacted[key] = '[REDACTED]';
     } else if (typeof redacted[key] === 'object') {
       redacted[key] = redactSensitiveData(redacted[key]);
@@ -546,7 +581,7 @@ export function logError(error: Error, context?: ErrorContext) {
     message: error.message,
     stack: error.stack,
     context: safeContext,
-    timestamp: new Date().toISOString(),
+    timestamp: new Date().toISOString()
   };
 
   // Console (development)
@@ -555,7 +590,7 @@ export function logError(error: Error, context?: ErrorContext) {
   // Sentry (production)
   if (typeof window !== 'undefined' && (window as any).Sentry) {
     (window as any).Sentry.captureException(error, {
-      contexts: { custom: safeContext },
+      contexts: { custom: safeContext }
     });
   }
 }
@@ -573,7 +608,8 @@ export function logError(error: Error, context?: ErrorContext) {
 
 ### Example 4: Graceful Degradation Tests (Fallback Behavior)
 
-**Context**: Validate application continues functioning when services are unavailable.
+**Context**: Validate application continues functioning when services are
+unavailable.
 
 **Implementation**:
 
@@ -598,17 +634,17 @@ test.describe('Service Unavailability', () => {
         JSON.stringify({
           data: [
             { id: 1, name: 'Cached Product 1' },
-            { id: 2, name: 'Cached Product 2' },
+            { id: 2, name: 'Cached Product 2' }
           ],
-          timestamp: Date.now(),
-        }),
+          timestamp: Date.now()
+        })
       );
     });
 
     // Mock API unavailable
     await page.route(
       '**/api/products',
-      (route) => route.abort('connectionrefused'), // Simulate server down
+      route => route.abort('connectionrefused') // Simulate server down
     );
 
     // Act
@@ -620,15 +656,21 @@ test.describe('Service Unavailability', () => {
 
     // Assert: Stale data warning shown
     await expect(page.getByTestId('cache-warning')).toBeVisible();
-    await expect(page.getByTestId('cache-warning')).toContainText(/showing.*cached|offline.*mode/i);
+    await expect(page.getByTestId('cache-warning')).toContainText(
+      /showing.*cached|offline.*mode/i
+    );
 
     // Assert: Retry button available
     await expect(page.getByTestId('refresh-button')).toBeVisible();
   });
 
-  test('should show fallback UI when analytics service fails', async ({ page }) => {
+  test('should show fallback UI when analytics service fails', async ({
+    page
+  }) => {
     // Mock analytics service down (non-critical)
-    await page.route('**/analytics/track', (route) => route.fulfill({ status: 503, body: 'Service unavailable' }));
+    await page.route('**/analytics/track', route =>
+      route.fulfill({ status: 503, body: 'Service unavailable' })
+    );
 
     // Act: Navigate normally
     await page.goto('/dashboard');
@@ -638,7 +680,7 @@ test.describe('Service Unavailability', () => {
 
     // Assert: Analytics error logged but not shown to user
     const consoleErrors = [];
-    page.on('console', (msg) => {
+    page.on('console', msg => {
       if (msg.type() === 'error') consoleErrors.push(msg.text());
     });
 
@@ -646,19 +688,23 @@ test.describe('Service Unavailability', () => {
     await page.getByTestId('track-action-button').click();
 
     // Analytics error logged
-    expect(consoleErrors).toContainEqual(expect.stringContaining('Analytics service unavailable'));
+    expect(consoleErrors).toContainEqual(
+      expect.stringContaining('Analytics service unavailable')
+    );
 
     // But user doesn't see error
     await expect(page.getByTestId('error-message')).not.toBeVisible();
   });
 
-  test('should fallback to local validation when API is slow', async ({ page }) => {
+  test('should fallback to local validation when API is slow', async ({
+    page
+  }) => {
     // Mock slow API (> 5 seconds)
-    await page.route('**/api/validate-email', async (route) => {
-      await new Promise((resolve) => setTimeout(resolve, 6000)); // 6 second delay
+    await page.route('**/api/validate-email', async route => {
+      await new Promise(resolve => setTimeout(resolve, 6000)); // 6 second delay
       route.fulfill({
         status: 200,
-        body: JSON.stringify({ valid: true }),
+        body: JSON.stringify({ valid: true })
       });
     });
 
@@ -668,16 +714,22 @@ test.describe('Service Unavailability', () => {
     await page.getByTestId('email-input').blur();
 
     // Assert: Client-side validation triggers immediately (doesn't wait for API)
-    await expect(page.getByTestId('email-valid-icon')).toBeVisible({ timeout: 1000 });
+    await expect(page.getByTestId('email-valid-icon')).toBeVisible({
+      timeout: 1000
+    });
 
     // Assert: Eventually API validates too (but doesn't block UX)
-    await expect(page.getByTestId('email-validated-badge')).toBeVisible({ timeout: 7000 });
+    await expect(page.getByTestId('email-validated-badge')).toBeVisible({
+      timeout: 7000
+    });
   });
 
-  test('should maintain functionality with third-party script failure', async ({ page }) => {
+  test('should maintain functionality with third-party script failure', async ({
+    page
+  }) => {
     // Block third-party scripts (Google Analytics, Intercom, etc.)
-    await page.route('**/*.google-analytics.com/**', (route) => route.abort());
-    await page.route('**/*.intercom.io/**', (route) => route.abort());
+    await page.route('**/*.google-analytics.com/**', route => route.abort());
+    await page.route('**/*.intercom.io/**', route => route.abort());
 
     // Act
     await page.goto('/');
@@ -707,19 +759,25 @@ test.describe('Service Unavailability', () => {
 
 Before shipping error handling code, verify:
 
-- [ ] **Scoped exception handling**: Only ignore documented errors (NetworkError, specific codes)
+- [ ] **Scoped exception handling**: Only ignore documented errors
+      (NetworkError, specific codes)
 - [ ] **Rethrow unexpected**: Unknown errors fail tests (catch regressions)
 - [ ] **Error UI tested**: User sees error messages for all error states
-- [ ] **Retry logic validated**: Sequential failures test backoff and max attempts
-- [ ] **Telemetry verified**: Errors logged with context (endpoint, status, user)
+- [ ] **Retry logic validated**: Sequential failures test backoff and max
+      attempts
+- [ ] **Telemetry verified**: Errors logged with context (endpoint, status,
+      user)
 - [ ] **Secret redaction**: Logs don't contain passwords, tokens, PII
 - [ ] **Graceful degradation**: Critical services down, app shows fallback UI
 - [ ] **Non-critical failures**: Analytics/tracking failures don't block app
 
 ## Integration Points
 
-- Used in workflows: `*automate` (error handling test generation), `*test-review` (error pattern detection)
-- Related fragments: `network-first.md`, `test-quality.md`, `contract-testing.md`
+- Used in workflows: `*automate` (error handling test generation),
+  `*test-review` (error pattern detection)
+- Related fragments: `network-first.md`, `test-quality.md`,
+  `contract-testing.md`
 - Monitoring tools: Sentry, Datadog, LogRocket
 
-_Source: Murat error-handling patterns, Pact resilience guidance, SEON production error handling_
+_Source: Murat error-handling patterns, Pact resilience guidance, SEON
+production error handling_

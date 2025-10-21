@@ -8,49 +8,51 @@
 // Type definitions for test data
 export interface SetupEnvironmentConfig {
   REQUIRED_VERSIONS: {
-    bun: string
-    typescript: string
-    docker: string
-    dockerCompose: string
-    postgresql: string
-    redis: string
-  }
+    bun: string;
+    typescript: string;
+    docker: string;
+    dockerCompose: string;
+    postgresql: string;
+    redis: string;
+  };
   platform: {
-    os: string
-    arch: string
-    packageManager: string
-  }
+    os: string;
+    arch: string;
+    packageManager: string;
+  };
 }
 
 export interface EnvironmentConfig {
-  DATABASE_URL: string
-  REDIS_URL: string
-  NODE_ENV: string
-  PORT: number
-  HOST: string
-  LOG_LEVEL: string
-  BUN_VERSION: string
-  TYPESCRIPT_VERSION: string
-  COMPOSE_PROJECT_NAME: string
+  DATABASE_URL: string;
+  REDIS_URL: string;
+  NODE_ENV: string;
+  PORT: number;
+  HOST: string;
+  LOG_LEVEL: string;
+  BUN_VERSION: string;
+  TYPESCRIPT_VERSION: string;
+  COMPOSE_PROJECT_NAME: string;
 }
 
 export interface HealthCheckResult {
-  status: 'healthy' | 'unhealthy' | 'unknown' | 'degraded'
-  name: string
-  responseTime?: number
-  message?: string
+  status: 'healthy' | 'unhealthy' | 'unknown' | 'degraded';
+  name: string;
+  responseTime?: number;
+  message?: string;
 }
 
 export interface ToolVersion {
-  installed: boolean
-  version?: string
-  required: string
+  installed: boolean;
+  version?: string;
+  required: string;
 }
 
 /**
  * Creates a mock setup environment configuration with sensible defaults
  */
-export const createMockSetupEnvironment = (overrides: Partial<SetupEnvironmentConfig> = {}): SetupEnvironmentConfig => ({
+export const createMockSetupEnvironment = (
+  overrides: Partial<SetupEnvironmentConfig> = {}
+): SetupEnvironmentConfig => ({
   REQUIRED_VERSIONS: {
     bun: '1.3.0',
     typescript: '5.9.3',
@@ -72,7 +74,9 @@ export const createMockSetupEnvironment = (overrides: Partial<SetupEnvironmentCo
 /**
  * Creates a mock environment configuration for testing
  */
-export const createMockEnvironmentConfig = (overrides: Partial<EnvironmentConfig> = {}): EnvironmentConfig => ({
+export const createMockEnvironmentConfig = (
+  overrides: Partial<EnvironmentConfig> = {}
+): EnvironmentConfig => ({
   DATABASE_URL: 'postgresql://localhost:5432/ccwrapper_dev',
   REDIS_URL: 'redis://localhost:6379',
   NODE_ENV: 'development',
@@ -88,7 +92,9 @@ export const createMockEnvironmentConfig = (overrides: Partial<EnvironmentConfig
 /**
  * Creates a mock health check result
  */
-export const createMockHealthCheck = (overrides: Partial<HealthCheckResult> = {}): HealthCheckResult => ({
+export const createMockHealthCheck = (
+  overrides: Partial<HealthCheckResult> = {}
+): HealthCheckResult => ({
   status: 'healthy',
   name: 'Test Service',
   responseTime: 100,

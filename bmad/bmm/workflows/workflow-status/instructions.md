@@ -1,9 +1,12 @@
 # Workflow Status Check - Multi-Mode Service
 
-<critical>The workflow execution engine is governed by: {project-root}/bmad/core/tasks/workflow.xml</critical>
-<critical>You MUST have already loaded and processed: {project-root}/bmad/bmm/workflows/workflow-status/workflow.yaml</critical>
-<critical>This workflow operates in multiple modes: interactive (default), validate, data, init-check, update</critical>
-<critical>Other workflows can call this as a service to avoid duplicating status logic</critical>
+<critical>The workflow execution engine is governed by:
+{project-root}/bmad/core/tasks/workflow.xml</critical> <critical>You MUST have
+already loaded and processed:
+{project-root}/bmad/bmm/workflows/workflow-status/workflow.yaml</critical>
+<critical>This workflow operates in multiple modes: interactive (default),
+validate, data, init-check, update</critical> <critical>Other workflows can call
+this as a service to avoid duplicating status logic</critical>
 
 <workflow>
 
@@ -40,9 +43,8 @@
 
 Load analyst agent and run: `workflow-init`
 
-This will guide you through project setup and create your workflow path.</output>
-<action>Exit workflow</action>
-</check>
+This will guide you through project setup and create your workflow
+path.</output> <action>Exit workflow</action> </check>
 
 <check if="status file found">
   <action>Continue to step 2</action>
@@ -65,8 +67,7 @@ Parse these fields:
 - IN_PROGRESS_STORY
 - NEXT_ACTION
 - NEXT_COMMAND
-- NEXT_AGENT
-  </step>
+- NEXT_AGENT </step>
 
 <step n="3" goal="Display current status and options">
 <action>Load workflow path file to check for optional steps</action>
@@ -76,57 +77,43 @@ Parse these fields:
 ## 📊 Current Status
 
 **Project:** {{PROJECT_NAME}} (Level {{PROJECT_LEVEL}} {{PROJECT_TYPE}})
-**Phase:** {{CURRENT_PHASE}}
-**Current Workflow:** {{CURRENT_WORKFLOW}}
+**Phase:** {{CURRENT_PHASE}} **Current Workflow:** {{CURRENT_WORKFLOW}}
 
-{{#if CURRENT_PHASE == "4-Implementation"}}
-**Development Queue:**
+{{#if CURRENT_PHASE == "4-Implementation"}} **Development Queue:**
 
 - TODO: {{TODO_STORY}} - {{TODO_TITLE}}
-- IN PROGRESS: {{IN_PROGRESS_STORY}} - {{IN_PROGRESS_TITLE}}
-  {{/if}}
+- IN PROGRESS: {{IN_PROGRESS_STORY}} - {{IN_PROGRESS_TITLE}} {{/if}}
 
 ## 🎯 Your Options
 
-{{#if CURRENT_WORKFLOW != "complete"}}
-**Continue in progress:**
+{{#if CURRENT_WORKFLOW != "complete"}} **Continue in progress:**
 
-- {{CURRENT_WORKFLOW}} ({{CURRENT_AGENT}} agent)
-  {{/if}}
+- {{CURRENT_WORKFLOW}} ({{CURRENT_AGENT}} agent) {{/if}}
 
 **Next required step:**
 
 - Command: `{{NEXT_COMMAND}}`
 - Agent: {{NEXT_AGENT}}
 
-{{#if optional_workflows_available}}
-**Optional workflows available:**
+{{#if optional_workflows_available}} **Optional workflows available:**
 {{#each optional_workflows}}
 
-- {{workflow_name}} ({{agent}})
-  {{/each}}
-  {{/if}}
-  </output>
-  </step>
+- {{workflow_name}} ({{agent}}) {{/each}} {{/if}} </output> </step>
 
 <step n="4" goal="Offer actions">
 <ask>What would you like to do?
 
 {{#if CURRENT_WORKFLOW != "complete"}}
 
-1. **Continue current** - Resume {{CURRENT_WORKFLOW}}
-   {{/if}}
-2. **Next required** - {{NEXT_COMMAND}}
-   {{#if optional_workflows_available}}
-3. **Optional workflow** - Choose from available options
-   {{/if}}
+1. **Continue current** - Resume {{CURRENT_WORKFLOW}} {{/if}}
+2. **Next required** - {{NEXT_COMMAND}} {{#if optional_workflows_available}}
+3. **Optional workflow** - Choose from available options {{/if}}
 4. **View full status** - See complete status file
 5. **Exit** - Return to agent
 
 Your choice:</ask>
 
-<action>Handle user selection based on available options</action>
-</step>
+<action>Handle user selection based on available options</action> </step>
 
 <!-- ============================================= -->
 <!-- SERVICE MODES - Called by other workflows -->
@@ -185,8 +172,8 @@ Your choice:</ask>
 
   </check>
 
-<template-output>status_file_path = {{path to bmm-workflow-status.md}}</template-output>
-</check>
+<template-output>status_file_path =
+{{path to bmm-workflow-status.md}}</template-output> </check>
 
 <action>Return control to calling workflow with all template outputs</action>
 </step>
@@ -245,11 +232,10 @@ Your choice:</ask>
     <action>Return all parsed fields as template outputs</action>
   </check>
 
-<template-output>status_file_path = {{path to bmm-workflow-status.md}}</template-output>
-</check>
+<template-output>status_file_path =
+{{path to bmm-workflow-status.md}}</template-output> </check>
 
-<action>Return control to calling workflow with requested data</action>
-</step>
+<action>Return control to calling workflow with requested data</action> </step>
 
 <step n="30" goal="Init-check mode - Simple existence check">
 <action>Check if {output_folder}/bmm-workflow-status.md exists</action>
@@ -264,8 +250,7 @@ Your choice:</ask>
   <template-output>suggestion = "No status file. Run workflow-init to create one (optional for progress tracking)"</template-output>
 </check>
 
-<action>Return immediately to calling workflow</action>
-</step>
+<action>Return immediately to calling workflow</action> </step>
 
 <step n="40" goal="Update mode - Centralized status file updates">
 <action>Read {output_folder}/bmm-workflow-status.md</action>

@@ -1,9 +1,7 @@
 # {{project_name}} Product Requirements Document (PRD)
 
-**Author:** {{user_name}}
-**Date:** {{date}}
-**Project Level:** {{project_level}}
-**Target Scale:** {{target_scale}}
+**Author:** {{user_name}} **Date:** {{date}} **Project Level:**
+{{project_level}} **Target Scale:** {{target_scale}}
 
 ---
 
@@ -53,7 +51,8 @@
 
 {{epic_list}}
 
-> **Note:** Detailed epic breakdown with full story specifications is available in [epics.md](./epics.md)
+> **Note:** Detailed epic breakdown with full story specifications is available
+> in [epics.md](./epics.md)
 
 ---
 

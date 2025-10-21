@@ -1,6 +1,7 @@
 # Test Framework Setup - Validation Checklist
 
-This checklist ensures the framework workflow completes successfully and all deliverables meet quality standards.
+This checklist ensures the framework workflow completes successfully and all
+deliverables meet quality standards.
 
 ---
 
@@ -9,7 +10,8 @@ This checklist ensures the framework workflow completes successfully and all del
 Before starting the workflow:
 
 - [ ] Project root contains valid `package.json`
-- [ ] No existing modern E2E framework detected (`playwright.config.*`, `cypress.config.*`)
+- [ ] No existing modern E2E framework detected (`playwright.config.*`,
+      `cypress.config.*`)
 - [ ] Project type identifiable (React, Vue, Angular, Next.js, Node, etc.)
 - [ ] Bundler identifiable (Vite, Webpack, Rollup, esbuild) or not applicable
 - [ ] User has write permissions to create directories and files
@@ -44,11 +46,13 @@ Before starting the workflow:
 - [ ] `tests/support/page-objects/` directory created (if applicable)
 - [ ] All directories have correct permissions
 
-**Note**: Test organization is flexible (e2e/, api/, integration/). The **support/** folder is the key pattern.
+**Note**: Test organization is flexible (e2e/, api/, integration/). The
+**support/** folder is the key pattern.
 
 ### Step 4: Configuration Files
 
-- [ ] Framework config file created (`playwright.config.ts` or `cypress.config.ts`)
+- [ ] Framework config file created (`playwright.config.ts` or
+      `cypress.config.ts`)
 - [ ] Config file uses TypeScript (if `use_typescript: true`)
 - [ ] Timeouts configured correctly (action: 15s, navigation: 30s, test: 60s)
 - [ ] Base URL configured with environment variable fallback
@@ -315,7 +319,6 @@ If workflow fails and needs to be rolled back:
 
 **Checklist Complete**: Sign off when all items checked and validated.
 
-**Completed by:** **\*\***\_\_\_**\*\***
-**Date:** **\*\***\_\_\_**\*\***
+**Completed by:** **\*\***\_\_\_**\*\*** **Date:** **\*\***\_\_\_**\*\***
 **Framework:** **\*\***\_\_\_**\*\*** (Playwright / Cypress)
 **Notes:** \***\*\*\*\*\***\*\*\***\*\*\*\*\***\_\_\_\***\*\*\*\*\***\*\*\***\*\*\*\*\***

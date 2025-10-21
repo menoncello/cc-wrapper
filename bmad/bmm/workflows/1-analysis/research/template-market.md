@@ -1,8 +1,7 @@
 # Market Research Report: {{product_name}}
 
-**Date:** {{date}}
-**Prepared by:** {{user_name}}
-**Research Depth:** {{research_depth}}
+**Date:** {{date}} **Prepared by:** {{user_name}} **Research Depth:**
+{{research_depth}}
 
 ---
 
@@ -105,36 +104,31 @@
 
 #### Segment 1
 
-{{segment_profile_1}}
-{{/segment_profile_1}}
+{{segment_profile_1}} {{/segment_profile_1}}
 
 {{#segment_profile_2}}
 
 #### Segment 2
 
-{{segment_profile_2}}
-{{/segment_profile_2}}
+{{segment_profile_2}} {{/segment_profile_2}}
 
 {{#segment_profile_3}}
 
 #### Segment 3
 
-{{segment_profile_3}}
-{{/segment_profile_3}}
+{{segment_profile_3}} {{/segment_profile_3}}
 
 {{#segment_profile_4}}
 
 #### Segment 4
 
-{{segment_profile_4}}
-{{/segment_profile_4}}
+{{segment_profile_4}} {{/segment_profile_4}}
 
 {{#segment_profile_5}}
 
 #### Segment 5
 
-{{segment_profile_5}}
-{{/segment_profile_5}}
+{{segment_profile_5}} {{/segment_profile_5}}
 
 ### Jobs-to-be-Done Analysis
 
@@ -158,36 +152,31 @@
 
 #### Competitor 1
 
-{{competitor_analysis_1}}
-{{/competitor_analysis_1}}
+{{competitor_analysis_1}} {{/competitor_analysis_1}}
 
 {{#competitor_analysis_2}}
 
 #### Competitor 2
 
-{{competitor_analysis_2}}
-{{/competitor_analysis_2}}
+{{competitor_analysis_2}} {{/competitor_analysis_2}}
 
 {{#competitor_analysis_3}}
 
 #### Competitor 3
 
-{{competitor_analysis_3}}
-{{/competitor_analysis_3}}
+{{competitor_analysis_3}} {{/competitor_analysis_3}}
 
 {{#competitor_analysis_4}}
 
 #### Competitor 4
 
-{{competitor_analysis_4}}
-{{/competitor_analysis_4}}
+{{competitor_analysis_4}} {{/competitor_analysis_4}}
 
 {{#competitor_analysis_5}}
 
 #### Competitor 5
 
-{{competitor_analysis_5}}
-{{/competitor_analysis_5}}
+{{competitor_analysis_5}} {{/competitor_analysis_5}}
 
 ### Competitive Positioning
 
@@ -265,9 +254,7 @@
 
 ## 10. Financial Projections
 
-{{#financial_projections}}
-{{financial_projections}}
-{{/financial_projections}}
+{{#financial_projections}} {{financial_projections}} {{/financial_projections}}
 
 ---
 
@@ -283,9 +270,7 @@
 
 ### Appendix C: Additional Analysis
 
-{{#appendices}}
-{{appendices}}
-{{/appendices}}
+{{#appendices}} {{appendices}} {{/appendices}}
 
 ### Appendix D: Glossary of Terms
 
@@ -295,10 +280,8 @@
 
 ## Document Information
 
-**Workflow:** BMad Market Research Workflow v1.0
-**Generated:** {{date}}
-**Next Review:** {{next_review_date}}
-**Classification:** {{classification}}
+**Workflow:** BMad Market Research Workflow v1.0 **Generated:** {{date}} **Next
+Review:** {{next_review_date}} **Classification:** {{classification}}
 
 ### Research Quality Metrics
 
@@ -308,4 +291,6 @@
 
 ---
 
-_This market research report was generated using the BMad Method Market Research Workflow, combining systematic analysis frameworks with real-time market intelligence gathering._
+_This market research report was generated using the BMad Method Market Research
+Workflow, combining systematic analysis frameworks with real-time market
+intelligence gathering._

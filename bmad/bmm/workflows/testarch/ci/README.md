@@ -1,6 +1,10 @@
 # CI/CD Pipeline Setup Workflow
 
-Scaffolds a production-ready CI/CD quality pipeline with test execution, burn-in loops for flaky test detection, parallel sharding, and artifact collection. This workflow creates platform-specific CI configuration optimized for fast feedback (< 45 min total) and reliable test execution with 20× speedup over sequential runs.
+Scaffolds a production-ready CI/CD quality pipeline with test execution, burn-in
+loops for flaky test detection, parallel sharding, and artifact collection. This
+workflow creates platform-specific CI configuration optimized for fast feedback
+(< 45 min total) and reliable test execution with 20× speedup over sequential
+runs.
 
 ## Usage
 
@@ -19,7 +23,8 @@ The TEA agent runs this workflow when:
 
 **Required Context Files:**
 
-- **Framework config** (playwright.config.ts, cypress.config.ts): Determines test commands and configuration
+- **Framework config** (playwright.config.ts, cypress.config.ts): Determines
+  test commands and configuration
 - **package.json**: Dependencies and scripts for caching strategy
 - **.nvmrc**: Node version for CI (optional, defaults to Node 20 LTS)
 
@@ -101,7 +106,8 @@ burn-in:
         done
 ```
 
-**Purpose**: Runs tests 10 times to catch non-deterministic failures before they reach main branch.
+**Purpose**: Runs tests 10 times to catch non-deterministic failures before they
+reach main branch.
 
 **When to run:**
 
@@ -109,7 +115,8 @@ burn-in:
 - Weekly on cron schedule
 - After test infrastructure changes
 
-**Failure threshold**: Even ONE failure → tests are flaky, must fix before merging.
+**Failure threshold**: Even ONE failure → tests are flaky, must fix before
+merging.
 
 ### Parallel Sharding
 
@@ -481,13 +488,17 @@ bmad tea *ci
 
 ## Related Workflows
 
-- **framework**: Set up test infrastructure → [framework/README.md](../framework/README.md)
+- **framework**: Set up test infrastructure →
+  [framework/README.md](../framework/README.md)
 - **atdd**: Generate acceptance tests → [atdd/README.md](../atdd/README.md)
-- **automate**: Expand test coverage → [automate/README.md](../automate/README.md)
-- **trace**: Traceability and quality gate decisions → [trace/README.md](../trace/README.md)
+- **automate**: Expand test coverage →
+  [automate/README.md](../automate/README.md)
+- **trace**: Traceability and quality gate decisions →
+  [trace/README.md](../trace/README.md)
 
 ## Version History
 
-- **v4.0 (BMad v6)**: Pure markdown instructions, enhanced workflow.yaml, burn-in loop integration
+- **v4.0 (BMad v6)**: Pure markdown instructions, enhanced workflow.yaml,
+  burn-in loop integration
 - **v3.x**: XML format instructions, basic CI setup
 - **v2.x**: Legacy task-based approach

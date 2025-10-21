@@ -2,17 +2,27 @@
 
 ## Principle
 
-Run only the tests you need, when you need them. Use tags/grep to slice suites by risk priority (not directory structure), filter by spec patterns or git diff to focus on impacted areas, and combine priority metadata (P0-P3) with change detection to optimize pre-commit vs. CI execution. Document the selection strategy clearly so teams understand when full regression is mandatory.
+Run only the tests you need, when you need them. Use tags/grep to slice suites
+by risk priority (not directory structure), filter by spec patterns or git diff
+to focus on impacted areas, and combine priority metadata (P0-P3) with change
+detection to optimize pre-commit vs. CI execution. Document the selection
+strategy clearly so teams understand when full regression is mandatory.
 
 ## Rationale
 
-Running the entire test suite on every commit wastes time and resources. Smart test selection provides fast feedback (smoke tests in minutes, full regression in hours) while maintaining confidence. The "32+ ways of selective testing" philosophy balances speed with coverage: quick loops for developers, comprehensive validation before deployment. Poorly documented selection leads to confusion about when tests run and why.
+Running the entire test suite on every commit wastes time and resources. Smart
+test selection provides fast feedback (smoke tests in minutes, full regression
+in hours) while maintaining confidence. The "32+ ways of selective testing"
+philosophy balances speed with coverage: quick loops for developers,
+comprehensive validation before deployment. Poorly documented selection leads to
+confusion about when tests run and why.
 
 ## Pattern Examples
 
 ### Example 1: Tag-Based Execution with Priority Levels
 
-**Context**: Organize tests by risk priority and execution stage using grep/tag patterns.
+**Context**: Organize tests by risk priority and execution stage using grep/tag
+patterns.
 
 **Implementation**:
 
@@ -32,7 +42,9 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Checkout Flow', () => {
   // P0 + Smoke: Must run on every commit
-  test('@smoke @p0 should complete purchase with valid payment', async ({ page }) => {
+  test('@smoke @p0 should complete purchase with valid payment', async ({
+    page
+  }) => {
     await page.goto('/checkout');
     await page.getByTestId('card-number').fill('4242424242424242');
     await page.getByTestId('submit-payment').click();
@@ -41,7 +53,9 @@ test.describe('Checkout Flow', () => {
   });
 
   // P0 but not smoke: Run pre-merge
-  test('@regression @p0 should handle payment decline gracefully', async ({ page }) => {
+  test('@regression @p0 should handle payment decline gracefully', async ({
+    page
+  }) => {
     await page.goto('/checkout');
     await page.getByTestId('card-number').fill('4000000000000002'); // Decline card
     await page.getByTestId('submit-payment').click();
@@ -60,15 +74,21 @@ test.describe('Checkout Flow', () => {
   });
 
   // P2: Run in full regression only
-  test('@regression @p2 should remember saved payment methods', async ({ page }) => {
+  test('@regression @p2 should remember saved payment methods', async ({
+    page
+  }) => {
     await page.goto('/checkout');
     await expect(page.getByTestId('saved-cards')).toBeVisible();
   });
 
   // P3: Low priority, run nightly or weekly
-  test('@nightly @p3 should display checkout page analytics', async ({ page }) => {
+  test('@nightly @p3 should display checkout page analytics', async ({
+    page
+  }) => {
     await page.goto('/checkout');
-    const analyticsEvents = await page.evaluate(() => (window as any).__ANALYTICS__);
+    const analyticsEvents = await page.evaluate(
+      () => (window as any).__ANALYTICS__
+    );
     expect(analyticsEvents).toBeDefined();
   });
 });
@@ -116,13 +136,13 @@ export default defineConfig({
   e2e: {
     env: {
       grepTags: process.env.GREP_TAGS || '',
-      grepFilterSpecs: true,
+      grepFilterSpecs: true
     },
     setupNodeEvents(on, config) {
       require('@cypress/grep/src/plugin')(config);
       return config;
-    },
-  },
+    }
+  }
 });
 ```
 
@@ -215,24 +235,24 @@ export default defineConfig({
     {
       name: 'smoke',
       testMatch: /.*smoke.*\.spec\.ts/,
-      retries: 0,
+      retries: 0
     },
     {
       name: 'e2e',
       testMatch: /tests\/e2e\/.*\.spec\.ts/,
-      retries: 2,
+      retries: 2
     },
     {
       name: 'integration',
       testMatch: /tests\/integration\/.*\.spec\.ts/,
-      retries: 1,
+      retries: 1
     },
     {
       name: 'component',
       testMatch: /tests\/component\/.*\.spec\.ts/,
-      use: { ...devices['Desktop Chrome'] },
-    },
-  ],
+      use: { ...devices['Desktop Chrome'] }
+    }
+  ]
 });
 ```
 
@@ -256,7 +276,7 @@ if (components.length === 0) {
 }
 
 // Convert component names to glob patterns
-const patterns = components.map((comp) => `**/*${comp}*.spec.ts`).join(' ');
+const patterns = components.map(comp => `**/*${comp}*.spec.ts`).join(' ');
 
 console.log(`🧩 Running tests for components: ${components.join(', ')}`);
 console.log(`Patterns: ${patterns}`);
@@ -264,7 +284,7 @@ console.log(`Patterns: ${patterns}`);
 try {
   execSync(`npx playwright test ${patterns}`, {
     stdio: 'inherit',
-    env: { ...process.env, CI: 'false' },
+    env: { ...process.env, CI: 'false' }
   });
 } catch (error) {
   process.exit(1);
@@ -492,7 +512,12 @@ jobs:
  * Defines which tests run at each stage of the development lifecycle
  */
 
-export type TestStage = 'pre-commit' | 'ci-pr' | 'ci-merge' | 'staging' | 'production';
+export type TestStage =
+  | 'pre-commit'
+  | 'ci-pr'
+  | 'ci-merge'
+  | 'staging'
+  | 'production';
 
 export type TestPromotion = {
   stage: TestStage;
@@ -510,7 +535,7 @@ export const TEST_PROMOTION_RULES: Record<TestStage, TestPromotion> = {
     testCommand: 'npm run test:smoke',
     timebudget: '2',
     required: true,
-    failureAction: 'block',
+    failureAction: 'block'
   },
   'ci-pr': {
     stage: 'ci-pr',
@@ -518,7 +543,7 @@ export const TEST_PROMOTION_RULES: Record<TestStage, TestPromotion> = {
     testCommand: 'npm run test:changed && npm run test:p0-p1',
     timebudget: '10',
     required: true,
-    failureAction: 'block',
+    failureAction: 'block'
   },
   'ci-merge': {
     stage: 'ci-merge',
@@ -526,7 +551,7 @@ export const TEST_PROMOTION_RULES: Record<TestStage, TestPromotion> = {
     testCommand: 'npm run test:regression',
     timebudget: '30',
     required: true,
-    failureAction: 'block',
+    failureAction: 'block'
   },
   staging: {
     stage: 'staging',
@@ -534,7 +559,7 @@ export const TEST_PROMOTION_RULES: Record<TestStage, TestPromotion> = {
     testCommand: 'npm run test:e2e -- --grep "@smoke"',
     timebudget: '15',
     required: true,
-    failureAction: 'block',
+    failureAction: 'block'
   },
   production: {
     stage: 'production',
@@ -542,8 +567,8 @@ export const TEST_PROMOTION_RULES: Record<TestStage, TestPromotion> = {
     testCommand: 'npm run test:e2e:prod -- --grep "@smoke.*@p0"',
     timebudget: '5',
     required: false,
-    failureAction: 'alert',
-  },
+    failureAction: 'alert'
+  }
 };
 
 /**
@@ -556,7 +581,10 @@ export function getTestsForStage(stage: TestStage): TestPromotion {
 /**
  * Validate if tests can be promoted to next stage
  */
-export function canPromote(currentStage: TestStage, testsPassed: boolean): boolean {
+export function canPromote(
+  currentStage: TestStage,
+  testsPassed: boolean
+): boolean {
   const promotion = TEST_PROMOTION_RULES[currentStage];
 
   if (!promotion.required) {

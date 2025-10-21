@@ -2,23 +2,27 @@
 
 # Test Framework Setup
 
-**Workflow ID**: `bmad/bmm/testarch/framework`
-**Version**: 4.0 (BMad v6)
+**Workflow ID**: `bmad/bmm/testarch/framework` **Version**: 4.0 (BMad v6)
 
 ---
 
 ## Overview
 
-Initialize a production-ready test framework architecture (Playwright or Cypress) with fixtures, helpers, configuration, and best practices. This workflow scaffolds the complete testing infrastructure for modern web applications.
+Initialize a production-ready test framework architecture (Playwright or
+Cypress) with fixtures, helpers, configuration, and best practices. This
+workflow scaffolds the complete testing infrastructure for modern web
+applications.
 
 ---
 
 ## Preflight Requirements
 
-**Critical:** Verify these requirements before proceeding. If any fail, HALT and notify the user.
+**Critical:** Verify these requirements before proceeding. If any fail, HALT and
+notify the user.
 
 - ✅ `package.json` exists in project root
-- ✅ No modern E2E test harness is already configured (check for existing `playwright.config.*` or `cypress.config.*`)
+- ✅ No modern E2E test harness is already configured (check for existing
+  `playwright.config.*` or `cypress.config.*`)
 - ✅ Architectural/stack context available (project type, bundler, dependencies)
 
 ---
@@ -36,14 +40,16 @@ Initialize a production-ready test framework architecture (Playwright or Cypress
 2. **Check for Existing Framework**
    - Search for `playwright.config.*`, `cypress.config.*`, `cypress.json`
    - Check `package.json` for `@playwright/test` or `cypress` dependencies
-   - If found, HALT with message: "Existing test framework detected. Use workflow `upgrade-framework` instead."
+   - If found, HALT with message: "Existing test framework detected. Use
+     workflow `upgrade-framework` instead."
 
 3. **Gather Context**
    - Look for architecture documents (`architecture.md`, `tech-spec*.md`)
    - Check for API documentation or endpoint lists
    - Identify authentication requirements
 
-**Halt Condition:** If preflight checks fail, stop immediately and report which requirement failed.
+**Halt Condition:** If preflight checks fail, stop immediately and report which
+requirement failed.
 
 ---
 
@@ -86,7 +92,9 @@ Initialize a production-ready test framework architecture (Playwright or Cypress
    │   └── README.md                 # Test suite documentation
    ```
 
-   **Note**: Users organize test files (e2e/, api/, integration/, component/) as needed. The **support/** folder is the critical pattern for fixtures and helpers used across tests.
+   **Note**: Users organize test files (e2e/, api/, integration/, component/) as
+   needed. The **support/** folder is the critical pattern for fixtures and
+   helpers used across tests.
 
 3. **Generate Configuration File**
 
@@ -104,7 +112,7 @@ Initialize a production-ready test framework architecture (Playwright or Cypress
 
      timeout: 60 * 1000, // Test timeout: 60s
      expect: {
-       timeout: 15 * 1000, // Assertion timeout: 15s
+       timeout: 15 * 1000 // Assertion timeout: 15s
      },
 
      use: {
@@ -113,16 +121,20 @@ Initialize a production-ready test framework architecture (Playwright or Cypress
        screenshot: 'only-on-failure',
        video: 'retain-on-failure',
        actionTimeout: 15 * 1000, // Action timeout: 15s
-       navigationTimeout: 30 * 1000, // Navigation timeout: 30s
+       navigationTimeout: 30 * 1000 // Navigation timeout: 30s
      },
 
-     reporter: [['html', { outputFolder: 'test-results/html' }], ['junit', { outputFile: 'test-results/junit.xml' }], ['list']],
+     reporter: [
+       ['html', { outputFolder: 'test-results/html' }],
+       ['junit', { outputFile: 'test-results/junit.xml' }],
+       ['list']
+     ],
 
      projects: [
        { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
        { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
-       { name: 'webkit', use: { ...devices['Desktop Safari'] } },
-     ],
+       { name: 'webkit', use: { ...devices['Desktop Safari'] } }
+     ]
    });
    ```
 
@@ -141,18 +153,18 @@ Initialize a production-ready test framework architecture (Playwright or Cypress
 
        setupNodeEvents(on, config) {
          // implement node event listeners here
-       },
+       }
      },
 
      retries: {
        runMode: 2,
-       openMode: 0,
+       openMode: 0
      },
 
      defaultCommandTimeout: 15000,
      requestTimeout: 30000,
      responseTimeout: 30000,
-     pageLoadTimeout: 60000,
+     pageLoadTimeout: 60000
    });
    ```
 
@@ -206,7 +218,7 @@ Initialize a production-ready test framework architecture (Playwright or Cypress
        const factory = new UserFactory();
        await use(factory);
        await factory.cleanup(); // Auto-cleanup
-     },
+     }
    });
 
    export { expect } from '@playwright/test';
@@ -229,14 +241,14 @@ Initialize a production-ready test framework architecture (Playwright or Cypress
          email: faker.internet.email(),
          name: faker.person.fullName(),
          password: faker.internet.password({ length: 12 }),
-         ...overrides,
+         ...overrides
        };
 
        // API call to create user
        const response = await fetch(`${process.env.API_URL}/users`, {
          method: 'POST',
          headers: { 'Content-Type': 'application/json' },
-         body: JSON.stringify(user),
+         body: JSON.stringify(user)
        });
 
        const created = await response.json();
@@ -248,7 +260,7 @@ Initialize a production-ready test framework architecture (Playwright or Cypress
        // Delete all created users
        for (const userId of this.createdUsers) {
          await fetch(`${process.env.API_URL}/users/${userId}`, {
-           method: 'DELETE',
+           method: 'DELETE'
          });
        }
        this.createdUsers = [];
@@ -297,7 +309,8 @@ Initialize a production-ready test framework architecture (Playwright or Cypress
    }
    ```
 
-   **Note**: Users can add additional scripts as needed (e.g., `--ui`, `--headed`, `--debug`, `show-report`).
+   **Note**: Users can add additional scripts as needed (e.g., `--ui`,
+   `--headed`, `--debug`, `show-report`).
 
 10. **Generate Documentation**
 
@@ -349,13 +362,20 @@ The generated `tests/README.md` should include:
 
 ### Knowledge Base Integration
 
-**Critical:** Consult `{project-root}/bmad/bmm/testarch/tea-index.csv` to identify and load relevant knowledge fragments:
+**Critical:** Consult `{project-root}/bmad/bmm/testarch/tea-index.csv` to
+identify and load relevant knowledge fragments:
 
-- `fixture-architecture.md` - Pure function → fixture → `mergeTests` composition with auto-cleanup (406 lines, 5 examples)
-- `data-factories.md` - Faker-based factories with overrides, nested factories, API seeding, auto-cleanup (498 lines, 5 examples)
-- `network-first.md` - Network-first testing safeguards: intercept before navigate, HAR capture, deterministic waiting (489 lines, 5 examples)
-- `playwright-config.md` - Playwright-specific configuration: environment-based, timeout standards, artifact output, parallelization, project config (722 lines, 5 examples)
-- `test-quality.md` - Test design principles: deterministic, isolated with cleanup, explicit assertions, length/time limits (658 lines, 5 examples)
+- `fixture-architecture.md` - Pure function → fixture → `mergeTests` composition
+  with auto-cleanup (406 lines, 5 examples)
+- `data-factories.md` - Faker-based factories with overrides, nested factories,
+  API seeding, auto-cleanup (498 lines, 5 examples)
+- `network-first.md` - Network-first testing safeguards: intercept before
+  navigate, HAR capture, deterministic waiting (489 lines, 5 examples)
+- `playwright-config.md` - Playwright-specific configuration: environment-based,
+  timeout standards, artifact output, parallelization, project config (722
+  lines, 5 examples)
+- `test-quality.md` - Test design principles: deterministic, isolated with
+  cleanup, explicit assertions, length/time limits (658 lines, 5 examples)
 
 ### Framework-Specific Guidance
 
@@ -390,7 +410,8 @@ The generated `tests/README.md` should include:
 
 ### Contract Testing
 
-For microservices architectures, **recommend Pact** for consumer-driven contract testing alongside E2E tests.
+For microservices architectures, **recommend Pact** for consumer-driven contract
+testing alongside E2E tests.
 
 ### Failure Artifacts
 

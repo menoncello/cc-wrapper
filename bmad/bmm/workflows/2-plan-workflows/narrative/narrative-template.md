@@ -1,8 +1,7 @@
 # {{game_name}} - Narrative Design Document
 
-**Author:** {{user_name}}
-**Game Type:** {{game_type}}
-**Narrative Complexity:** {{narrative_complexity}}
+**Author:** {{user_name}} **Game Type:** {{game_type}} **Narrative Complexity:**
+{{narrative_complexity}}
 
 ---
 
@@ -28,7 +27,8 @@
 
 {{story_type}}
 
-**Structure used:** (3-act, hero's journey, kishōtenketsu, episodic, branching, etc.)
+**Structure used:** (3-act, hero's journey, kishōtenketsu, episodic, branching,
+etc.)
 
 ### Act Breakdown
 

@@ -2,15 +2,22 @@
 
 ## Overview
 
-Interactive product brief creation workflow that guides users through defining their product vision with multiple input sources and conversational collaboration. Supports both structured interactive mode and rapid "YOLO" mode for quick draft generation.
+Interactive product brief creation workflow that guides users through defining
+their product vision with multiple input sources and conversational
+collaboration. Supports both structured interactive mode and rapid "YOLO" mode
+for quick draft generation.
 
 ## Key Features
 
 - **Dual Mode Operation** - Interactive step-by-step or rapid draft generation
-- **Multi-Input Support** - Integrates market research, competitive analysis, and brainstorming results
-- **Conversational Design** - Guides users through strategic thinking with probing questions
-- **Executive Summary Generation** - Creates compelling summaries for stakeholder communication
-- **Comprehensive Coverage** - Addresses all critical product planning dimensions
+- **Multi-Input Support** - Integrates market research, competitive analysis,
+  and brainstorming results
+- **Conversational Design** - Guides users through strategic thinking with
+  probing questions
+- **Executive Summary Generation** - Creates compelling summaries for
+  stakeholder communication
+- **Comprehensive Coverage** - Addresses all critical product planning
+  dimensions
 - **Stakeholder Ready** - Generates professional briefs suitable for PM handoff
 
 ## Usage
@@ -107,21 +114,27 @@ product-brief/
 
 ## Requirements
 
-No special requirements - designed to work with or without existing documentation.
+No special requirements - designed to work with or without existing
+documentation.
 
 ## Best Practices
 
 ### Before Starting
 
-1. **Gather Available Research**: Collect any market research, competitive analysis, or user feedback
-2. **Define Stakeholder Audience**: Know who will use this brief for decision-making
-3. **Set Time Boundaries**: Interactive mode requires 60-90 minutes for quality results
+1. **Gather Available Research**: Collect any market research, competitive
+   analysis, or user feedback
+2. **Define Stakeholder Audience**: Know who will use this brief for
+   decision-making
+3. **Set Time Boundaries**: Interactive mode requires 60-90 minutes for quality
+   results
 
 ### During Execution
 
-1. **Be Specific**: Avoid generic statements - provide concrete examples and data
+1. **Be Specific**: Avoid generic statements - provide concrete examples and
+   data
 2. **Think Strategically**: Focus on "why" and "what" rather than "how"
-3. **Challenge Assumptions**: Use the conversation to test and refine your thinking
+3. **Challenge Assumptions**: Use the conversation to test and refine your
+   thinking
 4. **Scope Ruthlessly**: Resist feature creep in MVP definition
 
 ### After Completion
@@ -136,13 +149,16 @@ No special requirements - designed to work with or without existing documentatio
 
 **Issue**: Brief lacks specificity or contains vague statements
 
-- **Solution**: Restart problem definition with concrete examples and measurable impacts
-- **Check**: Ensure each section answers "so what?" and provides actionable insights
+- **Solution**: Restart problem definition with concrete examples and measurable
+  impacts
+- **Check**: Ensure each section answers "so what?" and provides actionable
+  insights
 
 **Issue**: MVP scope is too large or undefined
 
 - **Solution**: Use the "what's the minimum to validate core hypothesis?" filter
-- **Check**: Verify that each MVP feature is truly essential for initial value delivery
+- **Check**: Verify that each MVP feature is truly essential for initial value
+  delivery
 
 **Issue**: Missing strategic context or business justification
 
@@ -153,9 +169,12 @@ No special requirements - designed to work with or without existing documentatio
 
 To customize this workflow:
 
-1. **Modify Questions**: Update instructions.md to add industry-specific or company-specific prompts
-2. **Adjust Template**: Customize template.md sections for organizational brief standards
-3. **Add Validation**: Extend checklist.md with company-specific quality criteria
+1. **Modify Questions**: Update instructions.md to add industry-specific or
+   company-specific prompts
+2. **Adjust Template**: Customize template.md sections for organizational brief
+   standards
+3. **Add Validation**: Extend checklist.md with company-specific quality
+   criteria
 4. **Configure Modes**: Adjust brief_format settings for different output styles
 
 ## Version History
@@ -170,7 +189,8 @@ To customize this workflow:
 
 For issues or questions:
 
-- Review the workflow creation guide at `/bmad/bmb/workflows/create-workflow/workflow-creation-guide.md`
+- Review the workflow creation guide at
+  `/bmad/bmb/workflows/create-workflow/workflow-creation-guide.md`
 - Validate output using `checklist.md`
 - Consider running market research workflow first if lacking business context
 - Consult BMAD documentation for product planning methodology

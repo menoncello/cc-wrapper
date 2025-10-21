@@ -2,7 +2,10 @@
 
 ## Principle
 
-Prefer factory functions that accept overrides and return complete objects (`createUser(overrides)`). Seed test state through APIs, tasks, or direct DB helpers before visiting the UI—never via slow UI interactions. UI is for validation only, not setup.
+Prefer factory functions that accept overrides and return complete objects
+(`createUser(overrides)`). Seed test state through APIs, tasks, or direct DB
+helpers before visiting the UI—never via slow UI interactions. UI is for
+validation only, not setup.
 
 ## Rationale
 
@@ -23,7 +26,9 @@ Dynamic factories with overrides provide:
 
 ### Example 1: Factory Function with Overrides
 
-**Context**: When creating test data, build factory functions with sensible defaults and explicit overrides. Use `faker` for dynamic values that prevent collisions.
+**Context**: When creating test data, build factory functions with sensible
+defaults and explicit overrides. Use `faker` for dynamic values that prevent
+collisions.
 
 **Implementation**:
 
@@ -47,7 +52,7 @@ export const createUser = (overrides: Partial<User> = {}): User => ({
   role: 'user',
   createdAt: new Date(),
   isActive: true,
-  ...overrides,
+  ...overrides
 });
 
 // test-utils/factories/product-factory.ts
@@ -65,7 +70,7 @@ export const createProduct = (overrides: Partial<Product> = {}): Product => ({
   price: parseFloat(faker.commerce.price()),
   stock: faker.number.int({ min: 0, max: 100 }),
   category: faker.commerce.department(),
-  ...overrides,
+  ...overrides
 });
 
 // Usage in tests:
@@ -96,7 +101,9 @@ test('admin can delete users', async ({ page, apiRequest }) => {
 
 ### Example 2: Nested Factory Pattern
 
-**Context**: When testing relationships (orders with users and products), nest factories to create complete object graphs. Control relationship data explicitly.
+**Context**: When testing relationships (orders with users and products), nest
+factories to create complete object graphs. Control relationship data
+explicitly.
 
 **Implementation**:
 
@@ -120,7 +127,9 @@ type Order = {
   createdAt: Date;
 };
 
-export const createOrderItem = (overrides: Partial<OrderItem> = {}): OrderItem => {
+export const createOrderItem = (
+  overrides: Partial<OrderItem> = {}
+): OrderItem => {
   const product = overrides.product || createProduct();
   const quantity = overrides.quantity || faker.number.int({ min: 1, max: 5 });
 
@@ -128,7 +137,7 @@ export const createOrderItem = (overrides: Partial<OrderItem> = {}): OrderItem =
     product,
     quantity,
     price: product.price * quantity,
-    ...overrides,
+    ...overrides
   };
 };
 
@@ -143,7 +152,7 @@ export const createOrder = (overrides: Partial<Order> = {}): Order => {
     total,
     status: 'pending',
     createdAt: new Date(),
-    ...overrides,
+    ...overrides
   };
 };
 
@@ -158,8 +167,8 @@ test('user can view order details', async ({ page, apiRequest }) => {
     user,
     items: [
       createOrderItem({ product: product1, quantity: 2 }), // $20
-      createOrderItem({ product: product2, quantity: 1 }), // $15
-    ],
+      createOrderItem({ product: product2, quantity: 1 }) // $15
+    ]
   });
 
   // Seed via API
@@ -185,7 +194,9 @@ test('user can view order details', async ({ page, apiRequest }) => {
 
 ### Example 3: Factory with API Seeding
 
-**Context**: When tests need data setup, always use API calls or database tasks—never UI navigation. Wrap factory usage with seeding utilities for clean test setup.
+**Context**: When tests need data setup, always use API calls or database
+tasks—never UI navigation. Wrap factory usage with seeding utilities for clean
+test setup.
 
 **Implementation**:
 
@@ -193,13 +204,19 @@ test('user can view order details', async ({ page, apiRequest }) => {
 // playwright/support/helpers/seed-helpers.ts
 import { APIRequestContext } from '@playwright/test';
 import { User, createUser } from '../../test-utils/factories/user-factory';
-import { Product, createProduct } from '../../test-utils/factories/product-factory';
+import {
+  Product,
+  createProduct
+} from '../../test-utils/factories/product-factory';
 
-export async function seedUser(request: APIRequestContext, overrides: Partial<User> = {}): Promise<User> {
+export async function seedUser(
+  request: APIRequestContext,
+  overrides: Partial<User> = {}
+): Promise<User> {
   const user = createUser(overrides);
 
   const response = await request.post('/api/users', {
-    data: user,
+    data: user
   });
 
   if (!response.ok()) {
@@ -209,11 +226,14 @@ export async function seedUser(request: APIRequestContext, overrides: Partial<Us
   return user;
 }
 
-export async function seedProduct(request: APIRequestContext, overrides: Partial<Product> = {}): Promise<Product> {
+export async function seedProduct(
+  request: APIRequestContext,
+  overrides: Partial<Product> = {}
+): Promise<Product> {
   const product = createProduct(overrides);
 
   const response = await request.post('/api/products', {
-    data: product,
+    data: product
   });
 
   if (!response.ok()) {
@@ -236,7 +256,7 @@ async function globalSetup(config: FullConfig) {
   // Seed admin user for all tests
   const admin = await seedUser(context.request, {
     email: 'admin@example.com',
-    role: 'admin',
+    role: 'admin'
   });
 
   // Save auth state for reuse
@@ -304,9 +324,12 @@ test('admin can delete user', async ({ page }) => {
 
 **Why It Fails**:
 
-- **Parallel collisions**: Hardcoded IDs (`id: 1`, `email: 'test@test.com'`) cause failures when tests run concurrently
-- **Schema drift**: Adding required fields (`phoneNumber`, `address`) breaks all tests using fixtures
-- **Hidden intent**: Does this test need `email: 'test@test.com'` specifically, or any email?
+- **Parallel collisions**: Hardcoded IDs (`id: 1`, `email: 'test@test.com'`)
+  cause failures when tests run concurrently
+- **Schema drift**: Adding required fields (`phoneNumber`, `address`) breaks all
+  tests using fixtures
+- **Hidden intent**: Does this test need `email: 'test@test.com'` specifically,
+  or any email?
 - **Slow setup**: UI-based data creation is 10-50x slower than API
 
 **Better Approach**: Use factories
@@ -314,7 +337,10 @@ test('admin can delete user', async ({ page }) => {
 ```typescript
 // ✅ GOOD: Factory-based data
 test('user can login', async ({ page, apiRequest }) => {
-  const user = createUser({ email: 'unique@example.com', password: 'secure123' });
+  const user = createUser({
+    email: 'unique@example.com',
+    password: 'secure123'
+  });
 
   // Seed via API (fast, parallel-safe)
   await apiRequest({ method: 'POST', url: '/api/users', data: user });
@@ -336,7 +362,7 @@ export const createUser = (overrides: Partial<User> = {}): User => ({
   name: faker.person.fullName(),
   phoneNumber: faker.phone.number(), // NEW field, all tests get it automatically
   role: 'user',
-  ...overrides,
+  ...overrides
 });
 ```
 
@@ -349,7 +375,8 @@ export const createUser = (overrides: Partial<User> = {}): User => ({
 
 ### Example 5: Factory Composition
 
-**Context**: When building specialized factories, compose simpler factories instead of duplicating logic. Layer overrides for specific test scenarios.
+**Context**: When building specialized factories, compose simpler factories
+instead of duplicating logic. Layer overrides for specific test scenarios.
 
 **Implementation**:
 
@@ -362,15 +389,18 @@ export const createUser = (overrides: Partial<User> = {}): User => ({
   role: 'user',
   createdAt: new Date(),
   isActive: true,
-  ...overrides,
+  ...overrides
 });
 
 // Compose specialized factories
-export const createAdminUser = (overrides: Partial<User> = {}): User => createUser({ role: 'admin', ...overrides });
+export const createAdminUser = (overrides: Partial<User> = {}): User =>
+  createUser({ role: 'admin', ...overrides });
 
-export const createModeratorUser = (overrides: Partial<User> = {}): User => createUser({ role: 'moderator', ...overrides });
+export const createModeratorUser = (overrides: Partial<User> = {}): User =>
+  createUser({ role: 'moderator', ...overrides });
 
-export const createInactiveUser = (overrides: Partial<User> = {}): User => createUser({ isActive: false, ...overrides });
+export const createInactiveUser = (overrides: Partial<User> = {}): User =>
+  createUser({ isActive: false, ...overrides });
 
 // Account-level factories with feature flags
 type Account = {
@@ -387,7 +417,7 @@ export const createAccount = (overrides: Partial<Account> = {}): Account => ({
   plan: 'free',
   features: [],
   maxUsers: 1,
-  ...overrides,
+  ...overrides
 });
 
 export const createProAccount = (overrides: Partial<Account> = {}): Account =>
@@ -395,15 +425,17 @@ export const createProAccount = (overrides: Partial<Account> = {}): Account =>
     plan: 'pro',
     features: ['advanced-analytics', 'priority-support'],
     maxUsers: 10,
-    ...overrides,
+    ...overrides
   });
 
-export const createEnterpriseAccount = (overrides: Partial<Account> = {}): Account =>
+export const createEnterpriseAccount = (
+  overrides: Partial<Account> = {}
+): Account =>
   createAccount({
     plan: 'enterprise',
     features: ['advanced-analytics', 'priority-support', 'sso', 'audit-logs'],
     maxUsers: 100,
-    ...overrides,
+    ...overrides
   });
 
 // Usage in tests:
@@ -432,16 +464,20 @@ test('free accounts cannot access analytics', async ({ page, apiRequest }) => {
 
 **Key Points**:
 
-- Compose specialized factories from base factories (`createAdminUser` → `createUser`)
+- Compose specialized factories from base factories (`createAdminUser` →
+  `createUser`)
 - Defaults cascade: `createProAccount` sets plan + features automatically
 - Still allow overrides: `createProAccount({ maxUsers: 50 })` works
-- Test intent clear: `createProAccount()` vs `createAccount({ plan: 'pro', features: [...] })`
+- Test intent clear: `createProAccount()` vs
+  `createAccount({ plan: 'pro', features: [...] })`
 
 ## Integration Points
 
-- **Used in workflows**: `*atdd` (test generation), `*automate` (test expansion), `*framework` (factory setup)
+- **Used in workflows**: `*atdd` (test generation), `*automate` (test
+  expansion), `*framework` (factory setup)
 - **Related fragments**:
-  - `fixture-architecture.md` - Pure functions and fixtures for factory integration
+  - `fixture-architecture.md` - Pure functions and fixtures for factory
+    integration
   - `network-first.md` - API-first setup patterns
   - `test-quality.md` - Parallel-safe, deterministic test design
 
@@ -477,14 +513,14 @@ When working with feature flags, layer them into factories:
 ```typescript
 export const createUserWithFlags = (
   overrides: Partial<User> = {},
-  flags: Record<string, boolean> = {},
+  flags: Record<string, boolean> = {}
 ): User & { flags: Record<string, boolean> } => ({
   ...createUser(overrides),
   flags: {
     'new-dashboard': false,
     'beta-features': false,
-    ...flags,
-  },
+    ...flags
+  }
 });
 
 // Usage:
@@ -492,9 +528,10 @@ const user = createUserWithFlags(
   { email: 'test@example.com' },
   {
     'new-dashboard': true,
-    'beta-features': true,
-  },
+    'beta-features': true
+  }
 );
 ```
 
-_Source: Murat Testing Philosophy (lines 94-120), API-first testing patterns, faker.js documentation._
+_Source: Murat Testing Philosophy (lines 94-120), API-first testing patterns,
+faker.js documentation._

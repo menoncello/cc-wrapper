@@ -1,0 +1,60 @@
+version: 2
+updates:
+  # Bun dependencies
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+    open-pull-requests-limit: 10
+    reviewers:
+      - 'cc-wrapper-team'
+    labels:
+      - 'dependencies'
+      - 'automated'
+    commit-message:
+      prefix: 'chore(deps)'
+      include: 'scope'
+    groups:
+      # Group all TypeScript-related updates
+      typescript:
+        patterns:
+          - 'typescript'
+          - '@types/*'
+          - '@typescript-eslint/*'
+      # Group all testing-related updates
+      testing:
+        patterns:
+          - 'bun-types'
+          - '@playwright/*'
+          - 'playwright'
+      # Group all build tools
+      build-tools:
+        patterns:
+          - 'vite'
+          - '@vitejs/*'
+          - 'esbuild'
+      # Group linting/formatting tools
+      code-quality:
+        patterns:
+          - 'eslint'
+          - '@eslint/*'
+          - 'eslint-*'
+          - 'prettier'
+          - 'husky'
+          - 'lint-staged'
+
+  # GitHub Actions
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+    open-pull-requests-limit: 5
+    labels:
+      - 'dependencies'
+      - 'github-actions'
+    commit-message:
+      prefix: 'ci'
