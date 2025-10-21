@@ -5,6 +5,7 @@
     "moduleResolution": "bundler",
     "lib": ["ES2022", "DOM"],
     "types": ["node", "bun-types"],
+    "jsx": "react-jsx",
 
     // Strict type checking
     "strict": true,
@@ -46,7 +47,7 @@
     "packages/**/*",
     "services/**/*",
     "scripts/**/*",
-    "tests/**/*",
+    "types/**/*",
     "*.ts"
   ],
   "exclude": [
@@ -54,6 +55,8 @@
     "dist",
     "coverage",
     ".git",
+    "tests",
+    "test-utils",
     "**/*.test.ts",
     "**/*.spec.ts"
   ]
