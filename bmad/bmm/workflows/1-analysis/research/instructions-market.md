@@ -1,8 +1,10 @@
 # Market Research Workflow Instructions
 
-<critical>The workflow execution engine is governed by: {project_root}/bmad/core/tasks/workflow.xml</critical>
-<critical>You MUST have already loaded and processed: {installed_path}/workflow.yaml</critical>
-<critical>This is an INTERACTIVE workflow with web research capabilities. Engage the user at key decision points.</critical>
+<critical>The workflow execution engine is governed by:
+{project_root}/bmad/core/tasks/workflow.xml</critical> <critical>You MUST have
+already loaded and processed: {installed_path}/workflow.yaml</critical>
+<critical>This is an INTERACTIVE workflow with web research capabilities. Engage
+the user at key decision points.</critical>
 
 <!-- IDE-INJECT-POINT: market-research-subagents -->
 
@@ -35,8 +37,7 @@ Ask the user these critical questions to shape the research:
 <template-output>product_name</template-output>
 <template-output>product_description</template-output>
 <template-output>research_objectives</template-output>
-<template-output>research_depth</template-output>
-</step>
+<template-output>research_depth</template-output> </step>
 
 <step n="2" goal="Market Definition and Boundaries">
 <action>Help the user precisely define the market scope</action>
@@ -58,17 +59,19 @@ Work with the user to establish:
    - Primary vs. secondary segments
    - Segment size estimates
 
-<ask>Should we include adjacent markets in the TAM calculation? This could significantly increase market size but may be less immediately addressable.</ask>
+<ask>Should we include adjacent markets in the TAM calculation? This could
+significantly increase market size but may be less immediately
+addressable.</ask>
 
 <template-output>market_definition</template-output>
 <template-output>geographic_scope</template-output>
-<template-output>segment_boundaries</template-output>
-</step>
+<template-output>segment_boundaries</template-output> </step>
 
 <step n="3" goal="Live Market Intelligence Gathering" if="enable_web_research == true">
 <action>Conduct real-time web research to gather current market data</action>
 
-<critical>This step performs ACTUAL web searches to gather live market intelligence</critical>
+<critical>This step performs ACTUAL web searches to gather live market
+intelligence</critical>
 
 Conduct systematic research across multiple sources:
 
@@ -112,13 +115,13 @@ Look for peer-reviewed studies on:
 
 <template-output>market_intelligence_raw</template-output>
 <template-output>key_data_points</template-output>
-<template-output>source_credibility_notes</template-output>
-</step>
+<template-output>source_credibility_notes</template-output> </step>
 
 <step n="4" goal="TAM, SAM, SOM Calculations">
 <action>Calculate market sizes using multiple methodologies for triangulation</action>
 
-<critical>Use actual data gathered in previous steps, not hypothetical numbers</critical>
+<critical>Use actual data gathered in previous steps, not hypothetical
+numbers</critical>
 
 <step n="4a" title="TAM Calculation">
 **Method 1: Top-Down Approach**
@@ -136,11 +139,11 @@ Look for peer-reviewed studies on:
 - Value created × Capturable percentage
 - Based on problem severity and alternative costs
 
-<ask>Which TAM calculation method seems most credible given our data? Should we use multiple methods and triangulate?</ask>
+<ask>Which TAM calculation method seems most credible given our data? Should we
+use multiple methods and triangulate?</ask>
 
 <template-output>tam_calculation</template-output>
-<template-output>tam_methodology</template-output>
-</step>
+<template-output>tam_methodology</template-output> </step>
 
 <step n="4b" title="SAM Calculation">
 <action>Calculate Serviceable Addressable Market</action>
@@ -153,11 +156,9 @@ Apply constraints to TAM:
 - Language/cultural barriers
 - Current business model limitations
 
-SAM = TAM × Serviceable Percentage
-Show the calculation with clear assumptions.
+SAM = TAM × Serviceable Percentage Show the calculation with clear assumptions.
 
-<template-output>sam_calculation</template-output>
-</step>
+<template-output>sam_calculation</template-output> </step>
 
 <step n="4c" title="SOM Calculation">
 <action>Calculate realistic market capture</action>
@@ -176,9 +177,7 @@ Create 3 scenarios:
 2. Realistic (3-5% market share)
 3. Optimistic (5-10% market share)
 
-<template-output>som_scenarios</template-output>
-</step>
-</step>
+<template-output>som_scenarios</template-output> </step> </step>
 
 <step n="5" goal="Customer Segment Deep Dive">
 <action>Develop detailed understanding of target customers</action>
@@ -205,8 +204,7 @@ For each major segment, research and define:
 - Budget allocation
 
 <invoke-task halt="true">{project-root}/bmad/core/tasks/adv-elicit.xml</invoke-task>
-<template-output>segment*profile*{{segment_number}}</template-output>
-</step>
+<template-output>segment*profile*{{segment_number}}</template-output> </step>
 
 <step n="5b" title="Jobs-to-be-Done Framework">
 <action>Apply JTBD framework to understand customer needs</action>
@@ -231,10 +229,10 @@ For primary segment, identify:
 - Group dynamics
 - Peer influences
 
-<ask>Would you like to conduct actual customer interviews or surveys to validate these jobs? (We can create an interview guide)</ask>
+<ask>Would you like to conduct actual customer interviews or surveys to validate
+these jobs? (We can create an interview guide)</ask>
 
-<template-output>jobs_to_be_done</template-output>
-</step>
+<template-output>jobs_to_be_done</template-output> </step>
 
 <step n="5c" title="Willingness to Pay Analysis">
 <action>Research and estimate pricing sensitivity</action>
@@ -246,9 +244,7 @@ Analyze:
 - Value perception indicators
 - Price points of substitutes
 
-<template-output>pricing_analysis</template-output>
-</step>
-</step>
+<template-output>pricing_analysis</template-output> </step> </step>
 
 <step n="6" goal="Competitive Intelligence" if="enable_competitor_analysis == true">
 <action>Conduct comprehensive competitive analysis</action>
@@ -263,8 +259,8 @@ Search for and categorize:
 3. **Potential Competitors** - Could enter market
 4. **Substitute Products** - Alternative approaches
 
-<ask>Do you have a specific list of competitors to analyze, or should I discover them through research?</ask>
-</step>
+<ask>Do you have a specific list of competitors to analyze, or should I discover
+them through research?</ask> </step>
 
 <step n="6b" title="Competitor Deep Dive" repeat="5">
 <action>For top 5 competitors, research and analyze</action>
@@ -301,14 +297,13 @@ Identify:
 - Over-served areas
 - Differentiation opportunities
 
-<template-output>competitive_positioning</template-output>
-</step>
-</step>
+<template-output>competitive_positioning</template-output> </step> </step>
 
 <step n="7" goal="Industry Forces Analysis">
 <action>Apply Porter's Five Forces framework</action>
 
-<critical>Use specific evidence from research, not generic assessments</critical>
+<critical>Use specific evidence from research, not generic
+assessments</critical>
 
 Analyze each force with concrete examples:
 
@@ -351,8 +346,7 @@ Rate: [Low/Medium/High]
 - Price-performance trade-offs
 </step>
 
-<template-output>porters_five_forces</template-output>
-</step>
+<template-output>porters_five_forces</template-output> </step>
 
 <step n="8" goal="Market Trends and Future Outlook">
 <action>Identify trends and future market dynamics</action>
@@ -383,11 +377,11 @@ Research and analyze:
 - Compliance requirements
 - Policy direction
 
-<ask>Should we explore any specific emerging technologies or disruptions that could reshape this market?</ask>
+<ask>Should we explore any specific emerging technologies or disruptions that
+could reshape this market?</ask>
 
 <template-output>market_trends</template-output>
-<template-output>future_outlook</template-output>
-</step>
+<template-output>future_outlook</template-output> </step>
 
 <step n="9" goal="Opportunity Assessment and Strategy">
 <action>Synthesize research into strategic opportunities</action>
@@ -405,8 +399,7 @@ For each opportunity:
 - Success criteria
 
 <invoke-task halt="true">{project-root}/bmad/core/tasks/adv-elicit.xml</invoke-task>
-<template-output>market_opportunities</template-output>
-</step>
+<template-output>market_opportunities</template-output> </step>
 
 <step n="9b" title="Go-to-Market Recommendations">
 Develop GTM strategy based on research:
@@ -435,8 +428,7 @@ Develop GTM strategy based on research:
 - Price points
 - Value metrics
 
-<template-output>gtm_strategy</template-output>
-</step>
+<template-output>gtm_strategy</template-output> </step>
 
 <step n="9c" title="Risk Analysis">
 Identify and assess key risks:
@@ -459,17 +451,16 @@ Identify and assess key risks:
 - Capability gaps
 - Scaling challenges
 
-For each risk: Impact (H/M/L) × Probability (H/M/L) = Risk Score
-Provide mitigation strategies.
+For each risk: Impact (H/M/L) × Probability (H/M/L) = Risk Score Provide
+mitigation strategies.
 
-<template-output>risk_assessment</template-output>
-</step>
-</step>
+<template-output>risk_assessment</template-output> </step> </step>
 
 <step n="10" goal="Financial Projections" optional="true" if="enable_financial_modeling == true">
 <action>Create financial model based on market research</action>
 
-<ask>Would you like to create a financial model with revenue projections based on the market analysis?</ask>
+<ask>Would you like to create a financial model with revenue projections based
+on the market analysis?</ask>
 
 <check if="yes">
   Build 3-year projections:
@@ -480,8 +471,7 @@ Provide mitigation strategies.
 - Break-even analysis
 - Funding requirements
 
-<template-output>financial_projections</template-output>
-</check>
+<template-output>financial_projections</template-output> </check>
 
 </step>
 
@@ -519,8 +509,7 @@ Create compelling executive summary with:
 - Major risks
 - Mitigation approach
 
-<template-output>executive_summary</template-output>
-</step>
+<template-output>executive_summary</template-output> </step>
 
 <step n="12" goal="Report Compilation and Review">
 <action>Compile full report and review with user</action>
@@ -529,12 +518,12 @@ Create compelling executive summary with:
 <action>Review all sections for completeness and consistency</action>
 <action>Ensure all data sources are properly cited</action>
 
-<ask>Would you like to review any specific sections before finalizing? Are there any additional analyses you'd like to include?</ask>
+<ask>Would you like to review any specific sections before finalizing? Are there
+any additional analyses you'd like to include?</ask>
 
 <goto step="9a" if="user requests changes">Return to refine opportunities</goto>
 
-<template-output>final_report_ready</template-output>
-</step>
+<template-output>final_report_ready</template-output> </step>
 
 <step n="13" goal="Appendices and Supporting Materials" optional="true">
 <ask>Would you like to include detailed appendices with calculations, full competitor profiles, or raw research data?</ask>
@@ -549,8 +538,7 @@ Create compelling executive summary with:
 - Financial model details
 - Glossary of terms
 
-<template-output>appendices</template-output>
-</check>
+<template-output>appendices</template-output> </check>
 
 </step>
 
@@ -589,9 +577,7 @@ Create compelling executive summary with:
    - `product-brief` or `game-brief` to formalize vision
    - `plan-project` if ready to create PRD/GDD
 
-Check status anytime with: `workflow-status`
-</output>
-</check>
+Check status anytime with: `workflow-status` </output> </check>
 
 <check if="status file not found">
   <output>**✅ Research Complete ({{research_mode}} mode)**
@@ -607,9 +593,6 @@ To track progress across workflows, run `workflow-status` first.
 **Next Steps:**
 
 1. Review research findings
-2. Run product-brief or plan-project workflows
-   </output>
-   </check>
-   </step>
+2. Run product-brief or plan-project workflows </output> </check> </step>
 
 </workflow>

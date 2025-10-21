@@ -23,71 +23,70 @@ const PROJECT_ROOT = path.resolve(__dirname, '../..');
 
 describe('Complete Development Workflow E2E', () => {
   test('should complete full development workflow in under 2 minutes', async () => {
-      // GIVEN: Clean project state
-      const startTime = Date.now();
+    // GIVEN: Clean project state
+    const startTime = Date.now();
 
-      // WHEN: Running complete workflow
-      const steps = {
-        install: false,
-        lint: false,
-        typeCheck: false,
-        test: false,
-        build: false
-      };
+    // WHEN: Running complete workflow
+    const steps = {
+      install: false,
+      lint: false,
+      typeCheck: false,
+      test: false,
+      build: false
+    };
 
-      // Step 1: Dependencies should be installed (or install)
-      try {
-        await execAsync('bun install', { cwd: PROJECT_ROOT, timeout: 30000 });
-        steps.install = true;
-      } catch {
-        steps.install = false;
-      }
+    // Step 1: Dependencies should be installed (or install)
+    try {
+      await execAsync('bun install', { cwd: PROJECT_ROOT, timeout: 30000 });
+      steps.install = true;
+    } catch {
+      steps.install = false;
+    }
 
-      // Step 2: Lint should pass
-      try {
-        await execAsync('bun run lint', { cwd: PROJECT_ROOT, timeout: 30000 });
-        steps.lint = true;
-      } catch {
-        steps.lint = false;
-      }
+    // Step 2: Lint should pass
+    try {
+      await execAsync('bun run lint', { cwd: PROJECT_ROOT, timeout: 30000 });
+      steps.lint = true;
+    } catch {
+      steps.lint = false;
+    }
 
-      // Step 3: Type check should pass
-      try {
-        await execAsync('bun run type-check', { cwd: PROJECT_ROOT, timeout: 30000 });
-        steps.typeCheck = true;
-      } catch {
-        steps.typeCheck = false;
-      }
+    // Step 3: Type check should pass
+    try {
+      await execAsync('bun run type-check', { cwd: PROJECT_ROOT, timeout: 30000 });
+      steps.typeCheck = true;
+    } catch {
+      steps.typeCheck = false;
+    }
 
-      // Step 4: Tests should run
-      try {
-        await execAsync('bun test', { cwd: PROJECT_ROOT, timeout: 30000 });
-        steps.test = true;
-      } catch {
-        steps.test = false;
-      }
+    // Step 4: Tests should run
+    try {
+      await execAsync('bun test', { cwd: PROJECT_ROOT, timeout: 30000 });
+      steps.test = true;
+    } catch {
+      steps.test = false;
+    }
 
-      // Step 5: Build should succeed
-      try {
-        await execAsync('bun run build', { cwd: PROJECT_ROOT, timeout: 30000 });
-        steps.build = true;
-      } catch {
-        steps.build = false;
-      }
+    // Step 5: Build should succeed
+    try {
+      await execAsync('bun run build', { cwd: PROJECT_ROOT, timeout: 30000 });
+      steps.build = true;
+    } catch {
+      steps.build = false;
+    }
 
-      const totalTime = (Date.now() - startTime) / 1000;
+    const totalTime = (Date.now() - startTime) / 1000;
 
-      // THEN: All steps should complete successfully
-      expect(steps.install).toBe(true);
-      expect(steps.lint).toBe(true);
-      expect(steps.typeCheck).toBe(true);
-      expect(steps.test).toBe(true);
-      expect(steps.build).toBe(true);
+    // THEN: All steps should complete successfully
+    expect(steps.install).toBe(true);
+    expect(steps.lint).toBe(true);
+    expect(steps.typeCheck).toBe(true);
+    expect(steps.test).toBe(true);
+    expect(steps.build).toBe(true);
 
-      // AND: Total workflow should complete in < 2 minutes
-      expect(totalTime).toBeLessThan(120);
-    });
-
+    // AND: Total workflow should complete in < 2 minutes
+    expect(totalTime).toBeLessThan(120);
+  });
 
   test('should have all project structure directories', () => {
     // GIVEN: Project root
@@ -226,66 +225,66 @@ describe('Complete Development Workflow E2E', () => {
   });
 
   test('should meet all performance targets', async () => {
-      // GIVEN: Performance requirements from tech spec
-      const startBuild = Date.now();
+    // GIVEN: Performance requirements from tech spec
+    const startBuild = Date.now();
 
-      // WHEN: Running build
-      try {
-        await execAsync('bun run build', { cwd: PROJECT_ROOT, timeout: 35000 });
-      } catch {
-        // Build may fail in RED phase, but timing matters
-      }
+    // WHEN: Running build
+    try {
+      await execAsync('bun run build', { cwd: PROJECT_ROOT, timeout: 35000 });
+    } catch {
+      // Build may fail in RED phase, but timing matters
+    }
 
-      const buildTime = (Date.now() - startBuild) / 1000;
+    const buildTime = (Date.now() - startBuild) / 1000;
 
-      // THEN: Build should complete in < 30 seconds
-      expect(buildTime).toBeLessThan(30);
-    });
+    // THEN: Build should complete in < 30 seconds
+    expect(buildTime).toBeLessThan(30);
+  });
 });
 
 describe('Development Workflow Happy Path', () => {
   test('new developer can get started in under 5 minutes', async () => {
-      // GIVEN: New developer clones repository
-      const startTime = Date.now();
+    // GIVEN: New developer clones repository
+    const startTime = Date.now();
 
-      // WHEN: Following quick start guide
-      const steps = {
-        dependenciesInstalled: false,
-        servicesStarted: false,
-        healthCheckPassed: false,
-        devServerStarted: false
-      };
+    // WHEN: Following quick start guide
+    const steps = {
+      dependenciesInstalled: false,
+      servicesStarted: false,
+      healthCheckPassed: false,
+      devServerStarted: false
+    };
 
-      // Step 1: Install dependencies
-      try {
-        await execAsync('bun install', { cwd: PROJECT_ROOT, timeout: 60000 });
-        steps.dependenciesInstalled = true;
-      } catch {
-        steps.dependenciesInstalled = false;
-      }
+    // Step 1: Install dependencies
+    try {
+      await execAsync('bun install', { cwd: PROJECT_ROOT, timeout: 60000 });
+      steps.dependenciesInstalled = true;
+    } catch {
+      steps.dependenciesInstalled = false;
+    }
 
-      // Step 2: Check if services can start (Docker may not be running in CI)
-      const servicesUp = fs.existsSync(path.join(PROJECT_ROOT, 'docker-compose.dev.yml'));
-      steps.servicesStarted = servicesUp;
+    // Step 2: Check if services can start (Docker may not be running in CI)
+    const servicesUp = fs.existsSync(path.join(PROJECT_ROOT, 'docker-compose.dev.yml'));
+    steps.servicesStarted = servicesUp;
 
-      // Step 3: Health check should pass
-      try {
-        const { stdout } = await execAsync('bun run health', { cwd: PROJECT_ROOT, timeout: 10000 });
-        steps.healthCheckPassed = stdout.includes('healthy') || stdout.includes('success');
-      } catch {
-        steps.healthCheckPassed = false;
-      }
+    // Step 3: Health check should pass
+    try {
+      const { stdout } = await execAsync('bun run health', { cwd: PROJECT_ROOT, timeout: 10000 });
+      steps.healthCheckPassed = stdout.includes('healthy') || stdout.includes('success');
+    } catch {
+      steps.healthCheckPassed = false;
+    }
 
-      // Step 4: Dev server config should exist
-      const packageJson = JSON.parse(
-        fs.readFileSync(path.join(PROJECT_ROOT, 'package.json'), 'utf-8')
-      );
-      steps.devServerStarted = packageJson.scripts?.dev !== undefined;
+    // Step 4: Dev server config should exist
+    const packageJson = JSON.parse(
+      fs.readFileSync(path.join(PROJECT_ROOT, 'package.json'), 'utf-8')
+    );
+    steps.devServerStarted = packageJson.scripts?.dev !== undefined;
 
-      const setupTime = (Date.now() - startTime) / 1000;
+    const setupTime = (Date.now() - startTime) / 1000;
 
-      // THEN: Setup should complete quickly
-      expect(steps.dependenciesInstalled).toBe(true);
-      expect(setupTime).toBeLessThan(300); // 5 minutes
-    });
+    // THEN: Setup should complete quickly
+    expect(steps.dependenciesInstalled).toBe(true);
+    expect(setupTime).toBeLessThan(300); // 5 minutes
+  });
 });

@@ -1,12 +1,15 @@
 # Document Project Workflow Router
 
-<critical>The workflow execution engine is governed by: {project-root}/bmad/core/tasks/workflow.xml</critical>
-<critical>You MUST have already loaded and processed: {project-root}/bmad/bmm/workflows/document-project/workflow.yaml</critical>
+<critical>The workflow execution engine is governed by:
+{project-root}/bmad/core/tasks/workflow.xml</critical> <critical>You MUST have
+already loaded and processed:
+{project-root}/bmad/bmm/workflows/document-project/workflow.yaml</critical>
 <critical>Communicate all responses in {communication_language}</critical>
 
 <workflow>
 
-<critical>This router determines workflow mode and delegates to specialized sub-workflows</critical>
+<critical>This router determines workflow mode and delegates to specialized
+sub-workflows</critical>
 
 <step n="1" goal="Validate workflow and get project info">
 
@@ -57,7 +60,8 @@
 <step n="2" goal="Check for resumability and determine workflow mode">
 <critical>SMART LOADING STRATEGY: Check state file FIRST before loading any CSV files</critical>
 
-<action>Check for existing state file at: {output_folder}/project-scan-report.json</action>
+<action>Check for existing state file at:
+{output_folder}/project-scan-report.json</action>
 
 <check if="project-scan-report.json exists">
   <action>Read state file and extract: timestamps, mode, scan_level, current_step, completed_steps, project_classification</action>
@@ -80,8 +84,7 @@ Would you like to:
 2. **Start fresh** - Archive old state and begin new scan
 3. **Cancel** - Exit without changes
 
-Your choice [1/2/3]:
-</ask>
+Your choice [1/2/3]: </ask>
 
     <check if="user selects 1">
       <action>Set resume_mode = true</action>
@@ -140,11 +143,11 @@ Your choice [1/2/3]:
 What would you like to do?
 
 1. **Re-scan entire project** - Update all documentation with latest changes
-2. **Deep-dive into specific area** - Generate detailed documentation for a particular feature/module/folder
+2. **Deep-dive into specific area** - Generate detailed documentation for a
+   particular feature/module/folder
 3. **Cancel** - Keep existing documentation as-is
 
-Your choice [1/2/3]:
-</ask>
+Your choice [1/2/3]: </ask>
 
   <check if="user selects 1">
     <action>Set workflow_mode = "full_rescan"</action>
@@ -198,16 +201,12 @@ Your choice [1/2/3]:
 - Scan Level: {{scan_level}}
 - Output: {output_folder}/bmm-index.md and related files
 
-{{#if status_file_found}}
-**Status Updated:**
+{{#if status_file_found}} **Status Updated:**
 
-- Progress tracking updated
-  {{else}}
-  **Note:** Running in standalone mode
+- Progress tracking updated {{else}} **Note:** Running in standalone mode
   {{/if}}
 
-Check status anytime with: `workflow-status`
-</output>
+Check status anytime with: `workflow-status` </output>
 
 </step>
 

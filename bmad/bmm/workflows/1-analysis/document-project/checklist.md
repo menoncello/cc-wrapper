@@ -2,11 +2,13 @@
 
 ## Scan Level and Resumability (v1.2.0)
 
-- [ ] Scan level selection offered (quick/deep/exhaustive) for initial_scan and full_rescan modes
+- [ ] Scan level selection offered (quick/deep/exhaustive) for initial_scan and
+      full_rescan modes
 - [ ] Deep-dive mode automatically uses exhaustive scan (no choice given)
 - [ ] Quick scan does NOT read source files (only patterns, configs, manifests)
 - [ ] Deep scan reads files in critical directories per project type
-- [ ] Exhaustive scan reads ALL source files (excluding node_modules, dist, build)
+- [ ] Exhaustive scan reads ALL source files (excluding node_modules, dist,
+      build)
 - [ ] State file (project-scan-report.json) created at workflow start
 - [ ] State file updated after each step completion
 - [ ] State file contains all required fields per schema
@@ -29,7 +31,8 @@
 - [ ] Batching applied for deep and exhaustive scan levels
 - [ ] Batches organized by SUBFOLDER (not arbitrary file count)
 - [ ] Large files (>5000 LOC) handled with appropriate judgment
-- [ ] Each batch: read files, extract info, write output, validate, purge context
+- [ ] Each batch: read files, extract info, write output, validate, purge
+      context
 - [ ] Batch completion tracked in state file (batches_completed array)
 - [ ] Batch summaries kept in context (1-2 sentences max)
 
@@ -116,7 +119,8 @@
 - [ ] All existing docs linked from index (if found)
 - [ ] Getting started section provides clear next steps
 - [ ] AI-assisted development guidance included
-- [ ] Navigation structure matches project complexity (simple for single-part, detailed for multi-part)
+- [ ] Navigation structure matches project complexity (simple for single-part,
+      detailed for multi-part)
 
 ## File Completeness
 
@@ -156,7 +160,8 @@
 ## Output Validation
 
 - [ ] All files saved to correct output folder
-- [ ] File naming follows convention (no part suffix for single-part, with suffix for multi-part)
+- [ ] File naming follows convention (no part suffix for single-part, with
+      suffix for multi-part)
 - [ ] No broken internal links between documents
 - [ ] Markdown formatting is correct and renders properly
 - [ ] JSON files are valid (project-parts.json if applicable)

@@ -2,17 +2,26 @@
 
 ## Principle
 
-CI pipelines must execute tests reliably, quickly, and provide clear feedback. Burn-in testing (running changed tests multiple times) flushes out flakiness before merge. Stage jobs strategically: install/cache once, run changed specs first for fast feedback, then shard full suites with fail-fast disabled to preserve evidence.
+CI pipelines must execute tests reliably, quickly, and provide clear feedback.
+Burn-in testing (running changed tests multiple times) flushes out flakiness
+before merge. Stage jobs strategically: install/cache once, run changed specs
+first for fast feedback, then shard full suites with fail-fast disabled to
+preserve evidence.
 
 ## Rationale
 
-CI is the quality gate for production. A poorly configured pipeline either wastes developer time (slow feedback, false positives) or ships broken code (false negatives, insufficient coverage). Burn-in testing ensures reliability by stress-testing changed code, while parallel execution and intelligent test selection optimize speed without sacrificing thoroughness.
+CI is the quality gate for production. A poorly configured pipeline either
+wastes developer time (slow feedback, false positives) or ships broken code
+(false negatives, insufficient coverage). Burn-in testing ensures reliability by
+stress-testing changed code, while parallel execution and intelligent test
+selection optimize speed without sacrificing thoroughness.
 
 ## Pattern Examples
 
 ### Example 1: GitHub Actions Workflow with Parallel Execution
 
-**Context**: Production-ready CI/CD pipeline for E2E tests with caching, parallelization, and burn-in testing.
+**Context**: Production-ready CI/CD pipeline for E2E tests with caching,
+parallelization, and burn-in testing.
 
 **Implementation**:
 
@@ -217,7 +226,8 @@ jobs:
 
 ### Example 2: Burn-In Loop Pattern (Standalone Script)
 
-**Context**: Reusable bash script for burn-in testing changed specs locally or in CI.
+**Context**: Reusable bash script for burn-in testing changed specs locally or
+in CI.
 
 **Implementation**:
 
@@ -331,7 +341,8 @@ exit 0
 
 ### Example 3: Shard Orchestration with Result Aggregation
 
-**Context**: Advanced sharding strategy for large test suites with intelligent result merging.
+**Context**: Advanced sharding strategy for large test suites with intelligent
+result merging.
 
 **Implementation**:
 
@@ -367,25 +378,29 @@ function runShard(shardIndex) {
     const shardId = `${shardIndex}/${SHARD_COUNT}`;
     console.log(`\n📦 Starting shard ${shardId}...`);
 
-    const child = spawn('npx', ['playwright', 'test', `--shard=${shardId}`, '--reporter=json'], {
-      env: { ...process.env, TEST_ENV, SHARD_INDEX: shardIndex },
-      stdio: 'pipe',
-    });
+    const child = spawn(
+      'npx',
+      ['playwright', 'test', `--shard=${shardId}`, '--reporter=json'],
+      {
+        env: { ...process.env, TEST_ENV, SHARD_INDEX: shardIndex },
+        stdio: 'pipe'
+      }
+    );
 
     let stdout = '';
     let stderr = '';
 
-    child.stdout.on('data', (data) => {
+    child.stdout.on('data', data => {
       stdout += data.toString();
       process.stdout.write(data);
     });
 
-    child.stderr.on('data', (data) => {
+    child.stderr.on('data', data => {
       stderr += data.toString();
       process.stderr.write(data);
     });
 
-    child.on('close', (code) => {
+    child.on('close', code => {
       // Save shard results
       const resultFile = path.join(RESULTS_DIR, `shard-${shardIndex}.json`);
       try {
@@ -394,12 +409,15 @@ function runShard(shardIndex) {
         console.log(`✅ Shard ${shardId} completed (exit code: ${code})`);
         resolve({ shardIndex, code, result });
       } catch (error) {
-        console.error(`❌ Shard ${shardId} failed to parse results:`, error.message);
+        console.error(
+          `❌ Shard ${shardId} failed to parse results:`,
+          error.message
+        );
         reject({ shardIndex, code, error });
       }
     });
 
-    child.on('error', (error) => {
+    child.on('error', error => {
       console.error(`❌ Shard ${shardId} process error:`, error.message);
       reject({ shardIndex, error });
     });
@@ -443,11 +461,14 @@ function aggregateResults() {
     skipped: totalSkipped,
     flaky: totalFlaky,
     duration: shardResults.reduce((acc, r) => acc + (r.duration || 0), 0),
-    timestamp: new Date().toISOString(),
+    timestamp: new Date().toISOString()
   };
 
   // Save aggregated summary
-  fs.writeFileSync(path.join(RESULTS_DIR, 'summary.json'), JSON.stringify(summary, null, 2));
+  fs.writeFileSync(
+    path.join(RESULTS_DIR, 'summary.json'),
+    JSON.stringify(summary, null, 2)
+  );
 
   console.log('\n━'.repeat(50));
   console.log('📈 Test Results Summary');
@@ -497,7 +518,7 @@ async function main() {
   process.exit(0);
 }
 
-main().catch((error) => {
+main().catch(error => {
   console.error('Fatal error:', error);
   process.exit(1);
 });
@@ -526,7 +547,8 @@ main().catch((error) => {
 
 ### Example 4: Selective Test Execution (Changed Files + Tags)
 
-**Context**: Optimize CI by running only relevant tests based on file changes and tags.
+**Context**: Optimize CI by running only relevant tests based on file changes
+and tags.
 
 **Implementation**:
 
@@ -662,14 +684,17 @@ Before deploying your CI pipeline, verify:
 - [ ] **Artifact retention**: 30 days for reports, 7 days for failure artifacts
 - [ ] **Parallelization**: Matrix strategy uses fail-fast: false
 - [ ] **Burn-in enabled**: Changed specs run 5-10x before merge
-- [ ] **wait-on app startup**: CI waits for app (wait-on: 'http://localhost:3000')
+- [ ] **wait-on app startup**: CI waits for app (wait-on:
+      'http://localhost:3000')
 - [ ] **Secrets documented**: README lists required secrets (API keys, tokens)
 - [ ] **Local parity**: CI scripts runnable locally (npm run test:ci)
 
 ## Integration Points
 
 - Used in workflows: `*ci` (CI/CD pipeline setup)
-- Related fragments: `selective-testing.md`, `playwright-config.md`, `test-quality.md`
+- Related fragments: `selective-testing.md`, `playwright-config.md`,
+  `test-quality.md`
 - CI tools: GitHub Actions, GitLab CI, CircleCI, Jenkins
 
-_Source: Murat CI/CD strategy blog, Playwright/Cypress workflow examples, SEON production pipelines_
+_Source: Murat CI/CD strategy blog, Playwright/Cypress workflow examples, SEON
+production pipelines_

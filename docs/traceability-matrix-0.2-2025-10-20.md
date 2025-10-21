@@ -1,7 +1,6 @@
 # Traceability Matrix & Gate Decision - Story 0.2
 
-**Story:** Initial Project Structure & Build System
-**Date:** 2025-10-20
+**Story:** Initial Project Structure & Build System **Date:** 2025-10-20
 **Evaluator:** Eduardo Menoncello (TEA Agent - Murat)
 
 ---
@@ -10,20 +9,22 @@
 
 ### Coverage Summary
 
-| Priority  | Total Criteria | FULL Coverage | Coverage % | Status       |
-| --------- | -------------- | ------------- | ---------- | ------------ |
-| P0        | 7              | 4             | 57%        | ❌ FAIL      |
-| P1        | 0              | 0             | N/A        | ✅ N/A       |
-| P2        | 0              | 0             | N/A        | ✅ N/A       |
-| P3        | 0              | 0             | N/A        | ✅ N/A       |
-| **Total** | **7**          | **4**         | **57%**    | **❌ FAIL**  |
+| Priority  | Total Criteria | FULL Coverage | Coverage % | Status      |
+| --------- | -------------- | ------------- | ---------- | ----------- |
+| P0        | 7              | 4             | 57%        | ❌ FAIL     |
+| P1        | 0              | 0             | N/A        | ✅ N/A      |
+| P2        | 0              | 0             | N/A        | ✅ N/A      |
+| P3        | 0              | 0             | N/A        | ✅ N/A      |
+| **Total** | **7**          | **4**         | **57%**    | **❌ FAIL** |
 
 **Legend:**
+
 - ✅ PASS - Coverage meets quality gate threshold
 - ⚠️ WARN - Coverage below threshold but not critical
 - ❌ FAIL - Coverage below minimum threshold (blocker)
 
 **Test Execution Summary:**
+
 - **Total Tests**: 234 tests
 - **Passed**: 158 tests (67.5%)
 - **Failed**: 14 tests (6.0%)
@@ -66,19 +67,19 @@
   - `0.2-AC1-005` - tests/integration/monorepo-structure.test.ts:63
     - **Given:** Workspaces configuration exists
     - **When:** Checking workspace patterns
-    - **Then:** packages/* should be included
+    - **Then:** packages/\* should be included
     - **Status:** ✅ PASS
 
   - `0.2-AC1-006` - tests/integration/monorepo-structure.test.ts:75
     - **Given:** Workspaces configuration exists
     - **When:** Checking workspace patterns
-    - **Then:** services/* should be included
+    - **Then:** services/\* should be included
     - **Status:** ✅ PASS
 
   - `0.2-AC1-007` - tests/integration/monorepo-structure.test.ts:87
     - **Given:** Workspaces configuration exists
     - **When:** Checking workspace patterns
-    - **Then:** apps/* should be included
+    - **Then:** apps/\* should be included
     - **Status:** ✅ PASS
 
   - `0.2-AC1-008` - tests/integration/monorepo-structure.test.ts:99
@@ -95,9 +96,13 @@
 
 - **Gaps:**
   - Test fixtures not properly copying monorepo directories (packages/, apps/)
-  - Integration tests failing due to test environment setup, not actual code issues
+  - Integration tests failing due to test environment setup, not actual code
+    issues
 
-- **Recommendation:** Fix test fixtures to properly copy workspace directories. The monorepo structure implementation is complete (per story completion notes), but test infrastructure needs updates. This is a test quality issue, not a functionality gap.
+- **Recommendation:** Fix test fixtures to properly copy workspace directories.
+  The monorepo structure implementation is complete (per story completion
+  notes), but test infrastructure needs updates. This is a test quality issue,
+  not a functionality gap.
 
 ---
 
@@ -172,10 +177,12 @@
     - **Status:** ✅ PASS
 
 - **Manual Verification:**
-  - Story completion notes confirm successful builds: frontend (733ms), backend (277 bytes), packages (TypeScript declarations)
+  - Story completion notes confirm successful builds: frontend (733ms), backend
+    (277 bytes), packages (TypeScript declarations)
   - Build performance meets requirements: <30 seconds target
 
-- **Recommendation:** All build system tests passing. Consider enabling skipped tests in CI environment where builds can execute.
+- **Recommendation:** All build system tests passing. Consider enabling skipped
+  tests in CI environment where builds can execute.
 
 ---
 
@@ -284,7 +291,9 @@
   - Missing stryker.config.json configuration file
   - Missing test:mutation script in package.json
 
-- **Recommendation:** Add Playwright and Stryker configuration files. These are critical for E2E and mutation testing infrastructure. Create test:mutation script to enable mutation testing workflow.
+- **Recommendation:** Add Playwright and Stryker configuration files. These are
+  critical for E2E and mutation testing infrastructure. Create test:mutation
+  script to enable mutation testing workflow.
 
 ---
 
@@ -395,9 +404,12 @@
     - **Status:** ✅ PASS
 
 - **Gaps:**
-  - Test expects prettier.config.js but .prettierrc.json is used (equivalent, just different naming)
+  - Test expects prettier.config.js but .prettierrc.json is used (equivalent,
+    just different naming)
 
-- **Recommendation:** Update test to accept both prettier.config.js and .prettierrc.json. Both are valid Prettier configuration formats. This is a test assumption issue, not a functionality gap.
+- **Recommendation:** Update test to accept both prettier.config.js and
+  .prettierrc.json. Both are valid Prettier configuration formats. This is a
+  test assumption issue, not a functionality gap.
 
 ---
 
@@ -408,11 +420,13 @@
   - No specific test IDs found for AC-5
   - Two E2E test files exist but failed to load:
     - tests/e2e/ci-pipeline.test.ts (Playwright version conflict error)
-    - tests/e2e/complete-dev-workflow.test.ts (Playwright version conflict error)
+    - tests/e2e/complete-dev-workflow.test.ts (Playwright version conflict
+      error)
 
 - **Gaps:**
   - No passing tests validating CI/CD pipeline functionality
-  - Playwright E2E tests have framework incompatibility (Playwright Test vs Bun Test conflict)
+  - Playwright E2E tests have framework incompatibility (Playwright Test vs Bun
+    Test conflict)
   - GitHub Actions workflows created but not validated by automated tests
 
 - **Manual Verification:**
@@ -421,7 +435,10 @@
     - .github/workflows/pr.yml (PR validation)
     - .github/workflows/release.yml (automated releases)
 
-- **Recommendation:** CRITICAL - Fix Playwright E2E test framework incompatibility. CI/CD implementation exists but lacks automated test coverage. Add unit/integration tests to validate workflow YAML syntax and configuration.
+- **Recommendation:** CRITICAL - Fix Playwright E2E test framework
+  incompatibility. CI/CD implementation exists but lacks automated test
+  coverage. Add unit/integration tests to validate workflow YAML syntax and
+  configuration.
 
 ---
 
@@ -441,7 +458,8 @@
   - health, setup
   - Script naming conventions validated
 
-- **Recommendation:** All development scripts tests passing. Excellent coverage for this criterion.
+- **Recommendation:** All development scripts tests passing. Excellent coverage
+  for this criterion.
 
 ---
 
@@ -449,11 +467,13 @@
 
 - **Coverage:** PARTIAL ⚠️
 - **Tests:**
-  - `0.2-AC7-001` through `0.2-AC7-017` - tests/integration/documentation.test.ts
+  - `0.2-AC7-001` through `0.2-AC7-017` -
+    tests/integration/documentation.test.ts
   - **Status:** ✅ 17/17 PASS
 
 - **Documentation Validated:**
-  - README.md (with project description, installation instructions, usage examples)
+  - README.md (with project description, installation instructions, usage
+    examples)
   - CONTRIBUTING.md (with contribution guidelines and scripts documentation)
   - CODE_OF_CONDUCT.md
   - docs/ directory with:
@@ -468,7 +488,8 @@
 - **Gaps:**
   - None - all documentation tests passing
 
-- **Recommendation:** Documentation structure is complete and well-tested. All 17 tests passing.
+- **Recommendation:** Documentation structure is complete and well-tested. All
+  17 tests passing.
 
 ---
 
@@ -482,8 +503,10 @@
    - Current Coverage: NONE
    - Missing Tests: Automated validation of CI/CD workflows
    - Impact: CI/CD implementation exists but has no test coverage validation
-   - Recommend: Fix Playwright E2E test framework incompatibility, add unit tests for workflow YAML validation
-   - **CRITICAL:** This blocks ability to verify CI/CD functionality automatically
+   - Recommend: Fix Playwright E2E test framework incompatibility, add unit
+     tests for workflow YAML validation
+   - **CRITICAL:** This blocks ability to verify CI/CD functionality
+     automatically
 
 2. **AC-3: Playwright Configuration** (P0)
    - Current Coverage: PARTIAL (missing playwright.config.ts)
@@ -493,10 +516,12 @@
    - **CRITICAL:** Blocks E2E test execution
 
 3. **AC-3: Mutation Testing Setup** (P0)
-   - Current Coverage: PARTIAL (missing stryker.config.json and test:mutation script)
+   - Current Coverage: PARTIAL (missing stryker.config.json and test:mutation
+     script)
    - Missing Configuration: stryker.config.json, test:mutation script
    - Impact: Mutation testing cannot be executed
-   - Recommend: Create stryker.config.json and add test:mutation script to package.json
+   - Recommend: Create stryker.config.json and add test:mutation script to
+     package.json
    - **IMPORTANT:** Required for test quality validation per user requirements
 
 ---
@@ -515,10 +540,12 @@
    - Current Coverage: PARTIAL (4 tests failing due to fixture issues)
    - Issue: Test fixtures not properly copying workspace directories
    - Impact: Integration tests failing despite correct implementation
-   - Recommend: Fix projectFixture() to properly copy packages/, apps/ directories
+   - Recommend: Fix projectFixture() to properly copy packages/, apps/
+     directories
    - **NOTE:** This is a test quality issue, not a functionality gap
 
-2. **AC-4: Prettier Configuration Naming** (P0 criterion, but cosmetic test issue)
+2. **AC-4: Prettier Configuration Naming** (P0 criterion, but cosmetic test
+   issue)
    - Current Coverage: PARTIAL (1 test failing due to configuration filename)
    - Issue: Test expects prettier.config.js but .prettierrc.json is used
    - Impact: Test fails despite correct Prettier configuration
@@ -552,26 +579,40 @@
 
 **BLOCKER Issues** ❌
 
-- `tests/e2e/ci-pipeline.test.ts` - Playwright Test version conflict - Cannot run with Bun Test runner - Fix framework compatibility or separate test runners
-- `tests/e2e/complete-dev-workflow.test.ts` - Playwright Test version conflict - Cannot run with Bun Test runner - Fix framework compatibility or separate test runners
-- `0.2-AC3-004` - Missing playwright.config.ts - Create configuration file for E2E tests
-- `0.2-AC3-015` - Missing stryker.config.json - Create configuration file for mutation testing
+- `tests/e2e/ci-pipeline.test.ts` - Playwright Test version conflict - Cannot
+  run with Bun Test runner - Fix framework compatibility or separate test
+  runners
+- `tests/e2e/complete-dev-workflow.test.ts` - Playwright Test version conflict -
+  Cannot run with Bun Test runner - Fix framework compatibility or separate test
+  runners
+- `0.2-AC3-004` - Missing playwright.config.ts - Create configuration file for
+  E2E tests
+- `0.2-AC3-015` - Missing stryker.config.json - Create configuration file for
+  mutation testing
 - `0.2-AC3-016` - Missing test:mutation script - Add script to package.json
 
 **WARNING Issues** ⚠️
 
-- `0.2-AC1-001` - Test fixture not detecting packages/ directory - Fix projectFixture() implementation
-- `0.2-AC1-003` - Test fixture not detecting apps/ directory - Fix projectFixture() implementation
-- `0.2-AC1-008` - Test fixture not finding shared-utils package - Fix getSubdirectories() implementation
+- `0.2-AC1-001` - Test fixture not detecting packages/ directory - Fix
+  projectFixture() implementation
+- `0.2-AC1-003` - Test fixture not detecting apps/ directory - Fix
+  projectFixture() implementation
+- `0.2-AC1-008` - Test fixture not finding shared-utils package - Fix
+  getSubdirectories() implementation
 - `0.2-AC1-009` - Prerequisite test failing - Depends on AC1-008 fix
-- `0.2-AC4-006` - Test expects different config filename - Update test to accept .prettierrc.json
-- Setup configuration test - Regex doesn't handle comment lines - Update regex to skip comments
+- `0.2-AC4-006` - Test expects different config filename - Update test to accept
+  .prettierrc.json
+- Setup configuration test - Regex doesn't handle comment lines - Update regex
+  to skip comments
 
 **INFO Issues** ℹ️
 
-- Platform detection test - Unsupported OS handling - Document supported platforms or add graceful fallback
-- TypeScript configuration test - JSON.parse fails on JSONC - Use comment-stripping parser
-- Package.json health script test - Expects direct script, but uses turbo - Update test expectation
+- Platform detection test - Unsupported OS handling - Document supported
+  platforms or add graceful fallback
+- TypeScript configuration test - JSON.parse fails on JSONC - Use
+  comment-stripping parser
+- Package.json health script test - Expects direct script, but uses turbo -
+  Update test expectation
 
 ---
 
@@ -580,6 +621,7 @@
 **150/234 tests (64.1%) meet all quality criteria** ✅
 
 **Test Quality Metrics:**
+
 - No hard waits detected ✅
 - Explicit assertions present ✅
 - Test IDs follow convention ✅
@@ -593,9 +635,12 @@
 
 #### Acceptable Overlap (Defense in Depth)
 
-- Monorepo structure: Tested at integration level (workspace validation) and file system level (directory existence) ✅
-- Build system: Tested at configuration level (package.json) and execution level (actual builds) ✅
-- Code quality: Tested at tool presence level and enforcement level (pre-commit hooks) ✅
+- Monorepo structure: Tested at integration level (workspace validation) and
+  file system level (directory existence) ✅
+- Build system: Tested at configuration level (package.json) and execution level
+  (actual builds) ✅
+- Code quality: Tested at tool presence level and enforcement level (pre-commit
+  hooks) ✅
 
 #### No Unacceptable Duplication Detected ✅
 
@@ -610,7 +655,8 @@
 | Unit        | 149   | 7                | 100%       |
 | **Total**   | 234   | 7                | 100%       |
 
-**Note:** E2E tests have framework loading errors and provide 0% coverage currently. All criteria are covered by integration and unit tests.
+**Note:** E2E tests have framework loading errors and provide 0% coverage
+currently. All criteria are covered by integration and unit tests.
 
 ---
 
@@ -618,38 +664,47 @@
 
 #### Immediate Actions (Before PR Merge)
 
-1. **Fix Playwright Framework Incompatibility** - Separate Playwright E2E tests from Bun Test runner or configure dual test frameworks. Currently blocking E2E test execution.
+1. **Fix Playwright Framework Incompatibility** - Separate Playwright E2E tests
+   from Bun Test runner or configure dual test frameworks. Currently blocking
+   E2E test execution.
 
-2. **Create Missing Configuration Files** - Add playwright.config.ts and stryker.config.json. Both are critical for test framework completeness.
+2. **Create Missing Configuration Files** - Add playwright.config.ts and
+   stryker.config.json. Both are critical for test framework completeness.
 
-3. **Add test:mutation Script** - Enable mutation testing workflow by adding script to package.json.
+3. **Add test:mutation Script** - Enable mutation testing workflow by adding
+   script to package.json.
 
-4. **Fix Test Fixtures** - Update projectFixture() to properly copy workspace directories for integration tests.
+4. **Fix Test Fixtures** - Update projectFixture() to properly copy workspace
+   directories for integration tests.
 
 ---
 
 #### Short-term Actions (This Sprint)
 
-1. **Add CI/CD Workflow Validation Tests** - Create unit/integration tests to validate GitHub Actions YAML syntax and configuration.
+1. **Add CI/CD Workflow Validation Tests** - Create unit/integration tests to
+   validate GitHub Actions YAML syntax and configuration.
 
-2. **Update Code Quality Tests** - Fix Prettier configuration filename test and environment file format test.
+2. **Update Code Quality Tests** - Fix Prettier configuration filename test and
+   environment file format test.
 
-3. **Document Platform Support** - Clarify supported platforms (macOS, Linux, Windows) and handle unsupported platforms gracefully.
+3. **Document Platform Support** - Clarify supported platforms (macOS, Linux,
+   Windows) and handle unsupported platforms gracefully.
 
 ---
 
 #### Long-term Actions (Backlog)
 
-1. **Enable Skipped Build Tests** - Run actual build execution tests in CI environment (currently skipped).
+1. **Enable Skipped Build Tests** - Run actual build execution tests in CI
+   environment (currently skipped).
 
-2. **Add E2E Workflow Tests** - Once Playwright compatibility fixed, add comprehensive E2E tests for complete development workflows.
+2. **Add E2E Workflow Tests** - Once Playwright compatibility fixed, add
+   comprehensive E2E tests for complete development workflows.
 
 ---
 
 ## PHASE 2: QUALITY GATE DECISION
 
-**Gate Type:** story
-**Decision Mode:** deterministic
+**Gate Type:** story **Decision Mode:** deterministic
 
 ---
 
@@ -669,7 +724,8 @@
 - **P0 Tests**: Based on test design document, 23 P0 tests are planned
   - Tests mapping to P0 criteria: ~83 tests (integration tests for all ACs)
   - Passing: 150/234 overall, estimated ~75 P0 tests passing
-  - **P0 Pass Rate**: ~90% estimated (some P0 tests failing due to test infrastructure issues, not functionality gaps)
+  - **P0 Pass Rate**: ~90% estimated (some P0 tests failing due to test
+    infrastructure issues, not functionality gaps)
 
 - **P1 Tests**: 9 tests planned (test design)
   - All configuration and script validation tests passing
@@ -699,13 +755,15 @@
   - AC-7: FULL ✅
 
 - **Overall Coverage**: 57% (by acceptance criteria with FULL coverage)
-- **Overall Coverage (adjusted)**: ~85% (considering test infrastructure issues vs actual functionality gaps)
+- **Overall Coverage (adjusted)**: ~85% (considering test infrastructure issues
+  vs actual functionality gaps)
 
 **Code Coverage** (from test results):
 
 - **Function Coverage**: 52.39%
 - **Line Coverage**: 48.37%
-- **Note**: Low coverage due to many scenarios being E2E/integration focused, plus setup.ts has many untested paths
+- **Note**: Low coverage due to many scenarios being E2E/integration focused,
+  plus setup.ts has many untested paths
 
 ---
 
@@ -713,9 +771,11 @@
 
 **Performance**: ✅ PASS
 
-- Build Performance: <30 seconds target - Frontend build 733ms, backend 277 bytes (Story completion notes confirm)
+- Build Performance: <30 seconds target - Frontend build 733ms, backend 277
+  bytes (Story completion notes confirm)
 - Test Execution: <2 minutes target - Test suite completes in 1.56 seconds ✅
-- Hot Reload: <200ms frontend / <1s backend target - Not measured yet (⚠️ needs validation)
+- Hot Reload: <200ms frontend / <1s backend target - Not measured yet (⚠️ needs
+  validation)
 
 **Maintainability**: ✅ PASS
 
@@ -744,8 +804,11 @@
 **Burn-in Results**: Not available (not run)
 
 **Test Stability Observations**:
-- Integration tests consistently failing due to fixture issues (deterministic failures)
-- E2E tests consistently failing due to framework version conflict (deterministic failures)
+
+- Integration tests consistently failing due to fixture issues (deterministic
+  failures)
+- E2E tests consistently failing due to framework version conflict
+  (deterministic failures)
 - No flaky/intermittent failures observed
 - **Stability Score**: Unable to calculate (no burn-in run)
 
@@ -757,18 +820,20 @@
 
 #### P0 Criteria (Must ALL Pass)
 
-| Criterion             | Threshold | Actual | Status      |
-| --------------------- | --------- | ------ | ----------- |
-| P0 Coverage           | 100%      | 57%    | ❌ FAIL     |
-| P0 Test Pass Rate     | 100%      | ~90%   | ❌ FAIL     |
-| Security Issues       | 0         | 0      | ✅ PASS     |
-| Critical NFR Failures | 0         | 0      | ✅ PASS     |
-| Flaky Tests           | 0         | 0      | ✅ PASS     |
+| Criterion             | Threshold | Actual | Status  |
+| --------------------- | --------- | ------ | ------- |
+| P0 Coverage           | 100%      | 57%    | ❌ FAIL |
+| P0 Test Pass Rate     | 100%      | ~90%   | ❌ FAIL |
+| Security Issues       | 0         | 0      | ✅ PASS |
+| Critical NFR Failures | 0         | 0      | ✅ PASS |
+| Flaky Tests           | 0         | 0      | ✅ PASS |
 
 **P0 Evaluation**: ❌ TWO CRITERIA FAILED (P0 Coverage, P0 Test Pass Rate)
 
 **Note**: P0 failures are due to:
-1. Missing configuration files (playwright.config.ts, stryker.config.json) - **Real gap**
+
+1. Missing configuration files (playwright.config.ts, stryker.config.json) -
+   **Real gap**
 2. E2E framework incompatibility - **Test infrastructure issue**
 3. Test fixture bugs - **Test quality issue, not functionality gap**
 
@@ -776,16 +841,18 @@
 
 #### P1 Criteria (Required for PASS, May Accept for CONCERNS)
 
-| Criterion              | Threshold | Actual  | Status   |
-| ---------------------- | --------- | ------- | -------- |
-| P1 Coverage            | ≥90%      | N/A     | ✅ PASS  |
-| P1 Test Pass Rate      | ≥95%      | ~100%   | ✅ PASS  |
-| Overall Test Pass Rate | ≥90%      | 67.5%   | ❌ FAIL  |
-| Overall Coverage       | ≥80%      | 57%*    | ❌ FAIL  |
+| Criterion              | Threshold | Actual | Status  |
+| ---------------------- | --------- | ------ | ------- |
+| P1 Coverage            | ≥90%      | N/A    | ✅ PASS |
+| P1 Test Pass Rate      | ≥95%      | ~100%  | ✅ PASS |
+| Overall Test Pass Rate | ≥90%      | 67.5%  | ❌ FAIL |
+| Overall Coverage       | ≥80%      | 57%\*  | ❌ FAIL |
 
-**P1 Evaluation**: ⚠️ TWO CRITERIA BELOW THRESHOLD (Overall pass rate, Overall coverage)
+**P1 Evaluation**: ⚠️ TWO CRITERIA BELOW THRESHOLD (Overall pass rate, Overall
+coverage)
 
-*Coverage adjusted to ~85% when considering test infrastructure issues separately from functionality
+\*Coverage adjusted to ~85% when considering test infrastructure issues
+separately from functionality
 
 ---
 
@@ -805,9 +872,12 @@
 **Critical Blockers Identified:**
 
 1. **P0 Coverage Incomplete (57%)**
-   - AC-5 (CI/CD Pipeline) has ZERO test coverage due to E2E framework incompatibility
-   - AC-3 (Testing Framework) missing critical configuration files (playwright.config.ts, stryker.config.json)
-   - AC-1 (Monorepo Structure) tests failing due to test fixture bugs (test infrastructure issue, not functionality gap)
+   - AC-5 (CI/CD Pipeline) has ZERO test coverage due to E2E framework
+     incompatibility
+   - AC-3 (Testing Framework) missing critical configuration files
+     (playwright.config.ts, stryker.config.json)
+   - AC-1 (Monorepo Structure) tests failing due to test fixture bugs (test
+     infrastructure issue, not functionality gap)
 
 2. **Configuration Files Missing**
    - playwright.config.ts required for E2E tests
@@ -822,9 +892,11 @@
 **Mitigating Factors:**
 
 - Actual implementation is largely complete per story completion notes
-- Test failures primarily due to test infrastructure issues, not functionality gaps
+- Test failures primarily due to test infrastructure issues, not functionality
+  gaps
 - Build system, development scripts, and documentation fully validated
-- Core functionality working (builds succeed, scripts execute, quality tools enforce standards)
+- Core functionality working (builds succeed, scripts execute, quality tools
+  enforce standards)
 
 **Why FAIL (not CONCERNS):**
 
@@ -835,7 +907,10 @@
 
 **Recommendation:**
 
-**BLOCK DEPLOYMENT** until critical blockers resolved. However, note that most failures are test infrastructure issues rather than functional gaps. Priority should be:
+**BLOCK DEPLOYMENT** until critical blockers resolved. However, note that most
+failures are test infrastructure issues rather than functional gaps. Priority
+should be:
+
 1. Add missing configuration files (quick fix)
 2. Fix Playwright/Bun Test incompatibility (architectural decision needed)
 3. Validate CI/CD workflows with unit tests (alternative approach)
@@ -853,14 +928,14 @@ Not applicable - Decision is FAIL, not CONCERNS or WAIVED.
 
 Top blockers requiring immediate attention:
 
-| Priority | Issue                                 | Description                                     | Owner | Due Date   | Status |
-| -------- | ------------------------------------- | ----------------------------------------------- | ----- | ---------- | ------ |
-| P0       | Missing playwright.config.ts          | E2E test configuration file missing             | Dev   | 2025-10-21 | OPEN   |
-| P0       | Missing stryker.config.json           | Mutation testing configuration missing          | Dev   | 2025-10-21 | OPEN   |
-| P0       | E2E framework incompatibility         | Playwright Test cannot run with Bun Test        | Dev   | 2025-10-22 | OPEN   |
-| P0       | CI/CD pipeline test coverage          | No automated validation of workflow configs     | Dev   | 2025-10-22 | OPEN   |
-| P1       | Test fixture bugs                     | Integration tests failing due to fixture issues | QA    | 2025-10-23 | OPEN   |
-| P1       | Code quality test assumptions         | Tests expect specific config filenames          | QA    | 2025-10-23 | OPEN   |
+| Priority | Issue                         | Description                                     | Owner | Due Date   | Status |
+| -------- | ----------------------------- | ----------------------------------------------- | ----- | ---------- | ------ |
+| P0       | Missing playwright.config.ts  | E2E test configuration file missing             | Dev   | 2025-10-21 | OPEN   |
+| P0       | Missing stryker.config.json   | Mutation testing configuration missing          | Dev   | 2025-10-21 | OPEN   |
+| P0       | E2E framework incompatibility | Playwright Test cannot run with Bun Test        | Dev   | 2025-10-22 | OPEN   |
+| P0       | CI/CD pipeline test coverage  | No automated validation of workflow configs     | Dev   | 2025-10-22 | OPEN   |
+| P1       | Test fixture bugs             | Integration tests failing due to fixture issues | QA    | 2025-10-23 | OPEN   |
+| P1       | Code quality test assumptions | Tests expect specific config filenames          | QA    | 2025-10-23 | OPEN   |
 
 **Blocking Issues Count**: 4 P0 blockers, 2 P1 issues
 
@@ -885,7 +960,8 @@ Top blockers requiring immediate attention:
 
    **Phase 2 (Framework Architecture - 1-2 days):**
    - Resolve Playwright/Bun Test incompatibility:
-     - Option A: Separate Playwright tests to run with dedicated Playwright runner
+     - Option A: Separate Playwright tests to run with dedicated Playwright
+       runner
      - Option B: Convert Playwright tests to Bun-compatible format
      - Option C: Use Playwright in different test command (npm script)
    - Add unit tests for CI/CD workflow YAML validation
@@ -917,7 +993,8 @@ Top blockers requiring immediate attention:
 2. Create stryker.config.json with mutation testing settings
 3. Add test:mutation script to package.json
 4. Investigate Playwright/Bun Test separation strategy
-5. Add unit tests for GitHub Actions workflow validation (YAML syntax, required jobs, etc.)
+5. Add unit tests for GitHub Actions workflow validation (YAML syntax, required
+   jobs, etc.)
 
 **Follow-up Actions** (next sprint):
 
@@ -929,9 +1006,15 @@ Top blockers requiring immediate attention:
 
 **Stakeholder Communication**:
 
-- **Notify PM**: Story 0.2 has FAIL gate decision. Critical configuration files missing and E2E test framework incompatibility. Estimated 2-3 days to resolution.
-- **Notify SM**: Technical blockers in test infrastructure. Need architectural decision on Playwright/Bun Test separation. Recommend dedicated test architecture discussion.
-- **Notify DEV lead**: Most implementation complete, issues are test infrastructure and configuration. Quick wins available in Phase 1 (2-4 hours), then framework decision needed.
+- **Notify PM**: Story 0.2 has FAIL gate decision. Critical configuration files
+  missing and E2E test framework incompatibility. Estimated 2-3 days to
+  resolution.
+- **Notify SM**: Technical blockers in test infrastructure. Need architectural
+  decision on Playwright/Bun Test separation. Recommend dedicated test
+  architecture discussion.
+- **Notify DEV lead**: Most implementation complete, issues are test
+  infrastructure and configuration. Quick wins available in Phase 1 (2-4 hours),
+  then framework decision needed.
 
 ---
 
@@ -941,8 +1024,8 @@ Top blockers requiring immediate attention:
 traceability_and_gate:
   # Phase 1: Traceability
   traceability:
-    story_id: "0.2"
-    date: "2025-10-20"
+    story_id: '0.2'
+    date: '2025-10-20'
     coverage:
       overall: 57%
       p0: 57%
@@ -960,17 +1043,17 @@ traceability_and_gate:
       blocker_issues: 5
       warning_issues: 6
     recommendations:
-      - "Create playwright.config.ts configuration file"
-      - "Create stryker.config.json configuration file"
-      - "Add test:mutation script to package.json"
-      - "Fix Playwright/Bun Test framework incompatibility"
-      - "Add unit tests for CI/CD workflow validation"
+      - 'Create playwright.config.ts configuration file'
+      - 'Create stryker.config.json configuration file'
+      - 'Add test:mutation script to package.json'
+      - 'Fix Playwright/Bun Test framework incompatibility'
+      - 'Add unit tests for CI/CD workflow validation'
 
   # Phase 2: Gate Decision
   gate_decision:
-    decision: "FAIL"
-    gate_type: "story"
-    decision_mode: "deterministic"
+    decision: 'FAIL'
+    gate_type: 'story'
+    decision_mode: 'deterministic'
     criteria:
       p0_coverage: 57%
       p0_pass_rate: 90%
@@ -989,11 +1072,14 @@ traceability_and_gate:
       min_overall_pass_rate: 90
       min_coverage: 80
     evidence:
-      test_results: "Local test run (bun test) - 2025-10-20"
-      traceability: "docs/traceability-matrix-0.2-2025-10-20.md"
-      test_design: "docs/test-design-epic-0.md"
-      story: "docs/stories/story-0.2.md"
-    next_steps: "Fix critical configuration files (playwright.config.ts, stryker.config.json, test:mutation script), resolve E2E framework incompatibility, add CI/CD workflow validation tests"
+      test_results: 'Local test run (bun test) - 2025-10-20'
+      traceability: 'docs/traceability-matrix-0.2-2025-10-20.md'
+      test_design: 'docs/test-design-epic-0.md'
+      story: 'docs/stories/story-0.2.md'
+    next_steps:
+      'Fix critical configuration files (playwright.config.ts,
+      stryker.config.json, test:mutation script), resolve E2E framework
+      incompatibility, add CI/CD workflow validation tests'
 ```
 
 ---
@@ -1022,7 +1108,8 @@ traceability_and_gate:
 
 - **Decision**: ❌ FAIL
 - **P0 Evaluation**: ❌ TWO CRITERIA FAILED (Coverage 57%, Pass Rate ~90%)
-- **P1 Evaluation**: ⚠️ TWO CRITERIA BELOW THRESHOLD (Overall pass rate 67.5%, Coverage 57%)
+- **P1 Evaluation**: ⚠️ TWO CRITERIA BELOW THRESHOLD (Overall pass rate 67.5%,
+  Coverage 57%)
 
 **Overall Status:** ❌ FAIL
 
@@ -1035,8 +1122,8 @@ traceability_and_gate:
 - Fix test fixtures and quality issues (1 day)
 - Re-run workflow after fixes (estimated 2-3 days to PASS)
 
-**Generated:** 2025-10-20
-**Workflow:** testarch-trace v4.0 (Enhanced with Gate Decision)
+**Generated:** 2025-10-20 **Workflow:** testarch-trace v4.0 (Enhanced with Gate
+Decision)
 
 ---
 

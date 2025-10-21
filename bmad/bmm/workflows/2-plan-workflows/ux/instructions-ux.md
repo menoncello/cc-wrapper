@@ -2,15 +2,20 @@
 
 <workflow>
 
-<critical>The workflow execution engine is governed by: {project_root}/bmad/core/tasks/workflow.xml</critical>
-<critical>You MUST have already loaded and processed: {installed_path}/workflow.yaml</critical>
-<critical>Communicate all responses in {communication_language} and language MUST be tailored to {user_skill_level}</critical>
-<critical>Generate all documents in {document_output_language}</critical>
-<critical>This workflow creates comprehensive UX/UI specifications - can run standalone or as part of plan-project</critical>
-<critical>Uses ux-spec-template.md for structured output generation</critical>
-<critical>Can optionally generate AI Frontend Prompts for tools like Vercel v0, Lovable.ai</critical>
+<critical>The workflow execution engine is governed by:
+{project_root}/bmad/core/tasks/workflow.xml</critical> <critical>You MUST have
+already loaded and processed: {installed_path}/workflow.yaml</critical>
+<critical>Communicate all responses in {communication_language} and language
+MUST be tailored to {user_skill_level}</critical> <critical>Generate all
+documents in {document_output_language}</critical> <critical>This workflow
+creates comprehensive UX/UI specifications - can run standalone or as part of
+plan-project</critical> <critical>Uses ux-spec-template.md for structured output
+generation</critical> <critical>Can optionally generate AI Frontend Prompts for
+tools like Vercel v0, Lovable.ai</critical>
 
-<critical>DOCUMENT OUTPUT: Professional, precise, actionable UX specs. Use tables/lists over prose. User skill level ({user_skill_level}) affects conversation style ONLY, not document content.</critical>
+<critical>DOCUMENT OUTPUT: Professional, precise, actionable UX specs. Use
+tables/lists over prose. User skill level ({user_skill_level}) affects
+conversation style ONLY, not document content.</critical>
 
 <step n="0" goal="Check for workflow status">
 
@@ -36,10 +41,8 @@
 <check if="mode is standalone">
   <ask>Do you have an existing PRD or requirements document? (y/n)
 
-If yes: Provide the path to the PRD
-If no: We'll gather basic requirements to create the UX spec
-</ask>
-</check>
+If yes: Provide the path to the PRD If no: We'll gather basic requirements to
+create the UX spec </ask> </check>
 
 <check if="no PRD in standalone mode">
   <ask>Let's gather essential information:
@@ -49,8 +52,7 @@ If no: We'll gather basic requirements to create the UX spec
 3. **Core Features**: What are the main capabilities? (3-5 key features)
 4. **Platform**: Web, mobile, desktop, or multi-platform?
 5. **Existing Brand/Design**: Any existing style guide or brand to follow?
-   </ask>
-   </check>
+   </ask> </check>
 
 <check if="PRD exists or integrated mode">
   <action>Load the following documents if available:</action>
@@ -86,17 +88,15 @@ If no: We'll gather basic requirements to create the UX spec
 - Secondary persona(s)
 - Their goals and pain points
 
-**2. Key Usability Goals:**
-What does success look like for users?
+**2. Key Usability Goals:** What does success look like for users?
 
 - Ease of learning?
 - Efficiency for power users?
 - Error prevention?
 - Accessibility requirements?
 
-**3. Core Design Principles** (3-5 principles):
-What will guide all design decisions?
-</ask>
+**3. Core Design Principles** (3-5 principles): What will guide all design
+decisions? </ask>
 
 <template-output>user_personas</template-output>
 <template-output>usability_goals</template-output>
@@ -108,7 +108,8 @@ What will guide all design decisions?
 
 <step n="3" goal="Create information architecture">
 
-<action>Based on functional requirements from PRD, create site/app structure</action>
+<action>Based on functional requirements from PRD, create site/app
+structure</action>
 
 **Create comprehensive site map showing:**
 
@@ -133,8 +134,8 @@ What will guide all design decisions?
 
 <step n="4" goal="Design user flows for critical paths">
 
-<action>Extract key user journeys from PRD</action>
-<action>For each critical user task, create detailed flow</action>
+<action>Extract key user journeys from PRD</action> <action>For each critical
+user task, create detailed flow</action>
 
 <for-each journey="user_journeys_from_prd">
 
@@ -170,9 +171,8 @@ Create Mermaid diagram showing complete flow.
 
 **2. If using existing, which one?**
 
-**3. Core Components Needed** (based on PRD features):
-We'll need to define states and variants for key components.
-</ask>
+**3. Core Components Needed** (based on PRD features): We'll need to define
+states and variants for key components. </ask>
 
 <action>For primary components, define:</action>
 
@@ -190,16 +190,14 @@ We'll need to define states and variants for key components.
 
 <ask>Visual Design Foundation:
 
-**1. Brand Guidelines:**
-Do you have existing brand guidelines to follow? (y/n)
+**1. Brand Guidelines:** Do you have existing brand guidelines to follow? (y/n)
 
 **2. If yes, provide link or key elements.**
 
 **3. If no, let's define basics:**
 
 - Primary brand personality (professional, playful, minimal, bold)
-- Industry conventions to follow or break
-  </ask>
+- Industry conventions to follow or break </ask>
 
 <action>Define color palette with semantic meanings</action>
 
@@ -247,8 +245,7 @@ This is recommended for:
 
 - Consumer-facing applications
 - Projects emphasizing user delight
-- Complex state transitions
-  </ask>
+- Complex state transitions </ask>
 
 <check if="yes or fuzzy match the user wants to define animation or micro interactions">
 
@@ -256,8 +253,7 @@ This is recommended for:
 <template-output>motion_principles</template-output>
 
 <action>Define key animations and transitions</action>
-<template-output>key_animations</template-output>
-</check>
+<template-output>key_animations</template-output> </check>
 
 </step>
 
@@ -277,8 +273,7 @@ This is recommended for:
 
 - Reference design file locations
 - Create low-fi wireframe descriptions
-- Skip visual representations
-  </ask>
+- Skip visual representations </ask>
 
 <template-output if="design files will be created">design_files</template-output>
 

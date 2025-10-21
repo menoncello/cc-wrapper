@@ -2,22 +2,31 @@
 
 ## Principle
 
-Build test helpers as pure functions first, then wrap them in framework-specific fixtures. Compose capabilities using `mergeTests` (Playwright) or layered commands (Cypress) instead of inheritance. Each fixture should solve one isolated concern (auth, API, logs, network).
+Build test helpers as pure functions first, then wrap them in framework-specific
+fixtures. Compose capabilities using `mergeTests` (Playwright) or layered
+commands (Cypress) instead of inheritance. Each fixture should solve one
+isolated concern (auth, API, logs, network).
 
 ## Rationale
 
-Traditional Page Object Models create tight coupling through inheritance chains (`BasePage → LoginPage → AdminPage`). When base classes change, all descendants break. Pure functions with fixture wrappers provide:
+Traditional Page Object Models create tight coupling through inheritance chains
+(`BasePage → LoginPage → AdminPage`). When base classes change, all descendants
+break. Pure functions with fixture wrappers provide:
 
 - **Testability**: Pure functions run in unit tests without framework overhead
-- **Composability**: Mix capabilities freely via `mergeTests`, no inheritance constraints
-- **Reusability**: Export fixtures via package subpaths for cross-project sharing
+- **Composability**: Mix capabilities freely via `mergeTests`, no inheritance
+  constraints
+- **Reusability**: Export fixtures via package subpaths for cross-project
+  sharing
 - **Maintainability**: One concern per fixture = clear responsibility boundaries
 
 ## Pattern Examples
 
 ### Example 1: Pure Function → Fixture Pattern
 
-**Context**: When building any test helper, always start with a pure function that accepts all dependencies explicitly. Then wrap it in a Playwright fixture or Cypress command.
+**Context**: When building any test helper, always start with a pure function
+that accepts all dependencies explicitly. Then wrap it in a Playwright fixture
+or Cypress command.
 
 **Implementation**:
 
@@ -82,11 +91,14 @@ export const test = base.extend<{ apiRequest: typeof apiRequest }>({
 - Pure function is unit-testable without Playwright running
 - Framework dependency (`request`) injected at fixture boundary
 - Fixture exposes the pure function to test context
-- Package subpath exports enable `import { apiRequest } from 'my-fixtures/api-request'`
+- Package subpath exports enable
+  `import { apiRequest } from 'my-fixtures/api-request'`
 
 ### Example 2: Composable Fixture System with mergeTests
 
-**Context**: When building comprehensive test capabilities, compose multiple focused fixtures instead of creating monolithic helper classes. Each fixture provides one capability.
+**Context**: When building comprehensive test capabilities, compose multiple
+focused fixtures instead of creating monolithic helper classes. Each fixture
+provides one capability.
 
 **Implementation**:
 
@@ -99,7 +111,13 @@ import { test as authFixture } from './auth-fixture';
 import { test as logFixture } from './log-fixture';
 
 // Compose all fixtures for comprehensive capabilities
-export const test = mergeTests(base, apiRequestFixture, networkFixture, authFixture, logFixture);
+export const test = mergeTests(
+  base,
+  apiRequestFixture,
+  networkFixture,
+  authFixture,
+  logFixture
+);
 
 export { expect } from '@playwright/test';
 
@@ -123,8 +141,12 @@ export const test = base.extend({
   network: async ({ page }, use) => {
     const interceptedRoutes = new Map();
 
-    const interceptRoute = async (method: string, url: string, response: unknown) => {
-      await page.route(url, (route) => {
+    const interceptRoute = async (
+      method: string,
+      url: string,
+      response: unknown
+    ) => {
+      await page.route(url, route => {
         if (route.request().method() === method) {
           route.fulfill({ body: JSON.stringify(response) });
         }
@@ -136,7 +158,7 @@ export const test = base.extend({
 
     // Cleanup
     interceptedRoutes.clear();
-  },
+  }
 });
 
 // auth-fixture.ts
@@ -150,13 +172,13 @@ export const test = base.extend({
           name: 'auth_token',
           value: token,
           domain: 'localhost',
-          path: '/',
-        },
+          path: '/'
+        }
       ]);
     };
 
     await use({ loginAs });
-  },
+  }
 });
 ```
 
@@ -169,7 +191,9 @@ export const test = base.extend({
 
 ### Example 3: Framework-Agnostic HTTP Helper
 
-**Context**: When building HTTP helpers, keep them framework-agnostic. Accept all params explicitly so they work in unit tests, Playwright, Cypress, or any context.
+**Context**: When building HTTP helpers, keep them framework-agnostic. Accept
+all params explicitly so they work in unit tests, Playwright, Cypress, or any
+context.
 
 **Implementation**:
 
@@ -185,23 +209,32 @@ type HttpHelperParams = {
   token?: string;
 };
 
-export async function makeHttpRequest({ baseUrl, endpoint, method, body, headers = {}, token }: HttpHelperParams): Promise<unknown> {
+export async function makeHttpRequest({
+  baseUrl,
+  endpoint,
+  method,
+  body,
+  headers = {},
+  token
+}: HttpHelperParams): Promise<unknown> {
   const url = `${baseUrl}${endpoint}`;
   const requestHeaders = {
     'Content-Type': 'application/json',
     ...(token && { Authorization: `Bearer ${token}` }),
-    ...headers,
+    ...headers
   };
 
   const response = await fetch(url, {
     method,
     headers: requestHeaders,
-    body: body ? JSON.stringify(body) : undefined,
+    body: body ? JSON.stringify(body) : undefined
   });
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`HTTP ${method} ${url} failed: ${response.status} ${errorText}`);
+    throw new Error(
+      `HTTP ${method} ${url} failed: ${response.status} ${errorText}`
+    );
   }
 
   return response.json();
@@ -216,15 +249,15 @@ export const test = base.extend({
   httpHelper: async ({}, use) => {
     const baseUrl = process.env.API_BASE_URL || 'http://localhost:3000';
 
-    await use((params) => makeHttpRequest({ baseUrl, ...params }));
-  },
+    await use(params => makeHttpRequest({ baseUrl, ...params }));
+  }
 });
 
 // Cypress command wrapper
 // cypress/support/commands.ts
 import { makeHttpRequest } from '../../shared/helpers/http-helper';
 
-Cypress.Commands.add('apiRequest', (params) => {
+Cypress.Commands.add('apiRequest', params => {
   const baseUrl = Cypress.env('API_BASE_URL') || 'http://localhost:3000';
   return cy.wrap(makeHttpRequest({ baseUrl, ...params }));
 });
@@ -239,7 +272,8 @@ Cypress.Commands.add('apiRequest', (params) => {
 
 ### Example 4: Fixture Cleanup Pattern
 
-**Context**: When fixtures create resources (data, files, connections), ensure automatic cleanup in fixture teardown. Tests must not leak state.
+**Context**: When fixtures create resources (data, files, connections), ensure
+automatic cleanup in fixture teardown. Tests must not leak state.
 
 **Implementation**:
 
@@ -288,7 +322,7 @@ export const test = base.extend<DatabaseFixture>({
       await deleteRecord('orders', orderId);
     }
     createdOrders.length = 0;
-  },
+  }
 });
 
 // Example usage:
@@ -349,7 +383,8 @@ class AdminPage extends LoginPage {
 
 - Changes to `BasePage` break all descendants (`LoginPage`, `AdminPage`)
 - `AdminPage` inherits unnecessary `login` details—tight coupling
-- Cannot compose capabilities (e.g., admin + reporting features require multiple inheritance)
+- Cannot compose capabilities (e.g., admin + reporting features require multiple
+  inheritance)
 - Hard to test `BasePage` methods in isolation
 - Hidden state in class instances leads to unpredictable behavior
 
@@ -375,7 +410,7 @@ export const test = base.extend({
     await login(page, 'admin@example.com', 'admin123');
     await navigate(page, '/admin');
     await use(page);
-  },
+  }
 });
 
 // Tests import exactly what they need—no inheritance
@@ -383,7 +418,8 @@ export const test = base.extend({
 
 ## Integration Points
 
-- **Used in workflows**: `*atdd` (test generation), `*automate` (test expansion), `*framework` (initial setup)
+- **Used in workflows**: `*atdd` (test generation), `*automate` (test
+  expansion), `*framework` (initial setup)
 - **Related fragments**:
   - `data-factories.md` - Factory functions for test data
   - `network-first.md` - Network interception patterns
@@ -393,9 +429,11 @@ export const test = base.extend({
 
 When deciding whether to create a fixture, follow these rules:
 
-- **3+ uses** → Create fixture with subpath export (shared across tests/projects)
+- **3+ uses** → Create fixture with subpath export (shared across
+  tests/projects)
 - **2-3 uses** → Create utility module (shared within project)
 - **1 use** → Keep inline (avoid premature abstraction)
 - **Complex logic** → Factory function pattern (dynamic data generation)
 
-_Source: Murat Testing Philosophy (lines 74-122), SEON production patterns, Playwright fixture docs._
+_Source: Murat Testing Philosophy (lines 74-122), SEON production patterns,
+Playwright fixture docs._

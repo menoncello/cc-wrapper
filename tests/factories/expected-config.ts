@@ -239,12 +239,7 @@ export const expectedFiles = () => ({
     'CONTRIBUTING.md',
     'CODE_OF_CONDUCT.md'
   ],
-  config: [
-    'vite.config.ts',
-    'playwright.config.ts',
-    'eslint.config.js',
-    'prettier.config.js'
-  ],
+  config: ['vite.config.ts', 'playwright.config.ts', 'eslint.config.js', 'prettier.config.js'],
   docs: [
     'docs/development-workflow.md',
     'docs/build-process.md',
@@ -253,12 +248,7 @@ export const expectedFiles = () => ({
     'docs/architecture.md',
     'docs/testing.md'
   ],
-  tests: [
-    'tests/integration',
-    'tests/e2e',
-    'tests/unit',
-    'tests/support'
-  ]
+  tests: ['tests/integration', 'tests/e2e', 'tests/unit', 'tests/support']
 });
 
 /**
@@ -267,10 +257,7 @@ export const expectedFiles = () => ({
 export const expectedESLintConfig = () => ({
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint'],
-  extends: [
-    'eslint:recommended',
-    'plugin:@typescript-eslint/recommended'
-  ]
+  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended']
 });
 
 /**
@@ -281,7 +268,7 @@ export const matchesDependencyPattern = (
   expected: ReturnType<typeof expectedDependencies>[keyof ReturnType<typeof expectedDependencies>]
 ): boolean => {
   if (!actual) {
-return false;
-}
+    return false;
+  }
   return expected.pattern.test(actual);
 };

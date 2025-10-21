@@ -2,17 +2,27 @@
 
 ## Principle
 
-Feature flags enable controlled rollouts and A/B testing, but require disciplined testing governance. Centralize flag definitions in a frozen enum, test both enabled and disabled states, clean up targeting after each spec, and maintain a comprehensive flag lifecycle checklist. For LaunchDarkly-style systems, script API helpers to seed variations programmatically rather than manual UI mutations.
+Feature flags enable controlled rollouts and A/B testing, but require
+disciplined testing governance. Centralize flag definitions in a frozen enum,
+test both enabled and disabled states, clean up targeting after each spec, and
+maintain a comprehensive flag lifecycle checklist. For LaunchDarkly-style
+systems, script API helpers to seed variations programmatically rather than
+manual UI mutations.
 
 ## Rationale
 
-Poorly managed feature flags become technical debt: untested variations ship broken code, forgotten flags clutter the codebase, and shared environments become unstable from leftover targeting rules. Structured governance ensures flags are testable, traceable, temporary, and safe. Testing both states prevents surprises when flags flip in production.
+Poorly managed feature flags become technical debt: untested variations ship
+broken code, forgotten flags clutter the codebase, and shared environments
+become unstable from leftover targeting rules. Structured governance ensures
+flags are testable, traceable, temporary, and safe. Testing both states prevents
+surprises when flags flip in production.
 
 ## Pattern Examples
 
 ### Example 1: Feature Flag Enum Pattern with Type Safety
 
-**Context**: Centralized flag management with TypeScript type safety and runtime validation.
+**Context**: Centralized flag management with TypeScript type safety and runtime
+validation.
 
 **Implementation**:
 
@@ -40,7 +50,7 @@ export const FLAGS = Object.freeze({
 
   // Killswitches (emergency disables)
   DISABLE_PAYMENT_PROCESSING: 'disable-payment-processing',
-  DISABLE_EMAIL_NOTIFICATIONS: 'disable-email-notifications',
+  DISABLE_EMAIL_NOTIFICATIONS: 'disable-email-notifications'
 } as const);
 
 /**
@@ -78,7 +88,7 @@ export const FLAG_REGISTRY: Record<FlagKey, FlagMetadata> = {
     defaultState: false,
     requiresCleanup: true,
     dependencies: [FLAGS.USE_NEW_API_ENDPOINT],
-    telemetryEvents: ['checkout_started', 'checkout_completed'],
+    telemetryEvents: ['checkout_started', 'checkout_completed']
   },
   [FLAGS.DARK_MODE]: {
     key: FLAGS.DARK_MODE,
@@ -86,8 +96,8 @@ export const FLAG_REGISTRY: Record<FlagKey, FlagMetadata> = {
     owner: 'frontend-team',
     createdDate: '2025-01-10',
     defaultState: false,
-    requiresCleanup: false, // Permanent feature toggle
-  },
+    requiresCleanup: false // Permanent feature toggle
+  }
   // ... rest of registry
 };
 
@@ -116,7 +126,7 @@ export function isFlagExpired(flag: FlagKey): boolean {
  * Get all expired flags requiring cleanup
  */
 export function getExpiredFlags(): FlagMetadata[] {
-  return Object.values(FLAG_REGISTRY).filter((meta) => isFlagExpired(meta.key));
+  return Object.values(FLAG_REGISTRY).filter(meta => isFlagExpired(meta.key));
 }
 ```
 
@@ -146,7 +156,8 @@ export function Checkout() {
 
 ### Example 2: Feature Flag Testing Pattern (Both States)
 
-**Context**: Comprehensive testing of feature flag variations with proper cleanup.
+**Context**: Comprehensive testing of feature flag variations with proper
+cleanup.
 
 **Implementation**:
 
@@ -176,26 +187,29 @@ test.describe('Checkout Flow - Feature Flag Variations', () => {
     await request.post('/api/feature-flags/cleanup', {
       data: {
         flagKey: FLAGS.NEW_CHECKOUT_FLOW,
-        userId: testUserId,
-      },
+        userId: testUserId
+      }
     });
   });
 
-  test('should use NEW checkout flow when flag is ENABLED', async ({ page, request }) => {
+  test('should use NEW checkout flow when flag is ENABLED', async ({
+    page,
+    request
+  }) => {
     // Arrange: Enable flag for test user
     await request.post('/api/feature-flags/target', {
       data: {
         flagKey: FLAGS.NEW_CHECKOUT_FLOW,
         userId: testUserId,
-        variation: true, // ENABLED
-      },
+        variation: true // ENABLED
+      }
     });
 
     // Act: Navigate as targeted user
     await page.goto('/checkout', {
       extraHTTPHeaders: {
-        'X-Test-User-ID': testUserId,
-      },
+        'X-Test-User-ID': testUserId
+      }
     });
 
     // Assert: New flow UI elements visible
@@ -207,32 +221,37 @@ test.describe('Checkout Flow - Feature Flag Variations', () => {
     await expect(page.getByTestId('checkout-v1-container')).not.toBeVisible();
 
     // Assert: Telemetry event fired
-    const analyticsEvents = await page.evaluate(() => (window as any).__ANALYTICS_EVENTS__ || []);
+    const analyticsEvents = await page.evaluate(
+      () => (window as any).__ANALYTICS_EVENTS__ || []
+    );
     expect(analyticsEvents).toContainEqual(
       expect.objectContaining({
         event: 'checkout_started',
         properties: expect.objectContaining({
-          variant: 'new_flow',
-        }),
-      }),
+          variant: 'new_flow'
+        })
+      })
     );
   });
 
-  test('should use LEGACY checkout flow when flag is DISABLED', async ({ page, request }) => {
+  test('should use LEGACY checkout flow when flag is DISABLED', async ({
+    page,
+    request
+  }) => {
     // Arrange: Disable flag for test user (or don't target at all)
     await request.post('/api/feature-flags/target', {
       data: {
         flagKey: FLAGS.NEW_CHECKOUT_FLOW,
         userId: testUserId,
-        variation: false, // DISABLED
-      },
+        variation: false // DISABLED
+      }
     });
 
     // Act: Navigate as targeted user
     await page.goto('/checkout', {
       extraHTTPHeaders: {
-        'X-Test-User-ID': testUserId,
-      },
+        'X-Test-User-ID': testUserId
+      }
     });
 
     // Assert: Legacy flow UI elements visible
@@ -244,26 +263,33 @@ test.describe('Checkout Flow - Feature Flag Variations', () => {
     await expect(page.getByTestId('express-payment-options')).not.toBeVisible();
 
     // Assert: Telemetry event fired with correct variant
-    const analyticsEvents = await page.evaluate(() => (window as any).__ANALYTICS_EVENTS__ || []);
+    const analyticsEvents = await page.evaluate(
+      () => (window as any).__ANALYTICS_EVENTS__ || []
+    );
     expect(analyticsEvents).toContainEqual(
       expect.objectContaining({
         event: 'checkout_started',
         properties: expect.objectContaining({
-          variant: 'legacy_flow',
-        }),
-      }),
+          variant: 'legacy_flow'
+        })
+      })
     );
   });
 
-  test('should handle flag evaluation errors gracefully', async ({ page, request }) => {
+  test('should handle flag evaluation errors gracefully', async ({
+    page,
+    request
+  }) => {
     // Arrange: Simulate flag service unavailable
-    await page.route('**/api/feature-flags/evaluate', (route) => route.fulfill({ status: 500, body: 'Service Unavailable' }));
+    await page.route('**/api/feature-flags/evaluate', route =>
+      route.fulfill({ status: 500, body: 'Service Unavailable' })
+    );
 
     // Act: Navigate (should fallback to default state)
     await page.goto('/checkout', {
       extraHTTPHeaders: {
-        'X-Test-User-ID': testUserId,
-      },
+        'X-Test-User-ID': testUserId
+      }
     });
 
     // Assert: Fallback to safe default (legacy flow)
@@ -271,10 +297,12 @@ test.describe('Checkout Flow - Feature Flag Variations', () => {
 
     // Assert: Error logged but no user-facing error
     const consoleErrors = [];
-    page.on('console', (msg) => {
+    page.on('console', msg => {
       if (msg.type() === 'error') consoleErrors.push(msg.text());
     });
-    expect(consoleErrors).toContain(expect.stringContaining('Feature flag evaluation failed'));
+    expect(consoleErrors).toContain(
+      expect.stringContaining('Feature flag evaluation failed')
+    );
   });
 });
 ```
@@ -296,7 +324,7 @@ describe('Checkout Flow - Feature Flag Variations', () => {
     // Clean up targeting
     cy.task('removeFeatureFlagTarget', {
       flagKey: FLAGS.NEW_CHECKOUT_FLOW,
-      userId: testUserId,
+      userId: testUserId
     });
   });
 
@@ -305,12 +333,12 @@ describe('Checkout Flow - Feature Flag Variations', () => {
     cy.task('setFeatureFlagVariation', {
       flagKey: FLAGS.NEW_CHECKOUT_FLOW,
       userId: testUserId,
-      variation: true,
+      variation: true
     });
 
     // Act
     cy.visit('/checkout', {
-      headers: { 'X-Test-User-ID': testUserId },
+      headers: { 'X-Test-User-ID': testUserId }
     });
 
     // Assert
@@ -323,12 +351,12 @@ describe('Checkout Flow - Feature Flag Variations', () => {
     cy.task('setFeatureFlagVariation', {
       flagKey: FLAGS.NEW_CHECKOUT_FLOW,
       userId: testUserId,
-      variation: false,
+      variation: false
     });
 
     // Act
     cy.visit('/checkout', {
-      headers: { 'X-Test-User-ID': testUserId },
+      headers: { 'X-Test-User-ID': testUserId }
     });
 
     // Assert
@@ -350,7 +378,8 @@ describe('Checkout Flow - Feature Flag Variations', () => {
 
 ### Example 3: Feature Flag Targeting Helper Pattern
 
-**Context**: Reusable helpers for programmatic flag control via LaunchDarkly/Split.io API.
+**Context**: Reusable helpers for programmatic flag control via
+LaunchDarkly/Split.io API.
 
 **Implementation**:
 
@@ -372,26 +401,32 @@ type FlagVariation = boolean | string | number | object;
  * Set flag variation for specific user
  * Uses LaunchDarkly API to create user target
  */
-export async function setFlagForUser(flagKey: FlagKey, userId: string, variation: FlagVariation): Promise<void> {
-  const response = await playwrightRequest.newContext().then((ctx) =>
+export async function setFlagForUser(
+  flagKey: FlagKey,
+  userId: string,
+  variation: FlagVariation
+): Promise<void> {
+  const response = await playwrightRequest.newContext().then(ctx =>
     ctx.post(`${LD_API_BASE}/flags/${flagKey}/targeting`, {
       headers: {
         Authorization: LD_SDK_KEY!,
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
       data: {
         targets: [
           {
             values: [userId],
-            variation: variation ? 1 : 0, // 0 = off, 1 = on
-          },
-        ],
-      },
-    }),
+            variation: variation ? 1 : 0 // 0 = off, 1 = on
+          }
+        ]
+      }
+    })
   );
 
   if (!response.ok()) {
-    throw new Error(`Failed to set flag ${flagKey} for user ${userId}: ${response.status()}`);
+    throw new Error(
+      `Failed to set flag ${flagKey} for user ${userId}: ${response.status()}`
+    );
   }
 }
 
@@ -399,18 +434,23 @@ export async function setFlagForUser(flagKey: FlagKey, userId: string, variation
  * Remove user from flag targeting
  * CRITICAL for test cleanup
  */
-export async function removeFlagTarget(flagKey: FlagKey, userId: string): Promise<void> {
-  const response = await playwrightRequest.newContext().then((ctx) =>
+export async function removeFlagTarget(
+  flagKey: FlagKey,
+  userId: string
+): Promise<void> {
+  const response = await playwrightRequest.newContext().then(ctx =>
     ctx.delete(`${LD_API_BASE}/flags/${flagKey}/targeting/users/${userId}`, {
       headers: {
-        Authorization: LD_SDK_KEY!,
-      },
-    }),
+        Authorization: LD_SDK_KEY!
+      }
+    })
   );
 
   if (!response.ok() && response.status() !== 404) {
     // 404 is acceptable (user wasn't targeted)
-    throw new Error(`Failed to remove flag ${flagKey} target for user ${userId}: ${response.status()}`);
+    throw new Error(
+      `Failed to remove flag ${flagKey} target for user ${userId}: ${response.status()}`
+    );
   }
 }
 
@@ -418,30 +458,35 @@ export async function removeFlagTarget(flagKey: FlagKey, userId: string): Promis
  * Percentage rollout helper
  * Enable flag for N% of users
  */
-export async function setFlagRolloutPercentage(flagKey: FlagKey, percentage: number): Promise<void> {
+export async function setFlagRolloutPercentage(
+  flagKey: FlagKey,
+  percentage: number
+): Promise<void> {
   if (percentage < 0 || percentage > 100) {
     throw new Error('Percentage must be between 0 and 100');
   }
 
-  const response = await playwrightRequest.newContext().then((ctx) =>
+  const response = await playwrightRequest.newContext().then(ctx =>
     ctx.patch(`${LD_API_BASE}/flags/${flagKey}`, {
       headers: {
         Authorization: LD_SDK_KEY!,
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
       data: {
         rollout: {
           variations: [
             { variation: 0, weight: 100 - percentage }, // off
-            { variation: 1, weight: percentage }, // on
-          ],
-        },
-      },
-    }),
+            { variation: 1, weight: percentage } // on
+          ]
+        }
+      }
+    })
   );
 
   if (!response.ok()) {
-    throw new Error(`Failed to set rollout for flag ${flagKey}: ${response.status()}`);
+    throw new Error(
+      `Failed to set rollout for flag ${flagKey}: ${response.status()}`
+    );
   }
 }
 
@@ -476,7 +521,10 @@ export function stubFeatureFlags(flags: Record<FlagKey, FlagVariation>): void {
 ```typescript
 // playwright/fixtures/feature-flag-fixture.ts
 import { test as base } from '@playwright/test';
-import { setFlagForUser, removeFlagTarget } from '../support/feature-flag-helpers';
+import {
+  setFlagForUser,
+  removeFlagTarget
+} from '../support/feature-flag-helpers';
 import { FlagKey } from '@/utils/feature-flags';
 
 type FeatureFlagFixture = {
@@ -502,14 +550,14 @@ export const test = base.extend<FeatureFlagFixture>({
       },
       cleanup: async (flag, userId) => {
         await removeFlagTarget(flag, userId);
-      },
+      }
     });
 
     // Auto-cleanup after test
     for (const { flag, userId } of cleanupQueue) {
       await removeFlagTarget(flag, userId);
     }
-  },
+  }
 });
 ```
 
@@ -525,7 +573,8 @@ export const test = base.extend<FeatureFlagFixture>({
 
 ### Example 4: Feature Flag Lifecycle Checklist & Cleanup Strategy
 
-**Context**: Governance checklist and automated cleanup detection for stale flags.
+**Context**: Governance checklist and automated cleanup detection for stale
+flags.
 
 **Implementation**:
 
@@ -536,7 +585,12 @@ export const test = base.extend<FeatureFlagFixture>({
  * Run weekly to detect stale flags requiring cleanup
  */
 
-import { FLAG_REGISTRY, FLAGS, getExpiredFlags, FlagKey } from '../src/utils/feature-flags';
+import {
+  FLAG_REGISTRY,
+  FLAGS,
+  getExpiredFlags,
+  FlagKey
+} from '../src/utils/feature-flags';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -554,11 +608,11 @@ type AuditResult = {
  */
 function auditFeatureFlags(): AuditResult {
   const allFlags = Object.keys(FLAG_REGISTRY) as FlagKey[];
-  const expiredFlags = getExpiredFlags().map((meta) => meta.key);
+  const expiredFlags = getExpiredFlags().map(meta => meta.key);
 
   // Flags expiring in next 30 days
   const thirtyDaysFromNow = Date.now() + 30 * 24 * 60 * 60 * 1000;
-  const flagsNearingExpiry = allFlags.filter((flag) => {
+  const flagsNearingExpiry = allFlags.filter(flag => {
     const meta = FLAG_REGISTRY[flag];
     if (!meta.expiryDate) return false;
     const expiry = new Date(meta.expiryDate).getTime();
@@ -566,11 +620,13 @@ function auditFeatureFlags(): AuditResult {
   });
 
   // Missing metadata
-  const missingOwners = allFlags.filter((flag) => !FLAG_REGISTRY[flag].owner);
-  const missingDates = allFlags.filter((flag) => !FLAG_REGISTRY[flag].createdDate);
+  const missingOwners = allFlags.filter(flag => !FLAG_REGISTRY[flag].owner);
+  const missingDates = allFlags.filter(
+    flag => !FLAG_REGISTRY[flag].createdDate
+  );
 
   // Permanent flags (no expiry, requiresCleanup = false)
-  const permanentFlags = allFlags.filter((flag) => {
+  const permanentFlags = allFlags.filter(flag => {
     const meta = FLAG_REGISTRY[flag];
     return !meta.expiryDate && !meta.requiresCleanup;
   });
@@ -581,7 +637,7 @@ function auditFeatureFlags(): AuditResult {
     missingOwners,
     missingDates,
     permanentFlags,
-    flagsNearingExpiry,
+    flagsNearingExpiry
   };
 }
 
@@ -595,7 +651,7 @@ function generateReport(audit: AuditResult): string {
 
   if (audit.expiredFlags.length > 0) {
     report += `## ⚠️ EXPIRED FLAGS - IMMEDIATE CLEANUP REQUIRED\n\n`;
-    audit.expiredFlags.forEach((flag) => {
+    audit.expiredFlags.forEach(flag => {
       const meta = FLAG_REGISTRY[flag];
       report += `- **${meta.name}** (\`${flag}\`)\n`;
       report += `  - Owner: ${meta.owner}\n`;
@@ -606,7 +662,7 @@ function generateReport(audit: AuditResult): string {
 
   if (audit.flagsNearingExpiry.length > 0) {
     report += `## ⏰ FLAGS EXPIRING SOON (Next 30 Days)\n\n`;
-    audit.flagsNearingExpiry.forEach((flag) => {
+    audit.flagsNearingExpiry.forEach(flag => {
       const meta = FLAG_REGISTRY[flag];
       report += `- **${meta.name}** (\`${flag}\`)\n`;
       report += `  - Owner: ${meta.owner}\n`;
@@ -617,7 +673,7 @@ function generateReport(audit: AuditResult): string {
 
   if (audit.permanentFlags.length > 0) {
     report += `## 🔄 PERMANENT FLAGS (No Expiry)\n\n`;
-    audit.permanentFlags.forEach((flag) => {
+    audit.permanentFlags.forEach(flag => {
       const meta = FLAG_REGISTRY[flag];
       report += `- **${meta.name}** (\`${flag}\`) - Owner: ${meta.owner}\n`;
     });
@@ -693,7 +749,10 @@ const report = generateReport(audit);
 // Save report
 const outputPath = path.join(__dirname, '../feature-flag-audit-report.md');
 fs.writeFileSync(outputPath, report);
-fs.writeFileSync(path.join(__dirname, '../FEATURE-FLAG-CHECKLIST.md'), FLAG_LIFECYCLE_CHECKLIST);
+fs.writeFileSync(
+  path.join(__dirname, '../FEATURE-FLAG-CHECKLIST.md'),
+  FLAG_LIFECYCLE_CHECKLIST
+);
 
 console.log(`✅ Audit complete. Report saved to: ${outputPath}`);
 console.log(`Total flags: ${audit.totalFlags}`);
@@ -747,4 +806,5 @@ Before merging flag-related code, verify:
 - Related fragments: `test-quality.md`, `selective-testing.md`
 - Flag services: LaunchDarkly, Split.io, Unleash, custom implementations
 
-_Source: LaunchDarkly strategy blog, Murat test architecture notes, SEON feature flag governance_
+_Source: LaunchDarkly strategy blog, Murat test architecture notes, SEON feature
+flag governance_

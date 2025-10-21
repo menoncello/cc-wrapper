@@ -2,7 +2,8 @@
 
 # Test Priorities Matrix
 
-Guide for prioritizing test scenarios based on risk, criticality, and business impact.
+Guide for prioritizing test scenarios based on risk, criticality, and business
+impact.
 
 ## Priority Levels
 
@@ -199,15 +200,32 @@ export type PriorityFactors = {
  * Mirrors the priority decision tree with objective criteria
  */
 export function calculatePriority(factors: PriorityFactors): Priority {
-  const { revenueImpact, userImpact, securityRisk, complianceRequired, previousFailure, complexity, usage } = factors;
+  const {
+    revenueImpact,
+    userImpact,
+    securityRisk,
+    complianceRequired,
+    previousFailure,
+    complexity,
+    usage
+  } = factors;
 
   // P0: Revenue-critical, security, or compliance
-  if (revenueImpact === 'critical' || securityRisk || complianceRequired || (previousFailure && revenueImpact === 'high')) {
+  if (
+    revenueImpact === 'critical' ||
+    securityRisk ||
+    complianceRequired ||
+    (previousFailure && revenueImpact === 'high')
+  ) {
     return 'P0';
   }
 
   // P0: High revenue + high complexity + frequent usage
-  if (revenueImpact === 'high' && complexity === 'high' && usage === 'frequent') {
+  if (
+    revenueImpact === 'high' &&
+    complexity === 'high' &&
+    usage === 'frequent'
+  ) {
     return 'P0';
   }
 
@@ -219,7 +237,10 @@ export function calculatePriority(factors: PriorityFactors): Priority {
   }
 
   // P1: High revenue OR high complexity with regular usage
-  if ((revenueImpact === 'high' && usage === 'regular') || (complexity === 'high' && usage === 'frequent')) {
+  if (
+    (revenueImpact === 'high' && usage === 'regular') ||
+    (complexity === 'high' && usage === 'frequent')
+  ) {
     return 'P1';
   }
 
@@ -239,7 +260,8 @@ export function justifyPriority(factors: PriorityFactors): string {
   const priority = calculatePriority(factors);
   const reasons: string[] = [];
 
-  if (factors.revenueImpact === 'critical') reasons.push('critical revenue impact');
+  if (factors.revenueImpact === 'critical')
+    reasons.push('critical revenue impact');
   if (factors.securityRisk) reasons.push('security-critical');
   if (factors.complianceRequired) reasons.push('compliance requirement');
   if (factors.previousFailure) reasons.push('regression prevention');
@@ -262,7 +284,7 @@ const paymentScenario: PriorityFactors = {
   complianceRequired: true,
   previousFailure: false,
   complexity: 'high',
-  usage: 'frequent',
+  usage: 'frequent'
 };
 
 console.log(calculatePriority(paymentScenario)); // 'P0'
@@ -278,7 +300,9 @@ import { test, expect } from '@playwright/test';
 
 // Tag tests with priority for selective execution
 test.describe('Checkout Flow', () => {
-  test('valid payment completes successfully @p0 @smoke @revenue', async ({ page }) => {
+  test('valid payment completes successfully @p0 @smoke @revenue', async ({
+    page
+  }) => {
     // P0: Revenue-critical happy path
     await page.goto('/checkout');
     await page.getByTestId('payment-method').selectOption('credit-card');
@@ -288,14 +312,18 @@ test.describe('Checkout Flow', () => {
     await expect(page.getByText('Order confirmed')).toBeVisible();
   });
 
-  test('expired card shows user-friendly error @p1 @error-handling', async ({ page }) => {
+  test('expired card shows user-friendly error @p1 @error-handling', async ({
+    page
+  }) => {
     // P1: Core error scenario (frequent user impact)
     await page.goto('/checkout');
     await page.getByTestId('payment-method').selectOption('credit-card');
     await page.getByTestId('card-number').fill('4000000000000069'); // Test card: expired
     await page.getByRole('button', { name: 'Place Order' }).click();
 
-    await expect(page.getByText('Card expired. Please use a different card.')).toBeVisible();
+    await expect(
+      page.getByText('Card expired. Please use a different card.')
+    ).toBeVisible();
   });
 
   test('coupon code applies discount correctly @p2', async ({ page }) => {
@@ -310,11 +338,15 @@ test.describe('Checkout Flow', () => {
   test('gift message formatting preserved @p3', async ({ page }) => {
     // P3: Cosmetic feature (rarely used)
     await page.goto('/checkout');
-    await page.getByTestId('gift-message').fill('Happy Birthday!\n\nWith love.');
+    await page
+      .getByTestId('gift-message')
+      .fill('Happy Birthday!\n\nWith love.');
     await page.getByRole('button', { name: 'Place Order' }).click();
 
     // Message formatting preserved (linebreaks intact)
-    await expect(page.getByTestId('order-summary')).toContainText('Happy Birthday!');
+    await expect(page.getByTestId('order-summary')).toContainText(
+      'Happy Birthday!'
+    );
   });
 });
 ```
@@ -345,7 +377,8 @@ Priority should align with risk score from `probability-impact.md`:
 | 4-5        | P1 or P2         | Medium risk (monitor closely)              |
 | 1-3        | P2 or P3         | Low risk (document and defer)              |
 
-**Example**: Risk score 9 (checkout API failure) → P0 priority → comprehensive coverage required.
+**Example**: Risk score 9 (checkout API failure) → P0 priority → comprehensive
+coverage required.
 
 ---
 
@@ -358,16 +391,24 @@ Before finalizing test priorities:
 - [ ] **Compliance requirements documented**: GDPR, PCI-DSS, SOC2 → P0
 - [ ] **User impact quantified**: >50% users → P0/P1, <10% → P2/P3
 - [ ] **Previous failures reviewed**: Regression prevention → increase priority
-- [ ] **Complexity evaluated**: >500 LOC or multiple dependencies → increase priority
+- [ ] **Complexity evaluated**: >500 LOC or multiple dependencies → increase
+      priority
 - [ ] **Usage metrics consulted**: Frequent use → P0/P1, rare use → P2/P3
-- [ ] **Monitoring coverage confirmed**: Strong monitoring → can decrease priority
+- [ ] **Monitoring coverage confirmed**: Strong monitoring → can decrease
+      priority
 - [ ] **Rollback capability verified**: Easy rollback → can decrease priority
 - [ ] **Priorities tagged in tests**: @p0, @p1, @p2, @p3 for selective execution
 
 ## Integration Points
 
-- **Used in workflows**: `*automate` (priority-based test generation), `*test-design` (scenario prioritization), `*trace` (coverage validation by priority)
-- **Related fragments**: `risk-governance.md` (risk scoring), `probability-impact.md` (impact assessment), `selective-testing.md` (tag-based execution)
-- **Tools**: Playwright/Cypress grep for tag filtering, CI scripts for priority-based execution
+- **Used in workflows**: `*automate` (priority-based test generation),
+  `*test-design` (scenario prioritization), `*trace` (coverage validation by
+  priority)
+- **Related fragments**: `risk-governance.md` (risk scoring),
+  `probability-impact.md` (impact assessment), `selective-testing.md` (tag-based
+  execution)
+- **Tools**: Playwright/Cypress grep for tag filtering, CI scripts for
+  priority-based execution
 
-_Source: Risk-based testing practices, test prioritization strategies, production incident analysis_
+_Source: Risk-based testing practices, test prioritization strategies,
+production incident analysis_

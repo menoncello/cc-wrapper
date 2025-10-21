@@ -46,9 +46,8 @@ export const projectFixture = () => {
       const tsconfigPath = path.join(PROJECT_ROOT, 'tsconfig.json');
       const content = fs.readFileSync(tsconfigPath, 'utf-8');
       // Strip comments using regex
-      const cleaned = content.replace(
-        /\\"|"(?:\\"|[^"])*"|(\/\/.*|\/\*[\s\S]*?\*\/)/g,
-        (m, g) => (g ? '' : m)
+      const cleaned = content.replace(/\\"|"(?:\\"|[^"])*"|(\/\/.*|\/\*[\s\S]*?\*\/)/g, (m, g) =>
+        g ? '' : m
       );
       return JSON.parse(cleaned);
     },
@@ -117,9 +116,7 @@ export const projectFixture = () => {
       }
 
       const files = fs.readdirSync(fullPath, { recursive });
-      return files
-        .filter(file => file.toString().endsWith(pattern))
-        .map(file => file.toString());
+      return files.filter(file => file.toString().endsWith(pattern)).map(file => file.toString());
     },
 
     /**
@@ -137,7 +134,10 @@ export const projectFixture = () => {
      * @param depName - Name of the dependency (e.g., 'vite', 'typescript')
      * @param type - Type of dependency ('dependencies' or 'devDependencies')
      */
-    hasDependency: (depName: string, type: 'dependencies' | 'devDependencies' = 'devDependencies'): boolean => {
+    hasDependency: (
+      depName: string,
+      type: 'dependencies' | 'devDependencies' = 'devDependencies'
+    ): boolean => {
       const packageJsonPath = path.join(PROJECT_ROOT, 'package.json');
       const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
       return packageJson[type]?.[depName] !== undefined;
@@ -148,7 +148,10 @@ export const projectFixture = () => {
      * @param depName - Name of the dependency
      * @param type - Type of dependency ('dependencies' or 'devDependencies')
      */
-    getDependencyVersion: (depName: string, type: 'dependencies' | 'devDependencies' = 'devDependencies'): string | undefined => {
+    getDependencyVersion: (
+      depName: string,
+      type: 'dependencies' | 'devDependencies' = 'devDependencies'
+    ): string | undefined => {
       const packageJsonPath = path.join(PROJECT_ROOT, 'package.json');
       const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
       return packageJson[type]?.[depName];

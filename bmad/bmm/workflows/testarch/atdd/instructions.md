@@ -2,27 +2,33 @@
 
 # Acceptance Test-Driven Development (ATDD)
 
-**Workflow ID**: `bmad/bmm/testarch/atdd`
-**Version**: 4.0 (BMad v6)
+**Workflow ID**: `bmad/bmm/testarch/atdd` **Version**: 4.0 (BMad v6)
 
 ---
 
 ## Overview
 
-Generates failing acceptance tests BEFORE implementation following TDD's red-green-refactor cycle. This workflow creates comprehensive test coverage at appropriate levels (E2E, API, Component) with supporting infrastructure (fixtures, factories, mocks) and provides an implementation checklist to guide development.
+Generates failing acceptance tests BEFORE implementation following TDD's
+red-green-refactor cycle. This workflow creates comprehensive test coverage at
+appropriate levels (E2E, API, Component) with supporting infrastructure
+(fixtures, factories, mocks) and provides an implementation checklist to guide
+development.
 
-**Core Principle**: Tests fail first (red phase), then guide development to green, then enable confident refactoring.
+**Core Principle**: Tests fail first (red phase), then guide development to
+green, then enable confident refactoring.
 
 ---
 
 ## Preflight Requirements
 
-**Critical:** Verify these requirements before proceeding. If any fail, HALT and notify the user.
+**Critical:** Verify these requirements before proceeding. If any fail, HALT and
+notify the user.
 
 - ✅ Story approved with clear acceptance criteria
 - ✅ Development sandbox/environment ready
 - ✅ Framework scaffolding exists (run `framework` workflow if missing)
-- ✅ Test framework configuration available (playwright.config.ts or cypress.config.ts)
+- ✅ Test framework configuration available (playwright.config.ts or
+  cypress.config.ts)
 
 ---
 
@@ -50,17 +56,33 @@ Generates failing acceptance tests BEFORE implementation following TDD's red-gre
 
 4. **Load Knowledge Base Fragments**
 
-   **Critical:** Consult `{project-root}/bmad/bmm/testarch/tea-index.csv` to load:
-   - `fixture-architecture.md` - Test fixture patterns with auto-cleanup (pure function → fixture → mergeTests composition, 406 lines, 5 examples)
-   - `data-factories.md` - Factory patterns using faker (override patterns, nested factories, API seeding, 498 lines, 5 examples)
-   - `component-tdd.md` - Component test strategies (red-green-refactor, provider isolation, accessibility, visual regression, 480 lines, 4 examples)
-   - `network-first.md` - Route interception patterns (intercept before navigate, HAR capture, deterministic waiting, 489 lines, 5 examples)
-   - `test-quality.md` - Test design principles (deterministic tests, isolated with cleanup, explicit assertions, length limits, execution time optimization, 658 lines, 5 examples)
-   - `test-healing-patterns.md` - Common failure patterns and healing strategies (stale selectors, race conditions, dynamic data, network errors, hard waits, 648 lines, 5 examples)
-   - `selector-resilience.md` - Selector best practices (data-testid > ARIA > text > CSS hierarchy, dynamic patterns, anti-patterns, 541 lines, 4 examples)
-   - `timing-debugging.md` - Race condition prevention and async debugging (network-first, deterministic waiting, anti-patterns, 370 lines, 3 examples)
+   **Critical:** Consult `{project-root}/bmad/bmm/testarch/tea-index.csv` to
+   load:
+   - `fixture-architecture.md` - Test fixture patterns with auto-cleanup (pure
+     function → fixture → mergeTests composition, 406 lines, 5 examples)
+   - `data-factories.md` - Factory patterns using faker (override patterns,
+     nested factories, API seeding, 498 lines, 5 examples)
+   - `component-tdd.md` - Component test strategies (red-green-refactor,
+     provider isolation, accessibility, visual regression, 480 lines, 4
+     examples)
+   - `network-first.md` - Route interception patterns (intercept before
+     navigate, HAR capture, deterministic waiting, 489 lines, 5 examples)
+   - `test-quality.md` - Test design principles (deterministic tests, isolated
+     with cleanup, explicit assertions, length limits, execution time
+     optimization, 658 lines, 5 examples)
+   - `test-healing-patterns.md` - Common failure patterns and healing strategies
+     (stale selectors, race conditions, dynamic data, network errors, hard
+     waits, 648 lines, 5 examples)
+   - `selector-resilience.md` - Selector best practices (data-testid > ARIA >
+     text > CSS hierarchy, dynamic patterns, anti-patterns, 541 lines, 4
+     examples)
+   - `timing-debugging.md` - Race condition prevention and async debugging
+     (network-first, deterministic waiting, anti-patterns, 370 lines, 3
+     examples)
 
-**Halt Condition:** If story has no acceptance criteria or framework is missing, HALT with message: "ATDD requires clear acceptance criteria and test framework setup"
+**Halt Condition:** If story has no acceptance criteria or framework is missing,
+HALT with message: "ATDD requires clear acceptance criteria and test framework
+setup"
 
 ---
 
@@ -167,7 +189,8 @@ Generates failing acceptance tests BEFORE implementation following TDD's red-gre
 
    After mode selection:
    - AI Generation: Continue to Step 2 (Select Test Levels and Strategy)
-   - Recording: Skip to Step 4 (Build Data Infrastructure) - tests already generated
+   - Recording: Skip to Step 4 (Build Data Infrastructure) - tests already
+     generated
 
 ---
 
@@ -226,7 +249,8 @@ Generates failing acceptance tests BEFORE implementation following TDD's red-gre
    - P1 scenarios → Should cover if time permits
    - P2/P3 scenarios → Optional for this iteration
 
-**Decision Point:** Set `primary_level` variable to main test level for this story (typically E2E or API)
+**Decision Point:** Set `primary_level` variable to main test level for this
+story (typically E2E or API)
 
 ---
 
@@ -268,7 +292,9 @@ Generates failing acceptance tests BEFORE implementation following TDD's red-gre
        await page.click('[data-testid="login-button"]');
 
        // THEN: Error message is displayed
-       await expect(page.locator('[data-testid="error-message"]')).toHaveText('Invalid email or password');
+       await expect(page.locator('[data-testid="error-message"]')).toHaveText(
+         'Invalid email or password'
+       );
      });
    });
    ```
@@ -287,17 +313,19 @@ Generates failing acceptance tests BEFORE implementation following TDD's red-gre
    ```typescript
    test('should load user dashboard after login', async ({ page }) => {
      // CRITICAL: Intercept routes BEFORE navigation
-     await page.route('**/api/user', (route) =>
+     await page.route('**/api/user', route =>
        route.fulfill({
          status: 200,
-         body: JSON.stringify({ id: 1, name: 'Test User' }),
-       }),
+         body: JSON.stringify({ id: 1, name: 'Test User' })
+       })
      );
 
      // NOW navigate
      await page.goto('/dashboard');
 
-     await expect(page.locator('[data-testid="user-name"]')).toHaveText('Test User');
+     await expect(page.locator('[data-testid="user-name"]')).toHaveText(
+       'Test User'
+     );
    });
    ```
 
@@ -311,12 +339,12 @@ Generates failing acceptance tests BEFORE implementation following TDD's red-gre
        // GIVEN: Valid user data
        const userData = {
          email: 'newuser@example.com',
-         name: 'New User',
+         name: 'New User'
        };
 
        // WHEN: Creating user via API
        const response = await request.post('/api/users', {
-         data: userData,
+         data: userData
        });
 
        // THEN: User is created successfully
@@ -325,7 +353,7 @@ Generates failing acceptance tests BEFORE implementation following TDD's red-gre
        expect(body).toMatchObject({
          email: userData.email,
          name: userData.name,
-         id: expect.any(Number),
+         id: expect.any(Number)
        });
      });
    });
@@ -361,7 +389,8 @@ Generates failing acceptance tests BEFORE implementation following TDD's red-gre
    - Failure messages should be clear and actionable
    - All tests must be in RED phase before sharing with DEV
 
-**Important:** Tests MUST fail initially. If a test passes before implementation, it's not a valid acceptance test.
+**Important:** Tests MUST fail initially. If a test passes before
+implementation, it's not a valid acceptance test.
 
 ---
 
@@ -382,10 +411,11 @@ Generates failing acceptance tests BEFORE implementation following TDD's red-gre
      email: faker.internet.email(),
      name: faker.person.fullName(),
      createdAt: faker.date.recent().toISOString(),
-     ...overrides,
+     ...overrides
    });
 
-   export const createUsers = (count: number) => Array.from({ length: count }, () => createUser());
+   export const createUsers = (count: number) =>
+     Array.from({ length: count }, () => createUser());
    ```
 
    **Factory principles:**
@@ -417,7 +447,7 @@ Generates failing acceptance tests BEFORE implementation following TDD's red-gre
 
        // Cleanup: Delete user
        await deleteUser(user.id);
-     },
+     }
    });
    ```
 
@@ -485,7 +515,8 @@ Generates failing acceptance tests BEFORE implementation following TDD's red-gre
    - [ ] Implement login form component
    - [ ] Add email/password validation
    - [ ] Integrate authentication API
-   - [ ] Add `data-testid` attributes: `email-input`, `password-input`, `login-button`
+   - [ ] Add `data-testid` attributes: `email-input`, `password-input`,
+         `login-button`
    - [ ] Implement error handling
    - [ ] Run test: `npm run test:e2e -- login.spec.ts`
    - [ ] ✅ Test passes (green phase)
@@ -670,7 +701,9 @@ test('should display user name', async ({ page }) => {
 // ❌ WRONG: Multiple assertions (not atomic)
 test('should display user info', async ({ page }) => {
   await expect(page.locator('[data-testid="user-name"]')).toHaveText('John');
-  await expect(page.locator('[data-testid="user-email"]')).toHaveText('john@example.com');
+  await expect(page.locator('[data-testid="user-email"]')).toHaveText(
+    'john@example.com'
+  );
 });
 ```
 
@@ -695,18 +728,27 @@ test('should display user info', async ({ page }) => {
 
 **Core Fragments (Auto-loaded in Step 1):**
 
-- `fixture-architecture.md` - Pure function → fixture → mergeTests patterns (406 lines, 5 examples)
-- `data-factories.md` - Factory patterns with faker, overrides, API seeding (498 lines, 5 examples)
-- `component-tdd.md` - Red-green-refactor, provider isolation, accessibility, visual regression (480 lines, 4 examples)
-- `network-first.md` - Intercept before navigate, HAR capture, deterministic waiting (489 lines, 5 examples)
-- `test-quality.md` - Deterministic tests, cleanup, explicit assertions, length/time limits (658 lines, 5 examples)
-- `test-healing-patterns.md` - Common failure patterns: stale selectors, race conditions, dynamic data, network errors, hard waits (648 lines, 5 examples)
-- `selector-resilience.md` - Selector hierarchy (data-testid > ARIA > text > CSS), dynamic patterns, anti-patterns (541 lines, 4 examples)
-- `timing-debugging.md` - Race condition prevention, deterministic waiting, async debugging (370 lines, 3 examples)
+- `fixture-architecture.md` - Pure function → fixture → mergeTests patterns (406
+  lines, 5 examples)
+- `data-factories.md` - Factory patterns with faker, overrides, API seeding (498
+  lines, 5 examples)
+- `component-tdd.md` - Red-green-refactor, provider isolation, accessibility,
+  visual regression (480 lines, 4 examples)
+- `network-first.md` - Intercept before navigate, HAR capture, deterministic
+  waiting (489 lines, 5 examples)
+- `test-quality.md` - Deterministic tests, cleanup, explicit assertions,
+  length/time limits (658 lines, 5 examples)
+- `test-healing-patterns.md` - Common failure patterns: stale selectors, race
+  conditions, dynamic data, network errors, hard waits (648 lines, 5 examples)
+- `selector-resilience.md` - Selector hierarchy (data-testid > ARIA > text >
+  CSS), dynamic patterns, anti-patterns (541 lines, 4 examples)
+- `timing-debugging.md` - Race condition prevention, deterministic waiting,
+  async debugging (370 lines, 3 examples)
 
 **Reference for Test Level Selection:**
 
-- `test-levels-framework.md` - E2E vs API vs Component vs Unit decision framework (467 lines, 4 examples)
+- `test-levels-framework.md` - E2E vs API vs Component vs Unit decision
+  framework (467 lines, 4 examples)
 
 **Manual Reference (Optional):**
 
@@ -721,8 +763,7 @@ After completing this workflow, provide a summary:
 ```markdown
 ## ATDD Complete - Tests in RED Phase
 
-**Story**: {story_id}
-**Primary Test Level**: {primary_level}
+**Story**: {story_id} **Primary Test Level**: {primary_level}
 
 **Failing Tests Created**:
 

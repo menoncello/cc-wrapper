@@ -1,14 +1,21 @@
 # PRD Workflow Instructions
 
-<critical>The workflow execution engine is governed by: {project-root}/bmad/core/tasks/workflow.xml</critical>
-<critical>You MUST have already loaded and processed: {installed_path}/workflow.yaml</critical>
-<critical>Communicate all responses in {communication_language} and language MUST be tailored to {user_skill_level}</critical>
-<critical>Generate all documents in {document_output_language}</critical>
-<critical>This workflow is for Level 2-4 projects. Level 0-1 use tech-spec workflow.</critical>
-<critical>Produces TWO outputs: PRD.md (strategic) and epics.md (tactical implementation)</critical>
-<critical>TECHNICAL NOTES: If ANY technical details, preferences, or constraints are mentioned during PRD discussions, append them to {technical_decisions_file}. If file doesn't exist, create it from {technical_decisions_template}</critical>
+<critical>The workflow execution engine is governed by:
+{project-root}/bmad/core/tasks/workflow.xml</critical> <critical>You MUST have
+already loaded and processed: {installed_path}/workflow.yaml</critical>
+<critical>Communicate all responses in {communication_language} and language
+MUST be tailored to {user_skill_level}</critical> <critical>Generate all
+documents in {document_output_language}</critical> <critical>This workflow is
+for Level 2-4 projects. Level 0-1 use tech-spec workflow.</critical>
+<critical>Produces TWO outputs: PRD.md (strategic) and epics.md (tactical
+implementation)</critical> <critical>TECHNICAL NOTES: If ANY technical details,
+preferences, or constraints are mentioned during PRD discussions, append them to
+{technical_decisions_file}. If file doesn't exist, create it from
+{technical_decisions_template}</critical>
 
-<critical>DOCUMENT OUTPUT: Concise, clear, actionable requirements. Use tables/lists over prose. User skill level ({user_skill_level}) affects conversation style ONLY, not document content.</critical>
+<critical>DOCUMENT OUTPUT: Concise, clear, actionable requirements. Use
+tables/lists over prose. User skill level ({user_skill_level}) affects
+conversation style ONLY, not document content.</critical>
 
 <workflow>
 
@@ -32,10 +39,8 @@ Please run `workflow-init` first to:
 
 Run: `workflow-init`
 
-After setup, return here to create your PRD.
-</output>
-<action>Exit workflow - cannot proceed without status file</action>
-</check>
+After setup, return here to create your PRD. </output> <action>Exit workflow -
+cannot proceed without status file</action> </check>
 
 <check if="status_exists == true">
   <action>Store {{status_file_path}} for later updates</action>
@@ -45,22 +50,16 @@ After setup, return here to create your PRD.
 
 PRD is for Level 2-4 projects. Level 0-1 should use tech-spec directly.
 
-**Correct workflow:** `tech-spec` (Architect agent)
-</output>
-<action>Exit and redirect to tech-spec</action>
-</check>
+**Correct workflow:** `tech-spec` (Architect agent) </output> <action>Exit and
+redirect to tech-spec</action> </check>
 
   <check if="project_type == game">
     <output>**Incorrect Workflow for Game Projects**
 
 Game projects should use GDD workflow instead of PRD.
 
-**Correct workflow:** `gdd` (PM agent)
-</output>
-<action>Exit and redirect to gdd</action>
-</check>
-</check>
-</step>
+**Correct workflow:** `gdd` (PM agent) </output> <action>Exit and redirect to
+gdd</action> </check> </check> </step>
 
 <step n="0.5" goal="Validate workflow sequencing">
 
@@ -81,8 +80,8 @@ Game projects should use GDD workflow instead of PRD.
 
 <step n="1" goal="Initialize PRD context">
 
-<action>Use {{project_level}} from status data</action>
-<action>Check for existing PRD.md in {output_folder}</action>
+<action>Use {{project_level}} from status data</action> <action>Check for
+existing PRD.md in {output_folder}</action>
 
 <check if="PRD.md exists">
   <ask>Found existing PRD.md. Would you like to:
@@ -95,10 +94,11 @@ Game projects should use GDD workflow instead of PRD.
   <action if="option 3">Archive existing PRD and start fresh</action>
 </check>
 
-<action>Load PRD template: {prd_template}</action>
-<action>Load epics template: {epics_template}</action>
+<action>Load PRD template: {prd_template}</action> <action>Load epics template:
+{epics_template}</action>
 
-<ask>Do you have a Product Brief? (Strongly recommended for Level 3-4, helpful for Level 2)</ask>
+<ask>Do you have a Product Brief? (Strongly recommended for Level 3-4, helpful
+for Level 2)</ask>
 
 <check if="yes">
   <action>Load and review product brief: {output_folder}/product-brief.md</action>
@@ -125,7 +125,8 @@ Game projects should use GDD workflow instead of PRD.
   <action>Gather goals through discussion with user, use probing questions and converse until you are ready to propose that you have enough information to proceed</action>
 </check>
 
-Create a bullet list of single-line desired outcomes that capture user and project goals.
+Create a bullet list of single-line desired outcomes that capture user and
+project goals.
 
 **Scale guidance:**
 
@@ -228,7 +229,8 @@ Draft non-functional requirements with NFR prefix.
 
 <step n="5" goal="UX and UI Vision - high-level overview" optional="level == 2 and minimal UI">
 
-**Purpose:** Capture essential UX/UI information needed for epic and story planning. A dedicated UX workflow will provide deeper design detail later.
+**Purpose:** Capture essential UX/UI information needed for epic and story
+planning. A dedicated UX workflow will provide deeper design detail later.
 
 <check if="level == 2 and minimal UI">
   <action>For backend-heavy or minimal UI projects, keep this section very brief or skip</action>
@@ -249,7 +251,8 @@ Draft non-functional requirements with NFR prefix.
    - Existing design systems or brand guidelines
    - Technical UI constraints (browser support, etc.)
 
-<note>Keep responses high-level. Detailed UX planning happens in the UX workflow after PRD completion.</note>
+<note>Keep responses high-level. Detailed UX planning happens in the UX workflow
+after PRD completion.</note>
 
 <invoke-task halt="true">{project-root}/bmad/core/tasks/adv-elicit.xml</invoke-task>
 
@@ -295,8 +298,8 @@ Create high-level epic list showing logical delivery sequence.
 - **Epic 1: Project Foundation & User Authentication**
 - **Epic 2: Core Task Management**
 
-<ask>Review the epic list. Does the sequence make sense? Any epics to add, remove, or resequence?</ask>
-<action>Refine epic list based on feedback</action>
+<ask>Review the epic list. Does the sequence make sense? Any epics to add,
+remove, or resequence?</ask> <action>Refine epic list based on feedback</action>
 <invoke-task halt="true">{project-root}/bmad/core/tasks/adv-elicit.xml</invoke-task>
 
 <template-output>epic_list</template-output>
@@ -323,8 +326,8 @@ This helps prevent scope creep and sets clear expectations.
 <step n="8" goal="Finalize PRD.md">
 
 <action>Review all PRD sections for completeness and consistency</action>
-<action>Ensure all placeholders are filled</action>
-<action>Save final PRD.md to {default_output_file}</action>
+<action>Ensure all placeholders are filled</action> <action>Save final PRD.md to
+{default_output_file}</action>
 
 **PRD.md is complete!** Strategic document ready.
 
@@ -334,11 +337,11 @@ Now we'll create the tactical implementation guide in epics.md.
 
 <step n="9" goal="Epic Details - Full story breakdown in epics.md">
 
-<critical>Now we create epics.md - the tactical implementation roadmap</critical>
-<critical>This is a SEPARATE FILE from PRD.md</critical>
+<critical>Now we create epics.md - the tactical implementation
+roadmap</critical> <critical>This is a SEPARATE FILE from PRD.md</critical>
 
-<action>Load epics template: {epics_template}</action>
-<action>Initialize epics.md with project metadata</action>
+<action>Load epics template: {epics_template}</action> <action>Initialize
+epics.md with project metadata</action>
 
 For each epic from the epic list, expand with full story details:
 
@@ -353,9 +356,11 @@ For each epic from the epic list, expand with full story details:
    **Critical Story Requirements:**
    - **Vertical slices** - Each story delivers complete, testable functionality
    - **Sequential** - Stories must be logically ordered within epic
-   - **No forward dependencies** - No story depends on work from a later story/epic
+   - **No forward dependencies** - No story depends on work from a later
+     story/epic
    - **AI-agent sized** - Completable in single focused session (2-4 hours)
-   - **Value-focused** - Minimize pure enabler stories; integrate technical work into value delivery
+   - **Value-focused** - Minimize pure enabler stories; integrate technical work
+     into value delivery
 
    **Story Format:**
 
@@ -386,9 +391,9 @@ For each epic from the epic list, expand with full story details:
 
 <ask>Ready to break down {{epic_title}}? (y/n)</ask>
 
-<action>Discuss epic scope and story ideas with user</action>
-<action>Draft story list ensuring vertical slices and proper sequencing</action>
-<action>For each story, write user story format and acceptance criteria</action>
+<action>Discuss epic scope and story ideas with user</action> <action>Draft
+story list ensuring vertical slices and proper sequencing</action> <action>For
+each story, write user story format and acceptance criteria</action>
 <action>Verify no forward dependencies exist</action>
 
 <template-output file="epics.md">{{epic_title}}\_details</template-output>
@@ -432,22 +437,19 @@ For each epic from the epic list, expand with full story details:
 
 - Review PRD and epics with stakeholders
 - **Next:** Run `tech-spec` for lightweight technical planning
-- Then proceed to implementation
-  {{/if}}
+- Then proceed to implementation {{/if}}
 
 {{#if project_level >= 3}}
 
 - Review PRD and epics with stakeholders
 - **Next:** Run `solution-architecture` for full technical design
-- Then proceed to implementation
-  {{/if}}
+- Then proceed to implementation {{/if}}
 
 Would you like to:
 
 1. Review/refine any section
 2. Proceed to next phase
-3. Exit and review documents
-   </output>
+3. Exit and review documents </output>
 
 </step>
 

@@ -5,7 +5,8 @@
 ### Objectives and Scope
 
 - [ ] Research objectives are clearly stated with specific questions to answer
-- [ ] Market boundaries are explicitly defined (product category, geography, segments)
+- [ ] Market boundaries are explicitly defined (product category, geography,
+      segments)
 - [ ] Research methodology is documented with data sources and timeframes
 - [ ] Limitations and assumptions are transparently acknowledged
 
@@ -14,14 +15,16 @@
 - [ ] All data sources are cited with dates and links where applicable
 - [ ] Data is no more than 12 months old for time-sensitive metrics
 - [ ] At least 3 independent sources validate key market size claims
-- [ ] Source credibility is assessed (primary > industry reports > news articles)
+- [ ] Source credibility is assessed (primary > industry reports > news
+      articles)
 - [ ] Conflicting data points are acknowledged and reconciled
 
 ## Market Sizing Analysis
 
 ### TAM Calculation
 
-- [ ] At least 2 different calculation methods are used (top-down, bottom-up, or value theory)
+- [ ] At least 2 different calculation methods are used (top-down, bottom-up, or
+      value theory)
 - [ ] All assumptions are explicitly stated with rationale
 - [ ] Calculation methodology is shown step-by-step
 - [ ] Numbers are sanity-checked against industry benchmarks
@@ -29,7 +32,8 @@
 
 ### SAM and SOM
 
-- [ ] SAM constraints are realistic and well-justified (geography, regulations, etc.)
+- [ ] SAM constraints are realistic and well-justified (geography, regulations,
+      etc.)
 - [ ] SOM includes competitive analysis to support market share assumptions
 - [ ] Three scenarios (conservative, realistic, optimistic) are provided
 - [ ] Time horizons for market capture are specified (Year 1, 3, 5)
@@ -41,7 +45,8 @@
 
 - [ ] At least 3 distinct customer segments are profiled
 - [ ] Each segment includes size estimates (number of customers or revenue)
-- [ ] Pain points are specific, not generic (e.g., "reduce invoice processing time by 50%" not "save time")
+- [ ] Pain points are specific, not generic (e.g., "reduce invoice processing
+      time by 50%" not "save time")
 - [ ] Willingness to pay is quantified with evidence
 - [ ] Buying process and decision criteria are documented
 
@@ -59,7 +64,8 @@
 
 - [ ] At least 5 direct competitors are analyzed
 - [ ] Indirect competitors and substitutes are identified
-- [ ] Each competitor profile includes: company size, funding, target market, pricing
+- [ ] Each competitor profile includes: company size, funding, target market,
+      pricing
 - [ ] Recent developments (last 6 months) are included
 - [ ] Competitive advantages and weaknesses are specific, not generic
 
@@ -109,7 +115,8 @@
 
 ### Risk Analysis
 
-- [ ] All major risk categories are covered (market, competitive, execution, regulatory)
+- [ ] All major risk categories are covered (market, competitive, execution,
+      regulatory)
 - [ ] Each risk has probability and impact assessment
 - [ ] Mitigation strategies are specific and actionable
 - [ ] Early warning indicators are defined
@@ -196,7 +203,5 @@ _List areas requiring further investigation:_
 
 ---
 
-**Validation Complete:** ☐ Yes ☐ No
-**Ready for Distribution:** ☐ Yes ☐ No
-**Reviewer:** **\*\***\_\_\_\_**\*\***
-**Date:** **\*\***\_\_\_\_**\*\***
+**Validation Complete:** ☐ Yes ☐ No **Ready for Distribution:** ☐ Yes ☐ No
+**Reviewer:** **\*\***\_\_\_\_**\*\*** **Date:** **\*\***\_\_\_\_**\*\***

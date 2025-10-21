@@ -1,22 +1,28 @@
 # Requirements Traceability & Quality Gate Workflow
 
-**Workflow ID:** `testarch-trace`
-**Agent:** Test Architect (TEA)
-**Command:** `bmad tea *trace`
+**Workflow ID:** `testarch-trace` **Agent:** Test Architect (TEA) **Command:**
+`bmad tea *trace`
 
 ---
 
 ## Overview
 
-The **trace** workflow operates in two sequential phases to validate test coverage and deployment readiness:
+The **trace** workflow operates in two sequential phases to validate test
+coverage and deployment readiness:
 
-**PHASE 1 - REQUIREMENTS TRACEABILITY:** Generates comprehensive requirements-to-tests traceability matrix that maps acceptance criteria to implemented tests, identifies coverage gaps, and provides actionable recommendations.
+**PHASE 1 - REQUIREMENTS TRACEABILITY:** Generates comprehensive
+requirements-to-tests traceability matrix that maps acceptance criteria to
+implemented tests, identifies coverage gaps, and provides actionable
+recommendations.
 
-**PHASE 2 - QUALITY GATE DECISION:** Makes deterministic release decisions (PASS/CONCERNS/FAIL/WAIVED) based on traceability results, test execution evidence, and non-functional requirements validation.
+**PHASE 2 - QUALITY GATE DECISION:** Makes deterministic release decisions
+(PASS/CONCERNS/FAIL/WAIVED) based on traceability results, test execution
+evidence, and non-functional requirements validation.
 
 **Key Features:**
 
-- Maps acceptance criteria to specific test cases across all levels (E2E, API, Component, Unit)
+- Maps acceptance criteria to specific test cases across all levels (E2E, API,
+  Component, Unit)
 - Classifies coverage status (FULL, PARTIAL, NONE, UNIT-ONLY, INTEGRATION-ONLY)
 - Prioritizes gaps by risk level (P0/P1/P2/P3)
 - Applies deterministic decision rules for deployment readiness
@@ -75,7 +81,8 @@ Use `*trace` when you need to:
 ### Recommended
 
 - `test-design.md` - Risk assessment and test priorities
-- `nfr-assessment.md` - Non-functional requirements validation (for release gates)
+- `nfr-assessment.md` - Non-functional requirements validation (for release
+  gates)
 - `tech-spec.md` - Technical implementation details
 - Test framework configuration (playwright.config.ts, jest.config.js)
 
@@ -83,7 +90,8 @@ Use `*trace` when you need to:
 
 - Story lacks any tests AND gaps are not acknowledged → Run `*atdd` first
 - Acceptance criteria are completely missing → Provide criteria or story file
-- Phase 2 enabled but test execution results missing → Warn and skip gate decision
+- Phase 2 enabled but test execution results missing → Warn and skip gate
+  decision
 
 ---
 
@@ -97,8 +105,10 @@ bmad tea *trace
 
 The workflow will:
 
-1. **Phase 1**: Read story file, extract acceptance criteria, auto-discover tests, generate traceability matrix
-2. **Phase 2**: Load test execution results, apply decision rules, generate gate decision document
+1. **Phase 1**: Read story file, extract acceptance criteria, auto-discover
+   tests, generate traceability matrix
+2. **Phase 2**: Load test execution results, apply decision rules, generate gate
+   decision document
 3. Save traceability matrix to `bmad/output/traceability-matrix.md`
 4. Save gate decision to `bmad/output/gate-decision-story-X.X.md`
 
@@ -133,18 +143,24 @@ bmad tea *trace --acceptance-criteria "AC-1: User can login with email..."
 ### PHASE 1: Requirements Traceability
 
 1. **Load Context** - Read story, test design, tech spec, knowledge base
-2. **Discover Tests** - Auto-find tests related to story (by ID, describe blocks, file paths)
+2. **Discover Tests** - Auto-find tests related to story (by ID, describe
+   blocks, file paths)
 3. **Map Criteria** - Link acceptance criteria to specific test cases
 4. **Analyze Gaps** - Identify missing coverage and prioritize by risk
 5. **Verify Quality** - Check test quality (assertions, structure, performance)
-6. **Generate Deliverables** - Create traceability matrix, gate YAML, coverage badge
+6. **Generate Deliverables** - Create traceability matrix, gate YAML, coverage
+   badge
 
 ### PHASE 2: Quality Gate Decision (if `enable_gate_decision: true`)
 
-7. **Gather Evidence** - Load traceability results, test execution reports, NFR assessments
-8. **Apply Decision Rules** - Evaluate against thresholds (PASS/CONCERNS/FAIL/WAIVED)
-9. **Document Decision** - Create gate decision document with evidence and rationale
-10. **Update Status & Notify** - Append to bmm-workflow-status.md, notify stakeholders
+7. **Gather Evidence** - Load traceability results, test execution reports, NFR
+   assessments
+8. **Apply Decision Rules** - Evaluate against thresholds
+   (PASS/CONCERNS/FAIL/WAIVED)
+9. **Document Decision** - Create gate decision document with evidence and
+   rationale
+10. **Update Status & Notify** - Append to bmm-workflow-status.md, notify
+    stakeholders
 
 ---
 
@@ -192,8 +208,7 @@ Gate Status: CONCERNS ⚠️ (P1 coverage below 90%)
 ```markdown
 # Quality Gate Decision: Story 1.3 - User Login
 
-**Decision**: ⚠️ CONCERNS
-**Date**: 2025-10-15
+**Decision**: ⚠️ CONCERNS **Date**: 2025-10-15
 
 ## Decision Criteria
 
@@ -285,7 +300,8 @@ Gate Status: CONCERNS ⚠️ (P1 coverage below 90%)
 
 **Action:** Deploy with business approval, aggressive monitoring, fix ASAP
 
-**Important:** Waivers NEVER apply to P0 security issues or data corruption risks
+**Important:** Waivers NEVER apply to P0 security issues or data corruption
+risks
 
 ---
 
@@ -563,8 +579,7 @@ bmad tea *trace --story-file "bmad/output/release-2.4.0.md" \
 ```markdown
 # Quality Gate Decision: Release 2.4.0
 
-**Original Decision**: ❌ FAIL
-**Final Decision**: 🔓 WAIVED
+**Original Decision**: ❌ FAIL **Final Decision**: 🔓 WAIVED
 
 Waiver Details:
 
@@ -574,9 +589,8 @@ Waiver Details:
 - Monitoring: Enhanced error tracking
 - Remediation: Fix in v2.4.1 hotfix (due Oct 20)
 
-Business Justification:
-Release contains critical GDPR features required by law. Failed
-test affects legacy feature used by <1% of users. Workaround available.
+Business Justification: Release contains critical GDPR features required by law.
+Failed test affects legacy feature used by <1% of users. Workaround available.
 
 Next Steps:
 

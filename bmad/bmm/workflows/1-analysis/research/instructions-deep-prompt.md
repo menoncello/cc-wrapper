@@ -1,9 +1,11 @@
 # Deep Research Prompt Generator Instructions
 
-<critical>The workflow execution engine is governed by: {project_root}/bmad/core/tasks/workflow.xml</critical>
-<critical>You MUST have already loaded and processed: {installed_path}/workflow.yaml</critical>
-<critical>This workflow generates structured research prompts optimized for AI platforms</critical>
-<critical>Based on 2025 best practices from ChatGPT, Gemini, Grok, and Claude</critical>
+<critical>The workflow execution engine is governed by:
+{project_root}/bmad/core/tasks/workflow.xml</critical> <critical>You MUST have
+already loaded and processed: {installed_path}/workflow.yaml</critical>
+<critical>This workflow generates structured research prompts optimized for AI
+platforms</critical> <critical>Based on 2025 best practices from ChatGPT,
+Gemini, Grok, and Claude</critical>
 
 <workflow>
 
@@ -75,7 +77,8 @@ Examples:
 
 <template-output>geographic_scope</template-output>
 
-<ask>**Thematic Boundaries** - Are there specific aspects to focus on or exclude?
+<ask>**Thematic Boundaries** - Are there specific aspects to focus on or
+exclude?
 
 Examples:
 
@@ -107,7 +110,8 @@ Examples:
 
 <template-output>information_types</template-output>
 
-<ask>**Preferred Sources** - Any specific source types or credibility requirements?
+<ask>**Preferred Sources** - Any specific source types or credibility
+requirements?
 
 Examples:
 
@@ -139,7 +143,8 @@ Examples:
 
 <template-output>output_format</template-output>
 
-<ask>**Key Sections** - What specific sections or questions should the research address?
+<ask>**Key Sections** - What specific sections or questions should the research
+address?
 
 Examples for market research:
 
@@ -188,7 +193,8 @@ Examples:
 <ask>**Special Requirements or Constraints:**
 
 - Citation requirements (e.g., "Include source URLs for all claims")
-- Bias considerations (e.g., "Consider perspectives from both proponents and critics")
+- Bias considerations (e.g., "Consider perspectives from both proponents and
+  critics")
 - Recency requirements (e.g., "Prioritize sources from 2024-2025")
 - Specific keywords or technical terms to focus on
 - Any topics or angles to avoid</ask>
@@ -212,7 +218,8 @@ Examples:
 
 <template-output>validation_criteria</template-output>
 
-<ask>**Follow-up Questions** - What potential follow-up questions should be anticipated?
+<ask>**Follow-up Questions** - What potential follow-up questions should be
+anticipated?
 
 Examples:
 
@@ -227,7 +234,8 @@ Examples:
 <step n="7" goal="Generate Optimized Research Prompt">
 <action>Synthesize all inputs into platform-optimized research prompt</action>
 
-<critical>Generate the deep research prompt using best practices for the target platform</critical>
+<critical>Generate the deep research prompt using best practices for the target
+platform</critical>
 
 **Prompt Structure Best Practices:**
 
@@ -268,8 +276,7 @@ Examples:
 - Specify keywords explicitly to guide search
 - Answer clarifying questions thoroughly (requests are more expensive)
 - You have 25-250 queries/month depending on tier
-- Review the research plan before it starts searching
-  </check>
+- Review the research plan before it starts searching </check>
 
 <check if="target_platform includes Gemini">
   **Gemini Deep Research Tips:**
@@ -278,8 +285,7 @@ Examples:
 - Be specific and clear - vagueness is the enemy
 - Review and modify the multi-point research plan before it runs
 - Use follow-up questions to drill deeper or add sections
-- Available in 45+ languages globally
-  </check>
+- Available in 45+ languages globally </check>
 
 <check if="target_platform includes Grok">
   **Grok DeepSearch Tips:**
@@ -289,8 +295,7 @@ Examples:
 - Pair with Think Mode for reasoning
 - Use follow-up commands: "Expand on [topic]" to deepen sections
 - Verify facts when obscure sources cited
-- Free tier: 5 queries/24hrs, Premium: 30/2hrs
-  </check>
+- Free tier: 5 queries/24hrs, Premium: 30/2hrs </check>
 
 <check if="target_platform includes Claude">
   **Claude Projects Tips:**
@@ -299,8 +304,7 @@ Examples:
 - Break into sub-prompts for multi-step research (prompt chaining)
 - Add relevant documents to Project for context
 - Provide explicit instructions and examples
-- Test iteratively and refine prompts
-  </check>
+- Test iteratively and refine prompts </check>
 
 <template-output>platform_tips</template-output>
 
@@ -407,9 +411,7 @@ Select option (1-4):</ask>
 2. Gather and analyze findings
 3. Run `plan-project` to incorporate findings
 
-Check status anytime with: `workflow-status`
-</output>
-</check>
+Check status anytime with: `workflow-status` </output> </check>
 
 <check if="status file not found">
   <output>**✅ Deep Research Prompt Generated**
@@ -423,9 +425,6 @@ Note: Running in standalone mode (no status file).
 **Next Steps:**
 
 1. Execute the research prompt with AI platform
-2. Run plan-project workflow
-   </output>
-   </check>
-   </step>
+2. Run plan-project workflow </output> </check> </step>
 
 </workflow>

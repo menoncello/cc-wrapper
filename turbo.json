@@ -154,10 +154,7 @@
         "stryker.conf.*",
         "package.json"
       ],
-      "outputs": [
-        "reports/mutation/**",
-        ".stryker-tmp/**"
-      ],
+      "outputs": ["reports/mutation/**", ".stryker-tmp/**"],
       "cache": true,
       "env": ["NODE_ENV"]
     },
@@ -189,11 +186,6 @@
       "cache": false
     }
   },
-  "globalEnv": [
-    "NODE_ENV",
-    "CI",
-    "DATABASE_URL",
-    "REDIS_URL"
-  ],
+  "globalEnv": ["NODE_ENV", "CI", "DATABASE_URL", "REDIS_URL"],
   "cacheDir": ".turbo"
 }

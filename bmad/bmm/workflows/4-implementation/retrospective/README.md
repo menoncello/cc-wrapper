@@ -4,11 +4,31 @@ last-redoc-date: 2025-10-01
 
 # Retrospective Workflow
 
-The retrospective workflow is v6's learning capture mechanism, run by the Scrum Master (SM) after epic completion to systematically harvest insights, patterns, and improvements discovered during implementation. Unlike traditional retrospectives that focus primarily on process and team dynamics, this workflow performs deep technical and methodological analysis of the entire epic journey—from story creation through implementation to review—identifying what worked well, what could improve, and what patterns emerged. The retrospective produces actionable intelligence that informs future epics, improves workflow templates, and evolves the team's shared knowledge.
+The retrospective workflow is v6's learning capture mechanism, run by the Scrum
+Master (SM) after epic completion to systematically harvest insights, patterns,
+and improvements discovered during implementation. Unlike traditional
+retrospectives that focus primarily on process and team dynamics, this workflow
+performs deep technical and methodological analysis of the entire epic
+journey—from story creation through implementation to review—identifying what
+worked well, what could improve, and what patterns emerged. The retrospective
+produces actionable intelligence that informs future epics, improves workflow
+templates, and evolves the team's shared knowledge.
 
-This workflow represents a critical feedback loop in the v6 methodology. Each epic is an experiment in adaptive software development, and the retrospective is where we analyze the results of that experiment. The SM examines completed stories, review feedback, course corrections made, story-context effectiveness, technical decisions, and team collaboration patterns to extract transferable learning. This learning manifests as updates to workflow templates, new story-context patterns, refined estimation approaches, and documented best practices.
+This workflow represents a critical feedback loop in the v6 methodology. Each
+epic is an experiment in adaptive software development, and the retrospective is
+where we analyze the results of that experiment. The SM examines completed
+stories, review feedback, course corrections made, story-context effectiveness,
+technical decisions, and team collaboration patterns to extract transferable
+learning. This learning manifests as updates to workflow templates, new
+story-context patterns, refined estimation approaches, and documented best
+practices.
 
-The retrospective is not just a compliance ritual but a genuine opportunity for continuous improvement. By systematically analyzing what happened during the epic, the team builds institutional knowledge that makes each subsequent epic smoother, faster, and higher quality. The insights captured here directly improve future story creation, context generation, development efficiency, and review effectiveness.
+The retrospective is not just a compliance ritual but a genuine opportunity for
+continuous improvement. By systematically analyzing what happened during the
+epic, the team builds institutional knowledge that makes each subsequent epic
+smoother, faster, and higher quality. The insights captured here directly
+improve future story creation, context generation, development efficiency, and
+review effectiveness.
 
 ## Usage
 
@@ -50,7 +70,8 @@ The SM should run this workflow:
 
 **Primary Deliverable:**
 
-- **Retrospective Report** (`[epic-id]-retrospective.xml`): Comprehensive analysis including:
+- **Retrospective Report** (`[epic-id]-retrospective.xml`): Comprehensive
+  analysis including:
   - Executive summary of epic outcomes
   - Story-by-story analysis of what was learned
   - Technical insights and architecture learnings

@@ -2,16 +2,22 @@
 
 <workflow>
 
-<critical>The workflow execution engine is governed by: {project_root}/bmad/core/tasks/workflow.xml</critical>
-<critical>You MUST have already loaded and processed: {installed_path}/workflow.yaml</critical>
-<critical>Communicate all responses in {communication_language} and language MUST be tailored to {user_skill_level}</critical>
-<critical>Generate all documents in {document_output_language}</critical>
-<critical>This is the SMALL instruction set for Level 0-1 projects - tech-spec with story generation</critical>
-<critical>Level 0: tech-spec + single user story | Level 1: tech-spec + epic/stories</critical>
-<critical>Project analysis already completed - proceeding directly to technical specification</critical>
-<critical>NO PRD generated - uses tech_spec_template + story templates</critical>
+<critical>The workflow execution engine is governed by:
+{project_root}/bmad/core/tasks/workflow.xml</critical> <critical>You MUST have
+already loaded and processed: {installed_path}/workflow.yaml</critical>
+<critical>Communicate all responses in {communication_language} and language
+MUST be tailored to {user_skill_level}</critical> <critical>Generate all
+documents in {document_output_language}</critical> <critical>This is the SMALL
+instruction set for Level 0-1 projects - tech-spec with story
+generation</critical> <critical>Level 0: tech-spec + single user story | Level
+1: tech-spec + epic/stories</critical> <critical>Project analysis already
+completed - proceeding directly to technical specification</critical>
+<critical>NO PRD generated - uses tech_spec_template + story
+templates</critical>
 
-<critical>DOCUMENT OUTPUT: Technical, precise, definitive. Specific versions only. User skill level ({user_skill_level}) affects conversation style ONLY, not document content.</critical>
+<critical>DOCUMENT OUTPUT: Technical, precise, definitive. Specific versions
+only. User skill level ({user_skill_level}) affects conversation style ONLY, not
+document content.</critical>
 
 <step n="0" goal="Validate workflow and extract project configuration">
 
@@ -23,7 +29,8 @@
 <check if="status_exists == false">
   <output>**⚠️ No Workflow Status File Found**
 
-The tech-spec workflow requires a status file to understand your project context.
+The tech-spec workflow requires a status file to understand your project
+context.
 
 Please run `workflow-init` first to:
 
@@ -33,10 +40,8 @@ Please run `workflow-init` first to:
 
 Run: `workflow-init`
 
-After setup, return here to create your tech spec.
-</output>
-<action>Exit workflow - cannot proceed without status file</action>
-</check>
+After setup, return here to create your tech spec. </output> <action>Exit
+workflow - cannot proceed without status file</action> </check>
 
 <check if="status_exists == true">
   <action>Store {{status_file_path}} for later updates</action>
@@ -46,22 +51,16 @@ After setup, return here to create your tech spec.
 
 Tech-spec is for Level 0-1 projects. Level 2-4 should use PRD workflow.
 
-**Correct workflow:** `prd` (PM agent)
-</output>
-<action>Exit and redirect to prd</action>
-</check>
+**Correct workflow:** `prd` (PM agent) </output> <action>Exit and redirect to
+prd</action> </check>
 
   <check if="project_type == game">
     <output>**Incorrect Workflow for Game Projects**
 
 Game projects should use GDD workflow instead of tech-spec.
 
-**Correct workflow:** `gdd` (PM agent)
-</output>
-<action>Exit and redirect to gdd</action>
-</check>
-</check>
-</step>
+**Correct workflow:** `gdd` (PM agent) </output> <action>Exit and redirect to
+gdd</action> </check> </check> </step>
 
 <step n="0.5" goal="Validate workflow sequencing">
 
@@ -86,12 +85,9 @@ Game projects should use GDD workflow instead of tech-spec.
 
 <action>Update Workflow Status:</action>
 <template-output file="{{status_file_path}}">current_workflow</template-output>
-<check if="project_level == 0">
-<action>Set to: "tech-spec (Level 0 - generating tech spec)"</action>
-</check>
-<check if="project_level == 1">
-<action>Set to: "tech-spec (Level 1 - generating tech spec)"</action>
-</check>
+<check if="project_level == 0"> <action>Set to: "tech-spec (Level 0 - generating
+tech spec)"</action> </check> <check if="project_level == 1"> <action>Set to:
+"tech-spec (Level 1 - generating tech spec)"</action> </check>
 
 <template-output file="{{status_file_path}}">progress_percentage</template-output>
 <action>Set to: 20%</action>
@@ -112,13 +108,13 @@ Game projects should use GDD workflow instead of tech-spec.
 
 <step n="2" goal="Generate DEFINITIVE tech spec">
 
-<critical>Generate tech-spec.md - this is the TECHNICAL SOURCE OF TRUTH</critical>
-<critical>ALL TECHNICAL DECISIONS MUST BE DEFINITIVE - NO AMBIGUITY ALLOWED</critical>
+<critical>Generate tech-spec.md - this is the TECHNICAL SOURCE OF
+TRUTH</critical> <critical>ALL TECHNICAL DECISIONS MUST BE DEFINITIVE - NO
+AMBIGUITY ALLOWED</critical>
 
 <action>Update progress:</action>
 <template-output file="{{status_file_path}}">progress_percentage</template-output>
-<action>Set to: 40%</action>
-<action>Save {{status_file_path}}</action>
+<action>Set to: 40%</action> <action>Save {{status_file_path}}</action>
 
 <action>Initialize and write out tech-spec.md using tech_spec_template</action>
 
@@ -160,7 +156,8 @@ Game projects should use GDD workflow instead of tech-spec.
 
 <action>Offer to run cohesion validation</action>
 
-<ask>Tech-spec complete! Before proceeding to implementation, would you like to validate project cohesion?
+<ask>Tech-spec complete! Before proceeding to implementation, would you like to
+validate project cohesion?
 
 **Cohesion Validation** checks:
 

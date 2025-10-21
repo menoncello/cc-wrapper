@@ -1,8 +1,6 @@
 # Product Brief: {{project_name}}
 
-**Date:** {{date}}
-**Author:** {{user_name}}
-**Status:** Draft for PM Review
+**Date:** {{date}} **Author:** {{user_name}} **Status:** Draft for PM Review
 
 ---
 
@@ -160,6 +158,8 @@
 
 ---
 
-_This Product Brief serves as the foundational input for Product Requirements Document (PRD) creation._
+_This Product Brief serves as the foundational input for Product Requirements
+Document (PRD) creation._
 
-_Next Steps: Handoff to Product Manager for PRD development using the `workflow prd` command._
+_Next Steps: Handoff to Product Manager for PRD development using the
+`workflow prd` command._

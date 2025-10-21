@@ -1,13 +1,15 @@
 # Game Design Document (GDD) Workflow
 
-This folder contains the GDD workflow for game projects, replacing the traditional PRD approach with game-specific documentation.
+This folder contains the GDD workflow for game projects, replacing the
+traditional PRD approach with game-specific documentation.
 
 ## Overview
 
 The GDD workflow creates a comprehensive Game Design Document that captures:
 
 - Core gameplay mechanics and pillars
-- Game type-specific elements (RPG systems, platformer movement, puzzle mechanics, etc.)
+- Game type-specific elements (RPG systems, platformer movement, puzzle
+  mechanics, etc.)
 - Level design framework
 - Art and audio direction
 - Technical specifications (platform-agnostic)
@@ -32,7 +34,8 @@ The GDD workflow creates a comprehensive Game Design Document that captures:
 
 ### Game-Type-Specific Injection
 
-The template includes a `{{GAME_TYPE_SPECIFIC_SECTIONS}}` placeholder that gets replaced with game-type-specific content.
+The template includes a `{{GAME_TYPE_SPECIFIC_SECTIONS}}` placeholder that gets
+replaced with game-type-specific content.
 
 ### Game Types Registry
 
@@ -46,7 +49,8 @@ The template includes a `{{GAME_TYPE_SPECIFIC_SECTIONS}}` placeholder that gets 
 
 ### Game-Type Fragments
 
-Located in `game-types/` folder, these markdown files contain sections specific to each game type:
+Located in `game-types/` folder, these markdown files contain sections specific
+to each game type:
 
 **action-platformer.md**:
 
@@ -116,7 +120,8 @@ Located in `game-types/` folder, these markdown files contain sections specific 
 5. **Solutioning Handoff** (Step 14):
    - Routes to `3-solutioning` workflow
    - Platform/engine specifics handled by solutioning registry
-   - Game-\* entries in solutioning `registry.csv` provide engine-specific guidance
+   - Game-\* entries in solutioning `registry.csv` provide engine-specific
+     guidance
 
 ## Platform vs. Game Type Separation
 

@@ -2,17 +2,30 @@
 
 ## Principle
 
-Load environment configs via a central map (`envConfigMap`), standardize timeouts (action 15s, navigation 30s, expect 10s, test 60s), emit HTML + JUnit reporters, and store artifacts under `test-results/` for CI upload. Keep `.env.example`, `.nvmrc`, and browser dependencies versioned so local and CI runs stay aligned.
+Load environment configs via a central map (`envConfigMap`), standardize
+timeouts (action 15s, navigation 30s, expect 10s, test 60s), emit HTML + JUnit
+reporters, and store artifacts under `test-results/` for CI upload. Keep
+`.env.example`, `.nvmrc`, and browser dependencies versioned so local and CI
+runs stay aligned.
 
 ## Rationale
 
-Environment-specific configuration prevents hardcoded URLs, timeouts, and credentials from leaking into tests. A central config map with fail-fast validation catches missing environments early. Standardized timeouts reduce flakiness while remaining long enough for real-world network conditions. Consistent artifact storage (`test-results/`, `playwright-report/`) enables CI pipelines to upload failure evidence automatically. Versioned dependencies (`.nvmrc`, `package.json` browser versions) eliminate "works on my machine" issues between local and CI environments.
+Environment-specific configuration prevents hardcoded URLs, timeouts, and
+credentials from leaking into tests. A central config map with fail-fast
+validation catches missing environments early. Standardized timeouts reduce
+flakiness while remaining long enough for real-world network conditions.
+Consistent artifact storage (`test-results/`, `playwright-report/`) enables CI
+pipelines to upload failure evidence automatically. Versioned dependencies
+(`.nvmrc`, `package.json` browser versions) eliminate "works on my machine"
+issues between local and CI environments.
 
 ## Pattern Examples
 
 ### Example 1: Environment-Based Configuration
 
-**Context**: When testing against multiple environments (local, staging, production), use a central config map that loads environment-specific settings and fails fast if `TEST_ENV` is invalid.
+**Context**: When testing against multiple environments (local, staging,
+production), use a central config map that loads environment-specific settings
+and fails fast if `TEST_ENV` is invalid.
 
 **Implementation**:
 
@@ -23,14 +36,14 @@ import path from 'path';
 
 // Load .env from project root
 dotenvConfig({
-  path: path.resolve(__dirname, '../../.env'),
+  path: path.resolve(__dirname, '../../.env')
 });
 
 // Central environment config map
 const envConfigMap = {
   local: require('./playwright/config/local.config').default,
   staging: require('./playwright/config/staging.config').default,
-  production: require('./playwright/config/production.config').default,
+  production: require('./playwright/config/production.config').default
 };
 
 const environment = process.env.TEST_ENV || 'local';
@@ -38,7 +51,9 @@ const environment = process.env.TEST_ENV || 'local';
 // Fail fast if environment not supported
 if (!Object.keys(envConfigMap).includes(environment)) {
   console.error(`❌ No configuration found for environment: ${environment}`);
-  console.error(`   Available environments: ${Object.keys(envConfigMap).join(', ')}`);
+  console.error(
+    `   Available environments: ${Object.keys(envConfigMap).join(', ')}`
+  );
   process.exit(1);
 }
 
@@ -62,18 +77,18 @@ export const baseConfig = defineConfig({
   reporter: [
     ['html', { outputFolder: 'playwright-report', open: 'never' }],
     ['junit', { outputFile: 'test-results/results.xml' }],
-    ['list'],
+    ['list']
   ],
   use: {
     actionTimeout: 15000,
     navigationTimeout: 30000,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
-    video: 'retain-on-failure',
+    video: 'retain-on-failure'
   },
   globalSetup: path.resolve(__dirname, '../support/global-setup.ts'),
   timeout: 60000,
-  expect: { timeout: 10000 },
+  expect: { timeout: 10000 }
 });
 ```
 
@@ -87,14 +102,14 @@ export default defineConfig({
   use: {
     ...baseConfig.use,
     baseURL: 'http://localhost:3000',
-    video: 'off', // No video locally for speed
+    video: 'off' // No video locally for speed
   },
   webServer: {
     command: 'npm run dev',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
-    timeout: 120000,
-  },
+    timeout: 120000
+  }
 });
 ```
 
@@ -108,8 +123,8 @@ export default defineConfig({
   use: {
     ...baseConfig.use,
     baseURL: 'https://staging.example.com',
-    ignoreHTTPSErrors: true, // Allow self-signed certs in staging
-  },
+    ignoreHTTPSErrors: true // Allow self-signed certs in staging
+  }
 });
 ```
 
@@ -124,8 +139,8 @@ export default defineConfig({
   use: {
     ...baseConfig.use,
     baseURL: 'https://example.com',
-    video: 'on', // Always record production failures
-  },
+    video: 'on' // Always record production failures
+  }
 });
 ```
 
@@ -147,7 +162,9 @@ DATABASE_URL=postgresql://localhost:5432/test_db
 
 ### Example 2: Timeout Standards
 
-**Context**: When tests fail due to inconsistent timeout settings, standardize timeouts across all tests: action 15s, navigation 30s, expect 10s, test 60s. Expose overrides through fixtures rather than inline literals.
+**Context**: When tests fail due to inconsistent timeout settings, standardize
+timeouts across all tests: action 15s, navigation 30s, expect 10s, test 60s.
+Expose overrides through fixtures rather than inline literals.
 
 **Implementation**:
 
@@ -164,13 +181,13 @@ export default defineConfig({
     actionTimeout: 15000,
 
     // Navigation timeout: 30 seconds (page.goto, page.reload)
-    navigationTimeout: 30000,
+    navigationTimeout: 30000
   },
 
   // Expect timeout: 10 seconds (all assertions)
   expect: {
-    timeout: 10000,
-  },
+    timeout: 10000
+  }
 });
 ```
 
@@ -192,7 +209,7 @@ export const test = base.extend<TimeoutOptions>({
 
     // Restore original timeout after test
     testInfo.setTimeout(originalTimeout);
-  },
+  }
 });
 
 export { expect } from '@playwright/test';
@@ -224,7 +241,7 @@ test('slow data processing operation', async ({ page, extendedTimeout }) => {
 
   // Wait for long-running operation
   await expect(page.getByText('Processing complete')).toBeVisible({
-    timeout: 120000, // 2 minutes for assertion
+    timeout: 120000 // 2 minutes for assertion
   });
 });
 ```
@@ -238,21 +255,28 @@ test('API returns quickly', async ({ page }) => {
   await expect(page.getByTestId('user-name')).toBeVisible({ timeout: 5000 }); // 5s instead of 10s
 
   // Override expect timeout for slow external API
-  await expect(page.getByTestId('weather-widget')).toBeVisible({ timeout: 20000 }); // 20s instead of 10s
+  await expect(page.getByTestId('weather-widget')).toBeVisible({
+    timeout: 20000
+  }); // 20s instead of 10s
 });
 ```
 
 **Key Points**:
 
-- **Standardized timeouts**: action 15s, navigation 30s, expect 10s, test 60s (global defaults)
-- Fixture-based override (`extendedTimeout`) for slow tests (preferred over inline)
+- **Standardized timeouts**: action 15s, navigation 30s, expect 10s, test 60s
+  (global defaults)
+- Fixture-based override (`extendedTimeout`) for slow tests (preferred over
+  inline)
 - Per-assertion timeout override via `{ timeout: X }` option (use sparingly)
 - Avoid hard waits (`page.waitForTimeout(3000)`) - use event-based waits instead
-- CI environments may need longer timeouts (handle in environment-specific config)
+- CI environments may need longer timeouts (handle in environment-specific
+  config)
 
 ### Example 3: Artifact Output Configuration
 
-**Context**: When debugging failures in CI, configure artifacts (screenshots, videos, traces, HTML reports) to be captured on failure and stored in consistent locations for upload.
+**Context**: When debugging failures in CI, configure artifacts (screenshots,
+videos, traces, HTML reports) to be captured on failure and stored in consistent
+locations for upload.
 
 **Implementation**:
 
@@ -273,7 +297,7 @@ export default defineConfig({
     video: 'retain-on-failure',
 
     // Trace recording on first retry (best debugging data)
-    trace: 'on-first-retry',
+    trace: 'on-first-retry'
   },
 
   reporter: [
@@ -282,21 +306,21 @@ export default defineConfig({
       'html',
       {
         outputFolder: 'playwright-report',
-        open: 'never', // Don't auto-open in CI
-      },
+        open: 'never' // Don't auto-open in CI
+      }
     ],
 
     // JUnit XML (CI integration)
     [
       'junit',
       {
-        outputFile: 'test-results/results.xml',
-      },
+        outputFile: 'test-results/results.xml'
+      }
     ],
 
     // List reporter (console output)
-    ['list'],
-  ],
+    ['list']
+  ]
 });
 ```
 
@@ -311,7 +335,7 @@ export const test = base.extend({
   page: async ({ page }, use, testInfo) => {
     const logs: string[] = [];
 
-    page.on('console', (msg) => {
+    page.on('console', msg => {
       logs.push(`[${msg.type()}] ${msg.text()}`);
     });
 
@@ -324,10 +348,10 @@ export const test = base.extend({
       testInfo.attachments.push({
         name: 'console-logs',
         contentType: 'text/plain',
-        path: logsPath,
+        path: logsPath
       });
     }
-  },
+  }
 });
 ```
 
@@ -386,7 +410,7 @@ test('capture screenshot on specific error', async ({ page }) => {
     // Capture custom screenshot with timestamp
     await page.screenshot({
       path: `test-results/payment-error-${Date.now()}.png`,
-      fullPage: true,
+      fullPage: true
     });
     throw error;
   }
@@ -405,7 +429,9 @@ test('capture screenshot on specific error', async ({ page }) => {
 
 ### Example 4: Parallelization Configuration
 
-**Context**: When tests run slowly in CI, configure parallelization with worker count, sharding, and fully parallel execution to maximize speed while maintaining stability.
+**Context**: When tests run slowly in CI, configure parallelization with worker
+count, sharding, and fully parallel execution to maximize speed while
+maintaining stability.
 
 **Implementation**:
 
@@ -434,9 +460,9 @@ export default defineConfig({
     process.env.SHARD_INDEX && process.env.SHARD_TOTAL
       ? {
           current: parseInt(process.env.SHARD_INDEX, 10),
-          total: parseInt(process.env.SHARD_TOTAL, 10),
+          total: parseInt(process.env.SHARD_TOTAL, 10)
         }
-      : undefined,
+      : undefined
 });
 ```
 
@@ -489,7 +515,7 @@ export default defineConfig({
 
   // Disable parallel execution
   fullyParallel: false,
-  workers: 1,
+  workers: 1
 
   // Used for: authentication flows, database-dependent tests, feature flag tests
 });
@@ -539,7 +565,9 @@ test.describe('Product Catalog', () => {
 
 ### Example 5: Project Configuration
 
-**Context**: When testing across multiple browsers, devices, or configurations, use Playwright projects to run the same tests against different environments (chromium, firefox, webkit, mobile).
+**Context**: When testing across multiple browsers, devices, or configurations,
+use Playwright projects to run the same tests against different environments
+(chromium, firefox, webkit, mobile).
 
 **Implementation**:
 
@@ -552,33 +580,33 @@ export default defineConfig({
     // Desktop browsers
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: { ...devices['Desktop Chrome'] }
     },
     {
       name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+      use: { ...devices['Desktop Firefox'] }
     },
     {
       name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
+      use: { ...devices['Desktop Safari'] }
     },
 
     // Mobile browsers
     {
       name: 'mobile-chrome',
-      use: { ...devices['Pixel 5'] },
+      use: { ...devices['Pixel 5'] }
     },
     {
       name: 'mobile-safari',
-      use: { ...devices['iPhone 13'] },
+      use: { ...devices['iPhone 13'] }
     },
 
     // Tablet
     {
       name: 'tablet',
-      use: { ...devices['iPad Pro'] },
-    },
-  ],
+      use: { ...devices['iPad Pro'] }
+    }
+  ]
 });
 ```
 
@@ -592,7 +620,7 @@ export default defineConfig({
     // Setup project (runs first, creates auth state)
     {
       name: 'setup',
-      testMatch: /global-setup\.ts/,
+      testMatch: /global-setup\.ts/
     },
 
     // Authenticated tests (reuse auth state)
@@ -600,17 +628,17 @@ export default defineConfig({
       name: 'authenticated',
       dependencies: ['setup'],
       use: {
-        storageState: path.resolve(__dirname, './playwright/.auth/user.json'),
+        storageState: path.resolve(__dirname, './playwright/.auth/user.json')
       },
-      testMatch: /.*authenticated\.spec\.ts/,
+      testMatch: /.*authenticated\.spec\.ts/
     },
 
     // Unauthenticated tests (public pages)
     {
       name: 'unauthenticated',
-      testMatch: /.*unauthenticated\.spec\.ts/,
-    },
-  ],
+      testMatch: /.*unauthenticated\.spec\.ts/
+    }
+  ]
 });
 ```
 
@@ -634,7 +662,7 @@ async function globalSetup(config: FullConfig) {
 
   // Save authentication state
   await page.context().storageState({
-    path: path.resolve(__dirname, '../.auth/user.json'),
+    path: path.resolve(__dirname, '../.auth/user.json')
   });
 
   await browser.close();
@@ -698,7 +726,8 @@ jobs:
 **Key Points**:
 
 - Projects enable testing across browsers, devices, and configurations
-- `devices` from `@playwright/test` provide preset configurations (Pixel 5, iPhone 13, etc.)
+- `devices` from `@playwright/test` provide preset configurations (Pixel 5,
+  iPhone 13, etc.)
 - `dependencies` ensures setup project runs first (auth, data seeding)
 - `storageState` shares authentication across tests (0 seconds auth per test)
 - `testMatch` filters which tests run in which project
@@ -707,7 +736,8 @@ jobs:
 
 ## Integration Points
 
-- **Used in workflows**: `*framework` (config setup), `*ci` (parallelization, artifact upload)
+- **Used in workflows**: `*framework` (config setup), `*ci` (parallelization,
+  artifact upload)
 - **Related fragments**:
   - `fixture-architecture.md` - Fixture-based timeout overrides
   - `ci-burn-in.md` - CI pipeline artifact upload
@@ -727,4 +757,5 @@ jobs:
 - [ ] Projects defined for cross-browser/device testing (if needed)
 - [ ] CI uploads artifacts on failure with 30-day retention
 
-_Source: Playwright book repo, SEON configuration example, Murat testing philosophy (lines 216-271)._
+_Source: Playwright book repo, SEON configuration example, Murat testing
+philosophy (lines 216-271)._

@@ -1,6 +1,10 @@
 # Test Design and Risk Assessment Workflow
 
-Plans comprehensive test coverage strategy with risk assessment (probability × impact scoring), priority classification (P0-P3), and resource estimation. This workflow generates a test design document that identifies high-risk areas, maps requirements to appropriate test levels, and provides execution ordering for optimal feedback.
+Plans comprehensive test coverage strategy with risk assessment (probability ×
+impact scoring), priority classification (P0-P3), and resource estimation. This
+workflow generates a test design document that identifies high-risk areas, maps
+requirements to appropriate test levels, and provides execution ordering for
+optimal feedback.
 
 ## Usage
 
@@ -174,15 +178,19 @@ The TEA agent runs this workflow when:
 - Error handling
 - Fastest, most granular
 
-**Key principle**: Avoid duplicate coverage - don't test same behavior at multiple levels.
+**Key principle**: Avoid duplicate coverage - don't test same behavior at
+multiple levels.
 
 ### Exploratory Mode (NEW - Phase 2.5)
 
-**test-design** supports UI exploration for brownfield applications with missing documentation.
+**test-design** supports UI exploration for brownfield applications with missing
+documentation.
 
-**Activation**: Automatic when requirements missing/incomplete for brownfield apps
+**Activation**: Automatic when requirements missing/incomplete for brownfield
+apps
 
-- If config.tea_use_mcp_enhancements is true + MCP available → MCP-assisted exploration
+- If config.tea_use_mcp_enhancements is true + MCP available → MCP-assisted
+  exploration
 - Otherwise → Manual exploration with user documentation
 
 **When to Use Exploratory Mode:**
@@ -238,8 +246,7 @@ The TEA agent runs this workflow when:
 ```markdown
 ## Exploration Findings - Legacy Admin Panel
 
-**Exploration URL**: https://admin.example.com
-**Mode**: MCP-Assisted
+**Exploration URL**: https://admin.example.com **Mode**: MCP-Assisted
 
 ### Discovered Features:
 
@@ -467,12 +474,14 @@ Total effort: 65 hours (~8 days)
 **Issue: "All tests marked as P0"**
 
 - **Cause**: Over-prioritization
-- **Solution**: Apply strict P0 criteria (blocks core journey + high risk + no workaround)
+- **Solution**: Apply strict P0 criteria (blocks core journey + high risk + no
+  workaround)
 
 **Issue: "Duplicate coverage at multiple test levels"**
 
 - **Cause**: Not following test pyramid
-- **Solution**: Use E2E for critical paths only, API for logic, unit for edge cases
+- **Solution**: Use E2E for critical paths only, API for logic, unit for edge
+  cases
 
 **Issue: "Resource estimates too high"**
 
@@ -482,12 +491,16 @@ Total effort: 65 hours (~8 days)
 ## Related Workflows
 
 - **atdd**: Generate failing tests → [atdd/README.md](../atdd/README.md)
-- **automate**: Expand regression coverage → [automate/README.md](../automate/README.md)
-- **trace**: Traceability and quality gate decisions → [trace/README.md](../trace/README.md)
-- **framework**: Test infrastructure → [framework/README.md](../framework/README.md)
+- **automate**: Expand regression coverage →
+  [automate/README.md](../automate/README.md)
+- **trace**: Traceability and quality gate decisions →
+  [trace/README.md](../trace/README.md)
+- **framework**: Test infrastructure →
+  [framework/README.md](../framework/README.md)
 
 ## Version History
 
-- **v4.0 (BMad v6)**: Pure markdown instructions, risk scoring framework, template-based output
+- **v4.0 (BMad v6)**: Pure markdown instructions, risk scoring framework,
+  template-based output
 - **v3.x**: XML format instructions
 - **v2.x**: Legacy task-based approach

@@ -2,17 +2,29 @@
 
 ## Principle
 
-Contract testing validates API contracts between consumer and provider services without requiring integrated end-to-end tests. Store consumer contracts alongside integration specs, version contracts semantically, and publish on every CI run. Provider verification before merge surfaces breaking changes immediately, while explicit fallback behavior (timeouts, retries, error payloads) captures resilience guarantees in contracts.
+Contract testing validates API contracts between consumer and provider services
+without requiring integrated end-to-end tests. Store consumer contracts
+alongside integration specs, version contracts semantically, and publish on
+every CI run. Provider verification before merge surfaces breaking changes
+immediately, while explicit fallback behavior (timeouts, retries, error
+payloads) captures resilience guarantees in contracts.
 
 ## Rationale
 
-Traditional integration testing requires running both consumer and provider simultaneously, creating slow, flaky tests with complex setup. Contract testing decouples services: consumers define expectations (pact files), providers verify against those expectations independently. This enables parallel development, catches breaking changes early, and documents API behavior as executable specifications. Pair contract tests with API smoke tests to validate data mapping and UI rendering in tandem.
+Traditional integration testing requires running both consumer and provider
+simultaneously, creating slow, flaky tests with complex setup. Contract testing
+decouples services: consumers define expectations (pact files), providers verify
+against those expectations independently. This enables parallel development,
+catches breaking changes early, and documents API behavior as executable
+specifications. Pair contract tests with API smoke tests to validate data
+mapping and UI rendering in tandem.
 
 ## Pattern Examples
 
 ### Example 1: Pact Consumer Test (Frontend → Backend API)
 
-**Context**: React application consuming a user management API, defining expected interactions.
+**Context**: React application consuming a user management API, defining
+expected interactions.
 
 **Implementation**:
 
@@ -34,7 +46,7 @@ const provider = new PactV3({
   consumer: 'user-management-web',
   provider: 'user-api-service',
   dir: './pacts', // Output directory for pact files
-  logLevel: 'warn',
+  logLevel: 'warn'
 });
 
 describe('User API Contract', () => {
@@ -49,27 +61,27 @@ describe('User API Contract', () => {
           path: '/users/1',
           headers: {
             Accept: 'application/json',
-            Authorization: like('Bearer token123'), // Matcher: any string
-          },
+            Authorization: like('Bearer token123') // Matcher: any string
+          }
         })
         .willRespondWith({
           status: 200,
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
           },
           body: like({
             id: integer(1),
             name: string('John Doe'),
             email: string('john@example.com'),
             role: string('user'),
-            createdAt: string('2025-01-15T10:00:00Z'),
-          }),
+            createdAt: string('2025-01-15T10:00:00Z')
+          })
         })
-        .executeTest(async (mockServer) => {
+        .executeTest(async mockServer => {
           // Act: Call consumer code against mock server
           const user = await getUserById(1, {
             baseURL: mockServer.url,
-            headers: { Authorization: 'Bearer token123' },
+            headers: { Authorization: 'Bearer token123' }
           });
 
           // Assert: Validate consumer behavior
@@ -78,8 +90,8 @@ describe('User API Contract', () => {
               id: 1,
               name: 'John Doe',
               email: 'john@example.com',
-              role: 'user',
-            }),
+              role: 'user'
+            })
           );
         });
     });
@@ -91,19 +103,21 @@ describe('User API Contract', () => {
         .withRequest({
           method: 'GET',
           path: '/users/999',
-          headers: { Accept: 'application/json' },
+          headers: { Accept: 'application/json' }
         })
         .willRespondWith({
           status: 404,
           headers: { 'Content-Type': 'application/json' },
           body: {
             error: 'User not found',
-            code: 'USER_NOT_FOUND',
-          },
+            code: 'USER_NOT_FOUND'
+          }
         })
-        .executeTest(async (mockServer) => {
+        .executeTest(async mockServer => {
           // Act & Assert: Consumer handles 404 gracefully
-          await expect(getUserById(999, { baseURL: mockServer.url })).rejects.toThrow('User not found');
+          await expect(
+            getUserById(999, { baseURL: mockServer.url })
+          ).rejects.toThrow('User not found');
         });
     });
   });
@@ -113,7 +127,7 @@ describe('User API Contract', () => {
       const newUser: Omit<User, 'id' | 'createdAt'> = {
         name: 'Jane Smith',
         email: 'jane@example.com',
-        role: 'admin',
+        role: 'admin'
       };
 
       await provider
@@ -124,9 +138,9 @@ describe('User API Contract', () => {
           path: '/users',
           headers: {
             'Content-Type': 'application/json',
-            Accept: 'application/json',
+            Accept: 'application/json'
           },
-          body: like(newUser),
+          body: like(newUser)
         })
         .willRespondWith({
           status: 201,
@@ -136,12 +150,12 @@ describe('User API Contract', () => {
             name: string('Jane Smith'),
             email: string('jane@example.com'),
             role: string('admin'),
-            createdAt: string('2025-01-15T11:00:00Z'),
-          }),
+            createdAt: string('2025-01-15T11:00:00Z')
+          })
         })
-        .executeTest(async (mockServer) => {
+        .executeTest(async mockServer => {
           const createdUser = await createUser(newUser, {
-            baseURL: mockServer.url,
+            baseURL: mockServer.url
           });
 
           expect(createdUser).toEqual(
@@ -149,8 +163,8 @@ describe('User API Contract', () => {
               id: expect.any(Number),
               name: 'Jane Smith',
               email: 'jane@example.com',
-              role: 'admin',
-            }),
+              role: 'admin'
+            })
           );
         });
     });
@@ -235,9 +249,9 @@ describe('Pact Provider Verification', () => {
                 name: 'John Doe',
                 email: 'john@example.com',
                 role: 'user',
-                createdAt: '2025-01-15T10:00:00Z',
-              },
-            ],
+                createdAt: '2025-01-15T10:00:00Z'
+              }
+            ]
           });
           return 'User seeded successfully';
         },
@@ -251,7 +265,7 @@ describe('Pact Provider Verification', () => {
         'no users exist': async () => {
           await resetDatabase();
           return 'Database empty';
-        },
+        }
       },
 
       // Request filters: Add auth headers to all requests
@@ -263,7 +277,7 @@ describe('Pact Provider Verification', () => {
       },
 
       // Timeout for verification
-      timeout: 30000,
+      timeout: 30000
     };
 
     // Run verification
@@ -333,7 +347,8 @@ jobs:
 
 ### Example 3: Contract CI Integration (Consumer & Provider Workflow)
 
-**Context**: Complete CI/CD workflow coordinating consumer pact publishing and provider verification.
+**Context**: Complete CI/CD workflow coordinating consumer pact publishing and
+provider verification.
 
 **Implementation**:
 
@@ -363,7 +378,8 @@ jobs:
         run: npm run test:contract
 
       - name: Publish pacts to broker
-        if: github.ref == 'refs/heads/main' || github.event_name == 'pull_request'
+        if:
+          github.ref == 'refs/heads/main' || github.event_name == 'pull_request'
         run: |
           npx pact-broker publish ./pacts \
             --consumer-app-version ${{ github.sha }} \
@@ -475,7 +491,8 @@ jobs:
 
 **Key Points**:
 
-- **Automatic trigger**: Consumer pact changes trigger provider verification via webhook
+- **Automatic trigger**: Consumer pact changes trigger provider verification via
+  webhook
 - **Branch tracking**: Pacts published per branch for feature testing
 - **can-i-deploy**: Safety gate before production deployment
 - **Record deployment**: Track which version is in each environment
@@ -485,7 +502,8 @@ jobs:
 
 ### Example 4: Resilience Coverage (Testing Fallback Behavior)
 
-**Context**: Capture timeout, retry, and error handling behavior explicitly in contracts.
+**Context**: Capture timeout, retry, and error handling behavior explicitly in
+contracts.
 
 **Implementation**:
 
@@ -499,7 +517,7 @@ const { like, string } = MatchersV3;
 const provider = new PactV3({
   consumer: 'user-management-web',
   provider: 'user-api-service',
-  dir: './pacts',
+  dir: './pacts'
 });
 
 describe('User API Resilience Contract', () => {
@@ -514,7 +532,7 @@ describe('User API Resilience Contract', () => {
       .withRequest({
         method: 'GET',
         path: '/users/1',
-        headers: { Accept: 'application/json' },
+        headers: { Accept: 'application/json' }
       })
       .willRespondWith({
         status: 500,
@@ -522,16 +540,16 @@ describe('User API Resilience Contract', () => {
         body: {
           error: 'Internal server error',
           code: 'INTERNAL_ERROR',
-          retryable: true,
-        },
+          retryable: true
+        }
       })
-      .executeTest(async (mockServer) => {
+      .executeTest(async mockServer => {
         // Consumer should retry on 500
         try {
           await getUserById(1, {
             baseURL: mockServer.url,
             retries: 3,
-            retryDelay: 100,
+            retryDelay: 100
           });
           fail('Should have thrown error after retries');
         } catch (error) {
@@ -552,24 +570,24 @@ describe('User API Resilience Contract', () => {
       .uponReceiving('a request that is rate limited')
       .withRequest({
         method: 'GET',
-        path: '/users/1',
+        path: '/users/1'
       })
       .willRespondWith({
         status: 429,
         headers: {
           'Content-Type': 'application/json',
-          'Retry-After': '60', // Retry after 60 seconds
+          'Retry-After': '60' // Retry after 60 seconds
         },
         body: {
           error: 'Too many requests',
-          code: 'RATE_LIMIT_EXCEEDED',
-        },
+          code: 'RATE_LIMIT_EXCEEDED'
+        }
       })
-      .executeTest(async (mockServer) => {
+      .executeTest(async mockServer => {
         try {
           await getUserById(1, {
             baseURL: mockServer.url,
-            respectRateLimit: true,
+            respectRateLimit: true
           });
           fail('Should have thrown rate limit error');
         } catch (error) {
@@ -590,19 +608,19 @@ describe('User API Resilience Contract', () => {
       .uponReceiving('a request that times out')
       .withRequest({
         method: 'GET',
-        path: '/users/1',
+        path: '/users/1'
       })
       .willRespondWith({
         status: 200,
         headers: { 'Content-Type': 'application/json' },
-        body: like({ id: 1, name: 'John' }),
+        body: like({ id: 1, name: 'John' })
       })
       .withDelay(15000) // Simulate 15 second delay
-      .executeTest(async (mockServer) => {
+      .executeTest(async mockServer => {
         try {
           await getUserById(1, {
             baseURL: mockServer.url,
-            timeout: 10000, // 10 second timeout
+            timeout: 10000 // 10 second timeout
           });
           fail('Should have timed out');
         } catch (error) {
@@ -622,7 +640,7 @@ describe('User API Resilience Contract', () => {
       .uponReceiving('a request for user with partial data')
       .withRequest({
         method: 'GET',
-        path: '/users/1',
+        path: '/users/1'
       })
       .willRespondWith({
         status: 200,
@@ -630,11 +648,11 @@ describe('User API Resilience Contract', () => {
         body: {
           id: integer(1),
           name: string('John Doe'),
-          email: string('john@example.com'),
+          email: string('john@example.com')
           // role, createdAt, etc. omitted (optional fields)
-        },
+        }
       })
-      .executeTest(async (mockServer) => {
+      .executeTest(async mockServer => {
         const user = await getUserById(1, { baseURL: mockServer.url });
 
         // Consumer handles missing optional fields gracefully
@@ -658,7 +676,7 @@ export class ApiError extends Error {
     message: string,
     public code: string,
     public retryable: boolean = false,
-    public retryAfter?: number,
+    public retryAfter?: number
   ) {
     super(message);
   }
@@ -669,9 +687,18 @@ export class ApiError extends Error {
  */
 export async function getUserById(
   id: number,
-  config?: AxiosRequestConfig & { retries?: number; retryDelay?: number; respectRateLimit?: boolean },
+  config?: AxiosRequestConfig & {
+    retries?: number;
+    retryDelay?: number;
+    respectRateLimit?: boolean;
+  }
 ): Promise<User> {
-  const { retries = 3, retryDelay = 1000, respectRateLimit = true, ...axiosConfig } = config || {};
+  const {
+    retries = 3,
+    retryDelay = 1000,
+    respectRateLimit = true,
+    ...axiosConfig
+  } = config || {};
 
   let lastError: Error;
 
@@ -684,13 +711,20 @@ export async function getUserById(
 
       // Handle rate limiting
       if (error.response?.status === 429) {
-        const retryAfter = parseInt(error.response.headers['retry-after'] || '60');
-        throw new ApiError('Too many requests', 'RATE_LIMIT_EXCEEDED', false, retryAfter);
+        const retryAfter = parseInt(
+          error.response.headers['retry-after'] || '60'
+        );
+        throw new ApiError(
+          'Too many requests',
+          'RATE_LIMIT_EXCEEDED',
+          false,
+          retryAfter
+        );
       }
 
       // Retry on 500 errors
       if (error.response?.status === 500 && attempt < retries) {
-        await new Promise((resolve) => setTimeout(resolve, retryDelay * attempt));
+        await new Promise(resolve => setTimeout(resolve, retryDelay * attempt));
         continue;
       }
 
@@ -756,15 +790,20 @@ function tagRelease(version: string, environment: 'staging' | 'production') {
       --tag ${environment} \
       --broker-base-url ${PACT_BROKER_URL} \
       --broker-token ${PACT_BROKER_TOKEN}`,
-    { stdio: 'inherit' },
+    { stdio: 'inherit' }
   );
 }
 
 /**
  * Record deployment to environment
  */
-function recordDeployment(version: string, environment: 'staging' | 'production') {
-  console.log(`📝 Recording deployment of ${PACTICIPANT} v${version} to ${environment}`);
+function recordDeployment(
+  version: string,
+  environment: 'staging' | 'production'
+) {
+  console.log(
+    `📝 Recording deployment of ${PACTICIPANT} v${version} to ${environment}`
+  );
 
   execSync(
     `npx pact-broker record-deployment \
@@ -773,7 +812,7 @@ function recordDeployment(version: string, environment: 'staging' | 'production'
       --environment ${environment} \
       --broker-base-url ${PACT_BROKER_URL} \
       --broker-token ${PACT_BROKER_TOKEN}`,
-    { stdio: 'inherit' },
+    { stdio: 'inherit' }
   );
 }
 
@@ -791,7 +830,7 @@ function cleanupOldPacts() {
       --broker-token ${PACT_BROKER_TOKEN} \
       --keep-latest-for-branch 1 \
       --keep-min-age 30`,
-    { stdio: 'inherit' },
+    { stdio: 'inherit' }
   );
 }
 
@@ -799,7 +838,9 @@ function cleanupOldPacts() {
  * Check deployment compatibility
  */
 function canIDeploy(version: string, toEnvironment: string): boolean {
-  console.log(`🔍 Checking if ${PACTICIPANT} v${version} can deploy to ${toEnvironment}`);
+  console.log(
+    `🔍 Checking if ${PACTICIPANT} v${version} can deploy to ${toEnvironment}`
+  );
 
   try {
     execSync(
@@ -811,7 +852,7 @@ function canIDeploy(version: string, toEnvironment: string): boolean {
         --broker-token ${PACT_BROKER_TOKEN} \
         --retry-while-unknown 6 \
         --retry-interval 10`,
-      { stdio: 'inherit' },
+      { stdio: 'inherit' }
     );
     return true;
   } catch (error) {
@@ -846,7 +887,9 @@ async function main() {
       break;
 
     default:
-      console.error('Unknown command. Use: tag-release | record-deployment | can-i-deploy | cleanup');
+      console.error(
+        'Unknown command. Use: tag-release | record-deployment | can-i-deploy | cleanup'
+      );
       process.exit(1);
   }
 }
@@ -945,13 +988,16 @@ Before implementing contract testing, verify:
 - [ ] **State handlers**: Provider implements all given() states
 - [ ] **can-i-deploy**: Blocks deployment if contracts incompatible
 - [ ] **Webhooks configured**: Consumer changes trigger provider verification
-- [ ] **Retention policy**: Old pacts archived (keep 30 days, all production tags)
+- [ ] **Retention policy**: Old pacts archived (keep 30 days, all production
+      tags)
 - [ ] **Resilience tested**: Timeouts, retries, error codes in contracts
 
 ## Integration Points
 
-- Used in workflows: `*automate` (integration test generation), `*ci` (contract CI setup)
+- Used in workflows: `*automate` (integration test generation), `*ci` (contract
+  CI setup)
 - Related fragments: `test-levels-framework.md`, `ci-burn-in.md`
 - Tools: Pact.js, Pact Broker (Pactflow or self-hosted), Pact CLI
 
-_Source: Pact consumer/provider sample repos, Murat contract testing blog, Pact official documentation_
+_Source: Pact consumer/provider sample repos, Murat contract testing blog, Pact
+official documentation_

@@ -1,15 +1,18 @@
 # Workflow Status System
 
-The universal entry point for BMM workflows - answers "what should I do now?" for any agent.
+The universal entry point for BMM workflows - answers "what should I do now?"
+for any agent.
 
 ## Overview
 
 The workflow status system provides:
 
-- **Smart project initialization** - Detects existing work and infers project details
+- **Smart project initialization** - Detects existing work and infers project
+  details
 - **Simple status tracking** - Key-value pairs for instant parsing
 - **Intelligent routing** - Suggests next actions based on current state
-- **Modular workflow paths** - Each project type/level has its own clean definition
+- **Modular workflow paths** - Each project type/level has its own clean
+  definition
 
 ## Architecture
 
@@ -64,17 +67,10 @@ workflow-init/
 Simple key-value pairs for instant parsing:
 
 ```markdown
-PROJECT_NAME: MyProject
-PROJECT_TYPE: software
-PROJECT_LEVEL: 2
-FIELD_TYPE: greenfield
-CURRENT_PHASE: 2-Planning
-CURRENT_WORKFLOW: prd
-TODO_STORY: story-1.2.md
-IN_PROGRESS_STORY: story-1.1.md
-NEXT_ACTION: Continue PRD
-NEXT_COMMAND: prd
-NEXT_AGENT: pm
+PROJECT_NAME: MyProject PROJECT_TYPE: software PROJECT_LEVEL: 2 FIELD_TYPE:
+greenfield CURRENT_PHASE: 2-Planning CURRENT_WORKFLOW: prd TODO_STORY:
+story-1.2.md IN_PROGRESS_STORY: story-1.1.md NEXT_ACTION: Continue PRD
+NEXT_COMMAND: prd NEXT_AGENT: pm
 ```
 
 Any agent can instantly grep what they need:
@@ -176,7 +172,8 @@ Instead of complex if/else logic:
 - Keep menus simple and contextual
 - Let intelligence emerge from the model
 
-**Result:** A workflow system that feels like talking to a smart assistant, not filling out a form.
+**Result:** A workflow system that feels like talking to a smart assistant, not
+filling out a form.
 
 ## Implementation Details
 
@@ -213,18 +210,18 @@ Other workflows read the status to coordinate:
 - Any workflow can check CURRENT_PHASE
 - All agents can ask "what should I do?"
 
-The status file is the single source of truth for project state and the hub that keeps all agents synchronized.
+The status file is the single source of truth for project state and the hub that
+keeps all agents synchronized.
 
 ## Benefits
 
 ✅ **Smart Detection** - Infers from existing work instead of asking everything
-✅ **Minimal Questions** - Just name and description in most cases
-✅ **Clean Status** - Simple key-value pairs for instant parsing
-✅ **Modular Paths** - 60-line files instead of 750+ line monolith
-✅ **Natural Language** - "Tell me about your project" not "Pick 1-12"
-✅ **Intelligent Menus** - Shows only relevant options
-✅ **Fast Parsing** - Grep instead of complex logic
-✅ **Easy Maintenance** - Change one level without affecting others
+✅ **Minimal Questions** - Just name and description in most cases ✅ **Clean
+Status** - Simple key-value pairs for instant parsing ✅ **Modular Paths** -
+60-line files instead of 750+ line monolith ✅ **Natural Language** - "Tell me
+about your project" not "Pick 1-12" ✅ **Intelligent Menus** - Shows only
+relevant options ✅ **Fast Parsing** - Grep instead of complex logic ✅ **Easy
+Maintenance** - Change one level without affecting others
 
 ## Future Enhancements
 
@@ -235,4 +232,5 @@ The status file is the single source of truth for project state and the hub that
 
 ---
 
-**This workflow is the front door to BMad Method. Start here to know what to do next.**
+**This workflow is the front door to BMad Method. Start here to know what to do
+next.**

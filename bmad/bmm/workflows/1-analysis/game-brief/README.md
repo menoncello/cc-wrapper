@@ -2,7 +2,10 @@
 
 ## Overview
 
-The Game Brief workflow is the starting point for game projects in the BMad Method. It's a lightweight, interactive brainstorming and planning session that captures your game vision before diving into detailed Game Design Documents (GDD).
+The Game Brief workflow is the starting point for game projects in the BMad
+Method. It's a lightweight, interactive brainstorming and planning session that
+captures your game vision before diving into detailed Game Design Documents
+(GDD).
 
 ## Purpose
 
@@ -142,19 +145,23 @@ Output is designed to feed directly into:
 
 ### Scenario: Indie Roguelike Card Game
 
-**Starting Point:**
-"I want to make a roguelike card game with a twist"
+**Starting Point:** "I want to make a roguelike card game with a twist"
 
 **After Game Brief:**
 
-- **Core Concept:** "A roguelike card battler where you play as emotions battling inner demons"
-- **Target Audience:** Core gamers who love Slay the Spire, interested in mental health themes
-- **Differentiator:** Emotional narrative system where deck composition affects story
-- **MVP Scope:** 3 characters, 80 cards, 30 enemy types, 3 bosses, 6-hour first run
+- **Core Concept:** "A roguelike card battler where you play as emotions
+  battling inner demons"
+- **Target Audience:** Core gamers who love Slay the Spire, interested in mental
+  health themes
+- **Differentiator:** Emotional narrative system where deck composition affects
+  story
+- **MVP Scope:** 3 characters, 80 cards, 30 enemy types, 3 bosses, 6-hour first
+  run
 - **Platform:** PC (Steam) first, mobile later
 - **Timeline:** 12 months with 2-person team
 - **Key Risk:** Emotional theme might alienate hardcore roguelike fans
-- **Mitigation:** Prototype early, test with target audience, offer "mechanical-only" mode
+- **Mitigation:** Prototype early, test with target audience, offer
+  "mechanical-only" mode
 
 **Next Steps:**
 
@@ -166,7 +173,8 @@ Output is designed to feed directly into:
 
 ### Be Honest About Scope
 
-The most common game dev failure is scope mismatch. Use this workflow to reality-check:
+The most common game dev failure is scope mismatch. Use this workflow to
+reality-check:
 
 - Can your team actually build this?
 - Is the timeline realistic?
@@ -198,24 +206,26 @@ The brief identifies assumptions and risks. Don't skip to GDD without:
 
 ## FAQ
 
-**Q: Is this required before GDD?**
-A: No, but highly recommended for new projects. You can start directly with GDD if you have a clear vision.
+**Q: Is this required before GDD?** A: No, but highly recommended for new
+projects. You can start directly with GDD if you have a clear vision.
 
-**Q: Can I use this for game jams?**
-A: Yes, but use YOLO mode for speed. Focus on vision, mechanics, and MVP scope.
+**Q: Can I use this for game jams?** A: Yes, but use YOLO mode for speed. Focus
+on vision, mechanics, and MVP scope.
 
-**Q: What if my game concept changes?**
-A: Revisit and update the brief. It's a living document during early development.
+**Q: What if my game concept changes?** A: Revisit and update the brief. It's a
+living document during early development.
 
-**Q: How detailed should content volume estimates be?**
-A: Rough orders of magnitude are fine. "~50 enemies" not "47 enemies with 3 variants each."
+**Q: How detailed should content volume estimates be?** A: Rough orders of
+magnitude are fine. "~50 enemies" not "47 enemies with 3 variants each."
 
-**Q: Should I complete this alone or with my team?**
-A: Involve your team! Collaborative briefs catch blind spots and build shared vision.
+**Q: Should I complete this alone or with my team?** A: Involve your team!
+Collaborative briefs catch blind spots and build shared vision.
 
 ## Related Workflows
 
-- **Product Brief** (`1-analysis/product-brief`): For software products, not games
+- **Product Brief** (`1-analysis/product-brief`): For software products, not
+  games
 - **GDD** (`2-plan-workflows/gdd`): Next step after game brief
-- **Narrative Design** (`2-plan-workflows/narrative`): For story-heavy games after GDD
+- **Narrative Design** (`2-plan-workflows/narrative`): For story-heavy games
+  after GDD
 - **Solutioning** (`3-solutioning`): Technical architecture after planning

@@ -1,22 +1,26 @@
 # Retrospective - Epic Completion Review Instructions
 
-<critical>The workflow execution engine is governed by: {project-root}/bmad/core/tasks/workflow.xml</critical>
-<critical>You MUST have already loaded and processed: {project-root}/bmad/bmm/workflows/4-implementation/retrospective/workflow.yaml</critical>
-<critical>Communicate all responses in {communication_language} and language MUST be tailored to {user_skill_level}</critical>
-<critical>Generate all documents in {document_output_language}</critical>
+<critical>The workflow execution engine is governed by:
+{project-root}/bmad/core/tasks/workflow.xml</critical> <critical>You MUST have
+already loaded and processed:
+{project-root}/bmad/bmm/workflows/4-implementation/retrospective/workflow.yaml</critical>
+<critical>Communicate all responses in {communication_language} and language
+MUST be tailored to {user_skill_level}</critical> <critical>Generate all
+documents in {document_output_language}</critical>
 
 <critical>
 
-<critical>DOCUMENT OUTPUT: Retrospective analysis. Concise insights, lessons learned, action items. User skill level ({user_skill_level}) affects conversation style ONLY, not retrospective content.</critical>
-FACILITATION NOTES:
+<critical>DOCUMENT OUTPUT: Retrospective analysis. Concise insights, lessons
+learned, action items. User skill level ({user_skill_level}) affects
+conversation style ONLY, not retrospective content.</critical> FACILITATION
+NOTES:
 
 - Scrum Master facilitates this retrospective
 - Psychological safety is paramount - NO BLAME
 - Focus on systems, processes, and learning
 - Everyone contributes with specific examples preferred
 - Action items must be achievable with clear ownership
-- Two-part format: (1) Epic Review + (2) Next Epic Preparation
-  </critical>
+- Two-part format: (1) Epic Review + (2) Next Epic Preparation </critical>
 
 <workflow>
 
@@ -28,9 +32,8 @@ FACILITATION NOTES:
 <check if="status_exists == false">
   <output>⚠️ {{suggestion}}
 
-Running in standalone mode - no progress tracking.</output>
-<action>Set standalone_mode = true</action>
-</check>
+Running in standalone mode - no progress tracking.</output> <action>Set
+standalone_mode = true</action> </check>
 
 <action>Store {{status_file_path}} for later updates (if exists)</action>
 </step>
@@ -41,28 +44,31 @@ Running in standalone mode - no progress tracking.</output>
 <action>If auto-detection succeeds, confirm with user: "It looks like Epic {{epic_number}} was just completed - is that correct?"</action>
 <action>If auto-detection fails or user indicates different epic, ask them to share which epic they just completed</action>
 
-<action>Load the completed epic from: {output_folder}/prd/epic-{{epic_number}}.md</action>
-<action>Extract epic details:
+<action>Load the completed epic from:
+{output_folder}/prd/epic-{{epic_number}}.md</action> <action>Extract epic
+details:
 
 - Epic title and goals
 - Success criteria
 - Planned stories and story points
 - Estimated sprint duration
-- Business objectives
-  </action>
+- Business objectives </action>
 
 <action>Find all stories for this epic in {output_folder}/stories/</action>
-<action>For each story, extract: - Story number and title - Completion status - Story points (if tracked) - Actual completion date - Dev Agent Record notes - TEA Results and testing outcomes - PO Notes and acceptance - Blockers encountered and resolution - Technical debt incurred
-</action>
+<action>For each story, extract: - Story number and title - Completion status -
+Story points (if tracked) - Actual completion date - Dev Agent Record notes -
+TEA Results and testing outcomes - PO Notes and acceptance - Blockers
+encountered and resolution - Technical debt incurred </action>
 
-<action>Calculate epic metrics: - Completed stories vs. total planned - Actual story points delivered vs. planned - Actual sprints taken vs. estimated - Velocity (points per sprint) - Blocker count - Technical debt items logged
+<action>Calculate epic metrics: - Completed stories vs. total planned - Actual
+story points delivered vs. planned - Actual sprints taken vs. estimated -
+Velocity (points per sprint) - Blocker count - Technical debt items logged
 </action>
 
 <action>Review epic goals and compare actual outcomes vs. planned</action>
-<action>Note any scope changes or descoped items</action>
-<action>Document key architectural decisions made during epic</action>
-<action>Identify technical debt incurred and why</action>
-</step>
+<action>Note any scope changes or descoped items</action> <action>Document key
+architectural decisions made during epic</action> <action>Identify technical
+debt incurred and why</action> </step>
 
 <step n="2" goal="Preview Next Epic">
 <action>Identify the next epic in sequence</action>
@@ -79,26 +85,24 @@ Analyze next epic for:
 
 <action>Identify dependencies on completed work:
 
-- What components from Epic {{completed_number}} does Epic {{next_number}} rely on?
+- What components from Epic {{completed_number}} does Epic {{next_number}} rely
+  on?
 - Are all prerequisites complete and stable?
-- Any incomplete work that creates blocking dependencies?
-  </action>
+- Any incomplete work that creates blocking dependencies? </action>
 
 <action>Note potential gaps or preparation needed:
 
 - Technical setup required (infrastructure, tools, libraries)
 - Knowledge gaps to fill (research, training, spikes)
 - Refactoring needed before starting next epic
-- Documentation or specifications to create
-  </action>
+- Documentation or specifications to create </action>
 
 <action>Check for technical prerequisites:
 
 - APIs or integrations that must be ready
 - Data migrations or schema changes needed
 - Testing infrastructure requirements
-- Deployment or environment setup
-  </action>
+- Deployment or environment setup </action>
 
 </step>
 
@@ -157,8 +161,9 @@ Focus Areas:
 
 </action>
 
-<action>Load agent configurations from {agent-manifest}</action>
-<action>Ensure key roles present from the {agent_manifest}: Product Owner, Scrum Master (facilitating the retro), Devs, Testing or QA, Architect, Analyst</action>
+<action>Load agent configurations from {agent-manifest}</action> <action>Ensure
+key roles present from the {agent_manifest}: Product Owner, Scrum Master
+(facilitating the retro), Devs, Testing or QA, Architect, Analyst</action>
 </step>
 
 <step n="4" goal="Epic Review Discussion">
@@ -166,20 +171,27 @@ Focus Areas:
 <action>Create space for each agent to share their perspective in their unique voice and communication style, grounded in actual story data and outcomes</action>
 <action>Maintain psychological safety throughout - focus on learning and systems, not blame or individual performance</action>
 
-<action>Guide the retrospective conversation to naturally surface key themes across three dimensions:</action>
+<action>Guide the retrospective conversation to naturally surface key themes
+across three dimensions:</action>
 
-**1. Successes and Strengths:**
-<action>Facilitate discussion that helps agents share what worked well during the epic - encourage specific examples from completed stories, effective practices, velocity achievements, collaboration wins, and smart technical decisions</action>
-<action>Draw out concrete examples: "Can you share a specific story where that approach worked well?"</action>
+**1. Successes and Strengths:** <action>Facilitate discussion that helps agents
+share what worked well during the epic - encourage specific examples from
+completed stories, effective practices, velocity achievements, collaboration
+wins, and smart technical decisions</action> <action>Draw out concrete examples:
+"Can you share a specific story where that approach worked well?"</action>
 
-**2. Challenges and Growth Areas:**
-<action>Create safe space for agents to explore challenges encountered - guide them to discuss blockers, process friction, technical debt decisions, and coordination issues with curiosity rather than judgment</action>
-<action>Probe for root causes: "What made that challenging? What pattern do we see here?"</action>
-<action>Keep focus on systems and processes, not individuals</action>
+**2. Challenges and Growth Areas:** <action>Create safe space for agents to
+explore challenges encountered - guide them to discuss blockers, process
+friction, technical debt decisions, and coordination issues with curiosity
+rather than judgment</action> <action>Probe for root causes: "What made that
+challenging? What pattern do we see here?"</action> <action>Keep focus on
+systems and processes, not individuals</action>
 
-**3. Insights and Learning:**
-<action>Help the team articulate what they learned from this epic - facilitate discovery of patterns to repeat or avoid, skills gained, and process improvements worth trying</action>
-<action>Connect insights to future application: "How might this insight help us in future epics?"</action>
+**3. Insights and Learning:** <action>Help the team articulate what they learned
+from this epic - facilitate discovery of patterns to repeat or avoid, skills
+gained, and process improvements worth trying</action> <action>Connect insights
+to future application: "How might this insight help us in future
+epics?"</action>
 
 <action>For each agent participating (loaded from {agent_manifest}):</action>
 
@@ -189,10 +201,11 @@ Focus Areas:
 - Follow interesting threads with adaptive questions
 - Balance celebration with honest assessment
 
-<action>As facilitator, actively synthesize common themes and patterns as the discussion unfolds</action>
-<action>Notice when multiple agents mention similar issues or successes - call these out to deepen the team's shared understanding</action>
-<action>Ensure every voice is heard, inviting quieter agents to contribute</action>
-</step>
+<action>As facilitator, actively synthesize common themes and patterns as the
+discussion unfolds</action> <action>Notice when multiple agents mention similar
+issues or successes - call these out to deepen the team's shared
+understanding</action> <action>Ensure every voice is heard, inviting quieter
+agents to contribute</action> </step>
 
 <step n="5" goal="Next Epic Preparation Discussion">
 <action>Scrum Master facilitates Part 2: Preparing for the next epic through forward-looking exploration</action>
@@ -200,34 +213,42 @@ Focus Areas:
 
 <action>Facilitate discovery across critical preparation dimensions:</action>
 
-**Dependencies and Continuity:**
-<action>Guide agents to explore connections between the completed epic and the upcoming one - help them identify what components, decisions, or work from Epic {{completed_number}} the next epic relies upon</action>
-<action>Probe for gaps: "What needs to be in place before we can start Epic {{next_number}}?"</action>
-<action>Surface hidden dependencies: "Are there integration points we need to verify?"</action>
+**Dependencies and Continuity:** <action>Guide agents to explore connections
+between the completed epic and the upcoming one - help them identify what
+components, decisions, or work from Epic {{completed_number}} the next epic
+relies upon</action> <action>Probe for gaps: "What needs to be in place before
+we can start Epic {{next_number}}?"</action> <action>Surface hidden
+dependencies: "Are there integration points we need to verify?"</action>
 
-**Readiness and Setup:**
-<action>Facilitate discussion about what preparation work is needed before the next epic can begin successfully - technical setup, knowledge development, refactoring, documentation, or infrastructure</action>
-<action>Draw out specific needs: "What do you need to feel ready to start Epic {{next_number}}?"</action>
-<action>Identify knowledge gaps: "What do we need to learn or research before diving in?"</action>
+**Readiness and Setup:** <action>Facilitate discussion about what preparation
+work is needed before the next epic can begin successfully - technical setup,
+knowledge development, refactoring, documentation, or infrastructure</action>
+<action>Draw out specific needs: "What do you need to feel ready to start Epic
+{{next_number}}?"</action> <action>Identify knowledge gaps: "What do we need to
+learn or research before diving in?"</action>
 
-**Risks and Mitigation:**
-<action>Create space for agents to voice concerns and uncertainties about the upcoming epic based on what they learned from this one</action>
-<action>Explore proactively: "Based on Epic {{completed_number}}, what concerns do you have about Epic {{next_number}}?"</action>
-<action>Develop mitigation thinking: "What could we do now to reduce that risk?"</action>
-<action>Identify early warning signs: "How will we know if we're heading for that problem again?"</action>
+**Risks and Mitigation:** <action>Create space for agents to voice concerns and
+uncertainties about the upcoming epic based on what they learned from this
+one</action> <action>Explore proactively: "Based on Epic {{completed_number}},
+what concerns do you have about Epic {{next_number}}?"</action> <action>Develop
+mitigation thinking: "What could we do now to reduce that risk?"</action>
+<action>Identify early warning signs: "How will we know if we're heading for
+that problem again?"</action>
 
 <action>For each agent participating:</action>
 
 - Let them share preparation needs in their natural voice
-- Encourage domain-specific insights (Architect on technical setup, PM on requirements clarity, etc.)
+- Encourage domain-specific insights (Architect on technical setup, PM on
+  requirements clarity, etc.)
 - Follow interesting preparation threads with adaptive questions
 - Help agents build on each other's observations
 - Surface quick wins that could de-risk the epic early
 
-<action>As facilitator, identify dependencies between preparation tasks as they emerge</action>
-<action>Notice when preparation items from different agents connect or conflict - explore these intersections</action>
-<action>Build a shared understanding of what "ready to start Epic {{next_number}}" actually means</action>
-</step>
+<action>As facilitator, identify dependencies between preparation tasks as they
+emerge</action> <action>Notice when preparation items from different agents
+connect or conflict - explore these intersections</action> <action>Build a
+shared understanding of what "ready to start Epic {{next_number}}" actually
+means</action> </step>
 
 <step n="6" goal="Synthesize Action Items">
 <action>Scrum Master identifies patterns across all agent feedback</action>
@@ -297,47 +318,59 @@ Risk Mitigation:
 
 <action>Ensure every action item has clear owner and timeline</action>
 <action>Prioritize preparation tasks by dependencies and criticality</action>
-<action>Identify which tasks can run in parallel vs. sequential</action>
-</step>
+<action>Identify which tasks can run in parallel vs. sequential</action> </step>
 
 <step n="7" goal="Critical Readiness Exploration">
 <action>Scrum Master leads a thoughtful exploration of whether Epic {{completed_number}} is truly complete and the team is ready for Epic {{next_number}}</action>
 <action>Approach this as discovery, not interrogation - help user surface any concerns or unfinished elements that could impact the next epic</action>
 
-<action>Guide a conversation exploring the completeness of Epic {{completed_number}} across critical dimensions:</action>
+<action>Guide a conversation exploring the completeness of Epic
+{{completed_number}} across critical dimensions:</action>
 
-**Testing and Quality:**
-<action>Explore the testing state of the epic - help user assess whether quality verification is truly complete</action>
-<action>Ask thoughtfully: "Walk me through the testing that's been done for Epic {{completed_number}}. Does anything still need verification?"</action>
-<action>Probe for gaps: "Are you confident the epic is production-ready from a quality perspective?"</action>
-<action if="testing concerns surface">Add to Critical Path: Complete necessary testing before Epic {{next_number}}</action>
+**Testing and Quality:** <action>Explore the testing state of the epic - help
+user assess whether quality verification is truly complete</action> <action>Ask
+thoughtfully: "Walk me through the testing that's been done for Epic
+{{completed_number}}. Does anything still need verification?"</action>
+<action>Probe for gaps: "Are you confident the epic is production-ready from a
+quality perspective?"</action> <action if="testing concerns surface">Add to
+Critical Path: Complete necessary testing before Epic {{next_number}}</action>
 
-**Deployment and Release:**
-<action>Understand where the epic currently stands in the deployment pipeline</action>
-<action>Explore: "What's the deployment status for Epic {{completed_number}}? Is it live, scheduled, or still pending?"</action>
-<action>If not yet deployed, clarify timeline: "When is deployment planned? Does that timing work for starting Epic {{next_number}}?"</action>
-<action if="deployment must happen first">Add to Critical Path: Deploy Epic {{completed_number}} with clear timeline</action>
+**Deployment and Release:** <action>Understand where the epic currently stands
+in the deployment pipeline</action> <action>Explore: "What's the deployment
+status for Epic {{completed_number}}? Is it live, scheduled, or still
+pending?"</action> <action>If not yet deployed, clarify timeline: "When is
+deployment planned? Does that timing work for starting Epic
+{{next_number}}?"</action> <action if="deployment must happen first">Add to
+Critical Path: Deploy Epic {{completed_number}} with clear timeline</action>
 
-**Stakeholder Acceptance:**
-<action>Guide user to reflect on business validation and stakeholder satisfaction</action>
-<action>Ask: "Have stakeholders seen and accepted the Epic {{completed_number}} deliverables? Any feedback pending?"</action>
-<action>Probe for risk: "Is there anything about stakeholder acceptance that could affect Epic {{next_number}}?"</action>
-<action if="acceptance incomplete">Add to Critical Path: Obtain stakeholder acceptance before proceeding</action>
+**Stakeholder Acceptance:** <action>Guide user to reflect on business validation
+and stakeholder satisfaction</action> <action>Ask: "Have stakeholders seen and
+accepted the Epic {{completed_number}} deliverables? Any feedback
+pending?"</action> <action>Probe for risk: "Is there anything about stakeholder
+acceptance that could affect Epic {{next_number}}?"</action>
+<action if="acceptance incomplete">Add to Critical Path: Obtain stakeholder
+acceptance before proceeding</action>
 
-**Technical Health:**
-<action>Create space for honest assessment of codebase stability after the epic</action>
-<action>Explore: "How does the codebase feel after Epic {{completed_number}}? Stable and maintainable, or are there concerns?"</action>
-<action>If concerns arise, probe deeper: "What's causing those concerns? What would it take to address them?"</action>
-<action if="stability concerns exist">Document concerns and add to Preparation Sprint: Address stability issues before Epic {{next_number}}</action>
+**Technical Health:** <action>Create space for honest assessment of codebase
+stability after the epic</action> <action>Explore: "How does the codebase feel
+after Epic {{completed_number}}? Stable and maintainable, or are there
+concerns?"</action> <action>If concerns arise, probe deeper: "What's causing
+those concerns? What would it take to address them?"</action>
+<action if="stability concerns exist">Document concerns and add to Preparation
+Sprint: Address stability issues before Epic {{next_number}}</action>
 
-**Unresolved Blockers:**
-<action>Help user surface any lingering issues that could create problems for the next epic</action>
-<action>Ask: "Are there any unresolved blockers or technical issues from Epic {{completed_number}} that we need to address before moving forward?"</action>
-<action>Explore impact: "How would these blockers affect Epic {{next_number}} if left unresolved?"</action>
-<action if="blockers exist">Document blockers and add to Critical Path with appropriate priority</action>
+**Unresolved Blockers:** <action>Help user surface any lingering issues that
+could create problems for the next epic</action> <action>Ask: "Are there any
+unresolved blockers or technical issues from Epic {{completed_number}} that we
+need to address before moving forward?"</action> <action>Explore impact: "How
+would these blockers affect Epic {{next_number}} if left unresolved?"</action>
+<action if="blockers exist">Document blockers and add to Critical Path with
+appropriate priority</action>
 
-<action>Synthesize the readiness discussion into a clear picture of what must happen before Epic {{next_number}} can safely begin</action>
-<action>Summarize any critical items identified and ensure user agrees with the assessment</action>
+<action>Synthesize the readiness discussion into a clear picture of what must
+happen before Epic {{next_number}} can safely begin</action> <action>Summarize
+any critical items identified and ensure user agrees with the
+assessment</action>
 
 </step>
 
@@ -375,10 +408,10 @@ Let's use these insights to make Epic {{next_number}} even better.
 See you at sprint planning once prep work is done!"
 ```
 
-<action>Save retrospective summary to: {output_folder}/retrospectives/epic-{{completed_number}}-retro-{{date}}.md</action>
-<action>Confirm all action items have been captured</action>
-<action>Remind user to schedule prep sprint if needed</action>
-</step>
+<action>Save retrospective summary to:
+{output_folder}/retrospectives/epic-{{completed_number}}-retro-{{date}}.md</action>
+<action>Confirm all action items have been captured</action> <action>Remind user
+to schedule prep sprint if needed</action> </step>
 
 <step n="9" goal="Update status file on completion">
 <action>Search {output_folder}/ for files matching pattern: bmm-workflow-status.md</action>
@@ -412,14 +445,13 @@ See you at sprint planning once prep work is done!"
 
 **Next Steps:**
 
-1. Review retrospective summary: {output_folder}/retrospectives/epic-{{completed_number}}-retro-{{date}}.md
+1. Review retrospective summary:
+   {output_folder}/retrospectives/epic-{{completed_number}}-retro-{{date}}.md
 2. Execute preparation sprint (Est: {{prep_days}} days)
 3. Complete critical path items before Epic {{next_number}}
 4. Begin Epic {{next_number}} planning when preparation complete
 
-Check status anytime with: `workflow-status`
-</output>
-</check>
+Check status anytime with: `workflow-status` </output> </check>
 
 <check if="status file not found">
   <output>**✅ Retrospective Complete, {user_name}!**
@@ -427,17 +459,15 @@ Check status anytime with: `workflow-status`
 **Epic Review:**
 
 - Epic {{completed_number}}: {{epic_title}} reviewed
-- Retrospective saved: {output_folder}/retrospectives/epic-{{completed_number}}-retro-{{date}}.md
+- Retrospective saved:
+  {output_folder}/retrospectives/epic-{{completed_number}}-retro-{{date}}.md
 
 Note: Running in standalone mode (no status file).
 
 **Next Steps:**
 
 1. Execute preparation sprint
-2. Begin Epic {{next_number}} planning
-   </output>
-   </check>
-   </step>
+2. Begin Epic {{next_number}} planning </output> </check> </step>
 
 </workflow>
 

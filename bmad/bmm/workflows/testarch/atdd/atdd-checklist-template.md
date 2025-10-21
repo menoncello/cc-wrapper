@@ -1,8 +1,6 @@
 # ATDD Checklist - Epic {epic_num}, Story {story_num}: {story_title}
 
-**Date:** {date}
-**Author:** {user_name}
-**Primary Test Level:** {primary_level}
+**Date:** {date} **Author:** {user_name} **Primary Test Level:** {primary_level}
 
 ---
 
@@ -10,9 +8,8 @@
 
 {Brief 2-3 sentence summary of the user story}
 
-**As a** {user_role}
-**I want** {feature_description}
-**So that** {business_value}
+**As a** {user_role} **I want** {feature_description} **So that**
+{business_value}
 
 ---
 
@@ -139,7 +136,8 @@ test('should do something', async ({ {fixtureName} }) => {
 
 ## Required data-testid Attributes
 
-{List all data-testid attributes required in UI implementation for test stability}
+{List all data-testid attributes required in UI implementation for test
+stability}
 
 ### {Page or Component Name}
 
@@ -239,7 +237,8 @@ test('should do something', async ({ {fixtureName} }) => {
 
 **DEV Agent Responsibilities:**
 
-1. **Pick one failing test** from implementation checklist (start with highest priority)
+1. **Pick one failing test** from implementation checklist (start with highest
+   priority)
 2. **Read the test** to understand expected behavior
 3. **Implement minimal code** to make that specific test pass
 4. **Run the test** to verify it now passes (green)
@@ -296,7 +295,8 @@ test('should do something', async ({ {fixtureName} }) => {
 4. **Work one test at a time** (red → green for each)
 5. **Share progress** in daily standup
 6. **When all tests pass**, refactor code for quality
-7. **When refactoring complete**, run `bmad sm story-approved` to move story to DONE
+7. **When refactoring complete**, run `bmad sm story-approved` to move story to
+   DONE
 
 ---
 
@@ -304,12 +304,18 @@ test('should do something', async ({ {fixtureName} }) => {
 
 This ATDD workflow consulted the following knowledge fragments:
 
-- **fixture-architecture.md** - Test fixture patterns with setup/teardown and auto-cleanup using Playwright's `test.extend()`
-- **data-factories.md** - Factory patterns using `@faker-js/faker` for random test data generation with overrides support
-- **component-tdd.md** - Component test strategies using Playwright Component Testing
-- **network-first.md** - Route interception patterns (intercept BEFORE navigation to prevent race conditions)
-- **test-quality.md** - Test design principles (Given-When-Then, one assertion per test, determinism, isolation)
-- **test-levels-framework.md** - Test level selection framework (E2E vs API vs Component vs Unit)
+- **fixture-architecture.md** - Test fixture patterns with setup/teardown and
+  auto-cleanup using Playwright's `test.extend()`
+- **data-factories.md** - Factory patterns using `@faker-js/faker` for random
+  test data generation with overrides support
+- **component-tdd.md** - Component test strategies using Playwright Component
+  Testing
+- **network-first.md** - Route interception patterns (intercept BEFORE
+  navigation to prevent race conditions)
+- **test-quality.md** - Test design principles (Given-When-Then, one assertion
+  per test, determinism, isolation)
+- **test-levels-framework.md** - Test level selection framework (E2E vs API vs
+  Component vs Unit)
 
 See `tea-index.csv` for complete knowledge fragment mapping.
 
@@ -334,8 +340,7 @@ See `tea-index.csv` for complete knowledge fragment mapping.
 - Failing: {total_test_count} (expected)
 - Status: ✅ RED phase verified
 
-**Expected Failure Messages:**
-{list_expected_failure_messages_for_each_test}
+**Expected Failure Messages:** {list_expected_failure_messages_for_each_test}
 
 ---
 

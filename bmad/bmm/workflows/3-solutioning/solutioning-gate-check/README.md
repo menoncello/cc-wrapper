@@ -2,17 +2,26 @@
 
 ## Overview
 
-The Implementation Ready Check workflow provides a systematic validation of all planning and solutioning artifacts before transitioning from Phase 3 (Solutioning) to Phase 4 (Implementation) in the BMad Method. This workflow ensures that PRDs, architecture documents, and story breakdowns are properly aligned with no critical gaps or contradictions.
+The Implementation Ready Check workflow provides a systematic validation of all
+planning and solutioning artifacts before transitioning from Phase 3
+(Solutioning) to Phase 4 (Implementation) in the BMad Method. This workflow
+ensures that PRDs, architecture documents, and story breakdowns are properly
+aligned with no critical gaps or contradictions.
 
 ## Purpose
 
 This workflow is designed to:
 
-- **Validate Completeness**: Ensure all required planning documents exist and are complete
-- **Verify Alignment**: Check that PRD, architecture, and stories are cohesive and aligned
-- **Identify Gaps**: Detect missing stories, unaddressed requirements, or sequencing issues
-- **Assess Risks**: Find contradictions, conflicts, or potential implementation blockers
-- **Provide Confidence**: Give teams confidence that planning is solid before starting development
+- **Validate Completeness**: Ensure all required planning documents exist and
+  are complete
+- **Verify Alignment**: Check that PRD, architecture, and stories are cohesive
+  and aligned
+- **Identify Gaps**: Detect missing stories, unaddressed requirements, or
+  sequencing issues
+- **Assess Risks**: Find contradictions, conflicts, or potential implementation
+  blockers
+- **Provide Confidence**: Give teams confidence that planning is solid before
+  starting development
 
 ## When to Use
 
@@ -70,11 +79,13 @@ The workflow will automatically search your project's output folder for:
 - Epic and Story breakdowns
 - UX artifacts (if applicable)
 
-No manual input file specification needed - the workflow discovers documents automatically.
+No manual input file specification needed - the workflow discovers documents
+automatically.
 
 ## Generated Output
 
-The workflow produces a comprehensive **Implementation Readiness Report** containing:
+The workflow produces a comprehensive **Implementation Readiness Report**
+containing:
 
 1. **Executive Summary** - Overall readiness status
 2. **Document Inventory** - What was found and reviewed
@@ -108,7 +119,8 @@ The workflow uses systematic validation rules adapted to each project level:
 - **Greenfield project setup coverage**
 - **Risk identification and mitigation**
 
-For projects using the new architecture workflow (decision-architecture.md), additional validations include:
+For projects using the new architecture workflow (decision-architecture.md),
+additional validations include:
 
 - **Implementation patterns defined for consistency**
 - **Technology versions verified and current**
@@ -174,4 +186,5 @@ For issues or questions about this workflow:
 
 ---
 
-_This workflow is part of the BMad Method v6-alpha suite of planning and solutioning tools_
+_This workflow is part of the BMad Method v6-alpha suite of planning and
+solutioning tools_

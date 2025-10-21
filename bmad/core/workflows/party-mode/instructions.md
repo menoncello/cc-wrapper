@@ -1,7 +1,8 @@
 # Party Mode - Multi-Agent Discussion Instructions
 
-<critical>The workflow execution engine is governed by: {project_root}/bmad/core/tasks/workflow.xml</critical>
-<critical>This workflow orchestrates group discussions between all installed BMAD agents</critical>
+<critical>The workflow execution engine is governed by:
+{project_root}/bmad/core/tasks/workflow.xml</critical> <critical>This workflow
+orchestrates group discussions between all installed BMAD agents</critical>
 
 <workflow>
 
@@ -19,14 +20,18 @@
     - module (source module)
     - path (file location)
 
-<action>For each agent found in manifest:</action>
-<check>Look for config override at {{agent_overrides}}[module]-[agent-name].customize.yaml</check>
+<action>For each agent found in manifest:</action> <check>Look for config
+override at {{agent_overrides}}[module]-[agent-name].customize.yaml</check>
 <action if="agent override exists">Load the override configuration</action>
-<action>MERGE override data with manifest data (overrides take precedence):</action> - Override role replaces manifest role if present - Override identity replaces manifest identity if present - Override communicationStyle replaces manifest communicationStyle if present - Override principles replace manifest principles if present - Any additional persona elements from override are added
+<action>MERGE override data with manifest data (overrides take
+precedence):</action> - Override role replaces manifest role if present -
+Override identity replaces manifest identity if present - Override
+communicationStyle replaces manifest communicationStyle if present - Override
+principles replace manifest principles if present - Any additional persona
+elements from override are added
 
 <action>Build complete agent roster with merged personalities</action>
-<action>Store agent data for use in conversation orchestration</action>
-</step>
+<action>Store agent data for use in conversation orchestration</action> </step>
 
 <step n="2" goal="Initialize Party Mode">
   <action>Announce party mode activation with enthusiasm</action>

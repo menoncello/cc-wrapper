@@ -2,20 +2,23 @@
 
 <workflow>
 
-<critical>This generates a single user story for Level 0 atomic changes</critical>
-<critical>Level 0 = single file change, bug fix, or small isolated task</critical>
-<critical>This workflow runs AFTER tech-spec.md has been completed</critical>
-<critical>Output format MUST match create-story template for compatibility with story-context and dev-story workflows</critical>
+<critical>This generates a single user story for Level 0 atomic
+changes</critical> <critical>Level 0 = single file change, bug fix, or small
+isolated task</critical> <critical>This workflow runs AFTER tech-spec.md has
+been completed</critical> <critical>Output format MUST match create-story
+template for compatibility with story-context and dev-story workflows</critical>
 
 <step n="1" goal="Load tech spec and extract the change">
 
-<action>Read the completed tech-spec.md file from {output_folder}/tech-spec.md</action>
-<action>Load bmm-workflow-status.md from {output_folder}/bmm-workflow-status.md</action>
-<action>Extract dev_story_location from config (where stories are stored)</action>
+<action>Read the completed tech-spec.md file from
+{output_folder}/tech-spec.md</action> <action>Load bmm-workflow-status.md from
+{output_folder}/bmm-workflow-status.md</action> <action>Extract
+dev_story_location from config (where stories are stored)</action>
 <action>Extract the problem statement from "Technical Approach" section</action>
 <action>Extract the scope from "Source Tree Structure" section</action>
-<action>Extract time estimate from "Implementation Guide" or technical details</action>
-<action>Extract acceptance criteria from "Testing Approach" section</action>
+<action>Extract time estimate from "Implementation Guide" or technical
+details</action> <action>Extract acceptance criteria from "Testing Approach"
+section</action>
 
 </step>
 
@@ -30,15 +33,16 @@
 - "Add OAuth Integration" → "oauth-integration"
 </example>
 
-<action>Set story_filename = "story-{slug}.md"</action>
-<action>Set story_path = "{dev_story_location}/story-{slug}.md"</action>
+<action>Set story_filename = "story-{slug}.md"</action> <action>Set story_path =
+"{dev_story_location}/story-{slug}.md"</action>
 
 </step>
 
 <step n="3" goal="Create user story in standard format">
 
-<action>Create 1 story that describes the technical change as a deliverable</action>
-<action>Story MUST use create-story template format for compatibility</action>
+<action>Create 1 story that describes the technical change as a
+deliverable</action> <action>Story MUST use create-story template format for
+compatibility</action>
 
 <guidelines>
 **Story Point Estimation:**
@@ -78,8 +82,7 @@
 - Extract technical constraints from tech-spec
 - Include file paths from "Source Tree Structure"
 - Reference architecture patterns if applicable
-- Cite tech-spec sections for implementation details
-  </guidelines>
+- Cite tech-spec sections for implementation details </guidelines>
 
 <action>Initialize story file using user_story_template</action>
 
@@ -110,13 +113,11 @@
   <output>✅ Tech-spec complete! Next: {{next_workflow}}</output>
 </check>
 
-<action>Load {{status_file_path}}</action>
-<action>Set STORIES_SEQUENCE: [{slug}]</action>
-<action>Set TODO_STORY: {slug}</action>
-<action>Set TODO_TITLE: {{story_title}}</action>
-<action>Set IN_PROGRESS_STORY: (empty)</action>
-<action>Set STORIES_DONE: []</action>
-<action>Save {{status_file_path}}</action>
+<action>Load {{status_file_path}}</action> <action>Set STORIES_SEQUENCE:
+[{slug}]</action> <action>Set TODO_STORY: {slug}</action> <action>Set
+TODO_TITLE: {{story_title}}</action> <action>Set IN_PROGRESS_STORY:
+(empty)</action> <action>Set STORIES_DONE: []</action> <action>Save
+{{status_file_path}}</action>
 
 <output>Story queue initialized with single story: {slug}</output>
 

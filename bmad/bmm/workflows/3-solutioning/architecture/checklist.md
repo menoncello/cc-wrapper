@@ -13,7 +13,8 @@
 
 - [ ] Every technology choice includes a specific version number
 - [ ] Version numbers are current (verified via WebSearch, not hardcoded)
-- [ ] Compatible versions selected (e.g., Node.js version supports chosen packages)
+- [ ] Compatible versions selected (e.g., Node.js version supports chosen
+      packages)
 - [ ] Verification dates noted for version checks
 
 ### Starter Template Integration (if applicable)
@@ -65,9 +66,11 @@
 ### Pattern Categories Coverage
 
 - [ ] **Naming Patterns**: API routes, database tables, components, files
-- [ ] **Structure Patterns**: Test organization, component organization, shared utilities
+- [ ] **Structure Patterns**: Test organization, component organization, shared
+      utilities
 - [ ] **Format Patterns**: API responses, error formats, date handling
-- [ ] **Communication Patterns**: Events, state updates, inter-component messaging
+- [ ] **Communication Patterns**: Events, state updates, inter-component
+      messaging
 - [ ] **Lifecycle Patterns**: Loading states, error recovery, retry logic
 - [ ] **Location Patterns**: URL structure, asset organization, config placement
 - [ ] **Consistency Patterns**: UI date formats, logging, user-facing errors
@@ -255,7 +258,8 @@
 
 ## Version Verification
 
-- [ ] All versions verified to be current (not relying on potentially outdated catalogs)
+- [ ] All versions verified to be current (not relying on potentially outdated
+      catalogs)
 - [ ] WebSearch used to verify versions during workflow execution
 - [ ] No hardcoded versions from knowledge bases trusted without verification
 - [ ] Starter template version checked for latest

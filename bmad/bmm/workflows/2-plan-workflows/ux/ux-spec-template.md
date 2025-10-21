@@ -70,11 +70,9 @@ _Generated on {{date}} by {{user_name}}_
 
 ### 5.2 Typography
 
-**Font Families:**
-{{font_families}}
+**Font Families:** {{font_families}}
 
-**Type Scale:**
-{{type_scale}}
+**Type Scale:** {{type_scale}}
 
 ### 5.3 Spacing and Layout
 

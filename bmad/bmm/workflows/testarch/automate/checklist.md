@@ -1,18 +1,22 @@
 # Automate Workflow Validation Checklist
 
-Use this checklist to validate that the automate workflow has been executed correctly and all deliverables meet quality standards.
+Use this checklist to validate that the automate workflow has been executed
+correctly and all deliverables meet quality standards.
 
 ## Prerequisites
 
 Before starting this workflow, verify:
 
-- [ ] Framework scaffolding configured (playwright.config.ts or cypress.config.ts exists)
+- [ ] Framework scaffolding configured (playwright.config.ts or
+      cypress.config.ts exists)
 - [ ] Test directory structure exists (tests/ folder with subdirectories)
 - [ ] Package.json has test framework dependencies installed
 
-**Halt only if:** Framework scaffolding is completely missing (run `framework` workflow first)
+**Halt only if:** Framework scaffolding is completely missing (run `framework`
+workflow first)
 
-**Note:** BMad artifacts (story, tech-spec, PRD) are OPTIONAL - workflow can run without them
+**Note:** BMad artifacts (story, tech-spec, PRD) are OPTIONAL - workflow can run
+without them
 
 ---
 
@@ -43,7 +47,8 @@ Before starting this workflow, verify:
 
 ### Coverage Analysis
 
-- [ ] Existing test files searched in `{test_dir}` (if `{analyze_coverage}` true)
+- [ ] Existing test files searched in `{test_dir}` (if `{analyze_coverage}`
+      true)
 - [ ] Tested features vs untested features identified
 - [ ] Coverage gaps mapped (tests to source files)
 - [ ] Existing fixture and factory patterns checked
@@ -86,7 +91,8 @@ Before starting this workflow, verify:
 
 - [ ] Test level selection framework applied (from `test-levels-framework.md`)
 - [ ] E2E tests identified: Critical user journeys, multi-system integration
-- [ ] API tests identified: Business logic, service contracts, data transformations
+- [ ] API tests identified: Business logic, service contracts, data
+      transformations
 - [ ] Component tests identified: UI behavior, interactions, state management
 - [ ] Unit tests identified: Pure logic, edge cases, error handling
 
@@ -148,7 +154,8 @@ Before starting this workflow, verify:
 
 ### Helper Utilities
 
-- [ ] Existing helpers checked in `tests/support/helpers/` (if `{update_helpers}` true)
+- [ ] Existing helpers checked in `tests/support/helpers/` (if
+      `{update_helpers}` true)
 - [ ] Common utilities created/enhanced:
   - [ ] waitFor (polling for complex conditions)
   - [ ] retry (retry helper for flaky operations)
@@ -227,7 +234,8 @@ Before starting this workflow, verify:
 
 ### Network-First Pattern Applied
 
-- [ ] Route interception set up BEFORE navigation (E2E tests with network requests)
+- [ ] Route interception set up BEFORE navigation (E2E tests with network
+      requests)
 - [ ] `page.route()` called before `page.goto()` to prevent race conditions
 - [ ] Network-first pattern verified in all E2E tests that make API calls
 
@@ -274,7 +282,8 @@ Before starting this workflow, verify:
 
 ### Unfixable Tests Handling
 
-- [ ] Tests that couldn't be healed after 3 iterations marked with `test.fixme()` (if `{mark_unhealable_as_fixme}` true)
+- [ ] Tests that couldn't be healed after 3 iterations marked with
+      `test.fixme()` (if `{mark_unhealable_as_fixme}` true)
 - [ ] Detailed comment added to test.fixme() tests:
   - [ ] What failure occurred
   - [ ] What healing was attempted (3 iterations)
@@ -336,7 +345,8 @@ Before starting this workflow, verify:
 ### Automation Summary Document
 
 - [ ] Output file created at `{output_summary}`
-- [ ] Document includes execution mode (BMad-Integrated, Standalone, Auto-discover)
+- [ ] Document includes execution mode (BMad-Integrated, Standalone,
+      Auto-discover)
 - [ ] Feature analysis included (source files, coverage gaps) - Standalone mode
 - [ ] Tests created listed (E2E, API, Component, Unit) with counts and paths
 - [ ] Infrastructure created listed (fixtures, factories, helpers)
@@ -438,12 +448,14 @@ Before starting this workflow, verify:
 
 All of the following must be true before marking this workflow as complete:
 
-- [ ] **Execution mode determined** (BMad-Integrated, Standalone, or Auto-discover)
+- [ ] **Execution mode determined** (BMad-Integrated, Standalone, or
+      Auto-discover)
 - [ ] **Framework configuration loaded** and validated
 - [ ] **Coverage analysis completed** (gaps identified if analyze_coverage true)
 - [ ] **Automation targets identified** (what needs testing)
 - [ ] **Test levels selected** appropriately (E2E, API, Component, Unit)
-- [ ] **Duplicate coverage avoided** (same behavior not tested at multiple levels)
+- [ ] **Duplicate coverage avoided** (same behavior not tested at multiple
+      levels)
 - [ ] **Test priorities assigned** (P0, P1, P2, P3)
 - [ ] **Fixture architecture created/enhanced** with auto-cleanup
 - [ ] **Data factories created/enhanced** using faker (no hardcoded data)
@@ -453,18 +465,22 @@ All of the following must be true before marking this workflow as complete:
 - [ ] **Priority tags added** to all test names ([P0], [P1], [P2], [P3])
 - [ ] **data-testid selectors used** in E2E tests (not CSS classes)
 - [ ] **Network-first pattern applied** (route interception before navigation)
-- [ ] **Quality standards enforced** (no hard waits, no flaky patterns, self-cleaning, deterministic)
+- [ ] **Quality standards enforced** (no hard waits, no flaky patterns,
+      self-cleaning, deterministic)
 - [ ] **Test README updated** with execution instructions and patterns
 - [ ] **package.json scripts updated** with test execution commands
 - [ ] **Test suite run locally** (if run_tests_after_generation true)
 - [ ] **Tests validated** (if auto_validate enabled)
 - [ ] **Failures healed** (if auto_heal_failures enabled and tests failed)
 - [ ] **Healing report generated** (if healing attempted)
-- [ ] **Unfixable tests marked** with test.fixme() and detailed comments (if any)
+- [ ] **Unfixable tests marked** with test.fixme() and detailed comments (if
+      any)
 - [ ] **Automation summary created** and saved to correct location
 - [ ] **Output file formatted correctly**
-- [ ] **Knowledge base references applied** and documented (including healing fragments if used)
-- [ ] **No test quality issues** (flaky patterns, race conditions, hardcoded data, page objects)
+- [ ] **Knowledge base references applied** and documented (including healing
+      fragments if used)
+- [ ] **No test quality issues** (flaky patterns, race conditions, hardcoded
+      data, page objects)
 
 ---
 
@@ -493,14 +509,16 @@ All of the following must be true before marking this workflow as complete:
 
 ### Issue: No automation targets identified
 
-**Problem:** Neither story, target_feature, nor target_files specified, and auto-discover finds nothing.
+**Problem:** Neither story, target_feature, nor target_files specified, and
+auto-discover finds nothing.
 
 **Resolution:**
 
 - Check if source_dir variable is correct
 - Verify source code exists in project
 - Ask user to specify target_feature or target_files explicitly
-- Provide examples: `target_feature: "src/auth/"` or `target_files: "src/auth/login.ts,src/auth/session.ts"`
+- Provide examples: `target_feature: "src/auth/"` or
+  `target_files: "src/auth/login.ts,src/auth/session.ts"`
 
 ### Issue: Duplicate coverage detected
 
@@ -565,16 +583,28 @@ All of the following must be true before marking this workflow as complete:
 
 ## Notes for TEA Agent
 
-- **automate is flexible:** Can work with or without BMad artifacts (story, tech-spec, PRD are OPTIONAL)
-- **Standalone mode is powerful:** Analyze any codebase and generate tests independently
-- **Auto-discover mode:** Scan codebase for features needing tests when no targets specified
-- **Framework is the ONLY hard requirement:** HALT if framework config missing, otherwise proceed
-- **Avoid duplicate coverage:** E2E for critical paths only, API/Component for variations
-- **Priority tagging enables selective execution:** P0 tests run on every commit, P1 on PR, P2 nightly
-- **Network-first pattern prevents race conditions:** Route interception BEFORE navigation
+- **automate is flexible:** Can work with or without BMad artifacts (story,
+  tech-spec, PRD are OPTIONAL)
+- **Standalone mode is powerful:** Analyze any codebase and generate tests
+  independently
+- **Auto-discover mode:** Scan codebase for features needing tests when no
+  targets specified
+- **Framework is the ONLY hard requirement:** HALT if framework config missing,
+  otherwise proceed
+- **Avoid duplicate coverage:** E2E for critical paths only, API/Component for
+  variations
+- **Priority tagging enables selective execution:** P0 tests run on every
+  commit, P1 on PR, P2 nightly
+- **Network-first pattern prevents race conditions:** Route interception BEFORE
+  navigation
 - **No page objects:** Keep tests simple, direct, and maintainable
-- **Use knowledge base:** Load relevant fragments (test-levels, test-priorities, fixture-architecture, data-factories, healing patterns) for guidance
-- **Deterministic tests only:** No hard waits, no conditional flow, no flaky patterns allowed
-- **Optional healing:** auto_heal_failures disabled by default (opt-in for automatic test healing)
-- **Graceful degradation:** Healing works without Playwright MCP (pattern-based fallback)
-- **Unfixable tests handled:** Mark with test.fixme() and detailed comments (not silently broken)
+- **Use knowledge base:** Load relevant fragments (test-levels, test-priorities,
+  fixture-architecture, data-factories, healing patterns) for guidance
+- **Deterministic tests only:** No hard waits, no conditional flow, no flaky
+  patterns allowed
+- **Optional healing:** auto_heal_failures disabled by default (opt-in for
+  automatic test healing)
+- **Graceful degradation:** Healing works without Playwright MCP (pattern-based
+  fallback)
+- **Unfixable tests handled:** Mark with test.fixme() and detailed comments (not
+  silently broken)

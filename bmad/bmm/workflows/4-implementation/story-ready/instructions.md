@@ -1,15 +1,19 @@
 # Story Ready Workflow Instructions (SM Agent)
 
-<critical>The workflow execution engine is governed by: {project_root}/bmad/core/tasks/workflow.xml</critical>
-<critical>You MUST have already loaded and processed: {installed_path}/workflow.yaml</critical>
-<critical>Communicate all responses in {communication_language} and language MUST be tailored to {user_skill_level}</critical>
-<critical>Generate all documents in {document_output_language}</critical>
+<critical>The workflow execution engine is governed by:
+{project_root}/bmad/core/tasks/workflow.xml</critical> <critical>You MUST have
+already loaded and processed: {installed_path}/workflow.yaml</critical>
+<critical>Communicate all responses in {communication_language} and language
+MUST be tailored to {user_skill_level}</critical> <critical>Generate all
+documents in {document_output_language}</critical>
 
 <workflow>
 
-<critical>This workflow is run by SM agent AFTER user reviews a drafted story and confirms it's ready for development</critical>
-<critical>NO SEARCHING - SM agent reads status file TODO section to know which story was drafted</critical>
-<critical>Simple workflow: Update story file status, move story TODO → IN PROGRESS, move next story BACKLOG → TODO</critical>
+<critical>This workflow is run by SM agent AFTER user reviews a drafted story
+and confirms it's ready for development</critical> <critical>NO SEARCHING - SM
+agent reads status file TODO section to know which story was drafted</critical>
+<critical>Simple workflow: Update story file status, move story TODO → IN
+PROGRESS, move next story BACKLOG → TODO</critical>
 
 <step n="1" goal="Get TODO story from status file">
 
@@ -23,9 +27,8 @@
 
 This workflow requires an active status file with a TODO story.
 
-Run `workflow-status` to check your project state.</output>
-<action>Exit workflow</action>
-</check>
+Run `workflow-status` to check your project state.</output> <action>Exit
+workflow</action> </check>
 
 <action>Use extracted story information:</action>
 
@@ -78,10 +81,11 @@ Run `workflow-status` to check your project state.</output>
 
 **Story Marked Ready for Development, {user_name}!**
 
-✅ Story file updated: `{{todo_story_file}}` → Status: Ready
-✅ Status file updated: Story moved TODO → IN PROGRESS
-{{#if next_story}}✅ Next story moved: BACKLOG → TODO ({{next_story_id}}: {{next_story_title}}){{/if}}
-{{#if no_more_stories}}✅ All stories have been drafted - backlog is empty{{/if}}
+✅ Story file updated: `{{todo_story_file}}` → Status: Ready ✅ Status file
+updated: Story moved TODO → IN PROGRESS {{#if next_story}}✅ Next story moved:
+BACKLOG → TODO ({{next_story_id}}: {{next_story_title}}){{/if}}
+{{#if no_more_stories}}✅ All stories have been drafted - backlog is
+empty{{/if}}
 
 **Current Story (IN PROGRESS):**
 
@@ -92,11 +96,13 @@ Run `workflow-status` to check your project state.</output>
 
 **Next Steps:**
 
-1. **Recommended:** Run `story-context` workflow to generate implementation context
+1. **Recommended:** Run `story-context` workflow to generate implementation
+   context
    - This creates a comprehensive context XML for the DEV agent
    - Includes relevant architecture, dependencies, and existing code
 
-2. **Alternative:** Skip context generation and go directly to `dev-story` workflow
+2. **Alternative:** Skip context generation and go directly to `dev-story`
+   workflow
    - Faster, but DEV agent will have less context
    - Only recommended for simple, well-understood stories
 

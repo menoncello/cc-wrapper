@@ -2,13 +2,22 @@
 
 ## Principle
 
-Race conditions arise when tests make assumptions about asynchronous timing (network, animations, state updates). **Deterministic waiting** eliminates flakiness by explicitly waiting for observable events (network responses, element state changes) instead of arbitrary timeouts.
+Race conditions arise when tests make assumptions about asynchronous timing
+(network, animations, state updates). **Deterministic waiting** eliminates
+flakiness by explicitly waiting for observable events (network responses,
+element state changes) instead of arbitrary timeouts.
 
 ## Rationale
 
-**The Problem**: Tests pass locally but fail in CI (different timing), or pass/fail randomly (race conditions). Hard waits (`waitForTimeout`, `sleep`) mask timing issues without solving them.
+**The Problem**: Tests pass locally but fail in CI (different timing), or
+pass/fail randomly (race conditions). Hard waits (`waitForTimeout`, `sleep`)
+mask timing issues without solving them.
 
-**The Solution**: Replace all hard waits with event-based waits (`waitForResponse`, `waitFor({ state })`). Implement network-first pattern (intercept before navigate). Use explicit state checks (loading spinner detached, data loaded). This makes tests deterministic regardless of network speed or system load.
+**The Solution**: Replace all hard waits with event-based waits
+(`waitForResponse`, `waitFor({ state })`). Implement network-first pattern
+(intercept before navigate). Use explicit state checks (loading spinner
+detached, data loaded). This makes tests deterministic regardless of network
+speed or system load.
 
 **Why This Matters**:
 
@@ -21,7 +30,8 @@ Race conditions arise when tests make assumptions about asynchronous timing (net
 
 ### Example 1: Race Condition Identification (Network-First Pattern)
 
-**Context**: Prevent race conditions by intercepting network requests before navigation
+**Context**: Prevent race conditions by intercepting network requests before
+navigation
 
 **Implementation**:
 
@@ -30,29 +40,35 @@ Race conditions arise when tests make assumptions about asynchronous timing (net
 import { test, expect } from '@playwright/test';
 
 test.describe('Race Condition Prevention Patterns', () => {
-  test('❌ Anti-Pattern: Navigate then intercept (race condition)', async ({ page, context }) => {
+  test('❌ Anti-Pattern: Navigate then intercept (race condition)', async ({
+    page,
+    context
+  }) => {
     // BAD: Navigation starts before interception ready
     await page.goto('/products'); // ⚠️ Race! API might load before route is set
 
-    await context.route('**/api/products', (route) => {
+    await context.route('**/api/products', route => {
       route.fulfill({ status: 200, body: JSON.stringify({ products: [] }) });
     });
 
     // Test may see real API response or mock (non-deterministic)
   });
 
-  test('✅ Pattern: Intercept BEFORE navigate (deterministic)', async ({ page, context }) => {
+  test('✅ Pattern: Intercept BEFORE navigate (deterministic)', async ({
+    page,
+    context
+  }) => {
     // GOOD: Interception ready before navigation
-    await context.route('**/api/products', (route) => {
+    await context.route('**/api/products', route => {
       route.fulfill({
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify({
           products: [
             { id: 1, name: 'Product A', price: 29.99 },
-            { id: 2, name: 'Product B', price: 49.99 },
-          ],
-        }),
+            { id: 2, name: 'Product B', price: 49.99 }
+          ]
+        })
       });
     });
 
@@ -65,7 +81,9 @@ test.describe('Race Condition Prevention Patterns', () => {
     await expect(page.getByText('Product A')).toBeVisible();
   });
 
-  test('✅ Pattern: Wait for element state change (loading → loaded)', async ({ page }) => {
+  test('✅ Pattern: Wait for element state change (loading → loaded)', async ({
+    page
+  }) => {
     await page.goto('/dashboard');
 
     // Wait for loading indicator to appear (confirms load started)
@@ -78,7 +96,9 @@ test.describe('Race Condition Prevention Patterns', () => {
     await expect(page.getByTestId('dashboard-data')).toBeVisible();
   });
 
-  test('✅ Pattern: Explicit visibility check (not just presence)', async ({ page }) => {
+  test('✅ Pattern: Explicit visibility check (not just presence)', async ({
+    page
+  }) => {
     await page.goto('/modal-demo');
 
     await page.getByRole('button', { name: 'Open Modal' }).click();
@@ -88,10 +108,14 @@ test.describe('Race Condition Prevention Patterns', () => {
 
     // ✅ Good: Wait for visibility (accounts for animations)
     await expect(page.getByTestId('modal')).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Modal Title' })).toBeVisible();
+    await expect(
+      page.getByRole('heading', { name: 'Modal Title' })
+    ).toBeVisible();
   });
 
-  test('❌ Anti-Pattern: waitForLoadState("networkidle") in SPAs', async ({ page }) => {
+  test('❌ Anti-Pattern: waitForLoadState("networkidle") in SPAs', async ({
+    page
+  }) => {
     // ⚠️ Deprecated for SPAs (WebSocket connections never idle)
     // await page.goto('/dashboard')
     // await page.waitForLoadState('networkidle') // May timeout in SPAs
@@ -110,7 +134,8 @@ test.describe('Race Condition Prevention Patterns', () => {
 
 - Network-first: ALWAYS intercept before navigate (prevents race conditions)
 - State changes: Wait for loading spinner detached (explicit load completion)
-- Visibility vs presence: `toBeVisible()` accounts for animations, `toBeAttached()` doesn't
+- Visibility vs presence: `toBeVisible()` accounts for animations,
+  `toBeAttached()` doesn't
 - Avoid networkidle: Unreliable in SPAs (WebSocket, polling connections)
 - Explicit waits: Document exactly what we're waiting for
 
@@ -137,7 +162,9 @@ test.describe('Deterministic Waiting Patterns', () => {
   });
 
   test('waitForResponse() with predicate function', async ({ page }) => {
-    const responsePromise = page.waitForResponse((resp) => resp.url().includes('/api/search') && resp.status() === 200);
+    const responsePromise = page.waitForResponse(
+      resp => resp.url().includes('/api/search') && resp.status() === 200
+    );
 
     await page.goto('/search');
     await page.getByPlaceholder('Search').fill('laptop');
@@ -161,7 +188,9 @@ test.describe('Deterministic Waiting Patterns', () => {
     await expect(page.getByTestId('user-count')).not.toHaveText('0');
   });
 
-  test('waitFor() element state (attached, visible, hidden, detached)', async ({ page }) => {
+  test('waitFor() element state (attached, visible, hidden, detached)', async ({
+    page
+  }) => {
     await page.goto('/products');
 
     // Wait for element to be attached to DOM
@@ -194,7 +223,8 @@ test.describe('Deterministic Waiting Patterns', () => {
 
 - `waitForResponse()`: Wait for specific API calls (URL pattern or predicate)
 - `waitForFunction()`: Wait for custom JavaScript conditions
-- `waitFor({ state })`: Wait for element state changes (attached, visible, hidden, detached)
+- `waitFor({ state })`: Wait for element state changes (attached, visible,
+  hidden, detached)
 - Cypress `cy.wait('@alias')`: Deterministic wait for aliased intercepts
 - All waits are event-based (not time-based)
 
@@ -211,7 +241,9 @@ test.describe('Deterministic Waiting Patterns', () => {
 import { test, expect } from '@playwright/test';
 
 test.describe('Timing Anti-Patterns to Avoid', () => {
-  test('❌ NEVER: page.waitForTimeout() (arbitrary delay)', async ({ page }) => {
+  test('❌ NEVER: page.waitForTimeout() (arbitrary delay)', async ({
+    page
+  }) => {
     await page.goto('/dashboard');
 
     // ❌ Bad: Arbitrary 3-second wait (flaky)
@@ -237,7 +269,9 @@ test.describe('Timing Anti-Patterns to Avoid', () => {
     */
   });
 
-  test('❌ NEVER: Multiple hard waits in sequence (compounding delays)', async ({ page }) => {
+  test('❌ NEVER: Multiple hard waits in sequence (compounding delays)', async ({
+    page
+  }) => {
     await page.goto('/checkout');
 
     // ❌ Bad: Stacked hard waits (6+ seconds wasted)
@@ -255,7 +289,9 @@ test.describe('Timing Anti-Patterns to Avoid', () => {
     await page.waitForURL('**/confirmation');
   });
 
-  test('❌ NEVER: waitForLoadState("networkidle") in SPAs', async ({ page }) => {
+  test('❌ NEVER: waitForLoadState("networkidle") in SPAs', async ({
+    page
+  }) => {
     // ❌ Bad: Unreliable in SPAs (WebSocket connections never idle)
     // await page.goto('/dashboard')
     // await page.waitForLoadState('networkidle') // Timeout in SPAs!
@@ -354,19 +390,32 @@ test('use trace viewer to debug timing', async ({ page }) => {
 
 Before deploying tests:
 
-- [ ] **Network-first pattern**: All routes intercepted BEFORE navigation (no race conditions)
-- [ ] **Explicit waits**: Every navigation followed by `waitForResponse()` or state check
-- [ ] **No hard waits**: Zero instances of `waitForTimeout()`, `cy.wait(number)`, `sleep()`
-- [ ] **Element state waits**: Loading spinners use `waitFor({ state: 'detached' })`
-- [ ] **Visibility checks**: Use `toBeVisible()` (accounts for animations), not just `toBeAttached()`
-- [ ] **Response validation**: Wait for successful responses (`resp.ok()` or `status === 200`)
-- [ ] **Trace viewer analysis**: Generate traces to identify timing issues (network waterfall, console errors)
-- [ ] **CI/local parity**: Tests pass reliably in both environments (no timing assumptions)
+- [ ] **Network-first pattern**: All routes intercepted BEFORE navigation (no
+      race conditions)
+- [ ] **Explicit waits**: Every navigation followed by `waitForResponse()` or
+      state check
+- [ ] **No hard waits**: Zero instances of `waitForTimeout()`,
+      `cy.wait(number)`, `sleep()`
+- [ ] **Element state waits**: Loading spinners use
+      `waitFor({ state: 'detached' })`
+- [ ] **Visibility checks**: Use `toBeVisible()` (accounts for animations), not
+      just `toBeAttached()`
+- [ ] **Response validation**: Wait for successful responses (`resp.ok()` or
+      `status === 200`)
+- [ ] **Trace viewer analysis**: Generate traces to identify timing issues
+      (network waterfall, console errors)
+- [ ] **CI/local parity**: Tests pass reliably in both environments (no timing
+      assumptions)
 
 ## Integration Points
 
-- **Used in workflows**: `*automate` (healing timing failures), `*test-review` (detect hard wait anti-patterns), `*framework` (configure timeout standards)
-- **Related fragments**: `test-healing-patterns.md` (race condition diagnosis), `network-first.md` (interception patterns), `playwright-config.md` (timeout configuration), `visual-debugging.md` (trace viewer analysis)
-- **Tools**: Playwright Inspector (`--debug`), Trace Viewer (`--trace on`), DevTools Network tab
+- **Used in workflows**: `*automate` (healing timing failures), `*test-review`
+  (detect hard wait anti-patterns), `*framework` (configure timeout standards)
+- **Related fragments**: `test-healing-patterns.md` (race condition diagnosis),
+  `network-first.md` (interception patterns), `playwright-config.md` (timeout
+  configuration), `visual-debugging.md` (trace viewer analysis)
+- **Tools**: Playwright Inspector (`--debug`), Trace Viewer (`--trace on`),
+  DevTools Network tab
 
-_Source: Playwright timing best practices, network-first pattern from test-resources-for-ai, production race condition debugging_
+_Source: Playwright timing best practices, network-first pattern from
+test-resources-for-ai, production race condition debugging_

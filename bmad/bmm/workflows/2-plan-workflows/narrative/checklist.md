@@ -1,6 +1,7 @@
 # Narrative Design Workflow Validation Checklist
 
-**Purpose**: Validate narrative design outputs are complete, cohesive, and ready for implementation.
+**Purpose**: Validate narrative design outputs are complete, cohesive, and ready
+for implementation.
 
 **Scope**: Story-driven games and applications (follows GDD workflow)
 

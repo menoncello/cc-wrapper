@@ -1,14 +1,16 @@
 # Research Workflow Router Instructions
 
-<critical>The workflow execution engine is governed by: {project_root}/bmad/core/tasks/workflow.xml</critical>
-<critical>You MUST have already loaded and processed: {installed_path}/workflow.yaml</critical>
+<critical>The workflow execution engine is governed by:
+{project_root}/bmad/core/tasks/workflow.xml</critical> <critical>You MUST have
+already loaded and processed: {installed_path}/workflow.yaml</critical>
 <critical>Communicate all responses in {communication_language}</critical>
 
 <!-- IDE-INJECT-POINT: research-subagents -->
 
 <workflow>
 
-<critical>This is a ROUTER that directs to specialized research instruction sets</critical>
+<critical>This is a ROUTER that directs to specialized research instruction
+sets</critical>
 
 <step n="1" goal="Validate workflow readiness">
 <invoke-workflow path="{project-root}/bmad/bmm/workflows/workflow-status">
@@ -42,27 +44,39 @@ Present the user with research type options:
 
 **What type of research do you need?**
 
-1. **Market Research** - Comprehensive market analysis with TAM/SAM/SOM calculations, competitive intelligence, customer segments, and go-to-market strategy
-   - Use for: Market opportunity assessment, competitive landscape analysis, market sizing
+1. **Market Research** - Comprehensive market analysis with TAM/SAM/SOM
+   calculations, competitive intelligence, customer segments, and go-to-market
+   strategy
+   - Use for: Market opportunity assessment, competitive landscape analysis,
+     market sizing
    - Output: Detailed market research report with financials
 
-2. **Deep Research Prompt Generator** - Create structured, multi-step research prompts optimized for AI platforms (ChatGPT, Gemini, Grok, Claude)
-   - Use for: Generating comprehensive research prompts, structuring complex investigations
-   - Output: Optimized research prompt with framework, scope, and validation criteria
+2. **Deep Research Prompt Generator** - Create structured, multi-step research
+   prompts optimized for AI platforms (ChatGPT, Gemini, Grok, Claude)
+   - Use for: Generating comprehensive research prompts, structuring complex
+     investigations
+   - Output: Optimized research prompt with framework, scope, and validation
+     criteria
 
-3. **Technical/Architecture Research** - Evaluate technology stacks, architecture patterns, frameworks, and technical approaches
-   - Use for: Tech stack decisions, architecture pattern selection, framework evaluation
-   - Output: Technical research report with recommendations and trade-off analysis
+3. **Technical/Architecture Research** - Evaluate technology stacks,
+   architecture patterns, frameworks, and technical approaches
+   - Use for: Tech stack decisions, architecture pattern selection, framework
+     evaluation
+   - Output: Technical research report with recommendations and trade-off
+     analysis
 
-4. **Competitive Intelligence** - Deep dive into specific competitors, their strategies, products, and market positioning
+4. **Competitive Intelligence** - Deep dive into specific competitors, their
+   strategies, products, and market positioning
    - Use for: Competitor deep dives, competitive strategy analysis
    - Output: Competitive intelligence report
 
-5. **User Research** - Customer insights, personas, jobs-to-be-done, and user behavior analysis
+5. **User Research** - Customer insights, personas, jobs-to-be-done, and user
+   behavior analysis
    - Use for: Customer discovery, persona development, user journey mapping
    - Output: User research report with personas and insights
 
-6. **Domain/Industry Research** - Deep dive into specific industries, domains, or subject matter areas
+6. **Domain/Industry Research** - Deep dive into specific industries, domains,
+   or subject matter areas
    - Use for: Industry analysis, domain expertise building, trend analysis
    - Output: Domain research report
 
@@ -74,7 +88,8 @@ Present the user with research type options:
 
 <step n="3" goal="Route to Appropriate Research Instructions">
 
-<critical>Based on user selection, load the appropriate instruction set</critical>
+<critical>Based on user selection, load the appropriate instruction
+set</critical>
 
 <check if="research_type == 1 OR fuzzy match market research">
   <action>Set research_mode = "market"</action>
@@ -118,7 +133,8 @@ Present the user with research type options:
   <action>Pass mode="domain" to focus on industry/domain analysis</action>
 </check>
 
-<critical>The loaded instruction set will continue from here with full context of the {research_type}</critical>
+<critical>The loaded instruction set will continue from here with full context
+of the {research_type}</critical>
 
 </step>
 
