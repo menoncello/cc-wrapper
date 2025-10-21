@@ -1,0 +1,133 @@
+name: PR Validation
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+concurrency:
+  group: pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  pr-checks:
+    name: PR Quality Checks
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check PR title format
+        run: |
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          # Check for conventional commit format: type(scope): description
+          if ! echo "$PR_TITLE" | grep -qE '^(feat|fix|docs|style|refactor|test|chore|perf|ci|build)(\(.+\))?: .+'; then
+            echo "❌ PR title must follow conventional commit format"
+            echo "Examples:"
+            echo "  - feat: add user authentication"
+            echo "  - fix(api): resolve timeout issue"
+            echo "  - docs: update README"
+            exit 1
+          fi
+          echo "✅ PR title format is valid"
+
+      - name: Check for large files
+        run: |
+          # Check for files larger than 1MB
+          large_files=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }}...HEAD | xargs -I {} sh -c 'test -f "{}" && find "{}" -size +1M' || true)
+          if [ -n "$large_files" ]; then
+            echo "❌ Large files detected (>1MB):"
+            echo "$large_files"
+            echo "Consider using Git LFS or excluding these files"
+            exit 1
+          fi
+          echo "✅ No large files detected"
+
+      - name: Check for secrets
+        run: |
+          # Simple check for common secret patterns
+          if git diff origin/${{ github.event.pull_request.base.ref }}...HEAD | grep -iE '(password|secret|api[_-]?key|token|private[_-]?key|aws|credential).*=.*["\x27]'; then
+            echo "❌ Potential secrets detected in diff"
+            echo "Please remove any sensitive data before merging"
+            exit 1
+          fi
+          echo "✅ No obvious secrets detected"
+
+  size-label:
+    name: PR Size Labeling
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Calculate PR size
+        id: size
+        run: |
+          additions=$(git diff --numstat origin/${{ github.event.pull_request.base.ref }}...HEAD | awk '{sum+=$1} END {print sum}')
+          deletions=$(git diff --numstat origin/${{ github.event.pull_request.base.ref }}...HEAD | awk '{sum+=$2} END {print sum}')
+          total=$((additions + deletions))
+
+          echo "additions=$additions" >> $GITHUB_OUTPUT
+          echo "deletions=$deletions" >> $GITHUB_OUTPUT
+          echo "total=$total" >> $GITHUB_OUTPUT
+
+          if [ $total -lt 100 ]; then
+            echo "size=XS" >> $GITHUB_OUTPUT
+          elif [ $total -lt 300 ]; then
+            echo "size=S" >> $GITHUB_OUTPUT
+          elif [ $total -lt 1000 ]; then
+            echo "size=M" >> $GITHUB_OUTPUT
+          elif [ $total -lt 3000 ]; then
+            echo "size=L" >> $GITHUB_OUTPUT
+          else
+            echo "size=XL" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Comment PR stats
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { additions, deletions, total, size } = ${{ toJSON(steps.size.outputs) }};
+            const body = `## 📊 PR Stats
+
+            - **Size**: ${size}
+            - **Lines Changed**: ${total} (+${additions} / -${deletions})
+
+            ${total > 1000 ? '⚠️ This is a large PR. Consider breaking it into smaller chunks for easier review.' : '✅ PR size looks good!'}`;
+
+            // Check for existing comment
+            const comments = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const botComment = comments.data.find(comment =>
+              comment.user.type === 'Bot' && comment.body.includes('📊 PR Stats')
+            );
+
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: body
+              });
+            }

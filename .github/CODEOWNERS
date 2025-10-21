@@ -1,0 +1,37 @@
+# Code Owners for CC Wrapper
+# These owners will be requested for review when someone opens a pull request
+
+# Global owners (default)
+* @cc-wrapper-team
+
+# Build system and CI/CD
+/.github/ @cc-wrapper-team
+/vite.config.ts @cc-wrapper-team
+/tsconfig*.json @cc-wrapper-team
+/bunfig.toml @cc-wrapper-team
+
+# Package management and dependencies
+/package.json @cc-wrapper-team
+/bun.lockb @cc-wrapper-team
+
+# Code quality configuration
+/.eslintrc* @cc-wrapper-team
+/eslint.config.js @cc-wrapper-team
+/.prettierrc* @cc-wrapper-team
+/.editorconfig @cc-wrapper-team
+
+# Monorepo packages
+/packages/ @cc-wrapper-team
+
+# Backend services
+/services/ @cc-wrapper-team
+
+# Frontend applications
+/apps/ @cc-wrapper-team
+
+# Documentation
+/docs/ @cc-wrapper-team
+/*.md @cc-wrapper-team
+
+# Tests
+/tests/ @cc-wrapper-team

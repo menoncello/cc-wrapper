@@ -1,0 +1,42 @@
+# Turbo ignore patterns
+# Files and directories that should not trigger rebuilds
+
+# Test files
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+**/__tests__/**
+**/__mocks__/**
+
+# Documentation
+*.md
+docs/**
+README*
+
+# Configuration that doesn't affect builds
+.prettierrc*
+.editorconfig
+.vscode/**
+.idea/**
+
+# Git
+.git/**
+.gitignore
+.gitattributes
+
+# CI/CD
+.github/**
+.gitlab-ci.yml
+.travis.yml
+.circleci/**
+
+# Logs
+*.log
+logs/**
+
+# Temporary files
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
