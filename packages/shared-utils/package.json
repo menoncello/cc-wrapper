@@ -1,0 +1,13 @@
+{
+  "name": "@cc-wrapper/shared-utils",
+  "version": "0.1.0",
+  "description": "Shared utilities for CC Wrapper",
+  "type": "module",
+  "main": "./dist/index.ts",
+  "types": "./dist/index.d.ts",
+  "keywords": [
+    "utilities"
+  ],
+  "author": "CC Wrapper Team",
+  "license": "MIT"
+}

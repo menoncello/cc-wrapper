@@ -111,13 +111,8 @@ describe('Environment Configuration - P0 Critical Setup Validation', () => {
     test('1.3-E2E-002: should create required directories', async () => {
       const setup = new SetupEnvironment();
 
-      // Clean up any existing directories
+      // Check that required directories exist (they should be git-tracked now)
       const dirs = ['apps', 'packages', 'services'];
-      dirs.forEach(dir => {
-        if (fs.existsSync(dir)) {
-          fs.rmSync(dir, { recursive: true, force: true });
-        }
-      });
 
       await (setup as SetupEnvironmentInstance).validateEnvironment();
 
@@ -127,12 +122,7 @@ describe('Environment Configuration - P0 Critical Setup Validation', () => {
         expect(stats.isDirectory()).toBe(true);
       });
 
-      // Cleanup
-      dirs.forEach(dir => {
-        if (fs.existsSync(dir)) {
-          fs.rmSync(dir, { recursive: true, force: true });
-        }
-      });
+      // No cleanup - these are git-tracked directories
     });
 
     test('should validate directory permissions', async () => {
@@ -140,13 +130,7 @@ describe('Environment Configuration - P0 Critical Setup Validation', () => {
 
       const dirs = ['apps', 'packages', 'services'];
 
-      // Clean up existing directories
-      dirs.forEach(dir => {
-        if (fs.existsSync(dir)) {
-          fs.rmSync(dir, { recursive: true, force: true });
-        }
-      });
-
+      // Directories should already exist (git-tracked)
       await (setup as SetupEnvironmentInstance).validateEnvironment();
 
       dirs.forEach(dir => {
@@ -158,12 +142,7 @@ describe('Environment Configuration - P0 Critical Setup Validation', () => {
         }).not.toThrow();
       });
 
-      // Cleanup
-      dirs.forEach(dir => {
-        if (fs.existsSync(dir)) {
-          fs.rmSync(dir, { recursive: true, force: true });
-        }
-      });
+      // No cleanup - these are git-tracked directories
     });
   });
 
