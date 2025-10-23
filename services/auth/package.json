@@ -14,7 +14,7 @@
     "lint:fix": "bunx eslint src --fix",
     "format": "bunx prettier --write src",
     "format:check": "bunx prettier --check src",
-    "type-check": "bunx tsc --noEmit",
+    "type-check": "bun run db:generate && bunx tsc --noEmit",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:migrate:deploy": "prisma migrate deploy",
