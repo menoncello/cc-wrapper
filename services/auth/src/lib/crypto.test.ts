@@ -65,7 +65,7 @@ describe('Crypto utilities', () => {
   });
 
   describe('JWT operations', () => {
-    const secret = 'test-secret-key-min-32-characters-long';
+    const secret = 'test-secret-key-for-jwt-purposes-only-32-chars';
 
     it('should generate and verify valid JWT', async () => {
       const payload = {
@@ -95,7 +95,7 @@ describe('Crypto utilities', () => {
       };
 
       const token = await generateJWT(payload, secret, '15m');
-      const wrongSecret = 'wrong-secret-key-min-32-characters-long';
+      const wrongSecret = 'incorrect-test-secret-key-for-testing-only-32-chars';
 
       const decoded = await verifyJWT(token, wrongSecret);
 

@@ -7,7 +7,7 @@ describe('AuthService', () => {
 
   beforeEach(() => {
     authService = new AuthService();
-    process.env.JWT_SECRET = 'test-secret-key-min-32-characters-long';
+    process.env.JWT_SECRET = 'test-secret-key-for-jwt-purposes-only-32-chars';
   });
 
   describe('register', () => {

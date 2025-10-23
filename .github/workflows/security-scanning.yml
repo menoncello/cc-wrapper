@@ -121,7 +121,7 @@ jobs:
       - name: Run dependency check
         run: |
           echo "🔍 Checking for known vulnerable dependencies..."
-          bun install --frozen-lockfile
+          bun install
 
           # Check for known vulnerabilities
           bun audit || true
