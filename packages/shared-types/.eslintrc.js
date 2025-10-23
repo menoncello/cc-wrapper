@@ -6,7 +6,7 @@ export default [
     rules: {
       'no-unused-vars': ['error', {
         argsIgnorePattern: '^_',
-        varsIgnorePattern: '^[A-Z_]+$' // Allow uppercase constant names (enums)
+        varsIgnorePattern: '^[A-Z][A-Z_]*$' // Allow uppercase constant names (enums)
       }]
     }
   }
