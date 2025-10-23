@@ -29,7 +29,7 @@ export async function verifyPassword(password: string, hash: string): Promise<bo
  */
 export function generateRandomToken(length = 32): string {
   const array = new Uint8Array(length);
-  crypto.getRandomValues(array);
+  globalThis.crypto.getRandomValues(array);
   return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
 }
 
@@ -116,7 +116,7 @@ export async function verifyJWT(token: string, secret: string): Promise<JWTPaylo
  */
 async function sign(message: string, secret: string): Promise<string> {
   const encoder = new TextEncoder();
-  const key = await crypto.subtle.importKey(
+  const key = await globalThis.crypto.subtle.importKey(
     'raw',
     encoder.encode(secret),
     { name: 'HMAC', hash: { name: 'SHA-256' } },
@@ -124,7 +124,7 @@ async function sign(message: string, secret: string): Promise<string> {
     ['sign']
   );
 
-  const signature = await crypto.subtle.sign('HMAC', key, encoder.encode(message));
+  const signature = await globalThis.crypto.subtle.sign('HMAC', key, encoder.encode(message));
 
   return base64UrlEncode(signature);
 }
@@ -134,7 +134,7 @@ async function sign(message: string, secret: string): Promise<string> {
  */
 function base64UrlEncode(data: string | ArrayBuffer): string {
   const base64 =
-    typeof data === 'string' ? btoa(data) : btoa(String.fromCharCode(...new Uint8Array(data)));
+    typeof data === 'string' ? globalThis.btoa(data) : globalThis.btoa(String.fromCharCode(...new Uint8Array(data)));
 
   return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
 }
@@ -145,7 +145,7 @@ function base64UrlEncode(data: string | ArrayBuffer): string {
 function base64UrlDecode(base64url: string): string {
   const base64 = base64url.replace(/-/g, '+').replace(/_/g, '/');
   const padding = '='.repeat((4 - (base64.length % 4)) % 4);
-  return atob(base64 + padding);
+  return globalThis.atob(base64 + padding);
 }
 
 /**

@@ -10,7 +10,7 @@
  */
 
 import { test, expect } from '../fixtures/merged.fixture';
-import { createRegistrationData, createLoginCredentials, createUser } from '../factories/user.factory';
+import { createRegistrationData } from '../factories/user.factory';
 
 test.describe('POST /api/auth/register - User Registration', () => {
   test('should create new user with valid email and password', async ({ request }) => {
