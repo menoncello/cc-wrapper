@@ -1,0 +1,18 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProfileSettings from '../../components/settings/ProfileSettings';
+---
+
+<BaseLayout title="Profile Settings - CC Wrapper">
+  <main class="settings-page">
+    <ProfileSettings client:load />
+  </main>
+</BaseLayout>
+
+<style>
+  .settings-page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+</style>

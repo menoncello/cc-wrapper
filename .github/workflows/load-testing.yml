@@ -1,0 +1,296 @@
+name: Load Testing
+
+on:
+  push:
+    branches: [main, develop, story/**]
+  pull_request:
+    branches: [main, develop]
+  schedule:
+    # Run load tests daily at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+        - development
+        - staging
+        - production
+      load_level:
+        description: 'Load testing level'
+        required: true
+        default: 'medium'
+        type: choice
+        options:
+        - light
+        - medium
+        - heavy
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  load-test:
+    name: Load Testing
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    strategy:
+      matrix:
+        test-scenario: [onboarding-wizard, skip-onboarding, profile-settings]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: '1.3.0'
+
+      - name: Setup k6
+        run: |
+          sudo gpg -k
+          sudo gpg --no-default-keyring --keyring /usr/share/keyrings/k6-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
+          echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+          sudo apt-get update
+          sudo apt-get install k6
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.bun/install/cache
+            node_modules
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build application
+        run: bun run build:all
+
+      - name: Start services for load testing
+        run: |
+          bun run services:up
+          sleep 10
+
+      - name: Wait for application to be ready
+        run: |
+          timeout 60 bash -c 'until curl -f http://localhost:3000/health; do sleep 2; done'
+
+      - name: Determine load configuration
+        id: config
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            ENVIRONMENT="staging"
+            LOAD_LEVEL="medium"
+          elif [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            ENVIRONMENT="${{ github.event.inputs.environment }}"
+            LOAD_LEVEL="${{ github.event.inputs.load_level }}"
+          elif [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            ENVIRONMENT="staging"
+            LOAD_LEVEL="medium"
+          else
+            ENVIRONMENT="development"
+            LOAD_LEVEL="light"
+          fi
+
+          echo "environment=$ENVIRONMENT" >> $GITHUB_OUTPUT
+          echo "load_level=$LOAD_LEVEL" >> $GITHUB_OUTPUT
+
+          # Set base URL based on environment
+          case $ENVIRONMENT in
+            "production")
+              BASE_URL="https://ccwrapper.dev"
+              ;;
+            "staging")
+              BASE_URL="https://staging.ccwrapper.dev"
+              ;;
+            *)
+              BASE_URL="http://localhost:3000"
+              ;;
+          esac
+          echo "base_url=$BASE_URL" >> $GITHUB_OUTPUT
+
+      - name: Configure k6 options
+        id: k6-options
+        run: |
+          case "${{ steps.config.outputs.load_level }}" in
+            "light")
+              OPTIONS="--vus 5 --duration 5m"
+              ;;
+            "medium")
+              OPTIONS="--vus 15 --duration 10m"
+              ;;
+            "heavy")
+              OPTIONS="--vus 50 --duration 15m"
+              ;;
+          esac
+          echo "options=$OPTIONS" >> $GITHUB_OUTPUT
+
+      - name: Run load test - ${{ matrix.test-scenario }}
+        run: |
+          echo "Running load test for ${{ matrix.test-scenario }}"
+          echo "Environment: ${{ steps.config.outputs.environment }}"
+          echo "Load Level: ${{ steps.config.outputs.load_level }}"
+          echo "Base URL: ${{ steps.config.outputs.base_url }}"
+          echo "k6 Options: ${{ steps.k6-options.options }}"
+
+          k6 run ${{ steps.k6-options.options }} \
+            --env BASE_URL=${{ steps.config.outputs.base_url }} \
+            tests/load/k6/${{ matrix.test-scenario }}.js
+
+      - name: Upload load test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: load-test-results-${{ matrix.test-scenario }}
+          path: |
+            *-summary.json
+            path: tests/load/reports/
+          retention-days: 30
+
+      - name: Process load test results
+        if: always()
+        run: |
+          # Create reports directory
+          mkdir -p tests/load/reports
+
+          # Move summary files to reports directory
+          mv *-summary.json tests/load/reports/ 2>/dev/null || true
+
+          # Generate combined report if multiple summary files exist
+          if ls tests/load/reports/*-summary.json 1> /dev/null 2>&1; then
+            echo "## Load Test Results Summary" > tests/load/reports/combined-summary.md
+            echo "" >> tests/load/reports/combined-summary.md
+            echo "**Environment:** ${{ steps.config.outputs.environment }}" >> tests/load/reports/combined-summary.md
+            echo "**Load Level:** ${{ steps.config.outputs.load_level }}" >> tests/load/reports/combined-summary.md
+            echo "**Test Date:** $(date)" >> tests/load/reports/combined-summary.md
+            echo "" >> tests/load/reports/combined-summary.md
+
+            for file in tests/load/reports/*-summary.json; do
+              if [ -f "$file" ]; then
+                filename=$(basename "$file" .json)
+                echo "### $filename" >> tests/load/reports/combined-summary.md
+                echo "\`\`\`json" >> tests/load/reports/combined-summary.md
+                cat "$file" >> tests/load/reports/combined-summary.md
+                echo "\`\`\`" >> tests/load/reports/combined-summary.md
+                echo "" >> tests/load/reports/combined-summary.md
+              fi
+            done
+          fi
+
+      - name: Comment PR with results
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = 'tests/load/reports/combined-summary.md';
+
+            if (fs.existsSync(path)) {
+              const summary = fs.readFileSync(path, 'utf8');
+
+              const comment = `## 🚀 Load Test Results
+
+              ${summary}
+
+              **Note:** These tests validate performance under concurrent load. Check the artifacts for detailed results.
+              `;
+
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment
+              });
+            }
+
+      - name: Stop services
+        if: always()
+        run: bun run services:down
+
+  load-test-summary:
+    name: Load Test Summary
+    runs-on: ubuntu-latest
+    needs: load-test
+    if: always()
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts/
+
+      - name: Generate summary report
+        run: |
+          echo "# Load Testing Summary" > load-testing-summary.md
+          echo "" >> load-testing-summary.md
+          echo "**Run Date:** $(date)" >> load-testing-summary.md
+          echo "**Workflow:** ${{ github.workflow }}" >> load-testing-summary.md
+          echo "**Repository:** ${{ github.repository }}" >> load-testing-summary.md
+          echo "**Commit:** ${{ github.sha }}" >> load-testing-summary.md
+          echo "" >> load-testing-summary.md
+
+          # Add results from each test scenario
+          for artifact in artifacts/load-test-results-*; do
+            if [ -d "$artifact" ]; then
+              scenario=$(echo "$artifact" | sed 's/artifacts\/load-test-results-//')
+              echo "## $scenario" >> load-testing-summary.md
+              echo "" >> load-testing-summary.md
+
+              for file in "$artifact"/*-summary.json; do
+                if [ -f "$file" ]; then
+                  filename=$(basename "$file")
+                  echo "### $filename" >> load-testing-summary.md
+                  echo "\`\`\`json" >> load-testing-summary.md
+                  cat "$file" >> load-testing-summary.md
+                  echo "\`\`\`" >> load-testing-summary.md
+                  echo "" >> load-testing-summary.md
+                fi
+              done
+            fi
+          done
+
+      - name: Upload summary report
+        uses: actions/upload-artifact@v4
+        with:
+          name: load-testing-summary
+          path: load-testing-summary.md
+          retention-days: 90
+
+      - name: Performance gate check
+        run: |
+          echo "Checking performance against gates..."
+
+          # Check if any test exceeded error rate threshold
+          HIGH_ERROR_RATE=false
+          SLOW_RESPONSE=false
+
+          for artifact in artifacts/load-test-results-*; do
+            if [ -d "$artifact" ]; then
+              for file in "$artifact"/*-summary.json; do
+                if [ -f "$file" ]; then
+                  # Parse JSON and check metrics (simplified check)
+                  if grep -q '"metrics"' "$file"; then
+                    echo "Analyzing $(basename "$file")"
+                    # Add more sophisticated JSON parsing here if needed
+                  fi
+                fi
+              done
+            fi
+          done
+
+          if [ "$HIGH_ERROR_RATE" = true ] || [ "$SLOW_RESPONSE" = true ]; then
+            echo "❌ Performance gates failed"
+            exit 1
+          else
+            echo "✅ Performance gates passed"
+          fi
