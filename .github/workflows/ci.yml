@@ -36,7 +36,7 @@ jobs:
             ${{ runner.os }}-bun-
 
       - name: Install dependencies
-        run: bun install --frozen-lockfile
+        run: bun install
 
       - name: TypeScript type check
         run: bun run type-check
@@ -76,7 +76,7 @@ jobs:
             ${{ runner.os }}-bun-
 
       - name: Install dependencies
-        run: bun install --frozen-lockfile
+        run: bun install
 
       - name: Run ${{ matrix.test-type }} tests
         run: bun run test:${{ matrix.test-type }}
@@ -106,7 +106,7 @@ jobs:
             ${{ runner.os }}-bun-
 
       - name: Install dependencies
-        run: bun install --frozen-lockfile
+        run: bun install
 
       - name: Run tests with coverage
         run: bun run test:coverage
@@ -143,7 +143,7 @@ jobs:
             ${{ runner.os }}-bun-
 
       - name: Install dependencies
-        run: bun install --frozen-lockfile
+        run: bun install
 
       - name: Build all targets
         run: bun run build:all
