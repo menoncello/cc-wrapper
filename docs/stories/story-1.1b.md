@@ -1,6 +1,6 @@
 # Story 1.1b: Onboarding UI & Guided Tour
 
-Status: Review Passed
+Status: Done
 
 ## Story
 
@@ -441,6 +441,12 @@ tracking and focused frontend development.
 
 - **Story 1.1b Implementation Complete**: All 5 acceptance criteria fully
   implemented with comprehensive UI components
+
+### Completion Notes
+
+**Completed:** 2025-10-24 **Definition of Done:** All acceptance criteria met,
+code reviewed, tests passing, deployed
+
 - **Onboarding Wizard**: Complete 3-step wizard with user type selection, AI
   tools configuration, and workspace setup
 - **Guided Tour**: 5-step interactive tour with spotlight effect, tooltips, and
@@ -481,6 +487,12 @@ tracking and focused frontend development.
 - `services/auth/src/index.ts` - Fixed CORS middleware type to accept
   `string | number` for headers
 - `docs/stories/story-1.1b.md` - Updated with UI fix details and file list
+
+**Modified Files (ESLint Fix - 2025-10-24):**
+
+- `apps/web/src/lib/api.ts` - Fixed 3 ESLint errors by removing unnecessary
+  global comment declaring built-in web APIs (localStorage, RequestInit, fetch)
+- `docs/stories/story-1.1b.md` - Updated with ESLint fix details and file list
 
 **Modified Files (Bug Fixes - 2025-10-23):**
 
@@ -581,6 +593,11 @@ tracking and focused frontend development.
   from title to allow proper text wrapping, and fixed CSS responsive design
   structure. All quality gates passing (TypeScript 0 errors, ESLint 0 errors,
   Prettier formatted).
+- **2025-10-24:** ESLint Fix - Fixed 3 ESLint errors in apps/web/src/lib/api.ts
+  by removing unnecessary global comment declaring localStorage, RequestInit,
+  and fetch as built-in global variables. These are standard web APIs that
+  ESLint already recognizes and don't need explicit declaration. All quality
+  gates passing (TypeScript 0 errors, ESLint 0 errors).
 
 ---
 
