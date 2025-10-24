@@ -1,10 +1,7 @@
 import { apiClient } from '@lib/api';
-import { useTourStore } from '@stores/tourStore';
-import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-
-/* global HTMLElement */
-
+import { useEffect, useState } from 'react';
+import { useTourStore } from '@stores/tourStore';
 import { tourSteps } from './tourSteps.config';
 import TourTooltip from './TourTooltip';
 
