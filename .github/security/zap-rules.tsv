@@ -1,0 +1,115 @@
+# OWASP ZAP Security Rules Configuration
+# Format: rule_id	description	risk_level
+# risk_level: High, Medium, Low, Informational
+
+10021	X-Content-Type-Options header missing	Medium
+10016	Web Browser XSS Protection Not Enabled	Medium
+10017	X-Frame-Options header not set	Medium
+10054	Cookie without SameSite Attribute	High
+10055	CSP (Content Security Policy) header not set	High
+10056	Cookie without HttpOnly Flag	High
+10057	Cookie without Secure Flag	High
+10058	User-Agent Fuzzer	Medium
+10059	Directory Browsing	Medium
+10060	Heartbleed OpenSSL Vulnerability (Indicative)	High
+10061	Apache HTTP Server: ETag Header Information Leak	Informational
+10062	Apache HTTP Server: mod_cgi Environment Variable Injection	High
+10063	Apache HTTP Server: mod_negotiation Filename Brute Forcing	Medium
+10064	Apache HTTP Server: mod_proxy Scanner	Medium
+10065	Apache HTTP Server: TRACE Method Enabled	High
+10066	Apache Tomcat: Manager/XSLT Servlet Information Disclosure	High
+10067	Apache Tomcat: Example Pages/Scripts Enabled	Informational
+10068	Apache Tomcat: Default Configuration Files	Informational
+10069	Apache Tomcat: Manager/Built-In Credentials	High
+10070	Apache Tomcat: Jenkins Console (Potential Credentials)	High
+10071	Apache Tomcat: JMX Console	High
+10072	Apache HTTP Server: mod_userdir User Enumeration	Informational
+10073	Apache HTTP Server: httpoxy Proxy Request Misuse	High
+10074	Backup File Disclosure	High
+10075	Disclosure in Error Messages	Informational
+10076	Information Disclosure - Debug Error Messages	Medium
+10077	Information Disclosure - Sensitive Information in URL	High
+10078	Information Disclosure - Sensitive Information in HTTP Referrer Header	High
+10079	Information Disclosure - Sensitive Information in HTTP GET Parameters	High
+10080	Information Disclosure - Suspicious Comments	Medium
+10081	Information Disclosure - /etc/passwd	High
+10082	Information Disclosure - /etc/shadow	High
+10083	Information Disclosure - Windows Configuration Files	High
+10084	Information Disclosure - Private IP Disclosure	Informational
+10085	Information Disclosure - Internal IP Disclosure	Informational
+10086	Information Disclosure - /etc/hosts	Informational
+10087	Information Disclosure - Apache Configuration Files	Informational
+10088	Information Disclosure - IIS Configuration Files	Informational
+10089	Information Disclosure - Apache httpd.conf	Medium
+10090	Information Disclosure - Apache .htaccess	Medium
+10091	Information Disclosure - Nginx Configuration Files	Informational
+10092	Information Disclosure - PHP Version	Informational
+10093	Information Disclosure - PHP Information Disclosure	High
+10094	Information Disclosure - ASP.NET Version	Informational
+10095	Information Disclosure - IIS Version	Informational
+10096	Information Disclosure - ColdFusion Administrator	High
+10097	Information Disclosure - JBoss Information	Informational
+10098	Information Disclosure - JMX Console	High
+10099	Information Disclosure - PHP Info	High
+10100	Information Disclosure - Server Headers	Informational
+10101	Information Disclosure - Web Server Configuration	Informational
+10102	Information Disclosure - Source Code Leakage	High
+10103	Information Disclosure - SVN/Metadata Files	High
+10104	Information Disclosure - Git/Metadata Files	High
+10105	Information Disclosure - Bazaar/Metadata Files	High
+10106	Information Disclosure - CVS/Metadata Files	High
+10107	Information Disclosure - Mercurial/Metadata Files	High
+10108	Information Disclosure - Darcs/Metadata Files	High
+10109	Information Disclosure - Subversion Entry	High
+10110	Information Disclosure - Subversion Props	High
+10111	Information Disclosure - Subversion WC.DB	High
+10112	Information Disclosure - GitHub/Metadata Files	High
+10113	Information Disclosure - Bitbucket/Metadata Files	High
+10114	Information Disclosure - GitLab/Metadata Files	High
+10115	Information Disclosure - VisualSVN/Metadata Files	High
+10116	Information Disclosure - SVN WC Files	High
+10117	Information Disclosure - Git Files	High
+10118	Information Disclosure - Hg/Metadata Files	High
+10119	Information Disclosure - CVS/Root Files	High
+10120	Information Disclosure - CVS/Repository Files	High
+10121	Information Disclosure - P4/Metadata Files	High
+10122	Information Disclosure - P4/Config Files	High
+10123	Information Disclosure - P4/Client Files	High
+10124	Information Disclosure - P4/Label Files	High
+10125	Information Disclosure - P4/User Files	High
+10126	Information Disclosure - P4/Group Files	High
+10127	Information Disclosure - P4/Protect Files	High
+10128	Information Disclosure - P4/Trigger Files	High
+10129	Information Disclosure - P4/Journal Files	High
+10130	Information Disclosure - P4/Ticket Files	High
+10131	Information Disclosure - P4/Depot Files	High
+10132	Information Disclosure - P4/Server Files	High
+10133	Information Disclosure - P4/Password Files	High
+10134	Information Disclosure - P4/SSL Files	High
+10135	Information Disclosure - P4/Integrity Files	High
+10136	Information Disclosure - P4/Checkpoint Files	High
+10137	Information Disclosure - P4/Restore Files	High
+10138	Information Disclosure - P4/Verify Files	High
+10139	Information Disclosure - P4/Rebuild Files	High
+10140	Information Disclosure - P4/Recover Files	High
+10141	Information Disclosure - P4/Purge Files	High
+10142	Information Disclosure - P4/Archive Files	High
+10143	Information Disclosure - P4/Obsolete Files	High
+10144	Information Disclosure - P4/Deprecated Files	High
+10145	Information Disclosure - P4/Experimental Files	High
+10146	Information Disclosure - P4/Unsupported Files	High
+10147	Information Disclosure - P4/Removed Files	High
+10148	Information Disclosure - P4/Disabled Files	High
+10149	Information Disclosure - P4/Hidden Files	High
+10150	Information Disclosure - P4/Encrypted Files	High
+10151	Information Disclosure - P4/Compressed Files	High
+10152	Information Disclosure - P4/Encoded Files	High
+10153	Information Disclosure - P4/Hashed Files	High
+10154	Information Disclosure - P4/Signed Files	High
+10155	Information Disclosure - P4/Encrypted Files	High
+10156	Information Disclosure - P4/Protected Files	High
+10157	Information Disclosure - P4/Restricted Files	High
+10158	Information Disclosure - P4/Confidential Files	High
+10159	Information Disclosure - P4/Private Files	High
+10160	Information Disclosure - P4/Secret Files	High
+10161	Information Disclosure - P4/Sensitive Files	High

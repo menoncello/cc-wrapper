@@ -15,38 +15,72 @@
 
 <workflow>
 
-  <step n="1" goal="Load story from status file IN PROGRESS section">
-    <invoke-workflow path="{project-root}/bmad/bmm/workflows/workflow-status">
-      <param>mode: data</param>
-      <param>data_request: next_story</param>
+  <step n="1" goal="Locate and load story from sprint status">
+    <check if="{{story_path}} is provided">
+      <action>Use {{story_path}} directly</action>
+      <action>Read COMPLETE story file</action>
+      <action>Extract story_key from filename or metadata</action>
+      <goto>task_check</goto>
+    </check>
+
+    <action>Query sprint-status for ready stories:</action>
+
+    <invoke-workflow path="{project-root}/bmad/bmm/workflows/helpers/sprint-status">
+      <param>action: get_next_story</param>
+      <param>filter_status: ready-for-dev</param>
     </invoke-workflow>
 
-    <check if="status_exists == true AND in_progress_story != ''">
-      <action>Use IN PROGRESS story from status:</action>
-      - {{in_progress_story}}: Current story ID
-      - Story file path derived from ID format
+    <check if="{{result_found}} == false">
+      <output>📋 No ready-for-dev stories found in sprint-status.yaml
 
-      <critical>DO NOT SEARCH - status file provides exact story</critical>
-
-      <action>Determine story file path from in_progress_story ID</action>
-      <action>Set {{story_path}} = {story_dir}/{{derived_story_file}}</action>
+**Options:**
+1. Run `story-ready` to mark drafted stories as ready
+2. Run `create-story` if no stories are drafted yet
+3. Check sprint-status.yaml to see current story states
+      </output>
+      <action>HALT</action>
     </check>
 
-    <check if="status_exists == false OR in_progress_story == ''">
-      <action>Fall back to legacy auto-discovery:</action>
-      <action>If {{story_path}} explicitly provided → use it</action>
-      <action>Otherwise list story-*.md files from {{story_dir}}, sort by modified time</action>
-      <ask optional="true" if="{{non_interactive}} == false">Select story or enter path</ask>
-      <action if="{{non_interactive}} == true">Auto-select most recent</action>
-    </check>
+    <action>Use {{result_story_key}} to find story file in {{story_dir}}</action>
+    <action>Read COMPLETE story file from discovered path</action>
+    <action>Store {{result_story_key}} for later status updates</action>
 
-    <action>Read COMPLETE story file from {{story_path}}</action>
+    <anchor id="task_check" />
+
     <action>Parse sections: Story, Acceptance Criteria, Tasks/Subtasks, Dev Notes, Dev Agent Record, File List, Change Log, Status</action>
     <action>Identify first incomplete task (unchecked [ ]) in Tasks/Subtasks</action>
 
-    <check>If no incomplete tasks → <goto step="6">Completion sequence</goto></check>
-    <check>If story file inaccessible → HALT: "Cannot develop story without access to story file"</check>
-    <check>If task requirements ambiguous → ASK user to clarify or HALT</check>
+    <action if="no incomplete tasks"><goto step="6">Completion sequence</goto></action>
+    <action if="story file inaccessible">HALT: "Cannot develop story without access to story file"</action>
+    <action if="task requirements ambiguous">ASK user to clarify or HALT</action>
+  </step>
+
+  <step n="1.5" goal="Mark story in-progress in sprint status">
+    <invoke-workflow path="{project-root}/bmad/bmm/workflows/helpers/sprint-status">
+      <param>action: get_story_status</param>
+      <param>story_key: {{result_story_key}}</param>
+    </invoke-workflow>
+
+    <check if="{{result_status}} == 'ready-for-dev'">
+      <invoke-workflow path="{project-root}/bmad/bmm/workflows/helpers/sprint-status">
+        <param>action: update_story_status</param>
+        <param>story_key: {{result_story_key}}</param>
+        <param>new_status: in-progress</param>
+        <param>validate: true</param>
+      </invoke-workflow>
+
+      <check if="{{result_success}} == true">
+        <output>🚀 Starting work on story {{result_story_key}}
+Status updated: {{result_old_status}} → {{result_new_status}}
+        </output>
+      </check>
+    </check>
+
+    <check if="{{result_status}} == 'in-progress'">
+      <output>⏯️ Resuming work on story {{result_story_key}}
+Story is already marked in-progress
+      </output>
+    </check>
   </step>
 
   <step n="2" goal="Plan and implement task">
@@ -54,11 +88,11 @@
     <action>Plan implementation steps and edge cases; write down a brief plan in Dev Agent Record → Debug Log</action>
     <action>Implement the task COMPLETELY including all subtasks, following architecture patterns and coding standards in this repo</action>
     <action>Handle error conditions and edge cases appropriately</action>
-    <check>If unapproved dependencies are needed → ASK user for approval before adding</check>
-    <check>If 3 consecutive implementation failures occur → HALT and request guidance</check>
-    <check>If required configuration is missing → HALT: "Cannot proceed without necessary configuration files"</check>
-    <check>If {{run_until_complete}} == true → Do not stop after partial progress; continue iterating tasks until all ACs are satisfied or a HALT condition triggers</check>
-    <check>Do NOT propose to pause for review, standups, or validation until Step 6 gates are satisfied</check>
+    <action if="unapproved dependencies are needed">ASK user for approval before adding</action>
+    <action if="3 consecutive implementation failures occur">HALT and request guidance</action>
+    <action if="required configuration is missing">HALT: "Cannot proceed without necessary configuration files"</action>
+    <action if="{{run_until_complete}} == true">Do not stop after partial progress; continue iterating tasks until all ACs are satisfied or a HALT condition triggers</action>
+    <critical>Do NOT propose to pause for review, standups, or validation until Step 6 gates are satisfied</critical>
   </step>
 
   <step n="3" goal="Author comprehensive tests">
@@ -74,37 +108,31 @@
     <substep n="4.1" goal="TypeScript type checking">
       <action>Run: bun run type-check</action>
       <check>ZERO TypeScript errors required - no exceptions</check>
-      <critical>NEVER use @ts-ignore or @ts-expect-error - fix the actual type issue</critical>
-      <check>If TypeScript errors exist → STOP and fix before continuing</check>
+      <critical>NEVER use @ts-ignore - fix the actual type issue</critical>
     </substep>
 
     <substep n="4.2" goal="ESLint validation">
       <action>Run: bun run lint</action>
       <check>ZERO ESLint errors required</check>
       <critical>NEVER add eslint-disable comments - refactor code to satisfy the rule</critical>
-      <check>If ESLint errors exist → STOP and fix before continuing</check>
     </substep>
 
-    <substep n="4.3" goal="Code formatting">
-      <action>Run: bun run format:check (or apply formatting with bun run format)</action>
-      <check>All code must follow Prettier conventions</check>
+    <substep n="4.3" goal="Test execution">
+      <action>Run: bun test</action>
+      <check>100% test pass rate required</check>
+      <action if="any tests fail">STOP and fix before continuing</action>
     </substep>
 
-    <substep n="4.4" goal="Test execution">
-      <action>Determine how to run tests for this repo (infer or use {{run_tests_command}} if provided, default: bun test)</action>
-      <action>Run all existing tests to ensure no regressions</action>
-      <action>Run the new tests to verify implementation correctness</action>
-      <check>If regression tests fail → STOP and fix before continuing</check>
-      <check>If new tests fail → STOP and fix before continuing</check>
-      <check>100% test pass rate required - no exceptions</check>
+    <substep n="4.4" goal="Mutation testing (if applicable)">
+      <action>Run: bun run test:mutation</action>
+      <check>80%+ mutation score required, 60%+ minimum threshold</check>
+      <critical>NEVER lower thresholds - improve test quality instead</critical>
     </substep>
 
     <substep n="4.5" goal="Validate acceptance criteria">
       <action>Validate implementation meets ALL story acceptance criteria</action>
-      <action>If ACs include quantitative thresholds (e.g., test pass rate, coverage), ensure they are met before marking complete</action>
+      <check>ACs with quantitative thresholds must be met</check>
     </substep>
-
-    <note>Mutation testing (Stryker) is configured for this project but typically run as part of quality review or CI pipeline, not during story development</note>
   </step>
 
   <step n="5" goal="Mark task complete and update story">
@@ -113,9 +141,9 @@
     <action>Add completion notes to Dev Agent Record if significant changes were made (summarize intent, approach, and any follow-ups)</action>
     <action>Append a brief entry to Change Log describing the change</action>
     <action>Save the story file</action>
-    <check>Determine if more incomplete tasks remain</check>
-    <check>If more tasks remain → <goto step="1">Next task</goto></check>
-    <check>If no tasks remain → <goto step="6">Completion</goto></check>
+    <action>Determine if more incomplete tasks remain</action>
+    <action if="more tasks remain"><goto step="1">Next task</goto></action>
+    <action if="no tasks remain"><goto step="6">Completion</goto></action>
   </step>
 
   <step n="6" goal="Story completion sequence">
@@ -124,67 +152,45 @@
     <action>Confirm File List includes every changed file</action>
     <action>Execute story definition-of-done checklist, if the story includes one</action>
     <action>Update the story Status to: Ready for Review</action>
-    <check>If any task is incomplete → Return to step 1 to complete remaining work (Do NOT finish with partial progress)</check>
-    <check>If regression failures exist → STOP and resolve before completing</check>
-    <check>If File List is incomplete → Update it before completing</check>
+
+    <invoke-workflow path="{project-root}/bmad/bmm/workflows/helpers/sprint-status">
+      <param>action: update_story_status</param>
+      <param>story_key: {{result_story_key}}</param>
+      <param>new_status: review</param>
+      <param>validate: true</param>
+    </invoke-workflow>
+
+    <check if="{{result_success}} == false">
+      <output>⚠️ Story file updated, but sprint-status update failed: {{result_error}}
+
+Story is marked Ready for Review in file, but sprint-status.yaml may be out of sync.
+      </output>
+    </check>
+
+    <action if="any task is incomplete">Return to step 1 to complete remaining work (Do NOT finish with partial progress)</action>
+    <action if="regression failures exist">STOP and resolve before completing</action>
+    <action if="File List is incomplete">Update it before completing</action>
   </step>
 
   <step n="7" goal="Validation and handoff" optional="true">
     <action>Optionally run the workflow validation task against the story using {project-root}/bmad/core/tasks/validate-workflow.xml</action>
     <action>Prepare a concise summary in Dev Agent Record → Completion Notes</action>
     <action>Communicate that the story is Ready for Review</action>
-  </step>
-
-  <step n="8" goal="Update status file on completion">
-    <action>Search {output_folder}/ for files matching pattern: bmm-workflow-status.md</action>
-    <action>Find the most recent file (by date in filename)</action>
-
-    <check if="status file exists">
-      <invoke-workflow path="{project-root}/bmad/bmm/workflows/workflow-status">
-        <param>mode: update</param>
-        <param>action: set_current_workflow</param>
-        <param>workflow_name: dev-story</param>
-      </invoke-workflow>
-
-      <check if="success == true">
-        <output>✅ Status updated: Story {{current_story_id}} ready for review</output>
-      </check>
-
-      <output>**✅ Story Implementation Complete, {user_name}!**
+    <output>**✅ Story Implementation Complete, {user_name}!**
 
 **Story Details:**
 - Story ID: {{current_story_id}}
+- Story Key: {{result_story_key}}
 - Title: {{current_story_title}}
 - File: {{story_path}}
-- Status: Ready for Review
-
-**Status file updated:**
-- Current step: dev-story (Story {{current_story_id}}) ✓
-- Progress: {{new_progress_percentage}}%
+- Status: {{result_new_status}} (was {{result_old_status}})
 
 **Next Steps:**
 1. Review the implemented story and test the changes
 2. Verify all acceptance criteria are met
-3. When satisfied, run `story-approved` to mark story complete and advance the queue
-
-Or check status anytime with: `workflow-status`
-      </output>
-    </check>
-
-    <check if="status file not found">
-      <output>**✅ Story Implementation Complete, {user_name}!**
-
-**Story Details:**
-- Story ID: {{current_story_id}}
-- Title: {{current_story_title}}
-- File: {{story_path}}
-- Status: Ready for Review
-
-Note: Running in standalone mode (no status file).
-
-To track progress across workflows, run `workflow-status` first.
-      </output>
-    </check>
+3. Run `review-story` workflow for senior developer review
+4. When review passes, run `story-done` to mark complete
+    </output>
   </step>
 
 </workflow>

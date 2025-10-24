@@ -1,7 +1,13 @@
 {
   "env": {
     "node": true,
-    "es2022": true
+    "es2022": true,
+    "browser": true
+  },
+  "globals": {
+    "localStorage": "readonly",
+    "fetch": "readonly",
+    "RequestInit": "readonly"
   },
   "extends": ["eslint:recommended", "@typescript-eslint/recommended"],
   "parser": "@typescript-eslint/parser",

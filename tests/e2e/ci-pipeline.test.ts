@@ -190,12 +190,12 @@ describe('CI/CD Pipeline (AC5)', () => {
 
   test('should have deployment workflow for staging', () => {
     // GIVEN: Workflows directory
-    const deployWorkflowPath = path.join(PROJECT_ROOT, '.github/workflows/deploy-staging.yml');
+    const releaseWorkflowPath = path.join(PROJECT_ROOT, '.github/workflows/release.yml');
 
     // WHEN: Checking if deployment workflow exists
-    const exists = fs.existsSync(deployWorkflowPath);
+    const exists = fs.existsSync(releaseWorkflowPath);
 
-    // THEN: deploy-staging.yml workflow file should exist
+    // THEN: release.yml workflow file should exist (handles staging and production deployment)
     expect(exists).toBe(true);
   });
 

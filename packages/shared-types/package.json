@@ -1,0 +1,25 @@
+{
+  "name": "@cc-wrapper/shared-types",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Shared TypeScript types for CC Wrapper",
+  "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./auth": "./src/auth/index.ts"
+  },
+  "scripts": {
+    "build": "bunx tsc",
+    "test": "echo 'No tests to run in shared-types'",
+    "test:coverage": "echo 'No coverage to generate in shared-types (type definitions only)'",
+    "lint": "echo 'No linting for shared-types package'",
+    "lint:fix": "bunx eslint src --fix",
+    "format": "bunx prettier --write src",
+    "format:check": "bunx prettier --check src",
+    "type-check": "bunx tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "typescript": "^5.9.3"
+  }
+}

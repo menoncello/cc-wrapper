@@ -51,7 +51,7 @@ interface HealthReport {
   timestamp: string;
 }
 
-describe.skip('Setup Performance - P0 Critical SLA Validation', () => {
+describe('Setup Performance - P0 Critical SLA Validation', () => {
   const _testDir = './temp-test-setup';
   const originalCwd = process.cwd();
   let mockConsole: ReturnType<typeof setupMockConsole>;

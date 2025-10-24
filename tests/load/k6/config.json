@@ -1,0 +1,80 @@
+{
+  "environments": {
+    "development": {
+      "baseUrl": "http://localhost:3000",
+      "stages": [
+        { "duration": "1m", "target": 5 },
+        { "duration": "2m", "target": 5 },
+        { "duration": "1m", "target": 10 },
+        { "duration": "2m", "target": 10 },
+        { "duration": "1m", "target": 0 }
+      ],
+      "thresholds": {
+        "http_req_duration": ["p(95)<3000"],
+        "http_req_failed": ["rate<0.05"],
+        "errors": ["rate<0.05"]
+      }
+    },
+    "staging": {
+      "baseUrl": "https://staging.ccwrapper.dev",
+      "stages": [
+        { "duration": "2m", "target": 10 },
+        { "duration": "5m", "target": 10 },
+        { "duration": "2m", "target": 25 },
+        { "duration": "5m", "target": 25 },
+        { "duration": "2m", "target": 50 },
+        { "duration": "5m", "target": 50 },
+        { "duration": "2m", "target": 0 }
+      ],
+      "thresholds": {
+        "http_req_duration": ["p(95)<2000"],
+        "http_req_failed": ["rate<0.01"],
+        "errors": ["rate<0.01"]
+      }
+    },
+    "production": {
+      "baseUrl": "https://ccwrapper.dev",
+      "stages": [
+        { "duration": "2m", "target": 20 },
+        { "duration": "5m", "target": 20 },
+        { "duration": "2m", "target": 50 },
+        { "duration": "5m", "target": 50 },
+        { "duration": "2m", "target": 100 },
+        { "duration": "5m", "target": 100 },
+        { "duration": "2m", "target": 0 }
+      ],
+      "thresholds": {
+        "http_req_duration": ["p(95)<1500"],
+        "http_req_failed": ["rate<0.005"],
+        "errors": ["rate<0.005"]
+      }
+    }
+  },
+  "scenarios": {
+    "onboarding-wizard": {
+      "description": "Complete onboarding wizard flow with user registration, workspace creation, and profile setup",
+      "script": "onboarding-wizard.js",
+      "weight": 70
+    },
+    "skip-onboarding": {
+      "description": "Skip onboarding functionality test with default workspace creation",
+      "script": "skip-onboarding.js",
+      "weight": 30
+    },
+    "profile-settings": {
+      "description": "Profile settings access and updates performance test",
+      "script": "profile-settings.js",
+      "weight": 50
+    }
+  },
+  "metrics": {
+    "custom": ["onboarding_duration", "api_response_time", "errors"],
+    "builtIn": [
+      "http_req_duration",
+      "http_req_failed",
+      "http_reqs",
+      "iteration_duration",
+      "vus"
+    ]
+  }
+}

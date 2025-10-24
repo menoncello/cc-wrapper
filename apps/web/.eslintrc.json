@@ -1,0 +1,12 @@
+{
+  "extends": "../../.eslintrc.json",
+  "env": {
+    "browser": true
+  },
+  "globals": {
+    "HTMLElement": "readonly",
+    "localStorage": "readonly",
+    "fetch": "readonly",
+    "RequestInit": "readonly"
+  }
+}
