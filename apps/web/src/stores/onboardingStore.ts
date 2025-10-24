@@ -19,14 +19,14 @@ interface OnboardingState {
   workspaceTemplate: WorkspaceTemplate;
 
   // Actions
-  setStep: (step: number) => void;
+  setStep: (_step: number) => void;
   nextStep: () => void;
   previousStep: () => void;
-  setUserType: (type: UserType) => void;
-  setAITools: (tools: string[]) => void;
-  addAITool: (tool: string) => void;
-  removeAITool: (tool: string) => void;
-  setWorkspaceConfig: (config: {
+  setUserType: (_type: UserType) => void;
+  setAITools: (_tools: string[]) => void;
+  addAITool: (_tool: string) => void;
+  removeAITool: (_tool: string) => void;
+  setWorkspaceConfig: (_config: {
     name?: string;
     description?: string;
     template?: WorkspaceTemplate;

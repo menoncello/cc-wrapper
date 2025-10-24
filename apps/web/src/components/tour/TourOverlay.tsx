@@ -10,7 +10,7 @@ export default function TourOverlay() {
   const { isActive, currentTourStep, nextStep, previousStep, skipTour, completeTour } =
     useTourStore();
 
-  const [targetElement, setTargetElement] = useState<Element | null>(null);
+  const [targetElement, setTargetElement] = useState<HTMLElement | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
 
   const currentStep = tourSteps[currentTourStep];
