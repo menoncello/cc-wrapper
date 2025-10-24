@@ -7,25 +7,35 @@ export enum UserRole {
   VIEWER = 'VIEWER'
 }
 
-// Export enum values to avoid unused variable warnings
-export const { OWNER, ADMIN, DEVELOPER, VIEWER } = UserRole;
+export const OWNER = 'OWNER';
+export const ADMIN = 'ADMIN';
+export const DEVELOPER = 'DEVELOPER';
+export const VIEWER = 'VIEWER';
+
+export enum UserRole {
+  OWNER = OWNER,
+  ADMIN = ADMIN,
+  DEVELOPER = DEVELOPER,
+  VIEWER = VIEWER
+}
+
+export const SOLO = 'solo';
+export const TEAM = 'team';
+export const ENTERPRISE = 'enterprise';
 
 export enum UserType {
-  SOLO = 'solo',
-  TEAM = 'team',
-  ENTERPRISE = 'enterprise'
+  SOLO = SOLO,
+  TEAM = TEAM,
+  ENTERPRISE = ENTERPRISE
 }
 
-// Export enum values to avoid unused variable warnings
-export const { SOLO, TEAM, ENTERPRISE } = UserType;
+export const GOOGLE = 'google';
+export const GITHUB = 'github';
 
 export enum OAuthProvider {
-  GOOGLE = 'google',
-  GITHUB = 'github'
+  GOOGLE = GOOGLE,
+  GITHUB = GITHUB
 }
-
-// Export enum values to avoid unused variable warnings
-export const { GOOGLE, GITHUB } = OAuthProvider;
 
 export interface User {
   id: string;
