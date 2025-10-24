@@ -7,16 +7,25 @@ export enum UserRole {
   VIEWER = 'VIEWER'
 }
 
+// Export enum values to avoid unused variable warnings
+export const { OWNER, ADMIN, DEVELOPER, VIEWER } = UserRole;
+
 export enum UserType {
   SOLO = 'solo',
   TEAM = 'team',
   ENTERPRISE = 'enterprise'
 }
 
+// Export enum values to avoid unused variable warnings
+export const { SOLO, TEAM, ENTERPRISE } = UserType;
+
 export enum OAuthProvider {
   GOOGLE = 'google',
   GITHUB = 'github'
 }
+
+// Export enum values to avoid unused variable warnings
+export const { GOOGLE, GITHUB } = OAuthProvider;
 
 export interface User {
   id: string;
