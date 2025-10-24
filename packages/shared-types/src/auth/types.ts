@@ -1,12 +1,5 @@
 // Shared authentication types for CC Wrapper
 
-export enum UserRole {
-  OWNER = 'OWNER',
-  ADMIN = 'ADMIN',
-  DEVELOPER = 'DEVELOPER',
-  VIEWER = 'VIEWER'
-}
-
 export const OWNER = 'OWNER';
 export const ADMIN = 'ADMIN';
 export const DEVELOPER = 'DEVELOPER';
