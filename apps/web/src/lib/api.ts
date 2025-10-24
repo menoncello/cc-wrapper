@@ -1,6 +1,5 @@
 // API client for interacting with the backend
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* global localStorage RequestInit fetch */
 
 const API_BASE_URL = import.meta.env.PUBLIC_API_URL || 'http://localhost:20001';

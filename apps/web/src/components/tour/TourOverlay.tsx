@@ -1,11 +1,13 @@
-import { apiClient } from '@lib/api';
 import { createPortal } from 'react-dom';
 import { useEffect, useState } from 'react';
+
+import { apiClient } from '@lib/api';
 import { useTourStore } from '@stores/tourStore';
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { tourSteps } from './tourSteps.config';
 import TourTooltip from './TourTooltip';
+import { tourSteps } from './tourSteps.config';
+
+/* global HTMLElement */
 
 export default function TourOverlay() {
   const { isActive, currentTourStep, nextStep, previousStep, skipTour, completeTour } =
