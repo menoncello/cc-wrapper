@@ -44,6 +44,7 @@
     "format": "turbo run format",
     "format:check": "turbo run format:check",
     "type-check": "turbo run type-check",
+    "typecheck": "turbo run type-check",
     "validate": "turbo run validate",
     "health": "turbo run health",
     "services:up": "docker compose -f docker-compose.dev.yml up -d",

@@ -53,19 +53,21 @@
         "tsconfig.json",
         "tsconfig.test.json"
       ],
-      "outputs": ["coverage/**"],
+      "outputs": ["coverage/**", "lcov.info"],
       "env": ["NODE_ENV", "CI"],
       "passThroughEnv": ["NODE_ENV"]
     },
     "test:unit": {
       "dependsOn": ["^build"],
       "inputs": ["tests/unit/**", "src/**", "test-utils/**"],
-      "outputs": ["coverage/**"]
+      "outputs": ["coverage/**", "lcov.info"],
+      "cache": false
     },
     "test:integration": {
       "dependsOn": ["^build"],
       "inputs": ["tests/integration/**", "src/**", "test-utils/**"],
-      "outputs": ["coverage/**"]
+      "outputs": ["coverage/**", "lcov.info"],
+      "cache": false
     },
     "test:e2e": {
       "dependsOn": ["^build"],
@@ -76,7 +78,8 @@
     "test:coverage": {
       "dependsOn": ["^build"],
       "inputs": ["tests/**", "src/**", "packages/*/src/**"],
-      "outputs": ["coverage/**"]
+      "outputs": ["coverage/**", "lcov.info"],
+      "cache": false
     },
     "lint": {
       "inputs": [

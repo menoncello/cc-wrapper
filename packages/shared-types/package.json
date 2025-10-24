@@ -11,6 +11,7 @@
   "scripts": {
     "build": "bunx tsc",
     "test": "echo 'No tests to run in shared-types'",
+    "test:coverage": "echo 'No coverage to generate in shared-types (type definitions only)'",
     "lint": "echo 'No linting for shared-types package'",
     "lint:fix": "bunx eslint src --fix",
     "format": "bunx prettier --write src",
