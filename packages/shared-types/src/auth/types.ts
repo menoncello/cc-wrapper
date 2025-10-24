@@ -1,33 +1,21 @@
 // Shared authentication types for CC Wrapper
 
-export const OWNER = 'OWNER';
-export const ADMIN = 'ADMIN';
-export const DEVELOPER = 'DEVELOPER';
-export const VIEWER = 'VIEWER';
-
 export enum UserRole {
-  OWNER = OWNER,
-  ADMIN = ADMIN,
-  DEVELOPER = DEVELOPER,
-  VIEWER = VIEWER
+  OWNER = 'OWNER',
+  ADMIN = 'ADMIN',
+  DEVELOPER = 'DEVELOPER',
+  VIEWER = 'VIEWER'
 }
-
-export const SOLO = 'solo';
-export const TEAM = 'team';
-export const ENTERPRISE = 'enterprise';
 
 export enum UserType {
-  SOLO = SOLO,
-  TEAM = TEAM,
-  ENTERPRISE = ENTERPRISE
+  SOLO = 'solo',
+  TEAM = 'team',
+  ENTERPRISE = 'enterprise'
 }
 
-export const GOOGLE = 'google';
-export const GITHUB = 'github';
-
 export enum OAuthProvider {
-  GOOGLE = GOOGLE,
-  GITHUB = GITHUB
+  GOOGLE = 'google',
+  GITHUB = 'github'
 }
 
 export interface User {
