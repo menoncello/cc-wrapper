@@ -21,7 +21,7 @@ export default function TourOverlay() {
     }
 
     // Find target element
-    const element = document.querySelector(currentStep.target);
+    const element = document.querySelector(currentStep.target) as HTMLElement | null;
     setTargetElement(element);
 
     if (element) {
