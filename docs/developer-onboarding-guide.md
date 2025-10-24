@@ -263,10 +263,10 @@ bun install
 bun run dev
 
 # 4. Open application
-# Frontend: http://localhost:4321
-# Auth Service: http://localhost:3001
-# Workspace Service: http://localhost:3002
-# AI Service: http://localhost:3003
+# Frontend: http://localhost:20000
+# Auth Service: http://localhost:20001
+# Workspace Service: http://localhost:20002
+# AI Service: http://localhost:200003
 ```
 
 ### Development Services
@@ -283,7 +283,7 @@ docker-compose up -d
 # - AI Service (port 3003)
 # - Analytics Service (port 3004)
 # - Notification Service (port 3005)
-# - Frontend (port 4321)
+# - Frontend (port 20000)
 ```
 
 ### Environment Configuration

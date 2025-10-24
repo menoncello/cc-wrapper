@@ -134,7 +134,9 @@ async function sign(message: string, secret: string): Promise<string> {
  */
 function base64UrlEncode(data: string | ArrayBuffer): string {
   const base64 =
-    typeof data === 'string' ? globalThis.btoa(data) : globalThis.btoa(String.fromCharCode(...new Uint8Array(data)));
+    typeof data === 'string'
+      ? globalThis.btoa(data)
+      : globalThis.btoa(String.fromCharCode(...new Uint8Array(data)));
 
   return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
 }

@@ -1,30 +1,35 @@
 # ATDD Checklist - Epic 1, Story 1.1b: Onboarding UI & Guided Tour
 
-**Date:** 2025-10-21
-**Author:** BMad
-**Primary Test Level:** E2E
-**Story Status:** ContextReadyDraft
-**Test Status:** 🔴 RED - 45 tests failing (awaiting UI implementation)
+**Date:** 2025-10-21 **Author:** BMad **Primary Test Level:** E2E **Story
+Status:** ContextReadyDraft **Test Status:** 🔴 RED - 45 tests failing (awaiting
+UI implementation)
 
 ---
 
 ## Story Summary
 
-Frontend implementation of onboarding wizard and guided tour for new users of CC Wrapper, enabling quick workspace configuration and interface familiarization without friction.
+Frontend implementation of onboarding wizard and guided tour for new users of CC
+Wrapper, enabling quick workspace configuration and interface familiarization
+without friction.
 
-**As a** new user
-**I want** an intuitive onboarding wizard and guided tour
-**So that** I can quickly configure my workspace, select my AI tools, and understand the core interface features
+**As a** new user **I want** an intuitive onboarding wizard and guided tour **So
+that** I can quickly configure my workspace, select my AI tools, and understand
+the core interface features
 
 ---
 
 ## Acceptance Criteria
 
-1. **AC-1**: Onboarding wizard collects user type (solo/team/enterprise) and primary AI tools (Claude, ChatGPT, Cursor, Windsurf, GitHub Copilot)
-2. **AC-2**: System configures default workspace based on user preferences with template selection (React, Node.js, Python, Custom)
-3. **AC-3**: User receives guided tour of core interface focusing on wait-time optimization features
-4. **AC-4**: User can skip onboarding and access basic functionality immediately with default configuration
-5. **AC-5**: Profile includes basic settings page for preferred AI tools, notification preferences, and default workspace
+1. **AC-1**: Onboarding wizard collects user type (solo/team/enterprise) and
+   primary AI tools (Claude, ChatGPT, Cursor, Windsurf, GitHub Copilot)
+2. **AC-2**: System configures default workspace based on user preferences with
+   template selection (React, Node.js, Python, Custom)
+3. **AC-3**: User receives guided tour of core interface focusing on wait-time
+   optimization features
+4. **AC-4**: User can skip onboarding and access basic functionality immediately
+   with default configuration
+5. **AC-5**: Profile includes basic settings page for preferred AI tools,
+   notification preferences, and default workspace
 
 ---
 
@@ -34,9 +39,11 @@ Frontend implementation of onboarding wizard and guided tour for new users of CC
 
 **File:** `tests/e2e/onboarding-wizard.spec.ts:11-79` (360 lines total)
 
-- ✅ **Test:** `should complete full onboarding wizard and create default workspace`
+- ✅ **Test:**
+  `should complete full onboarding wizard and create default workspace`
   - **Status:** 🔴 RED - Page `/onboarding` not implemented
-  - **Verifies:** AC-1, AC-2 - Complete onboarding flow from user type → AI tools → workspace configuration → dashboard redirect
+  - **Verifies:** AC-1, AC-2 - Complete onboarding flow from user type → AI
+    tools → workspace configuration → dashboard redirect
   - **Lines:** 12-35
 
 - ✅ **Test:** `should display progress indicator showing current step`
@@ -78,7 +85,8 @@ Frontend implementation of onboarding wizard and guided tour for new users of CC
 
 - ✅ **Test:** `should display available AI tools with checkboxes`
   - **Status:** 🔴 RED - AI tools step component missing
-  - **Verifies:** AC-1 - All 5 AI tools displayed (Claude, ChatGPT, Cursor, Windsurf, GitHub Copilot)
+  - **Verifies:** AC-1 - All 5 AI tools displayed (Claude, ChatGPT, Cursor,
+    Windsurf, GitHub Copilot)
   - **Lines:** 112-125
 
 - ✅ **Test:** `should allow multiple AI tool selections`
@@ -128,7 +136,8 @@ Frontend implementation of onboarding wizard and guided tour for new users of CC
   - **Verifies:** AC-4 - User confirmation before skipping
   - **Lines:** 223-235
 
-- ✅ **Test:** `should create default generic workspace when onboarding is skipped`
+- ✅ **Test:**
+  `should create default generic workspace when onboarding is skipped`
   - **Status:** 🔴 RED - Default workspace creation logic missing
   - **Verifies:** AC-4 - "My Workspace" with "Custom" template created
   - **Lines:** 237-247
@@ -156,7 +165,8 @@ Frontend implementation of onboarding wizard and guided tour for new users of CC
 
 - ✅ **Test:** `should display all tour steps in sequence`
   - **Status:** 🔴 RED - Tour step navigation logic missing
-  - **Verifies:** AC-3 - 5 tour steps (Welcome, Terminal, Browser, AI Context, Wait-Time Optimization)
+  - **Verifies:** AC-3 - 5 tour steps (Welcome, Terminal, Browser, AI Context,
+    Wait-Time Optimization)
   - **Lines:** 296-326
 
 - ✅ **Test:** `should allow skipping guided tour`
@@ -166,7 +176,8 @@ Frontend implementation of onboarding wizard and guided tour for new users of CC
 
 - ✅ **Test:** `should store tour completion status in user preferences`
   - **Status:** 🔴 RED - Tour status persistence missing
-  - **Verifies:** AC-3 - PUT /api/auth/profile integration, localStorage fallback
+  - **Verifies:** AC-3 - PUT /api/auth/profile integration, localStorage
+    fallback
   - **Lines:** 345-360
 
 ---
@@ -177,7 +188,8 @@ Frontend implementation of onboarding wizard and guided tour for new users of CC
 
 - ✅ **Test:** `should display all profile settings sections`
   - **Status:** 🔴 RED - Profile settings page not implemented
-  - **Verifies:** AC-5 - AI tools, notifications, default workspace sections visible
+  - **Verifies:** AC-5 - AI tools, notifications, default workspace sections
+    visible
   - **Lines:** 12-22
 
 - ✅ **Test:** `should load current user profile data on page load`
@@ -298,20 +310,20 @@ Frontend implementation of onboarding wizard and guided tour for new users of CC
 
 ## Test Summary Statistics
 
-| Category | Test Count | File | Status |
-|----------|-----------|------|--------|
-| Onboarding Complete Flow | 4 tests | onboarding-wizard.spec.ts | 🔴 RED |
-| User Type Selection | 2 tests | onboarding-wizard.spec.ts | 🔴 RED |
-| AI Tools Selection | 3 tests | onboarding-wizard.spec.ts | 🔴 RED |
-| Workspace Configuration | 3 tests | onboarding-wizard.spec.ts | 🔴 RED |
-| Skip Functionality | 5 tests | onboarding-wizard.spec.ts | 🔴 RED |
-| Guided Tour | 4 tests | onboarding-wizard.spec.ts | 🔴 RED |
-| Profile Settings General | 2 tests | user-profile-settings.spec.ts | 🔴 RED |
-| AI Tools Management | 4 tests | user-profile-settings.spec.ts | 🔴 RED |
-| Notification Preferences | 5 tests | user-profile-settings.spec.ts | 🔴 RED |
-| Default Workspace | 4 tests | user-profile-settings.spec.ts | 🔴 RED |
-| Form Validation | 5 tests | user-profile-settings.spec.ts | 🔴 RED |
-| **TOTAL** | **45 tests** | 2 files | **🔴 ALL RED** |
+| Category                 | Test Count   | File                          | Status         |
+| ------------------------ | ------------ | ----------------------------- | -------------- |
+| Onboarding Complete Flow | 4 tests      | onboarding-wizard.spec.ts     | 🔴 RED         |
+| User Type Selection      | 2 tests      | onboarding-wizard.spec.ts     | 🔴 RED         |
+| AI Tools Selection       | 3 tests      | onboarding-wizard.spec.ts     | 🔴 RED         |
+| Workspace Configuration  | 3 tests      | onboarding-wizard.spec.ts     | 🔴 RED         |
+| Skip Functionality       | 5 tests      | onboarding-wizard.spec.ts     | 🔴 RED         |
+| Guided Tour              | 4 tests      | onboarding-wizard.spec.ts     | 🔴 RED         |
+| Profile Settings General | 2 tests      | user-profile-settings.spec.ts | 🔴 RED         |
+| AI Tools Management      | 4 tests      | user-profile-settings.spec.ts | 🔴 RED         |
+| Notification Preferences | 5 tests      | user-profile-settings.spec.ts | 🔴 RED         |
+| Default Workspace        | 4 tests      | user-profile-settings.spec.ts | 🔴 RED         |
+| Form Validation          | 5 tests      | user-profile-settings.spec.ts | 🔴 RED         |
+| **TOTAL**                | **45 tests** | 2 files                       | **🔴 ALL RED** |
 
 ---
 
@@ -322,15 +334,20 @@ Frontend implementation of onboarding wizard and guided tour for new users of CC
 **File:** `tests/factories/user.factory.ts` (EXISTING - READY TO USE)
 
 **Exports:**
-- `createUser(overrides?)` - Create single user with optional overrides (uses faker)
+
+- `createUser(overrides?)` - Create single user with optional overrides (uses
+  faker)
 - `createOAuthUser(provider, overrides?)` - Create OAuth user (Google/GitHub)
 - `createUsers(count, overrides?)` - Create array of users
-- `createUserProfile(userId, overrides?)` - Create user profile with AI tools, notifications, workspace preferences
-- `createUserWithProfile(userOverrides?, profileOverrides?)` - Create user + profile in single call
+- `createUserProfile(userId, overrides?)` - Create user profile with AI tools,
+  notifications, workspace preferences
+- `createUserWithProfile(userOverrides?, profileOverrides?)` - Create user +
+  profile in single call
 - `createRegistrationData(overrides?)` - Create registration form data
 - `createLoginCredentials(overrides?)` - Create login credentials
 
 **Example Usage:**
+
 ```typescript
 // Create user with profile for testing
 const { user, profile } = createUserWithProfile(
@@ -358,14 +375,20 @@ const profile = createUserProfile('user-123', {
 **File:** `tests/factories/workspace.factory.ts` (EXISTING - READY TO USE)
 
 **Exports:**
-- `createWorkspace(userId, overrides?)` - Create single workspace with template-specific configuration
-- `createDefaultWorkspace(userId, template?, overrides?)` - Create default workspace ("My Workspace")
-- `createWorkspaces(userId, count, overrides?)` - Create array of workspaces (first is default)
+
+- `createWorkspace(userId, overrides?)` - Create single workspace with
+  template-specific configuration
+- `createDefaultWorkspace(userId, template?, overrides?)` - Create default
+  workspace ("My Workspace")
+- `createWorkspaces(userId, count, overrides?)` - Create array of workspaces
+  (first is default)
 - `createOnboardingData(overrides?)` - Create onboarding wizard form data
 - `createWorkspacePayload(overrides?)` - Create workspace creation API payload
-- `createWorkspaceConfiguration(template, aiTools?, overrides?)` - Create workspace configuration object
+- `createWorkspaceConfiguration(template, aiTools?, overrides?)` - Create
+  workspace configuration object
 
 **Example Usage:**
+
 ```typescript
 // Create default workspace for skipped onboarding
 const defaultWs = createDefaultWorkspace('user-123', 'custom', {
@@ -398,8 +421,10 @@ const payload = createWorkspacePayload({
 **File:** `tests/fixtures/auth.fixture.ts` (EXISTING - READY TO USE)
 
 **Fixtures:**
+
 - `authenticatedUser` - Creates user, registers, and authenticates
-  - **Setup:** Register via POST /api/auth/register, login via POST /api/auth/login
+  - **Setup:** Register via POST /api/auth/register, login via POST
+    /api/auth/login
   - **Provides:** User object with auth token
   - **Cleanup:** Delete user from database
 
@@ -409,6 +434,7 @@ const payload = createWorkspacePayload({
   - **Cleanup:** Logout, delete user
 
 **Example Usage:**
+
 ```typescript
 import { test } from '../fixtures/merged.fixture';
 
@@ -426,6 +452,7 @@ test('onboarding with authenticated user', async ({ authenticatedPage }) => {
 **File:** `tests/fixtures/workspace.fixture.ts` (EXISTING - READY TO USE)
 
 **Fixtures:**
+
 - `defaultWorkspace` - Creates default workspace for authenticated user
   - **Setup:** Create user, create workspace via POST /api/workspaces
   - **Provides:** Workspace object with configuration
@@ -437,13 +464,17 @@ test('onboarding with authenticated user', async ({ authenticatedPage }) => {
   - **Cleanup:** Delete all workspaces, delete user
 
 **Example Usage:**
+
 ```typescript
 import { test } from '../fixtures/merged.fixture';
 
 test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
   // User has 3 workspaces available
   await page.goto('/settings/profile');
-  await page.selectOption('[data-testid="default-workspace-select"]', testWorkspaces[1].id);
+  await page.selectOption(
+    '[data-testid="default-workspace-select"]',
+    testWorkspaces[1].id
+  );
 });
 ```
 
@@ -456,18 +487,23 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 **Endpoints:** Already implemented in Story 1.1a (PRODUCTION READY)
 
 **POST /api/auth/register**
+
 - No mocking needed - use real endpoint
 
 **POST /api/auth/login**
+
 - No mocking needed - use real endpoint
 
 **GET /api/auth/me**
+
 - No mocking needed - use real endpoint
 
 **PUT /api/auth/profile**
+
 - No mocking needed - use real endpoint
 
 **Request Example:**
+
 ```json
 {
   "preferred_ai_tools": ["claude", "cursor", "chatgpt"],
@@ -487,6 +523,7 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 ```
 
 **Success Response (200):**
+
 ```json
 {
   "profile": {
@@ -507,9 +544,11 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 **Endpoints:** Already implemented in Story 1.1a (PRODUCTION READY)
 
 **POST /api/workspaces**
+
 - No mocking needed - use real endpoint
 
 **Request Example:**
+
 ```json
 {
   "name": "My React Project",
@@ -520,6 +559,7 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 ```
 
 **Success Response (201):**
+
 ```json
 {
   "workspace": {
@@ -558,6 +598,7 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 - `skip-onboarding-button` - Skip for now button
 
 **Implementation Example:**
+
 ```tsx
 <div data-testid="onboarding-progress">
   <span data-testid="progress-percentage">33%</span>
@@ -578,6 +619,7 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 - `user-type-enterprise` - Enterprise user type card/button
 
 **Implementation Example:**
+
 ```tsx
 <div
   data-testid="user-type-solo"
@@ -602,6 +644,7 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 - `ai-tool-github-copilot` - GitHub Copilot checkbox
 
 **Implementation Example:**
+
 ```tsx
 <label>
   <input
@@ -630,6 +673,7 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 - `template-option-custom` - Custom template option
 
 **Implementation Example:**
+
 ```tsx
 <input
   type="text"
@@ -660,6 +704,7 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 - `skip-cancel-button` - Cancel skip button
 
 **Implementation Example:**
+
 ```tsx
 <dialog data-testid="skip-confirmation-dialog">
   <p data-testid="skip-confirmation-message">
@@ -682,6 +727,7 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 - `profile-setup-reminder` - Reminder notification to complete profile
 
 **Implementation Example:**
+
 ```tsx
 <div data-testid="welcome-banner">
   <p data-testid="profile-setup-reminder">
@@ -705,9 +751,11 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 - `tour-previous-button` - Previous step button
 - `tour-skip-button` - Skip tour button
 - `tour-complete-button` - Complete tour button (final step)
-- `tour-spotlight` - Spotlight element highlighting UI (with `data-target` attribute)
+- `tour-spotlight` - Spotlight element highlighting UI (with `data-target`
+  attribute)
 
 **Implementation Example:**
+
 ```tsx
 <div data-testid="tour-overlay">
   <div
@@ -734,6 +782,7 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 - `tour-skip-confirm-button` - Confirm skip button
 
 **Implementation Example:**
+
 ```tsx
 <dialog data-testid="tour-skip-confirmation">
   <p>Are you sure? You can restart the tour later from settings</p>
@@ -749,7 +798,8 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 **Component:** `ProfileSettings.tsx` or `ProfileSettingsPage.astro`
 
 - `ai-tools-section` - AI Tools section container
-- `notification-preferences-section` - Notification Preferences section container
+- `notification-preferences-section` - Notification Preferences section
+  container
 - `default-workspace-section` - Default Workspace section container
 - `save-profile-button` - Save changes button
 - `cancel-changes-button` - Cancel changes button
@@ -758,6 +808,7 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 - `form-validation-error` - Form validation error container
 
 **Implementation Example:**
+
 ```tsx
 <section data-testid="ai-tools-section">
   <h2>Preferred AI Tools</h2>
@@ -788,14 +839,17 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 **Component:** `AIToolsSettings.tsx`
 
 - `selected-ai-tools` - Container for selected AI tools chips/badges
-- `selected-ai-tool-{toolName}` - Individual AI tool chip (e.g., `selected-ai-tool-claude`)
+- `selected-ai-tool-{toolName}` - Individual AI tool chip (e.g.,
+  `selected-ai-tool-claude`)
 - `add-ai-tool-button` - Add new AI tool button
 - `ai-tool-dropdown` - AI tool selection dropdown
 - `confirm-add-tool-button` - Confirm add tool button
-- `remove-ai-tool-{toolName}` - Remove tool button (e.g., `remove-ai-tool-cursor`)
+- `remove-ai-tool-{toolName}` - Remove tool button (e.g.,
+  `remove-ai-tool-cursor`)
 - `ai-tools-error` - AI tools validation error message
 
 **Implementation Example:**
+
 ```tsx
 <div data-testid="selected-ai-tools">
   <span data-testid="selected-ai-tool-claude">
@@ -837,6 +891,7 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 - `quiet-hours-error` - Quiet hours validation error message
 
 **Implementation Example:**
+
 ```tsx
 <label>
   <input
@@ -892,10 +947,13 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 **Component:** `WorkspaceSettings.tsx`
 
 - `default-workspace-select` - Default workspace dropdown
-- `workspace-option-{n}` - Workspace option elements (e.g., `workspace-option-1`)
-- `active-workspace-name` - Active workspace name on dashboard (for verification)
+- `workspace-option-{n}` - Workspace option elements (e.g.,
+  `workspace-option-1`)
+- `active-workspace-name` - Active workspace name on dashboard (for
+  verification)
 
 **Implementation Example:**
+
 ```tsx
 <select
   data-testid="default-workspace-select"
@@ -911,10 +969,12 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
   <option data-testid="workspace-option-3" value="workspace-3">
     My Third Workspace
   </option>
-</select>
+</select>;
 
-{/* On Dashboard component */}
-<h1 data-testid="active-workspace-name">{workspace.name}</h1>
+{
+  /* On Dashboard component */
+}
+<h1 data-testid="active-workspace-name">{workspace.name}</h1>;
 ```
 
 ---
@@ -926,6 +986,7 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 - `restart-onboarding-button` - Restart onboarding button
 
 **Implementation Example:**
+
 ```tsx
 <button
   data-testid="restart-onboarding-button"
@@ -946,15 +1007,25 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 **Tasks to make this test pass:**
 
 - [ ] Create `/onboarding` route in `apps/web/src/pages/onboarding.astro`
-- [ ] Implement `OnboardingWizard.tsx` component with multi-step state management
-- [ ] Create `UserTypeStep.tsx` component with solo/team/enterprise selection cards
-- [ ] Create `AIToolsStep.tsx` component with checkbox multi-select for 5 AI tools
-- [ ] Create `WorkspaceConfigStep.tsx` component with name input, description textarea, template dropdown
-- [ ] Implement Zustand store `onboardingStore.ts` with state: currentStep, userType, selectedAITools, workspaceName, workspaceDescription, workspaceTemplate
-- [ ] Add navigation logic (Next button advances step, Complete button triggers API call)
+- [ ] Implement `OnboardingWizard.tsx` component with multi-step state
+      management
+- [ ] Create `UserTypeStep.tsx` component with solo/team/enterprise selection
+      cards
+- [ ] Create `AIToolsStep.tsx` component with checkbox multi-select for 5 AI
+      tools
+- [ ] Create `WorkspaceConfigStep.tsx` component with name input, description
+      textarea, template dropdown
+- [ ] Implement Zustand store `onboardingStore.ts` with state: currentStep,
+      userType, selectedAITools, workspaceName, workspaceDescription,
+      workspaceTemplate
+- [ ] Add navigation logic (Next button advances step, Complete button triggers
+      API call)
 - [ ] Integrate POST /api/workspaces endpoint to create workspace on completion
 - [ ] Add redirect to `/dashboard` after successful workspace creation
-- [ ] Add required data-testid attributes: `user-type-solo`, `ai-tool-claude`, `ai-tool-cursor`, `workspace-name-input`, `workspace-description-input`, `workspace-template-select`, `onboarding-next-button`, `onboarding-complete-button`, `workspace-name`
+- [ ] Add required data-testid attributes: `user-type-solo`, `ai-tool-claude`,
+      `ai-tool-cursor`, `workspace-name-input`, `workspace-description-input`,
+      `workspace-template-select`, `onboarding-next-button`,
+      `onboarding-complete-button`, `workspace-name`
 - [ ] Run test: `bunx playwright test tests/e2e/onboarding-wizard.spec.ts:12`
 - [ ] ✅ Test passes (green phase)
 
@@ -969,7 +1040,8 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 **Tasks to make this test pass:**
 
 - [ ] Create `ProgressIndicator.tsx` component displaying "Step X of 3"
-- [ ] Calculate and display progress percentage (Step 1=33%, Step 2=67%, Step 3=100%)
+- [ ] Calculate and display progress percentage (Step 1=33%, Step 2=67%, Step
+      3=100%)
 - [ ] Integrate ProgressIndicator into OnboardingWizard layout
 - [ ] Subscribe to Zustand onboardingStore.currentStep for reactive updates
 - [ ] Add data-testid attributes: `onboarding-progress`, `progress-percentage`
@@ -1003,9 +1075,12 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 
 **Tasks to make this test pass:**
 
-- [ ] Ensure Zustand store persists state across step changes (do NOT reset on navigation)
-- [ ] Add `aria-selected` attribute to selected user type card reflecting Zustand state
-- [ ] Verify UserTypeStep.tsx re-renders with correct selection when returning to Step 1
+- [ ] Ensure Zustand store persists state across step changes (do NOT reset on
+      navigation)
+- [ ] Add `aria-selected` attribute to selected user type card reflecting
+      Zustand state
+- [ ] Verify UserTypeStep.tsx re-renders with correct selection when returning
+      to Step 1
 - [ ] Add data-testid: `user-type-team` with dynamic `aria-selected` attribute
 - [ ] Run test: `bunx playwright test tests/e2e/onboarding-wizard.spec.ts:64`
 - [ ] ✅ Test passes (green phase)
@@ -1021,7 +1096,8 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 **Tasks to make this test pass:**
 
 - [ ] Ensure UserTypeStep.tsx renders all three cards: Solo, Team, Enterprise
-- [ ] Add data-testid attributes: `user-type-solo`, `user-type-team`, `user-type-enterprise`
+- [ ] Add data-testid attributes: `user-type-solo`, `user-type-team`,
+      `user-type-enterprise`
 - [ ] Run test: `bunx playwright test tests/e2e/onboarding-wizard.spec.ts:82`
 - [ ] ✅ Test passes (green phase)
 
@@ -1052,8 +1128,10 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 
 **Tasks to make this test pass:**
 
-- [ ] Ensure AIToolsStep.tsx renders 5 checkboxes: Claude, ChatGPT, Cursor, Windsurf, GitHub Copilot
-- [ ] Add data-testid attributes: `ai-tool-claude`, `ai-tool-chatgpt`, `ai-tool-cursor`, `ai-tool-windsurf`, `ai-tool-github-copilot`
+- [ ] Ensure AIToolsStep.tsx renders 5 checkboxes: Claude, ChatGPT, Cursor,
+      Windsurf, GitHub Copilot
+- [ ] Add data-testid attributes: `ai-tool-claude`, `ai-tool-chatgpt`,
+      `ai-tool-cursor`, `ai-tool-windsurf`, `ai-tool-github-copilot`
 - [ ] Run test: `bunx playwright test tests/e2e/onboarding-wizard.spec.ts:112`
 - [ ] ✅ Test passes (green phase)
 
@@ -1083,7 +1161,8 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 
 **Tasks to make this test pass:**
 
-- [ ] Ensure Next button is enabled on Step 2 even when `selectedAITools.length === 0`
+- [ ] Ensure Next button is enabled on Step 2 even when
+      `selectedAITools.length === 0`
 - [ ] Do NOT add validation requirement for AI tools (they are optional)
 - [ ] Run test: `bunx playwright test tests/e2e/onboarding-wizard.spec.ts:144`
 - [ ] ✅ Test passes (green phase)
@@ -1101,7 +1180,8 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 - [ ] Implement Zod schema validation in WorkspaceConfigStep.tsx
 - [ ] Validate workspace name is non-empty on Complete button click
 - [ ] Display error message "Workspace name is required" on validation failure
-- [ ] Add data-testid attributes: `workspace-name-input`, `onboarding-complete-button`, `workspace-name-error`
+- [ ] Add data-testid attributes: `workspace-name-input`,
+      `onboarding-complete-button`, `workspace-name-error`
 - [ ] Run test: `bunx playwright test tests/e2e/onboarding-wizard.spec.ts:159`
 - [ ] ✅ Test passes (green phase)
 
@@ -1116,7 +1196,9 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 **Tasks to make this test pass:**
 
 - [ ] Ensure WorkspaceConfigStep.tsx renders template dropdown with 4 options
-- [ ] Add data-testid attributes: `workspace-template-select`, `template-option-react`, `template-option-nodejs`, `template-option-python`, `template-option-custom`
+- [ ] Add data-testid attributes: `workspace-template-select`,
+      `template-option-react`, `template-option-nodejs`,
+      `template-option-python`, `template-option-custom`
 - [ ] Run test: `bunx playwright test tests/e2e/onboarding-wizard.spec.ts:175`
 - [ ] ✅ Test passes (green phase)
 
@@ -1131,7 +1213,8 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 **Tasks to make this test pass:**
 
 - [ ] Implement workspace creation API call using Zustand state data
-- [ ] Call POST /api/workspaces with payload: `{ name, description, template, user_id }`
+- [ ] Call POST /api/workspaces with payload:
+      `{ name, description, template, user_id }`
 - [ ] Handle success response and extract workspace ID
 - [ ] Redirect to `/dashboard` and load created workspace
 - [ ] Display workspace template badge on dashboard matching selected template
@@ -1150,10 +1233,12 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 **Tasks to make this test pass:**
 
 - [ ] Add "Skip for now" button visible on all onboarding steps
-- [ ] Implement skip logic: create default workspace (name="My Workspace", template="custom")
+- [ ] Implement skip logic: create default workspace (name="My Workspace",
+      template="custom")
 - [ ] Call POST /api/workspaces with default configuration
 - [ ] Redirect to `/dashboard?onboarding=skipped` after skip
-- [ ] Display welcome banner on dashboard when `?onboarding=skipped` query parameter present
+- [ ] Display welcome banner on dashboard when `?onboarding=skipped` query
+      parameter present
 - [ ] Add data-testid attributes: `skip-onboarding-button`, `welcome-banner`
 - [ ] Run test: `bunx playwright test tests/e2e/onboarding-wizard.spec.ts:211`
 - [ ] ✅ Test passes (green phase)
@@ -1172,7 +1257,8 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 - [ ] Show dialog when Skip button is clicked (before actual skip)
 - [ ] Display message: "You can complete your profile setup later from settings"
 - [ ] Add Confirm and Cancel buttons in dialog
-- [ ] Add data-testid attributes: `skip-confirmation-dialog`, `skip-confirmation-message`, `skip-confirm-button`
+- [ ] Add data-testid attributes: `skip-confirmation-dialog`,
+      `skip-confirmation-message`, `skip-confirm-button`
 - [ ] Run test: `bunx playwright test tests/e2e/onboarding-wizard.spec.ts:223`
 - [ ] ✅ Test passes (green phase)
 
@@ -1206,7 +1292,8 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 
 - [ ] Add profile setup reminder banner on dashboard when onboarding skipped
 - [ ] Display message: "Complete your profile to unlock all features"
-- [ ] Add notification badge on profile settings menu item (optional enhancement)
+- [ ] Add notification badge on profile settings menu item (optional
+      enhancement)
 - [ ] Add data-testid: `profile-setup-reminder`
 - [ ] Run test: `bunx playwright test tests/e2e/onboarding-wizard.spec.ts:249`
 - [ ] ✅ Test passes (green phase)
@@ -1240,7 +1327,8 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 **Tasks to make this test pass:**
 
 - [ ] Create `TourOverlay.tsx` component with semi-transparent backdrop
-- [ ] Create `TourTooltip.tsx` component with step content and navigation buttons
+- [ ] Create `TourTooltip.tsx` component with step content and navigation
+      buttons
 - [ ] Implement tour auto-launch logic on dashboard after onboarding completion
 - [ ] Display first tour step: "Welcome to CC Wrapper"
 - [ ] Add data-testid attributes: `tour-overlay`, `tour-step-title`
@@ -1266,7 +1354,8 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 - [ ] Implement tour step navigation (Next/Previous buttons)
 - [ ] Implement spotlight positioning logic using `getBoundingClientRect()`
 - [ ] Update `tour-spotlight` `data-target` attribute for each step
-- [ ] Add data-testid attributes: `tour-next-button`, `tour-spotlight` with dynamic `data-target`
+- [ ] Add data-testid attributes: `tour-next-button`, `tour-spotlight` with
+      dynamic `data-target`
 - [ ] Run test: `bunx playwright test tests/e2e/onboarding-wizard.spec.ts:296`
 - [ ] ✅ Test passes (green phase)
 
@@ -1281,10 +1370,12 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 **Tasks to make this test pass:**
 
 - [ ] Add "Skip Tour" button to TourTooltip.tsx
-- [ ] Create skip confirmation dialog: "Are you sure? You can restart the tour later from settings"
+- [ ] Create skip confirmation dialog: "Are you sure? You can restart the tour
+      later from settings"
 - [ ] Implement tour close logic on skip confirmation
 - [ ] Hide tour overlay after skip
-- [ ] Add data-testid attributes: `tour-skip-button`, `tour-skip-confirmation`, `tour-skip-confirm-button`, `tour-overlay`
+- [ ] Add data-testid attributes: `tour-skip-button`, `tour-skip-confirmation`,
+      `tour-skip-confirm-button`, `tour-overlay`
 - [ ] Run test: `bunx playwright test tests/e2e/onboarding-wizard.spec.ts:328`
 - [ ] ✅ Test passes (green phase)
 
@@ -1299,7 +1390,8 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 **Tasks to make this test pass:**
 
 - [ ] Implement tour completion tracking in Zustand tourStore
-- [ ] Call PUT /api/auth/profile with `{ tour_completed: true }` on tour completion
+- [ ] Call PUT /api/auth/profile with `{ tour_completed: true }` on tour
+      completion
 - [ ] Store tour completion status in localStorage as fallback
 - [ ] Check tour completion status on dashboard load (API + localStorage)
 - [ ] Do NOT auto-launch tour if `tour_completed === true`
@@ -1316,10 +1408,14 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 
 **Tasks to make this test pass:**
 
-- [ ] Create `/settings/profile` route in `apps/web/src/pages/settings/profile.astro`
-- [ ] Create `ProfileSettings.tsx` component with 3 sections: AI Tools, Notifications, Default Workspace
-- [ ] Add data-testid attributes: `ai-tools-section`, `notification-preferences-section`, `default-workspace-section`
-- [ ] Run test: `bunx playwright test tests/e2e/user-profile-settings.spec.ts:12`
+- [ ] Create `/settings/profile` route in
+      `apps/web/src/pages/settings/profile.astro`
+- [ ] Create `ProfileSettings.tsx` component with 3 sections: AI Tools,
+      Notifications, Default Workspace
+- [ ] Add data-testid attributes: `ai-tools-section`,
+      `notification-preferences-section`, `default-workspace-section`
+- [ ] Run test:
+      `bunx playwright test tests/e2e/user-profile-settings.spec.ts:12`
 - [ ] ✅ Test passes (green phase)
 
 **Estimated Effort:** 3 hours
@@ -1333,10 +1429,13 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 **Tasks to make this test pass:**
 
 - [ ] Implement GET /api/auth/me API call on ProfileSettings component mount
-- [ ] Load current user profile data (AI tools, notification preferences, default workspace)
+- [ ] Load current user profile data (AI tools, notification preferences,
+      default workspace)
 - [ ] Display loaded data in form fields (pre-populate)
-- [ ] Add data-testid attributes: `selected-ai-tools`, `email-notifications-toggle`
-- [ ] Run test: `bunx playwright test tests/e2e/user-profile-settings.spec.ts:24`
+- [ ] Add data-testid attributes: `selected-ai-tools`,
+      `email-notifications-toggle`
+- [ ] Run test:
+      `bunx playwright test tests/e2e/user-profile-settings.spec.ts:24`
 - [ ] ✅ Test passes (green phase)
 
 **Estimated Effort:** 3 hours
@@ -1354,8 +1453,10 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 - [ ] Implement dropdown with available AI tools
 - [ ] Add "Confirm" button to add selected tool to list
 - [ ] Display added tool as chip/badge with remove button
-- [ ] Add data-testid attributes: `add-ai-tool-button`, `ai-tool-dropdown`, `confirm-add-tool-button`, `ai-tool-chatgpt`
-- [ ] Run test: `bunx playwright test tests/e2e/user-profile-settings.spec.ts:37`
+- [ ] Add data-testid attributes: `add-ai-tool-button`, `ai-tool-dropdown`,
+      `confirm-add-tool-button`, `ai-tool-chatgpt`
+- [ ] Run test:
+      `bunx playwright test tests/e2e/user-profile-settings.spec.ts:37`
 - [ ] ✅ Test passes (green phase)
 
 **Estimated Effort:** 4 hours
@@ -1371,7 +1472,8 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 - [ ] Add remove button (×) to each AI tool chip/badge
 - [ ] Implement remove logic: update Zustand/React state, remove chip from UI
 - [ ] Add data-testid: `remove-ai-tool-cursor`, `ai-tool-cursor`
-- [ ] Run test: `bunx playwright test tests/e2e/user-profile-settings.spec.ts:52`
+- [ ] Run test:
+      `bunx playwright test tests/e2e/user-profile-settings.spec.ts:52`
 - [ ] ✅ Test passes (green phase)
 
 **Estimated Effort:** 2 hours
@@ -1384,11 +1486,13 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 
 **Tasks to make this test pass:**
 
-- [ ] Add validation logic: if only 1 AI tool remains, show error on remove attempt
+- [ ] Add validation logic: if only 1 AI tool remains, show error on remove
+      attempt
 - [ ] Display error message: "At least one AI tool must be selected"
 - [ ] Prevent removal (keep tool in list)
 - [ ] Add data-testid: `ai-tools-error`
-- [ ] Run test: `bunx playwright test tests/e2e/user-profile-settings.spec.ts:63`
+- [ ] Run test:
+      `bunx playwright test tests/e2e/user-profile-settings.spec.ts:63`
 - [ ] ✅ Test passes (green phase)
 
 **Estimated Effort:** 2 hours
@@ -1405,8 +1509,10 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 - [ ] Call PUT /api/auth/profile with updated `preferred_ai_tools` array
 - [ ] Display success message: "Profile updated successfully"
 - [ ] Persist changes (reload page and verify AI tools remain)
-- [ ] Add data-testid attributes: `save-profile-button`, `save-success-message`, `ai-tool-github-copilot`
-- [ ] Run test: `bunx playwright test tests/e2e/user-profile-settings.spec.ts:79`
+- [ ] Add data-testid attributes: `save-profile-button`, `save-success-message`,
+      `ai-tool-github-copilot`
+- [ ] Run test:
+      `bunx playwright test tests/e2e/user-profile-settings.spec.ts:79`
 - [ ] ✅ Test passes (green phase)
 
 **Estimated Effort:** 3 hours
@@ -1423,7 +1529,8 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 - [ ] Add email notifications toggle checkbox
 - [ ] Update Zustand/React state on toggle
 - [ ] Add data-testid: `email-notifications-toggle`
-- [ ] Run test: `bunx playwright test tests/e2e/user-profile-settings.spec.ts:101`
+- [ ] Run test:
+      `bunx playwright test tests/e2e/user-profile-settings.spec.ts:101`
 - [ ] ✅ Test passes (green phase)
 
 **Estimated Effort:** 2 hours
@@ -1439,7 +1546,8 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 - [ ] Add in-app notifications toggle checkbox
 - [ ] Update Zustand/React state on toggle
 - [ ] Add data-testid: `in-app-notifications-toggle`
-- [ ] Run test: `bunx playwright test tests/e2e/user-profile-settings.spec.ts:112`
+- [ ] Run test:
+      `bunx playwright test tests/e2e/user-profile-settings.spec.ts:112`
 - [ ] ✅ Test passes (green phase)
 
 **Estimated Effort:** 1 hour
@@ -1456,10 +1564,13 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 - [ ] Add start time input field (type="time")
 - [ ] Add end time input field (type="time")
 - [ ] Update Zustand/React state on changes
-- [ ] Call PUT /api/auth/profile with updated `notification_preferences.quietHours`
+- [ ] Call PUT /api/auth/profile with updated
+      `notification_preferences.quietHours`
 - [ ] Display success message after save
-- [ ] Add data-testid attributes: `quiet-hours-toggle`, `quiet-hours-start`, `quiet-hours-end`, `save-profile-button`, `save-success-message`
-- [ ] Run test: `bunx playwright test tests/e2e/user-profile-settings.spec.ts:123`
+- [ ] Add data-testid attributes: `quiet-hours-toggle`, `quiet-hours-start`,
+      `quiet-hours-end`, `save-profile-button`, `save-success-message`
+- [ ] Run test:
+      `bunx playwright test tests/e2e/user-profile-settings.spec.ts:123`
 - [ ] ✅ Test passes (green phase)
 
 **Estimated Effort:** 3 hours
@@ -1477,7 +1588,8 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 - [ ] Display error message: "End time must be after start time"
 - [ ] Prevent form submission on validation error
 - [ ] Add data-testid: `quiet-hours-error`
-- [ ] Run test: `bunx playwright test tests/e2e/user-profile-settings.spec.ts:139`
+- [ ] Run test:
+      `bunx playwright test tests/e2e/user-profile-settings.spec.ts:139`
 - [ ] ✅ Test passes (green phase)
 
 **Estimated Effort:** 2 hours
@@ -1493,7 +1605,8 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 - [ ] Implement save logic for notification preferences
 - [ ] Call PUT /api/auth/profile with updated `notification_preferences`
 - [ ] Persist changes (reload page and verify toggles/time inputs)
-- [ ] Run test: `bunx playwright test tests/e2e/user-profile-settings.spec.ts:154`
+- [ ] Run test:
+      `bunx playwright test tests/e2e/user-profile-settings.spec.ts:154`
 - [ ] ✅ Test passes (green phase)
 
 **Estimated Effort:** 2 hours
@@ -1509,8 +1622,10 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 - [ ] Create `WorkspaceSettings.tsx` component
 - [ ] Fetch user's workspaces via GET /api/workspaces (or from context)
 - [ ] Populate dropdown with workspace options
-- [ ] Add data-testid attributes: `default-workspace-select`, `workspace-option-1`, `workspace-option-2`, `workspace-option-3`
-- [ ] Run test: `bunx playwright test tests/e2e/user-profile-settings.spec.ts:171`
+- [ ] Add data-testid attributes: `default-workspace-select`,
+      `workspace-option-1`, `workspace-option-2`, `workspace-option-3`
+- [ ] Run test:
+      `bunx playwright test tests/e2e/user-profile-settings.spec.ts:171`
 - [ ] ✅ Test passes (green phase)
 
 **Estimated Effort:** 3 hours
@@ -1527,7 +1642,8 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 - [ ] Update selected workspace ID in Zustand/React state
 - [ ] Reflect selection in dropdown value
 - [ ] Add data-testid: `default-workspace-select`
-- [ ] Run test: `bunx playwright test tests/e2e/user-profile-settings.spec.ts:185`
+- [ ] Run test:
+      `bunx playwright test tests/e2e/user-profile-settings.spec.ts:185`
 - [ ] ✅ Test passes (green phase)
 
 **Estimated Effort:** 1 hour
@@ -1543,7 +1659,8 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 - [ ] Implement save logic for default workspace
 - [ ] Call PUT /api/auth/profile with updated `default_workspace_id`
 - [ ] Persist changes (reload page and verify dropdown value)
-- [ ] Run test: `bunx playwright test tests/e2e/user-profile-settings.spec.ts:198`
+- [ ] Run test:
+      `bunx playwright test tests/e2e/user-profile-settings.spec.ts:198`
 - [ ] ✅ Test passes (green phase)
 
 **Estimated Effort:** 2 hours
@@ -1559,7 +1676,8 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 - [ ] Load default workspace on dashboard based on user's `default_workspace_id`
 - [ ] Display workspace name on dashboard
 - [ ] Add data-testid: `active-workspace-name`
-- [ ] Run test: `bunx playwright test tests/e2e/user-profile-settings.spec.ts:213`
+- [ ] Run test:
+      `bunx playwright test tests/e2e/user-profile-settings.spec.ts:213`
 - [ ] ✅ Test passes (green phase)
 
 **Estimated Effort:** 2 hours
@@ -1577,7 +1695,8 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 - [ ] Display validation errors inline for each field
 - [ ] Prevent API call on validation failure
 - [ ] Add data-testid: `form-validation-error`
-- [ ] Run test: `bunx playwright test tests/e2e/user-profile-settings.spec.ts:230`
+- [ ] Run test:
+      `bunx playwright test tests/e2e/user-profile-settings.spec.ts:230`
 - [ ] ✅ Test passes (green phase)
 
 **Estimated Effort:** 3 hours
@@ -1595,7 +1714,8 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 - [ ] Display message: "Failed to update profile. Please try again."
 - [ ] Add retry button (optional enhancement)
 - [ ] Add data-testid: `save-error-message`
-- [ ] Run test: `bunx playwright test tests/e2e/user-profile-settings.spec.ts:242`
+- [ ] Run test:
+      `bunx playwright test tests/e2e/user-profile-settings.spec.ts:242`
 - [ ] ✅ Test passes (green phase)
 
 **Estimated Effort:** 2 hours
@@ -1612,7 +1732,8 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 - [ ] Disable Save button during API call (`disabled={isLoading}`)
 - [ ] Re-enable Save button after API response
 - [ ] Add data-testid: `save-profile-button` with dynamic `disabled` attribute
-- [ ] Run test: `bunx playwright test tests/e2e/user-profile-settings.spec.ts:258`
+- [ ] Run test:
+      `bunx playwright test tests/e2e/user-profile-settings.spec.ts:258`
 - [ ] ✅ Test passes (green phase)
 
 **Estimated Effort:** 2 hours
@@ -1629,7 +1750,8 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 - [ ] Store original profile data on component mount
 - [ ] Reset form fields to original values on Cancel click
 - [ ] Add data-testid: `cancel-changes-button`
-- [ ] Run test: `bunx playwright test tests/e2e/user-profile-settings.spec.ts:274`
+- [ ] Run test:
+      `bunx playwright test tests/e2e/user-profile-settings.spec.ts:274`
 - [ ] ✅ Test passes (green phase)
 
 **Estimated Effort:** 2 hours
@@ -1692,6 +1814,7 @@ bunx playwright test tests/e2e/onboarding-wizard.spec.ts tests/e2e/user-profile-
 ```
 
 **Failure Messages Expected:**
+
 - "Page /onboarding not found" (onboarding wizard not implemented)
 - "Page /settings/profile not found" (profile settings not implemented)
 - "Locator not found: [data-testid='...']" (UI components missing)
@@ -1702,7 +1825,8 @@ bunx playwright test tests/e2e/onboarding-wizard.spec.ts tests/e2e/user-profile-
 
 **DEV Agent Responsibilities:**
 
-1. **Pick one failing test** from implementation checklist (recommended order: onboarding wizard → tour → profile settings)
+1. **Pick one failing test** from implementation checklist (recommended order:
+   onboarding wizard → tour → profile settings)
 2. **Read the test** to understand expected behavior
 3. **Implement minimal code** to make that specific test pass
 4. **Run the test** to verify it now passes (green)
@@ -1718,7 +1842,8 @@ bunx playwright test tests/e2e/onboarding-wizard.spec.ts tests/e2e/user-profile-
 
 **Recommended Implementation Order:**
 
-1. **Onboarding Complete Flow** (4 tests, 8 hours) - Foundation for all onboarding features
+1. **Onboarding Complete Flow** (4 tests, 8 hours) - Foundation for all
+   onboarding features
 2. **User Type Selection** (2 tests, 3 hours) - Step 1 of wizard
 3. **AI Tools Selection** (3 tests, 4 hours) - Step 2 of wizard
 4. **Workspace Configuration** (3 tests, 7 hours) - Step 3 of wizard
@@ -1797,13 +1922,21 @@ bunx playwright test tests/e2e/onboarding-wizard.spec.ts tests/e2e/user-profile-
 
 ## Knowledge Base References Applied
 
-This ATDD workflow consulted the following knowledge fragments from `bmad/bmm/testarch/knowledge/`:
+This ATDD workflow consulted the following knowledge fragments from
+`bmad/bmm/testarch/knowledge/`:
 
-- **fixture-architecture.md** - Test fixture patterns with setup/teardown and auto-cleanup using Playwright's `test.extend()` and `mergeTests()` composition
-- **data-factories.md** - Factory patterns using `@faker-js/faker` for random test data generation with overrides support (createUser, createWorkspace, createOnboardingData)
-- **network-first.md** - Route interception patterns (intercept BEFORE navigation to prevent race conditions) - not needed for this story (using real backend)
-- **test-quality.md** - Test design principles (Given-When-Then, one assertion per test, determinism, isolation, explicit waits)
-- **selector-resilience.md** - Selector best practices (data-testid > ARIA > text > CSS, avoid brittle selectors)
+- **fixture-architecture.md** - Test fixture patterns with setup/teardown and
+  auto-cleanup using Playwright's `test.extend()` and `mergeTests()` composition
+- **data-factories.md** - Factory patterns using `@faker-js/faker` for random
+  test data generation with overrides support (createUser, createWorkspace,
+  createOnboardingData)
+- **network-first.md** - Route interception patterns (intercept BEFORE
+  navigation to prevent race conditions) - not needed for this story (using real
+  backend)
+- **test-quality.md** - Test design principles (Given-When-Then, one assertion
+  per test, determinism, isolation, explicit waits)
+- **selector-resilience.md** - Selector best practices (data-testid > ARIA >
+  text > CSS, avoid brittle selectors)
 
 See `bmad/bmm/testarch/tea-index.csv` for complete knowledge fragment mapping.
 
@@ -1814,6 +1947,7 @@ See `bmad/bmm/testarch/tea-index.csv` for complete knowledge fragment mapping.
 ### Initial Test Run (RED Phase Verification)
 
 **Command:**
+
 ```bash
 bunx playwright test tests/e2e/onboarding-wizard.spec.ts tests/e2e/user-profile-settings.spec.ts
 ```
@@ -1848,7 +1982,8 @@ Running 45 tests using 1 worker
 - `page.goto: net::ERR_ABORTED` - Page routes not implemented
 - `Locator not found: [data-testid='user-type-solo']` - UI components missing
 - `Locator not found: [data-testid='tour-overlay']` - Tour component missing
-- `Locator not found: [data-testid='ai-tools-section']` - Profile settings missing
+- `Locator not found: [data-testid='ai-tools-section']` - Profile settings
+  missing
 
 ---
 
@@ -1856,10 +1991,14 @@ Running 45 tests using 1 worker
 
 ### Architecture Decisions
 
-- **Frontend Framework**: Astro 5.14 + React 19.2.0 hybrid (Astro pages with React islands for interactivity)
-- **State Management**: Zustand 4.5.5 for client-side state (onboardingStore, tourStore)
-- **Validation**: Zod schemas matching backend validation (services/auth/src/schemas/auth.ts)
-- **Backend Integration**: All APIs ready from Story 1.1a (POST /api/workspaces, PUT /api/auth/profile)
+- **Frontend Framework**: Astro 5.14 + React 19.2.0 hybrid (Astro pages with
+  React islands for interactivity)
+- **State Management**: Zustand 4.5.5 for client-side state (onboardingStore,
+  tourStore)
+- **Validation**: Zod schemas matching backend validation
+  (services/auth/src/schemas/auth.ts)
+- **Backend Integration**: All APIs ready from Story 1.1a (POST /api/workspaces,
+  PUT /api/auth/profile)
 
 ### Backend APIs Available (Story 1.1a - PRODUCTION READY)
 
@@ -1867,7 +2006,8 @@ Running 45 tests using 1 worker
 - ✅ POST /api/auth/login - User authentication
 - ✅ GET /api/auth/me - Get current user profile
 - ✅ POST /api/workspaces - Create workspace with template
-- ✅ PUT /api/auth/profile - Update user profile (AI tools, notifications, default workspace, tour status)
+- ✅ PUT /api/auth/profile - Update user profile (AI tools, notifications,
+  default workspace, tour status)
 
 ### Dependencies
 

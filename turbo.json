@@ -54,7 +54,8 @@
         "tsconfig.test.json"
       ],
       "outputs": ["coverage/**"],
-      "env": ["NODE_ENV", "CI"]
+      "env": ["NODE_ENV", "CI"],
+      "passThroughEnv": ["NODE_ENV"]
     },
     "test:unit": {
       "dependsOn": ["^build"],

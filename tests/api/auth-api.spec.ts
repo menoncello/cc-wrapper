@@ -270,7 +270,9 @@ test.describe('GET /api/auth/oauth/:provider/callback - OAuth Callback', () => {
     const state = 'random-state-token';
 
     // WHEN: OAuth callback is triggered
-    const response = await request.get(`/api/auth/oauth/google/callback?code=${authCode}&state=${state}`);
+    const response = await request.get(
+      `/api/auth/oauth/google/callback?code=${authCode}&state=${state}`
+    );
 
     // THEN: User is authenticated and token is returned
     expect(response.status()).toBe(200);
@@ -291,7 +293,9 @@ test.describe('GET /api/auth/oauth/:provider/callback - OAuth Callback', () => {
     const state = 'random-state-token';
 
     // WHEN: OAuth callback is triggered
-    const response = await request.get(`/api/auth/oauth/github/callback?code=${authCode}&state=${state}`);
+    const response = await request.get(
+      `/api/auth/oauth/github/callback?code=${authCode}&state=${state}`
+    );
 
     // THEN: User is authenticated and token is returned
     expect(response.status()).toBe(200);
@@ -305,7 +309,9 @@ test.describe('GET /api/auth/oauth/:provider/callback - OAuth Callback', () => {
     const invalidState = 'tampered-state-token';
 
     // WHEN: OAuth callback with invalid state
-    const response = await request.get(`/api/auth/oauth/google/callback?code=${authCode}&state=${invalidState}`);
+    const response = await request.get(
+      `/api/auth/oauth/google/callback?code=${authCode}&state=${invalidState}`
+    );
 
     // THEN: CSRF error is returned
     expect(response.status()).toBe(400);
@@ -334,7 +340,9 @@ test.describe('GET /api/auth/oauth/:provider/callback - OAuth Callback', () => {
     const state = 'random-state-token';
 
     // WHEN: OAuth callback returns profile with existing email
-    const response = await request.get(`/api/auth/oauth/google/callback?code=${authCode}&state=${state}`);
+    const response = await request.get(
+      `/api/auth/oauth/google/callback?code=${authCode}&state=${state}`
+    );
 
     // THEN: OAuth provider is linked to existing account
     expect(response.status()).toBe(200);
@@ -351,7 +359,9 @@ test.describe('GET /api/auth/oauth/:provider/callback - OAuth Callback', () => {
     const state = 'random-state-token';
 
     // WHEN: OAuth callback completes
-    const response = await request.get(`/api/auth/oauth/google/callback?code=${authCode}&state=${state}`);
+    const response = await request.get(
+      `/api/auth/oauth/google/callback?code=${authCode}&state=${state}`
+    );
 
     // THEN: New user is created
     expect(response.status()).toBe(201);
@@ -365,7 +375,9 @@ test.describe('GET /api/auth/oauth/:provider/callback - OAuth Callback', () => {
 });
 
 test.describe('Rate Limiting on Authentication Endpoints', () => {
-  test('should enforce rate limit of 100 requests per minute on /api/auth/register', async ({ request }) => {
+  test('should enforce rate limit of 100 requests per minute on /api/auth/register', async ({
+    request
+  }) => {
     // GIVEN: Rate limit is configured for 100 requests/minute
     const requests: Promise<any>[] = [];
 
@@ -390,7 +402,9 @@ test.describe('Rate Limiting on Authentication Endpoints', () => {
     expect(rateLimitedBody.error).toContain('Too many requests');
   });
 
-  test('should enforce rate limit of 100 requests per minute on /api/auth/login', async ({ request }) => {
+  test('should enforce rate limit of 100 requests per minute on /api/auth/login', async ({
+    request
+  }) => {
     // GIVEN: Rate limit is configured
     const requests: Promise<any>[] = [];
 
@@ -461,9 +475,7 @@ test.describe('JWT Token Security', () => {
     // WHEN: Decoding JWT payload
     expect(response.status()).toBe(200);
     const body = await response.json();
-    const payload = JSON.parse(
-      Buffer.from(body.token.split('.')[1], 'base64').toString()
-    );
+    const payload = JSON.parse(Buffer.from(body.token.split('.')[1], 'base64').toString());
 
     // THEN: User ID is in payload
     expect(payload).toHaveProperty('userId');

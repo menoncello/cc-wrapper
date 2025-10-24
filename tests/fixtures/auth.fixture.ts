@@ -7,7 +7,12 @@
  */
 
 import { test as base, type APIRequestContext, type Page } from '@playwright/test';
-import { createUser, createUserWithProfile, type User, type UserProfile } from '../factories/user.factory';
+import {
+  createUser,
+  createUserWithProfile,
+  type User,
+  type UserProfile
+} from '../factories/user.factory';
 
 /**
  * Extended test context with authentication fixtures
@@ -114,11 +119,7 @@ export async function loginUserViaAPI(
 /**
  * Helper: Login user via UI
  */
-export async function loginUserViaUI(
-  page: Page,
-  email: string,
-  password: string
-): Promise<void> {
+export async function loginUserViaUI(page: Page, email: string, password: string): Promise<void> {
   await page.goto('/auth/login');
   await page.fill('[data-testid="login-email-input"]', email);
   await page.fill('[data-testid="login-password-input"]', password);

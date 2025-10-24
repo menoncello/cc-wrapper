@@ -11,7 +11,7 @@ export default [
       parser: tsparser,
       parserOptions: {
         ecmaVersion: 2022,
-        sourceType: 'module',
+        sourceType: 'module'
       },
       globals: {
         // Bun runtime globals
@@ -65,12 +65,12 @@ export default [
         beforeEach: 'readonly',
         afterEach: 'readonly',
         beforeAll: 'readonly',
-        afterAll: 'readonly',
-      },
+        afterAll: 'readonly'
+      }
     },
     plugins: {
       '@typescript-eslint': tseslint,
-      'simple-import-sort': simpleImportSort,
+      'simple-import-sort': simpleImportSort
     },
     rules: {
       ...tseslint.configs.recommended.rules,
@@ -80,16 +80,16 @@ export default [
         'error',
         {
           argsIgnorePattern: '^_',
-          varsIgnorePattern: '^_',
-        },
+          varsIgnorePattern: '^_'
+        }
       ],
       'no-unused-vars': [
         'error',
         {
           argsIgnorePattern: '^_',
-          varsIgnorePattern: '^_',
-        },
-      ],
-    },
-  },
+          varsIgnorePattern: '^_'
+        }
+      ]
+    }
+  }
 ];

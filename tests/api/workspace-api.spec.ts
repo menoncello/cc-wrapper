@@ -268,9 +268,7 @@ test.describe('PUT /api/auth/profile - Update User Profile', () => {
     // THEN: Notification preferences are saved
     expect(response.status()).toBe(200);
     const body = await response.json();
-    expect(body.profile.notificationPreferences).toMatchObject(
-      profileData.notificationPreferences
-    );
+    expect(body.profile.notificationPreferences).toMatchObject(profileData.notificationPreferences);
   });
 
   test('should update default workspace', async ({ request }) => {
@@ -310,7 +308,9 @@ test.describe('PUT /api/auth/profile - Update User Profile', () => {
     expect(body.error).toBe('Authentication required');
   });
 
-  test('should validate workspace ownership when setting default workspace', async ({ request }) => {
+  test('should validate workspace ownership when setting default workspace', async ({
+    request
+  }) => {
     // GIVEN: Workspace ID belonging to different user
     const profileData = {
       defaultWorkspaceId: 'other-user-workspace-id'

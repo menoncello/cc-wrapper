@@ -86,16 +86,10 @@ const getTemplateConfiguration = (template: WorkspaceTemplate): WorkspaceConfigu
  * const workspace = createWorkspace('user-123');
  * const reactWorkspace = createWorkspace('user-123', { template: 'react' });
  */
-export const createWorkspace = (
-  userId: string,
-  overrides: Partial<Workspace> = {}
-): Workspace => {
-  const template = overrides.template || faker.helpers.arrayElement([
-    'react',
-    'nodejs',
-    'python',
-    'custom'
-  ] as WorkspaceTemplate[]);
+export const createWorkspace = (userId: string, overrides: Partial<Workspace> = {}): Workspace => {
+  const template =
+    overrides.template ||
+    faker.helpers.arrayElement(['react', 'nodejs', 'python', 'custom'] as WorkspaceTemplate[]);
 
   const defaultWorkspace: Workspace = {
     id: faker.string.uuid(),
@@ -179,9 +173,7 @@ export const createWorkspaces = (
  * const onboarding = createOnboardingData();
  * const teamOnboarding = createOnboardingData({ userType: 'team' });
  */
-export const createOnboardingData = (
-  overrides: Partial<OnboardingData> = {}
-): OnboardingData => {
+export const createOnboardingData = (overrides: Partial<OnboardingData> = {}): OnboardingData => {
   const defaultOnboarding: OnboardingData = {
     userType: faker.helpers.arrayElement(['solo', 'team', 'enterprise'] as UserType[]),
     aiTools: faker.helpers.arrayElements(

@@ -22,7 +22,7 @@ afterEach(async () => {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({ email })
       });
@@ -266,7 +266,7 @@ describe('Authentication Integration Tests', () => {
       const protectedResponse = await fetch(`${API_BASE_URL}/api/auth/me`, {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${token}`
+          Authorization: `Bearer ${token}`
         }
       });
 

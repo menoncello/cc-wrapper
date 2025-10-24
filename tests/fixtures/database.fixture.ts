@@ -129,8 +129,8 @@ export const test = base.extend<DatabaseFixtures>({
             password_hash: userData.password_hash || '',
             oauth_provider: userData.oauth_provider as any,
             oauth_id: userData.oauth_id,
-            user_type: userData.user_type as any,
-          },
+            user_type: userData.user_type as any
+          }
         });
 
         createdUserIds.push(user.id);
@@ -165,8 +165,8 @@ export const test = base.extend<DatabaseFixtures>({
             description: workspaceData.description,
             template: workspaceData.template,
             configuration: workspaceData.configuration,
-            is_default: workspaceData.is_default || false,
-          },
+            is_default: workspaceData.is_default || false
+          }
         });
 
         createdWorkspaceIds.push(workspace.id);
@@ -217,7 +217,7 @@ export const test = base.extend<DatabaseFixtures>({
     };
 
     await use(deleteWorkspaceFn);
-  },
+  }
 });
 
 export { expect } from '@playwright/test';

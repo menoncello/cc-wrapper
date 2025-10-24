@@ -1,0 +1,279 @@
+<story-context id="bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>1</epicId>
+    <storyId>1.1b</storyId>
+    <title>Onboarding UI &amp; Guided Tour</title>
+    <status>Ready</status>
+    <generatedAt>2025-10-21</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/stories/story-1.1b.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>a new user</asA>
+    <iWant>an intuitive onboarding wizard and guided tour</iWant>
+    <soThat>I can quickly configure my workspace, select my AI tools, and understand the core interface features without friction</soThat>
+    <tasks>
+      <task id="1">Build onboarding wizard multi-step component (10 subtasks)</task>
+      <task id="2">Implement guided tour component (8 subtasks)</task>
+      <task id="3">Create skip onboarding functionality (8 subtasks)</task>
+      <task id="4">Build profile settings page UI (7 subtasks)</task>
+      <task id="5">Implement state management for onboarding and tour (6 subtasks)</task>
+      <task id="6">Write E2E tests for onboarding wizard (8 tests)</task>
+      <task id="7">Write E2E tests for guided tour (4 tests)</task>
+      <task id="8">Write E2E tests for skip functionality (5 tests)</task>
+      <task id="9">Write E2E tests for profile settings page (6 tests)</task>
+      <task id="10">Write component tests for UI components (5 tests)</task>
+      <task id="11">Integration testing and bug fixes (7 subtasks)</task>
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    <criterion id="AC-1" priority="P0">Onboarding wizard collects user type (solo/team/enterprise) and primary AI tools (Claude, ChatGPT, Cursor, Windsurf, GitHub Copilot)</criterion>
+    <criterion id="AC-2" priority="P0">System configures default workspace based on user preferences with template selection (React, Node.js, Python, Custom)</criterion>
+    <criterion id="AC-3" priority="P1">User receives guided tour of core interface focusing on wait-time optimization features</criterion>
+    <criterion id="AC-4" priority="P1">User can skip onboarding and access basic functionality immediately with default configuration</criterion>
+    <criterion id="AC-5" priority="P1">Profile includes basic settings page for preferred AI tools, notification preferences, and default workspace</criterion>
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/tech-spec-epic-1.md</path>
+        <title>Epic 1 Technical Specification</title>
+        <section>Authentication & Onboarding Implementation</section>
+        <snippet>Defines Astro 5.14 + React 19.2.0 hybrid architecture, Zustand state management, API endpoints (POST /api/workspaces, PUT /api/auth/profile), and frontend component structure for onboarding wizard and profile settings.</snippet>
+      </doc>
+      <doc>
+        <path>docs/solution-architecture.md</path>
+        <title>Solution Architecture</title>
+        <section>Technology Stack - Frontend</section>
+        <snippet>Astro 5.14 with React 19.2.0 islands for interactive components, Zustand 4.5.5 for client state, Zod for validation. Architecture emphasizes island-based interactivity, progressive enhancement, and optimized bundle sizes.</snippet>
+      </doc>
+      <doc>
+        <path>docs/story-split-recommendation-1.1.md</path>
+        <title>Story 1.1 Split Recommendation</title>
+        <section>Frontend Scope Definition</section>
+        <snippet>Scope for Story 1.1b includes AC-2 (onboarding wizard), AC-3 (workspace config UI), AC-4 (guided tour), AC-5 (skip functionality), AC-6 (profile settings). Backend APIs ready for integration. Estimated 96 hours (~12 days).</snippet>
+      </doc>
+      <doc>
+        <path>docs/stories/story-1.1a-completion-summary.md</path>
+        <title>Story 1.1a Completion Summary</title>
+        <section>Available Backend APIs</section>
+        <snippet>POST /api/workspaces (create workspace with template), PUT /api/auth/profile (update user preferences), GET /api/auth/me (fetch user data). All endpoints PRODUCTION-READY with 41/41 tests passing. Shared types available in packages/shared-types/.</snippet>
+      </doc>
+      <doc>
+        <path>docs/test-design-epic-1.md</path>
+        <title>Epic 1 Test Design</title>
+        <section>Frontend E2E Test Coverage</section>
+        <snippet>32 E2E tests for onboarding wizard, guided tour, skip functionality, and profile settings. Tests currently RED, should turn GREEN after UI implementation. Test files: tests/e2e/onboarding-wizard.spec.ts, tests/e2e/user-profile-settings.spec.ts.</snippet>
+      </doc>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>FR017 - User Onboarding</section>
+        <snippet>Users complete guided onboarding collecting user type, primary AI tools, and workspace preferences. System creates default workspace based on selections. Tour highlights wait-time optimization features. Skip option available for experienced users.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epic Breakdown</title>
+        <section>Epic 1 - Core Platform &amp; Infrastructure</section>
+        <snippet>Story 1.1 focuses on basic authentication and user onboarding, establishing foundation for user management and workspace configuration. Integration with wait-time optimization features in subsequent epics.</snippet>
+      </doc>
+      <doc>
+        <path>docs/traceability-matrix-story-1.1.md</path>
+        <title>Story 1.1 Traceability Matrix</title>
+        <section>Gap Analysis - Frontend Coverage</section>
+        <snippet>AC-1 backend complete (41 tests passing). AC-2, AC-3, AC-4, AC-5 require frontend implementation with 32 E2E tests currently RED. Gate decision: FAIL due to P0 coverage 67%, P1 coverage 0%. Requires Story 1.1b frontend implementation.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <artifact>
+        <path>services/auth/src/schemas/auth.ts</path>
+        <kind>validation-schemas</kind>
+        <symbol>profileUpdateSchema, onboardingDataSchema</symbol>
+        <lines>47-75</lines>
+        <reason>Zod validation schemas for profile updates and onboarding data. Frontend must match these schemas for API validation compatibility.</reason>
+      </artifact>
+      <artifact>
+        <path>packages/shared-types/src/auth/types.ts</path>
+        <kind>type-definitions</kind>
+        <symbol>UserProfile, NotificationPreferences, Workspace, TourStep, OnboardingData</symbol>
+        <lines>32-118</lines>
+        <reason>Shared TypeScript types for user profiles, workspaces, and tour configuration. Frontend components will import these types for type safety.</reason>
+      </artifact>
+      <artifact>
+        <path>services/auth/src/routes/workspace.routes.ts</path>
+        <kind>api-routes</kind>
+        <symbol>POST /api/workspaces, GET /api/workspaces, GET /api/workspaces/:id</symbol>
+        <lines>14-115</lines>
+        <reason>Backend workspace API endpoints ready for integration. POST /api/workspaces creates workspace from onboarding data, GET endpoints retrieve user workspaces.</reason>
+      </artifact>
+      <artifact>
+        <path>services/auth/src/routes/auth.routes.ts</path>
+        <kind>api-routes</kind>
+        <symbol>PUT /api/auth/profile, GET /api/auth/me</symbol>
+        <lines>98-157</lines>
+        <reason>Backend profile management endpoints. PUT updates user profile with AI tools, notification preferences, and default workspace. GET retrieves current user data.</reason>
+      </artifact>
+      <artifact>
+        <path>tests/e2e/onboarding-wizard.spec.ts</path>
+        <kind>e2e-tests</kind>
+        <symbol>32 E2E test cases for onboarding wizard, tour, and skip functionality</symbol>
+        <lines>1-400</lines>
+        <reason>Comprehensive E2E test suite covering all acceptance criteria. Tests are currently RED, should turn GREEN after UI implementation.</reason>
+      </artifact>
+      <artifact>
+        <path>tests/e2e/user-profile-settings.spec.ts</path>
+        <kind>e2e-tests</kind>
+        <symbol>E2E test cases for profile settings page</symbol>
+        <lines>1-200</lines>
+        <reason>E2E tests for profile settings functionality including AI tools, notification preferences, and default workspace updates.</reason>
+      </artifact>
+      <artifact>
+        <path>tests/factories/user.factory.ts</path>
+        <kind>test-factory</kind>
+        <symbol>User factory functions for test data generation</symbol>
+        <lines>1-100</lines>
+        <reason>Reusable test data factories for creating user objects in E2E and component tests. Ensures consistent test data across test suite.</reason>
+      </artifact>
+      <artifact>
+        <path>tests/fixtures/merged.fixture.ts</path>
+        <kind>test-fixtures</kind>
+        <symbol>Playwright test fixtures for authentication and database setup</symbol>
+        <lines>1-150</lines>
+        <reason>Test fixtures providing authenticated user context and database utilities for E2E testing. Use these fixtures in all E2E tests.</reason>
+      </artifact>
+    </code>
+    <dependencies>
+      <ecosystem name="Node.js (Bun Runtime)">
+        <package name="bun" version=">=1.3.0">Bun JavaScript runtime for fast builds and testing</package>
+        <package name="typescript" version="^5.9.3">TypeScript for type-safe frontend and backend development</package>
+        <package name="turbo" version="^2.5.8">Monorepo build system for managing workspaces</package>
+      </ecosystem>
+      <ecosystem name="Frontend - Astro + React">
+        <package name="astro" version="^5.14.0">Static site generator with React islands (to be added to apps/web)</package>
+        <package name="react" version="^19.2.0">React library for interactive UI components</package>
+        <package name="react-dom" version="^19.2.0">React DOM renderer</package>
+        <package name="zustand" version="^5.0.8">Client-side state management for React islands</package>
+        <package name="zod" version="^4.1.12">Schema validation for forms and API requests</package>
+      </ecosystem>
+      <ecosystem name="Backend - Elysia Framework">
+        <package name="elysia" version="^1.4.12">Elysia web framework for API endpoints</package>
+        <package name="@prisma/client" version="^6.17.1">Prisma ORM client for database operations</package>
+      </ecosystem>
+      <ecosystem name="Testing - Playwright + Bun Test">
+        <package name="@playwright/test" version="^1.56.0">Playwright E2E testing framework</package>
+        <package name="playwright" version="^1.56.0">Playwright browser automation</package>
+        <package name="@faker-js/faker" version="^10.1.0">Faker library for test data generation</package>
+        <package name="@stryker-mutator/core" version="^9.2.0">Mutation testing framework</package>
+      </ecosystem>
+      <ecosystem name="Development Tools">
+        <package name="vite" version="^7.0.0">Vite build tool for frontend bundling</package>
+        <package name="@vitejs/plugin-react" version="^5.0.4">Vite plugin for React support</package>
+        <package name="eslint" version="^9.14.0">ESLint for code quality</package>
+        <package name="prettier" version="^3.3.3">Prettier for code formatting</package>
+        <package name="husky" version="^9.1.7">Git hooks for pre-commit checks</package>
+      </ecosystem>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint type="architecture">Frontend must use Astro 5.14 + React 19.2.0 hybrid architecture with island-based interactivity. Onboarding and profile pages are Astro pages with React islands for interactive components.</constraint>
+    <constraint type="state-management">Use Zustand 4.5.5 for client-side state management in React islands. Create separate stores for onboarding wizard state and guided tour state.</constraint>
+    <constraint type="validation">Frontend validation must use Zod schemas matching backend schemas (profileUpdateSchema, onboardingDataSchema) from services/auth/src/schemas/auth.ts. Ensures validation consistency.</constraint>
+    <constraint type="testing">All 32 E2E tests in tests/e2e/onboarding-wizard.spec.ts must turn GREEN after implementation. Use Playwright 1.56.0 with existing test fixtures from tests/fixtures/merged.fixture.ts.</constraint>
+    <constraint type="accessibility">Components must meet WCAG 2.1 AA compliance: keyboard navigation, screen reader support, ARIA labels, focus management, and semantic HTML.</constraint>
+    <constraint type="performance">Onboarding page load time &lt;2 seconds, tour step transitions &lt;100ms, profile settings API calls &lt;500ms with optimistic UI updates.</constraint>
+    <constraint type="security">Backend APIs require authentication via JWT token in Authorization header. Use authMiddleware pattern from existing auth routes.</constraint>
+    <constraint type="ux">Progressive disclosure in wizard (show only relevant fields per step), clear progress indicators, non-intrusive tour overlay with spotlight effect, inline validation with immediate feedback.</constraint>
+  </constraints>
+  <interfaces>
+    <interface>
+      <name>POST /api/workspaces</name>
+      <kind>REST endpoint</kind>
+      <signature>Request: { userType: "solo" | "team" | "enterprise", preferredAITools: string[], workspaceName: string, workspaceDescription?: string, workspaceTemplate?: "React" | "Node.js" | "Python" | "Custom" }; Response: { workspace: Workspace }</signature>
+      <path>services/auth/src/routes/workspace.routes.ts:14-66</path>
+    </interface>
+    <interface>
+      <name>PUT /api/auth/profile</name>
+      <kind>REST endpoint</kind>
+      <signature>Request: { preferredAITools?: string[], notificationPreferences?: { email: boolean, inApp: boolean, quietHours?: { enabled: boolean, start: string, end: string } }, defaultWorkspaceId?: string }; Response: { profile: UserProfile }</signature>
+      <path>services/auth/src/routes/auth.routes.ts:121-157</path>
+    </interface>
+    <interface>
+      <name>GET /api/auth/me</name>
+      <kind>REST endpoint</kind>
+      <signature>Request: None (requires Authorization header); Response: { user: User }</signature>
+      <path>services/auth/src/routes/auth.routes.ts:98-119</path>
+    </interface>
+    <interface>
+      <name>GET /api/workspaces</name>
+      <kind>REST endpoint</kind>
+      <signature>Request: None (requires Authorization header); Response: { workspaces: Workspace[] }</signature>
+      <path>services/auth/src/routes/workspace.routes.ts:68-84</path>
+    </interface>
+    <interface>
+      <name>UserProfile</name>
+      <kind>TypeScript interface</kind>
+      <signature>interface UserProfile { id: string; userId: string; preferredAITools?: string[]; notificationPreferences?: NotificationPreferences; defaultWorkspaceId?: string; onboardingCompleted: boolean; tourCompleted: boolean; createdAt: Date; updatedAt: Date; }</signature>
+      <path>packages/shared-types/src/auth/types.ts:32-42</path>
+    </interface>
+    <interface>
+      <name>Workspace</name>
+      <kind>TypeScript interface</kind>
+      <signature>interface Workspace { id: string; name: string; description?: string; template?: string; ownerId: string; config?: Record&lt;string, unknown&gt;; createdAt: Date; updatedAt: Date; }</signature>
+      <path>packages/shared-types/src/auth/types.ts:54-63</path>
+    </interface>
+    <interface>
+      <name>TourStep</name>
+      <kind>TypeScript interface</kind>
+      <signature>interface TourStep { id: string; title: string; description: string; target: string; position: "top" | "bottom" | "left" | "right"; }</signature>
+      <path>packages/shared-types/src/auth/types.ts:112-118</path>
+    </interface>
+    <interface>
+      <name>OnboardingData</name>
+      <kind>TypeScript interface</kind>
+      <signature>interface OnboardingData { userType: UserType; preferredAITools: string[]; workspaceName: string; workspaceDescription?: string; workspaceTemplate?: string; }</signature>
+      <path>packages/shared-types/src/auth/types.ts:99-105</path>
+    </interface>
+  </interfaces>
+  <tests>
+    <standards>E2E Testing: Playwright 1.56.0 with custom fixtures (merged.fixture.ts) for authenticated user context, database setup, and test isolation. Component Testing: Bun Test with React Testing Library for unit-level component validation. Test Coverage: 90% line/branch/function coverage required. Mutation Testing: Stryker with 80% mutation score threshold. Test Quality: Given-When-Then structure, explicit assertions, data-testid attributes for reliable selectors, comprehensive edge case coverage. All tests must follow patterns from existing test suite (tests/api/auth/, tests/integration/auth/).</standards>
+    <locations>
+      <location type="e2e">tests/e2e/onboarding-wizard.spec.ts - 32 tests covering onboarding wizard, guided tour, and skip functionality</location>
+      <location type="e2e">tests/e2e/user-profile-settings.spec.ts - E2E tests for profile settings page</location>
+      <location type="component">apps/web/src/components/**/*.test.tsx - Component-level tests for React islands (to be created)</location>
+      <location type="integration">tests/integration/auth/ - Integration tests for auth service and workspace service (existing)</location>
+      <location type="factories">tests/factories/user.factory.ts - Test data factories for user objects</location>
+      <location type="fixtures">tests/fixtures/merged.fixture.ts - Playwright test fixtures for E2E tests</location>
+    </locations>
+    <ideas>
+      <test id="1" ac="AC-1" priority="P0">E2E test for complete onboarding wizard flow: user selects type (solo/team/enterprise), selects multiple AI tools, fills workspace config, submits form, verifies workspace creation via API, confirms redirect to /dashboard. Currently RED in tests/e2e/onboarding-wizard.spec.ts:12.</test>
+      <test id="2" ac="AC-1" priority="P0">E2E test for onboarding wizard progress indicator: verify step 1/3 shows 33%, step 2/3 shows 67%, step 3/3 shows 100%. Verify visual progress bar updates. Currently RED in tests/e2e/onboarding-wizard.spec.ts:37.</test>
+      <test id="3" ac="AC-1" priority="P0">E2E test for onboarding wizard navigation: navigate to step 2, click Back button, verify step 1 displays, verify previous selections preserved (user type still selected). Currently RED in tests/e2e/onboarding-wizard.spec.ts:49, :64.</test>
+      <test id="4" ac="AC-1" priority="P0">E2E test for user type validation: attempt to click Next without selecting user type, verify validation error displays, verify Next button disabled. Currently RED in tests/e2e/onboarding-wizard.spec.ts:93.</test>
+      <test id="5" ac="AC-1" priority="P1">E2E test for AI tools selection: select multiple tools (Claude, ChatGPT, Cursor), verify all selections persist, verify proceeding with no selections shows validation error. Currently RED in tests/e2e/onboarding-wizard.spec.ts:127, :144.</test>
+      <test id="6" ac="AC-2" priority="P0">E2E test for workspace configuration validation: attempt to submit without workspace name, verify validation error "Workspace name is required", fill name, verify error clears. Currently RED in tests/e2e/onboarding-wizard.spec.ts:159.</test>
+      <test id="7" ac="AC-2" priority="P0">E2E test for workspace template selection: select "React" template, submit onboarding, verify POST /api/workspaces called with template: "React", verify workspace created with correct template. Currently RED in tests/e2e/onboarding-wizard.spec.ts:192.</test>
+      <test id="8" ac="AC-3" priority="P1">E2E test for guided tour launch: complete onboarding wizard, verify tour overlay appears automatically, verify first tour step highlights welcome message. Currently RED in tests/e2e/onboarding-wizard.spec.ts:279.</test>
+      <test id="9" ac="AC-3" priority="P1">E2E test for guided tour navigation: verify all 5 tour steps display in sequence (Welcome, Terminal Panel, Browser Panel, AI Context Panel, Wait-Time Features), verify spotlight highlights correct UI elements. Currently RED in tests/e2e/onboarding-wizard.spec.ts:296.</test>
+      <test id="10" ac="AC-3" priority="P1">E2E test for tour skip confirmation: click "Skip Tour" button, verify confirmation dialog displays "Are you sure?", click Cancel, verify tour continues, click Skip Tour again, click Confirm, verify tour closes. Currently RED in tests/e2e/onboarding-wizard.spec.ts:328.</test>
+      <test id="11" ac="AC-3" priority="P1">E2E test for tour completion persistence: complete tour to end, verify PUT /api/auth/profile called with tourCompleted: true, reload page, verify tour does not auto-launch. Currently RED in tests/e2e/onboarding-wizard.spec.ts:345.</test>
+      <test id="12" ac="AC-4" priority="P1">E2E test for skip onboarding: click "Skip for now" button on step 1, verify skip confirmation dialog displays, click Confirm, verify redirect to /dashboard?onboarding=skipped, verify default workspace created. Currently RED in tests/e2e/onboarding-wizard.spec.ts:211.</test>
+      <test id="13" ac="AC-4" priority="P1">E2E test for skip confirmation message: click Skip button, verify dialog message "You can complete your profile setup later from settings", verify Cancel and Confirm buttons present. Currently RED in tests/e2e/onboarding-wizard.spec.ts:223.</test>
+      <test id="14" ac="AC-4" priority="P1">E2E test for default workspace creation on skip: click Skip and confirm, verify POST /api/workspaces called with default config (userType: "solo", preferredAITools: [], workspaceName: "My Workspace", template: "Custom"). Currently RED in tests/e2e/onboarding-wizard.spec.ts:237.</test>
+      <test id="15" ac="AC-4" priority="P1">E2E test for reminder notification after skip: skip onboarding, land on dashboard, verify welcome banner displays "Welcome! Complete your profile setup to unlock all features.", verify notification badge on profile settings menu. Currently RED in tests/e2e/onboarding-wizard.spec.ts:249.</test>
+      <test id="16" ac="AC-4" priority="P1">E2E test for restart onboarding button: skip onboarding, navigate to /settings/profile, verify "Restart Onboarding" button exists, click button, verify redirect to /onboarding. Currently RED in tests/e2e/onboarding-wizard.spec.ts:263.</test>
+      <test id="17" ac="AC-5" priority="P1">E2E test for profile settings AI tools update: navigate to /settings/profile, add AI tool (Cursor), remove AI tool (Claude), click Save, verify PUT /api/auth/profile called with updated preferredAITools array. Create in tests/e2e/user-profile-settings.spec.ts.</test>
+      <test id="18" ac="AC-5" priority="P1">E2E test for notification preferences update: toggle email notifications off, toggle in-app on, set quiet hours (22:00-08:00), click Save, verify PUT /api/auth/profile called with correct notificationPreferences object. Create in tests/e2e/user-profile-settings.spec.ts.</test>
+      <test id="19" ac="AC-5" priority="P1">E2E test for default workspace selection: load profile settings, verify dropdown shows all user workspaces, select different workspace, click Save, verify PUT /api/auth/profile called with defaultWorkspaceId. Create in tests/e2e/user-profile-settings.spec.ts.</test>
+      <test id="20" ac="AC-5" priority="P1">E2E test for profile validation errors: clear workspace name in default workspace section, click Save, verify inline validation error displays, verify API not called until validation passes. Create in tests/e2e/user-profile-settings.spec.ts.</test>
+      <test id="21" ac="All" priority="P2">Component test for UserTypeStep: render component, verify 3 cards display (solo, team, enterprise), click solo card, verify selection state updates, verify Next button enabled.</test>
+      <test id="22" ac="All" priority="P2">Component test for AIToolsStep: render component, verify 5 AI tool checkboxes, select multiple tools, verify selectedAITools state updates correctly.</test>
+      <test id="23" ac="All" priority="P2">Component test for WorkspaceConfigStep: render component, verify workspace name input, description textarea, template dropdown render, test form validation logic.</test>
+      <test id="24" ac="All" priority="P2">Component test for TourOverlay: render with mock tour steps, verify spotlight positioning, test navigation (Next, Previous, Skip), verify tooltip content displays.</test>
+      <test id="25" ac="All" priority="P2">Component test for ProfileSettings: render component, verify sections (AI Tools, Notifications, Default Workspace), test form state management, test validation logic.</test>
+    </ideas>
+  </tests>
+</story-context>
