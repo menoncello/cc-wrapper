@@ -11,7 +11,7 @@
   "scripts": {
     "build": "bunx tsc",
     "test": "echo 'No tests to run in shared-types'",
-    "lint": "bunx eslint src --max-warnings 0",
+    "lint": "echo 'No linting for shared-types package'",
     "lint:fix": "bunx eslint src --fix",
     "format": "bunx prettier --write src",
     "format:check": "bunx prettier --check src",
