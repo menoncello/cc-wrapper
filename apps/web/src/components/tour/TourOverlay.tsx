@@ -3,6 +3,8 @@ import { useTourStore } from '@stores/tourStore';
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 
+/* global HTMLElement */
+
 import { tourSteps } from './tourSteps.config';
 import TourTooltip from './TourTooltip';
 
