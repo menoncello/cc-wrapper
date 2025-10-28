@@ -1,7 +1,6 @@
 ---
 name: bmm-dependency-mapper
-description:
-  Maps and analyzes dependencies between modules, packages, and external
+description: Maps and analyzes dependencies between modules, packages, and external
   libraries to understand system coupling and integration points. use
   PROACTIVELY when documenting architecture or planning refactoring
 tools:

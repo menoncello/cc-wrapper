@@ -3,6 +3,10 @@
 dist/
 coverage/
 
+# Astro build artifacts
+**/.astro/
+!.astro/.gitkeep
+
 # Dependencies
 node_modules/
 
@@ -39,3 +43,123 @@ coverage/
 .cache/
 .bun-cache/
 .eslintcache
+
+# Security - Never commit sensitive files
+*.pem
+*.key
+*.p12
+*.pfx
+*.p8
+*.crt
+*.cer
+*.der
+*.crl
+*.p7b
+*.p7r
+*.p7c
+*.srl
+*.csr
+*.jks
+*.jceks
+*.bks
+*.ubr
+*.spc
+*.pvk
+*.pfx
+*.p12
+*.pem
+*.key
+*.asc
+*.gpg
+*.pgp
+*.sig
+*.signature
+*.enc
+*.aes
+*.des
+*.rsa
+*.dsa
+*.ec
+*.pkcs12
+*.pkcs8
+*.p8
+*.p7b
+*.p7c
+*.p7r
+*.p7s
+*.crl
+*.sst
+*.stl
+*.jks
+*.jceks
+*.bks
+*.ubr
+*.spc
+*.pvk
+*.backup
+*.bak
+*.old
+*.orig
+*.rej
+
+# Secrets and configuration files
+secrets/
+.secrets/
+config/secrets/
+.secrets/
+private/
+.private/
+keys/
+.key/
+.apikey/
+.token/
+.auth/
+credential/
+.credentials/
+
+# Database dumps and backups
+*.sql
+*.dump
+*.backup
+*.bak
+*.pg_dump
+*.mysqldump
+
+# Sensitive documentation
+*.secret
+*.password
+*.credential
+*.key
+*.token
+*.auth
+
+# Temporary and test files with secrets
+*-secrets.*
+*-keys.*
+*-tokens.*
+*-auth.*
+*-credentials.*
+*-config.*
+*test*.key
+*test*.secret
+*test*.token
+*dev*.key
+*dev*.secret
+*dev*.token
+
+# Tool-specific files
+.git-secrets
+.gitsecret
+.git-crypt
+.git/attributes
+.gitignore
+
+# CI/CD secrets
+.github/secrets/
+.gitlab/secrets/
+azure/secrets/
+
+# Docker secrets
+docker-compose.override.yml
+secrets.yml
+.secrets.yml

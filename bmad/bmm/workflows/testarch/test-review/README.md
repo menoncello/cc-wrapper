@@ -1,33 +1,21 @@
 # Test Quality Review Workflow
 
-The Test Quality Review workflow performs comprehensive quality validation of
-test code using TEA's knowledge base of best practices. It detects flaky
-patterns, validates structure, and provides actionable feedback to improve test
-maintainability and reliability.
+The Test Quality Review workflow performs comprehensive quality validation of test code using TEA's knowledge base of best practices. It detects flaky patterns, validates structure, and provides actionable feedback to improve test maintainability and reliability.
 
 ## Overview
 
-This workflow reviews test quality against proven patterns from TEA's knowledge
-base including fixture architecture, network-first safeguards, data factories,
-determinism, isolation, and flakiness prevention. It generates a quality score
-(0-100) with detailed feedback on violations and recommendations.
+This workflow reviews test quality against proven patterns from TEA's knowledge base including fixture architecture, network-first safeguards, data factories, determinism, isolation, and flakiness prevention. It generates a quality score (0-100) with detailed feedback on violations and recommendations.
 
 **Key Features:**
 
-- **Knowledge-Based Review**: Applies patterns from 19+ knowledge fragments in
-  tea-index.csv
-- **Quality Scoring**: 0-100 score with letter grade (A+ to F) based on
-  violations
+- **Knowledge-Based Review**: Applies patterns from 19+ knowledge fragments in tea-index.csv
+- **Quality Scoring**: 0-100 score with letter grade (A+ to F) based on violations
 - **Multi-Scope Review**: Single file, directory, or entire test suite
-- **Pattern Detection**: Identifies hard waits, race conditions, shared state,
-  conditionals
-- **Best Practice Validation**: BDD format, test IDs, priorities, assertions,
-  test length
-- **Actionable Feedback**: Critical issues (must fix) vs recommendations (should
-  fix)
+- **Pattern Detection**: Identifies hard waits, race conditions, shared state, conditionals
+- **Best Practice Validation**: BDD format, test IDs, priorities, assertions, test length
+- **Actionable Feedback**: Critical issues (must fix) vs recommendations (should fix)
 - **Code Examples**: Every issue includes recommended fix with code snippets
-- **Integration**: Works with story files, test-design, acceptance criteria
-  context
+- **Integration**: Works with story files, test-design, acceptance criteria context
 
 ---
 
@@ -62,17 +50,14 @@ The TEA agent runs this workflow when:
 
 ### Required Context Files
 
-- **Test File(s)**: One or more test files to review (auto-discovered or
-  explicitly provided)
-- **Test Framework Config**: playwright.config.ts, jest.config.js, etc. (for
-  context)
+- **Test File(s)**: One or more test files to review (auto-discovered or explicitly provided)
+- **Test Framework Config**: playwright.config.ts, jest.config.js, etc. (for context)
 
 ### Recommended Context Files
 
 - **Story File**: Acceptance criteria for context (e.g., `story-1.3.md`)
 - **Test Design**: Priority context (P0/P1/P2/P3) from test-design.md
-- **Knowledge Base**: tea-index.csv with best practice fragments (required for
-  thorough review)
+- **Knowledge Base**: tea-index.csv with best practice fragments (required for thorough review)
 
 ### Workflow Variables
 
@@ -112,11 +97,9 @@ Key variables that control review behavior (configured in `workflow.yaml`):
 
 **Test Quality Review Report** (`test-review-{filename}.md`):
 
-- **Executive Summary**: Overall assessment, key strengths/weaknesses,
-  recommendation
+- **Executive Summary**: Overall assessment, key strengths/weaknesses, recommendation
 - **Quality Score**: 0-100 score with letter grade (A+ to F)
-- **Quality Criteria Assessment**: Table with all criteria evaluated
-  (PASS/WARN/FAIL)
+- **Quality Criteria Assessment**: Table with all criteria evaluated (PASS/WARN/FAIL)
 - **Critical Issues**: P0/P1 violations that must be fixed
 - **Recommendations**: P2/P3 violations that should be fixed
 - **Best Practices Examples**: Good patterns found in tests
@@ -131,8 +114,7 @@ Each issue includes:
 
 ### Secondary Outputs
 
-- **Inline Comments**: TODO comments in test files at violation locations (if
-  enabled)
+- **Inline Comments**: TODO comments in test files at violation locations (if enabled)
 - **Quality Badge**: Badge with score (e.g., "Test Quality: 87/100 (A)")
 - **Story Update**: Test quality section appended to story file (if enabled)
 
@@ -183,9 +165,7 @@ await expect(page.locator('.text')).toBeVisible();
 
 ```typescript
 test.describe('1.3-E2E-001: User Login Flow', () => {
-  test('should log in successfully with valid credentials', async ({
-    page
-  }) => {
+  test('should log in successfully with valid credentials', async ({ page }) => {
     // Test implementation
   });
 });
@@ -229,9 +209,7 @@ test.describe('P2: Edge Case - International Addresses', () => {
 
 ```typescript
 // ✅ Good: Explicit wait for condition
-await expect(page.locator('[data-testid="user-menu"]')).toBeVisible({
-  timeout: 10000
-});
+await expect(page.locator('[data-testid="user-menu"]')).toBeVisible({ timeout: 10000 });
 ```
 
 **FAIL**: Hard waits introduce flakiness
@@ -408,8 +386,9 @@ await page.locator('[data-testid="username"]').isVisible(); // No assertion!
 
 ### 11. Test Length
 
-**PASS**: ≤300 lines per file (ideal: ≤200) **WARN**: 301-500 lines (consider
-splitting) **FAIL**: >500 lines (too large)
+**PASS**: ≤300 lines per file (ideal: ≤200)
+**WARN**: 301-500 lines (consider splitting)
+**FAIL**: >500 lines (too large)
 
 **Knowledge**: test-quality.md
 
@@ -417,8 +396,9 @@ splitting) **FAIL**: >500 lines (too large)
 
 ### 12. Test Duration
 
-**PASS**: ≤1.5 minutes per test (target: <30 seconds) **WARN**: 1.5-3 minutes
-(consider optimization) **FAIL**: >3 minutes (too slow)
+**PASS**: ≤1.5 minutes per test (target: <30 seconds)
+**WARN**: 1.5-3 minutes (consider optimization)
+**FAIL**: >3 minutes (too slow)
 
 **Knowledge**: test-quality.md, selective-testing.md
 
@@ -479,22 +459,25 @@ Final Score: max(0, min(100, Starting Score - Violations + Bonus))
 ```markdown
 # Test Quality Review: checkout-flow.spec.ts
 
-**Quality Score**: 95/100 (A+ - Excellent) **Recommendation**: Approve -
-Production Ready
+**Quality Score**: 95/100 (A+ - Excellent)
+**Recommendation**: Approve - Production Ready
 
 ## Executive Summary
 
-Excellent test quality with comprehensive coverage and best practices
-throughout. Tests demonstrate expert-level patterns including fixture
-architecture, data factories, network-first approach, and perfect isolation.
+Excellent test quality with comprehensive coverage and best practices throughout.
+Tests demonstrate expert-level patterns including fixture architecture, data
+factories, network-first approach, and perfect isolation.
 
-**Strengths:** ✅ Clear Given-When-Then structure in all tests ✅ Comprehensive
-fixtures for authenticated states ✅ Data factories with faker.js for realistic
-test data ✅ Network-first pattern prevents race conditions ✅ Perfect test
-isolation with cleanup ✅ All test IDs present (1.2-E2E-001 through 1.2-E2E-005)
+**Strengths:**
+✅ Clear Given-When-Then structure in all tests
+✅ Comprehensive fixtures for authenticated states
+✅ Data factories with faker.js for realistic test data
+✅ Network-first pattern prevents race conditions
+✅ Perfect test isolation with cleanup
+✅ All test IDs present (1.2-E2E-001 through 1.2-E2E-005)
 
-**Minor Recommendations:** ⚠️ One test slightly verbose (245 lines) - consider
-extracting helper function
+**Minor Recommendations:**
+⚠️ One test slightly verbose (245 lines) - consider extracting helper function
 
 **Recommendation**: Approve without changes. Use as reference for other tests.
 ```
@@ -506,21 +489,26 @@ extracting helper function
 ```markdown
 # Test Quality Review: user-profile.spec.ts
 
-**Quality Score**: 82/100 (A - Good) **Recommendation**: Approve with Comments
+**Quality Score**: 82/100 (A - Good)
+**Recommendation**: Approve with Comments
 
 ## Executive Summary
 
 Solid test quality with good structure and coverage. A few improvements would
 enhance maintainability and reduce flakiness risk.
 
-**Strengths:** ✅ Good BDD structure ✅ Test IDs present ✅ Explicit assertions
+**Strengths:**
+✅ Good BDD structure
+✅ Test IDs present
+✅ Explicit assertions
 
-**Issues to Address:** ⚠️ 2 hard waits detected (lines 34, 67) - use explicit
-waits instead ⚠️ Hardcoded test data (line 23) - use factory functions ⚠️
-Missing cleanup in one test (line 89) - add afterEach hook
+**Issues to Address:**
+⚠️ 2 hard waits detected (lines 34, 67) - use explicit waits instead
+⚠️ Hardcoded test data (line 23) - use factory functions
+⚠️ Missing cleanup in one test (line 89) - add afterEach hook
 
-**Recommendation**: Address hard waits before merging. Other improvements can be
-addressed in follow-up PR.
+**Recommendation**: Address hard waits before merging. Other improvements
+can be addressed in follow-up PR.
 ```
 
 ---
@@ -530,20 +518,24 @@ addressed in follow-up PR.
 ```markdown
 # Test Quality Review: legacy-report.spec.ts
 
-**Quality Score**: 68/100 (C - Needs Improvement) **Recommendation**: Request
-Changes
+**Quality Score**: 68/100 (C - Needs Improvement)
+**Recommendation**: Request Changes
 
 ## Executive Summary
 
 Test has several quality issues that should be addressed before merging.
 Primarily concerns around flakiness risk and maintainability.
 
-**Critical Issues:** ❌ 5 hard waits detected (flakiness risk) ❌ Race
-condition: navigation before route interception (line 45) ❌ Shared global state
-between tests (line 12) ❌ Missing test IDs (can't trace to requirements)
+**Critical Issues:**
+❌ 5 hard waits detected (flakiness risk)
+❌ Race condition: navigation before route interception (line 45)
+❌ Shared global state between tests (line 12)
+❌ Missing test IDs (can't trace to requirements)
 
-**Recommendations:** ⚠️ Test file is 487 lines - consider splitting ⚠️ Hardcoded
-data throughout - use factories ⚠️ Missing cleanup in afterEach
+**Recommendations:**
+⚠️ Test file is 487 lines - consider splitting
+⚠️ Hardcoded data throughout - use factories
+⚠️ Missing cleanup in afterEach
 
 **Recommendation**: Address all critical issues (❌) before re-review.
 Significant refactoring needed.
@@ -556,23 +548,27 @@ Significant refactoring needed.
 ```markdown
 # Test Quality Review: data-export.spec.ts
 
-**Quality Score**: 42/100 (F - Critical Issues) **Recommendation**: Block - Not
-Production Ready
+**Quality Score**: 42/100 (F - Critical Issues)
+**Recommendation**: Block - Not Production Ready
 
 ## Executive Summary
 
-CRITICAL: Test has severe quality issues that make it unsuitable for production.
-Significant refactoring required.
+CRITICAL: Test has severe quality issues that make it unsuitable for
+production. Significant refactoring required.
 
-**Critical Issues:** ❌ 12 hard waits (page.waitForTimeout) throughout ❌ No
-test IDs or structure ❌ Try/catch blocks swallowing errors (lines 23, 45,
-67, 89) ❌ No cleanup - tests leave data in database ❌ Conditional logic
-(if/else) throughout tests ❌ No assertions in 3 tests (tests do nothing!) ❌
-687 lines - far too large ❌ Multiple race conditions ❌ Hardcoded credentials
-in plain text (SECURITY ISSUE)
+**Critical Issues:**
+❌ 12 hard waits (page.waitForTimeout) throughout
+❌ No test IDs or structure
+❌ Try/catch blocks swallowing errors (lines 23, 45, 67, 89)
+❌ No cleanup - tests leave data in database
+❌ Conditional logic (if/else) throughout tests
+❌ No assertions in 3 tests (tests do nothing!)
+❌ 687 lines - far too large
+❌ Multiple race conditions
+❌ Hardcoded credentials in plain text (SECURITY ISSUE)
 
-**Recommendation**: BLOCK MERGE. Complete rewrite recommended following TEA
-knowledge base patterns. Suggest pairing session with QA engineer.
+**Recommendation**: BLOCK MERGE. Complete rewrite recommended following
+TEA knowledge base patterns. Suggest pairing session with QA engineer.
 ```
 
 ---
@@ -588,8 +584,7 @@ knowledge base patterns. Suggest pairing session with QA engineer.
 ### After Test Review
 
 1. **Developer** - Addresses critical issues, improves based on recommendations
-2. **gate** - Test quality feeds into release decision (high-quality tests
-   increase confidence)
+2. **gate** - Test quality feeds into release decision (high-quality tests increase confidence)
 
 ### Coordinates With
 
@@ -699,8 +694,7 @@ Use for: Debugging flaky tests, targeted improvements
 ## Important Notes
 
 1. **Non-Prescriptive**: Review provides guidance, not rigid rules
-2. **Context Matters**: Some violations may be justified (document with
-   comments)
+2. **Context Matters**: Some violations may be justified (document with comments)
 3. **Knowledge-Based**: All feedback grounded in proven patterns
 4. **Actionable**: Every issue includes recommended fix with code example
 5. **Quality Score**: Use as indicator, not absolute measure
@@ -713,11 +707,9 @@ Use for: Debugging flaky tests, targeted improvements
 
 This workflow automatically consults:
 
-- **test-quality.md** - Definition of Done (no hard waits, <300 lines, <1.5 min,
-  self-cleaning)
+- **test-quality.md** - Definition of Done (no hard waits, <300 lines, <1.5 min, self-cleaning)
 - **fixture-architecture.md** - Pure function → Fixture → mergeTests pattern
-- **network-first.md** - Route intercept before navigate (race condition
-  prevention)
+- **network-first.md** - Route intercept before navigate (race condition prevention)
 - **data-factories.md** - Factory functions with overrides, API-first setup
 - **test-levels-framework.md** - E2E vs API vs Component vs Unit appropriateness
 - **playwright-config.md** - Environment-based configuration patterns

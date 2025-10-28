@@ -202,15 +202,18 @@ describe('Complete Development Workflow E2E', () => {
   test('should have CI/CD pipeline configured', () => {
     // GIVEN: GitHub workflows directory
     const ciWorkflowPath = path.join(PROJECT_ROOT, '.github/workflows/ci.yml');
-    const deployWorkflowPath = path.join(PROJECT_ROOT, '.github/workflows/deploy-staging.yml');
+    const releaseWorkflowPath = path.join(PROJECT_ROOT, '.github/workflows/release.yml');
+    const prWorkflowPath = path.join(PROJECT_ROOT, '.github/workflows/pr.yml');
 
     // WHEN: Checking workflow files
     const hasCIWorkflow = fs.existsSync(ciWorkflowPath);
-    const hasDeployWorkflow = fs.existsSync(deployWorkflowPath);
+    const hasReleaseWorkflow = fs.existsSync(releaseWorkflowPath);
+    const hasPRWorkflow = fs.existsSync(prWorkflowPath);
 
-    // THEN: Both workflows should exist
+    // THEN: All required workflows should exist
     expect(hasCIWorkflow).toBe(true);
-    expect(hasDeployWorkflow).toBe(true);
+    expect(hasReleaseWorkflow).toBe(true);
+    expect(hasPRWorkflow).toBe(true);
   });
 
   test('should have pre-commit hooks configured', () => {

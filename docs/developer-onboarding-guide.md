@@ -263,10 +263,10 @@ bun install
 bun run dev
 
 # 4. Open application
-# Frontend: http://localhost:4321
-# Auth Service: http://localhost:3001
-# Workspace Service: http://localhost:3002
-# AI Service: http://localhost:3003
+# Frontend: http://localhost:20000
+# Auth Service: http://localhost:20001
+# Workspace Service: http://localhost:20002
+# AI Service: http://localhost:200003
 ```
 
 ### Development Services
@@ -283,7 +283,7 @@ docker-compose up -d
 # - AI Service (port 3003)
 # - Analytics Service (port 3004)
 # - Notification Service (port 3005)
-# - Frontend (port 4321)
+# - Frontend (port 20000)
 ```
 
 ### Environment Configuration
@@ -536,10 +536,7 @@ git push origin feature/ai-chat-improvements
 ```json
 // .eslintrc.json
 {
-  "extends": [
-    "@typescript-eslint/recommended",
-    "plugin:react-hooks/recommended"
-  ],
+  "extends": ["@typescript-eslint/recommended", "plugin:react-hooks/recommended"],
   "rules": {
     "@typescript-eslint/no-unused-vars": "error",
     "prefer-const": "error",
@@ -582,10 +579,7 @@ describe('AuthService', () => {
 
   test('should reject invalid credentials', async () => {
     const authService = new AuthService();
-    const result = await authService.login(
-      'user@example.com',
-      'wrong-password'
-    );
+    const result = await authService.login('user@example.com', 'wrong-password');
 
     expect(result.success).toBe(false);
     expect(result.error).toBe('Invalid credentials');
@@ -692,9 +686,7 @@ test('user can have conversation with AI', async ({ page }) => {
 
   // Verify response
   await expect(page.locator('[data-testid="ai-response"]')).toBeVisible();
-  await expect(page.locator('[data-testid="ai-response"]')).toContainText(
-    'function'
-  );
+  await expect(page.locator('[data-testid="ai-response"]')).toContainText('function');
 });
 ```
 

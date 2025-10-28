@@ -2,29 +2,17 @@
 
 ## Principle
 
-Contract testing validates API contracts between consumer and provider services
-without requiring integrated end-to-end tests. Store consumer contracts
-alongside integration specs, version contracts semantically, and publish on
-every CI run. Provider verification before merge surfaces breaking changes
-immediately, while explicit fallback behavior (timeouts, retries, error
-payloads) captures resilience guarantees in contracts.
+Contract testing validates API contracts between consumer and provider services without requiring integrated end-to-end tests. Store consumer contracts alongside integration specs, version contracts semantically, and publish on every CI run. Provider verification before merge surfaces breaking changes immediately, while explicit fallback behavior (timeouts, retries, error payloads) captures resilience guarantees in contracts.
 
 ## Rationale
 
-Traditional integration testing requires running both consumer and provider
-simultaneously, creating slow, flaky tests with complex setup. Contract testing
-decouples services: consumers define expectations (pact files), providers verify
-against those expectations independently. This enables parallel development,
-catches breaking changes early, and documents API behavior as executable
-specifications. Pair contract tests with API smoke tests to validate data
-mapping and UI rendering in tandem.
+Traditional integration testing requires running both consumer and provider simultaneously, creating slow, flaky tests with complex setup. Contract testing decouples services: consumers define expectations (pact files), providers verify against those expectations independently. This enables parallel development, catches breaking changes early, and documents API behavior as executable specifications. Pair contract tests with API smoke tests to validate data mapping and UI rendering in tandem.
 
 ## Pattern Examples
 
 ### Example 1: Pact Consumer Test (Frontend → Backend API)
 
-**Context**: React application consuming a user management API, defining
-expected interactions.
+**Context**: React application consuming a user management API, defining expected interactions.
 
 **Implementation**:
 
@@ -115,9 +103,9 @@ describe('User API Contract', () => {
         })
         .executeTest(async mockServer => {
           // Act & Assert: Consumer handles 404 gracefully
-          await expect(
-            getUserById(999, { baseURL: mockServer.url })
-          ).rejects.toThrow('User not found');
+          await expect(getUserById(999, { baseURL: mockServer.url })).rejects.toThrow(
+            'User not found'
+          );
         });
     });
   });
@@ -347,8 +335,7 @@ jobs:
 
 ### Example 3: Contract CI Integration (Consumer & Provider Workflow)
 
-**Context**: Complete CI/CD workflow coordinating consumer pact publishing and
-provider verification.
+**Context**: Complete CI/CD workflow coordinating consumer pact publishing and provider verification.
 
 **Implementation**:
 
@@ -378,8 +365,7 @@ jobs:
         run: npm run test:contract
 
       - name: Publish pacts to broker
-        if:
-          github.ref == 'refs/heads/main' || github.event_name == 'pull_request'
+        if: github.ref == 'refs/heads/main' || github.event_name == 'pull_request'
         run: |
           npx pact-broker publish ./pacts \
             --consumer-app-version ${{ github.sha }} \
@@ -491,8 +477,7 @@ jobs:
 
 **Key Points**:
 
-- **Automatic trigger**: Consumer pact changes trigger provider verification via
-  webhook
+- **Automatic trigger**: Consumer pact changes trigger provider verification via webhook
 - **Branch tracking**: Pacts published per branch for feature testing
 - **can-i-deploy**: Safety gate before production deployment
 - **Record deployment**: Track which version is in each environment
@@ -502,8 +487,7 @@ jobs:
 
 ### Example 4: Resilience Coverage (Testing Fallback Behavior)
 
-**Context**: Capture timeout, retry, and error handling behavior explicitly in
-contracts.
+**Context**: Capture timeout, retry, and error handling behavior explicitly in contracts.
 
 **Implementation**:
 
@@ -693,12 +677,7 @@ export async function getUserById(
     respectRateLimit?: boolean;
   }
 ): Promise<User> {
-  const {
-    retries = 3,
-    retryDelay = 1000,
-    respectRateLimit = true,
-    ...axiosConfig
-  } = config || {};
+  const { retries = 3, retryDelay = 1000, respectRateLimit = true, ...axiosConfig } = config || {};
 
   let lastError: Error;
 
@@ -711,15 +690,8 @@ export async function getUserById(
 
       // Handle rate limiting
       if (error.response?.status === 429) {
-        const retryAfter = parseInt(
-          error.response.headers['retry-after'] || '60'
-        );
-        throw new ApiError(
-          'Too many requests',
-          'RATE_LIMIT_EXCEEDED',
-          false,
-          retryAfter
-        );
+        const retryAfter = parseInt(error.response.headers['retry-after'] || '60');
+        throw new ApiError('Too many requests', 'RATE_LIMIT_EXCEEDED', false, retryAfter);
       }
 
       // Retry on 500 errors
@@ -797,13 +769,8 @@ function tagRelease(version: string, environment: 'staging' | 'production') {
 /**
  * Record deployment to environment
  */
-function recordDeployment(
-  version: string,
-  environment: 'staging' | 'production'
-) {
-  console.log(
-    `📝 Recording deployment of ${PACTICIPANT} v${version} to ${environment}`
-  );
+function recordDeployment(version: string, environment: 'staging' | 'production') {
+  console.log(`📝 Recording deployment of ${PACTICIPANT} v${version} to ${environment}`);
 
   execSync(
     `npx pact-broker record-deployment \
@@ -838,9 +805,7 @@ function cleanupOldPacts() {
  * Check deployment compatibility
  */
 function canIDeploy(version: string, toEnvironment: string): boolean {
-  console.log(
-    `🔍 Checking if ${PACTICIPANT} v${version} can deploy to ${toEnvironment}`
-  );
+  console.log(`🔍 Checking if ${PACTICIPANT} v${version} can deploy to ${toEnvironment}`);
 
   try {
     execSync(
@@ -988,16 +953,13 @@ Before implementing contract testing, verify:
 - [ ] **State handlers**: Provider implements all given() states
 - [ ] **can-i-deploy**: Blocks deployment if contracts incompatible
 - [ ] **Webhooks configured**: Consumer changes trigger provider verification
-- [ ] **Retention policy**: Old pacts archived (keep 30 days, all production
-      tags)
+- [ ] **Retention policy**: Old pacts archived (keep 30 days, all production tags)
 - [ ] **Resilience tested**: Timeouts, retries, error codes in contracts
 
 ## Integration Points
 
-- Used in workflows: `*automate` (integration test generation), `*ci` (contract
-  CI setup)
+- Used in workflows: `*automate` (integration test generation), `*ci` (contract CI setup)
 - Related fragments: `test-levels-framework.md`, `ci-burn-in.md`
 - Tools: Pact.js, Pact Broker (Pactflow or self-hosted), Pact CLI
 
-_Source: Pact consumer/provider sample repos, Murat contract testing blog, Pact
-official documentation_
+_Source: Pact consumer/provider sample repos, Murat contract testing blog, Pact official documentation_

@@ -1,7 +1,6 @@
 ---
 name: bmm-codebase-analyzer
-description:
-  Performs comprehensive codebase analysis to understand project structure,
+description: Performs comprehensive codebase analysis to understand project structure,
   architecture patterns, and technology stack. use PROACTIVELY when documenting
   projects or analyzing brownfield codebases
 tools:

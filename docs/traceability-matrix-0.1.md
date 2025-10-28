@@ -542,8 +542,7 @@ traceability_and_gate:
       traceability: 'docs/traceability-matrix-0.1.md'
       nfr_assessment: 'test_analysis'
       code_coverage: 'not_available'
-    next_steps:
-      'Deploy to staging for validation, monitor setup performance and service
+    next_steps: 'Deploy to staging for validation, monitor setup performance and service
       health'
 ```
 

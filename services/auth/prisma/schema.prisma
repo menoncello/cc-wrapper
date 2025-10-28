@@ -1,0 +1,94 @@
+// CC Wrapper Authentication Service - Prisma Schema
+// Database: PostgreSQL 18.0
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+// User authentication table
+model User {
+  id            String    @id @default(uuid()) @db.Uuid
+  email         String    @unique
+  passwordHash  String?   @map("password_hash")
+  oauthProvider String?   @map("oauth_provider")
+  oauthId       String?   @map("oauth_id")
+  userType      String?   @map("user_type") // solo, team, enterprise
+  name          String?
+  role          UserRole  @default(DEVELOPER)
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  profile       UserProfile?
+  workspaces    Workspace[]
+  sessions      Session[]
+
+  @@index([email])
+  @@index([oauthProvider, oauthId])
+  @@map("users")
+}
+
+// User profile settings table
+model UserProfile {
+  id                      String   @id @default(uuid()) @db.Uuid
+  userId                  String   @unique @map("user_id") @db.Uuid
+  preferredAITools        Json?    @map("preferred_ai_tools") // Array of AI tool names
+  notificationPreferences Json?    @map("notification_preferences") // Notification settings object
+  defaultWorkspaceId      String?  @map("default_workspace_id") @db.Uuid
+  onboardingCompleted     Boolean  @default(false) @map("onboarding_completed")
+  tourCompleted           Boolean  @default(false) @map("tour_completed")
+  createdAt               DateTime @default(now()) @map("created_at")
+  updatedAt               DateTime @updatedAt @map("updated_at")
+
+  user                    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  defaultWorkspace        Workspace? @relation(fields: [defaultWorkspaceId], references: [id])
+
+  @@map("user_profiles")
+}
+
+// Workspace table
+model Workspace {
+  id          String   @id @default(uuid()) @db.Uuid
+  name        String
+  description String?
+  template    String?  // React, Node.js, Python, Custom
+  ownerId     String   @map("owner_id") @db.Uuid
+  config      Json?    // Workspace configuration
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  owner       User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  profiles    UserProfile[]
+
+  @@map("workspaces")
+}
+
+// Session management table
+model Session {
+  id           String   @id @default(uuid()) @db.Uuid
+  userId       String   @map("user_id") @db.Uuid
+  token        String   @unique
+  refreshToken String?  @unique @map("refresh_token")
+  deviceInfo   Json?    @map("device_info") // Device fingerprinting
+  expiresAt    DateTime @map("expires_at")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+  @@map("sessions")
+}
+
+// User role enum
+enum UserRole {
+  OWNER
+  ADMIN
+  DEVELOPER
+  VIEWER
+}

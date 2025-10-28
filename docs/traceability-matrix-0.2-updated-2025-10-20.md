@@ -834,8 +834,7 @@ traceability_and_gate:
       nfr_assessment: 'docs/nfr-assessment-0.1-2025-10-20.md'
       test_review: 'docs/test-review-0.2.md (Score: 82/100 A - Good)'
       story_completion: 'docs/stories/story-0.2.md (All tasks marked complete)'
-    next_steps:
-      'Deploy to production. Create P2 follow-up for test infrastructure
+    next_steps: 'Deploy to production. Create P2 follow-up for test infrastructure
       improvements.'
 ```
 

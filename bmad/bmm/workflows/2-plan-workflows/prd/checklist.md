@@ -1,7 +1,6 @@
 # PRD Workflow Validation Checklist
 
-**Purpose**: Validate PRD workflow outputs are complete, consistent, and ready
-for next phase.
+**Purpose**: Validate PRD workflow outputs are complete, consistent, and ready for next phase.
 
 **Scope**: Levels 2-4 software projects
 
@@ -36,8 +35,7 @@ for next phase.
 ### Strategic Focus
 
 - [ ] PRD focuses on WHAT and WHY (not technical HOW)
-- [ ] No specific technology choices in PRD (those belong in
-      technical-decisions.md)
+- [ ] No specific technology choices in PRD (those belong in technical-decisions.md)
 - [ ] Goals are outcome-focused, not implementation-focused
 
 ---
@@ -46,20 +44,16 @@ for next phase.
 
 ### Story Format
 
-- [ ] All stories follow user story format: "As a [role], I want [capability],
-      so that [benefit]"
+- [ ] All stories follow user story format: "As a [role], I want [capability], so that [benefit]"
 - [ ] Each story has numbered acceptance criteria
 - [ ] Prerequisites/dependencies explicitly stated
 
 ### Story Sequencing (CRITICAL)
 
-- [ ] **Epic 1 establishes foundation** (infrastructure, initial deployable
-      functionality)
+- [ ] **Epic 1 establishes foundation** (infrastructure, initial deployable functionality)
   - Exception noted if adding to existing app
-- [ ] **Vertical slices**: Each story delivers complete, testable functionality
-      (not horizontal layers)
-- [ ] **No forward dependencies**: No story depends on work from a LATER story
-      or epic
+- [ ] **Vertical slices**: Each story delivers complete, testable functionality (not horizontal layers)
+- [ ] **No forward dependencies**: No story depends on work from a LATER story or epic
 - [ ] Stories are sequentially ordered within each epic
 - [ ] Each story leaves system in working state
 
@@ -85,13 +79,12 @@ for next phase.
 
 ### If Level 2:
 
-- [ ] PRD provides sufficient context for tech-spec workflow (lightweight
-      solutioning)
+- [ ] PRD provides sufficient context for tech-spec workflow (lightweight solutioning)
 - [ ] Epic structure supports 5-15 story implementation scope
 
 ### If Level 3-4:
 
-- [ ] PRD provides sufficient context for solution-architecture workflow
+- [ ] PRD provides sufficient context for create-architecture workflow
 - [ ] Epic structure supports phased delivery approach
 - [ ] Clear value delivery path through epic sequence
 
@@ -101,10 +94,8 @@ for next phase.
 
 - [ ] ❌ **No epics.md file** (two-file output is required)
 - [ ] ❌ **Epic 1 doesn't establish foundation** (violates core principle)
-- [ ] ❌ **Stories have forward dependencies** (would break sequential
-      implementation)
-- [ ] ❌ **Stories not vertically sliced** (horizontal layers block value
-      delivery)
+- [ ] ❌ **Stories have forward dependencies** (would break sequential implementation)
+- [ ] ❌ **Stories not vertically sliced** (horizontal layers block value delivery)
 - [ ] ❌ **Technical decisions in PRD** (should be in technical-decisions.md)
 - [ ] ❌ **Epics don't cover all FRs** (orphaned requirements)
 - [ ] ❌ **User journeys don't reference FR numbers** (missing traceability)
@@ -123,5 +114,4 @@ for next phase.
 
 ---
 
-_Adapt this checklist based on actual outputs. Not all sections may apply to
-every project._
+_Adapt this checklist based on actual outputs. Not all sections may apply to every project._

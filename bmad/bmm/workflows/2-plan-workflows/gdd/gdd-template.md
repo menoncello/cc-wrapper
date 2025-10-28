@@ -1,7 +1,8 @@
 # {{game_name}} - Game Design Document
 
-**Author:** {{user_name}} **Game Type:** {{game_type}} **Target Platform(s):**
-{{platforms}}
+**Author:** {{user_name}}
+**Game Type:** {{game_type}}
+**Target Platform(s):** {{platforms}}
 
 ---
 

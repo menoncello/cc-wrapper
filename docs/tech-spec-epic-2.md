@@ -96,10 +96,7 @@ interface EnterpriseSSOService {
 
   // Provider Management
   addIdentityProvider(provider: IdentityProvider): Promise<void>;
-  updateIdentityProvider(
-    providerId: string,
-    config: ProviderConfig
-  ): Promise<void>;
+  updateIdentityProvider(providerId: string, config: ProviderConfig): Promise<void>;
   removeIdentityProvider(providerId: string): Promise<void>;
 }
 
@@ -136,20 +133,12 @@ interface RBACService {
   removePermissionFromRole(roleId: string, permissionId: string): Promise<void>;
 
   // User Role Assignment
-  assignRoleToUser(
-    userId: string,
-    roleId: string,
-    scope?: string
-  ): Promise<void>;
+  assignRoleToUser(userId: string, roleId: string, scope?: string): Promise<void>;
   removeRoleFromUser(userId: string, roleId: string): Promise<void>;
   getUserRoles(userId: string): Promise<UserRole[]>;
 
   // Access Control
-  checkPermission(
-    userId: string,
-    resource: string,
-    action: string
-  ): Promise<boolean>;
+  checkPermission(userId: string, resource: string, action: string): Promise<boolean>;
   getUserPermissions(userId: string): Promise<Permission[]>;
 }
 
@@ -178,30 +167,18 @@ type Role = {
 interface AuditService {
   // Event Logging
   logEvent(event: AuditEvent): Promise<void>;
-  logUserAction(
-    action: UserAction,
-    userId: string,
-    context: ActionContext
-  ): Promise<void>;
+  logUserAction(action: UserAction, userId: string, context: ActionContext): Promise<void>;
   logSystemEvent(event: SystemEvent): Promise<void>;
   logSecurityEvent(event: SecurityEvent): Promise<void>;
 
   // Event Retrieval
   getAuditEvents(filters: AuditEventFilters): Promise<AuditEvent[]>;
-  getUserActivity(
-    userId: string,
-    timeframe: TimeFrame
-  ): Promise<UserActivity[]>;
+  getUserActivity(userId: string, timeframe: TimeFrame): Promise<UserActivity[]>;
   getSecurityEvents(timeframe: TimeFrame): Promise<SecurityEvent[]>;
 
   // Compliance Reporting
-  generateComplianceReport(
-    config: ComplianceReportConfig
-  ): Promise<ComplianceReport>;
-  exportAuditLogs(
-    filters: AuditFilters,
-    format: ExportFormat
-  ): Promise<ExportResult>;
+  generateComplianceReport(config: ComplianceReportConfig): Promise<ComplianceReport>;
+  exportAuditLogs(filters: AuditFilters, format: ExportFormat): Promise<ExportResult>;
 }
 
 interface AuditEvent {
@@ -240,10 +217,7 @@ type AuditEventType =
 interface DataProtectionService {
   // Encryption Management
   encryptData(data: string, context: EncryptionContext): Promise<EncryptedData>;
-  decryptData(
-    encryptedData: EncryptedData,
-    context: DecryptionContext
-  ): Promise<string>;
+  decryptData(encryptedData: EncryptedData, context: DecryptionContext): Promise<string>;
   rotateEncryptionKeys(): Promise<void>;
 
   // Data Classification
@@ -251,22 +225,11 @@ interface DataProtectionService {
   applyProtectionRules(data: ClassifiedData): Promise<ProtectedData>;
 
   // Access Control
-  checkDataAccess(
-    userId: string,
-    dataId: string,
-    action: DataAction
-  ): Promise<boolean>;
-  logDataAccess(
-    userId: string,
-    dataId: string,
-    action: DataAction
-  ): Promise<void>;
+  checkDataAccess(userId: string, dataId: string, action: DataAction): Promise<boolean>;
+  logDataAccess(userId: string, dataId: string, action: DataAction): Promise<void>;
 
   // Data Residency
-  determineDataLocation(
-    userId: string,
-    organizationId: string
-  ): Promise<DataLocation>;
+  determineDataLocation(userId: string, organizationId: string): Promise<DataLocation>;
   ensureDataResidency(data: string, location: DataLocation): Promise<void>;
 }
 
@@ -292,9 +255,7 @@ interface TeamWorkspaceService {
   removeTeamMember(teamId: string, userId: string): Promise<void>;
 
   // Workspace Collaboration
-  createCollaborativeWorkspace(
-    workspace: CreateCollaborativeWorkspaceRequest
-  ): Promise<Workspace>;
+  createCollaborativeWorkspace(workspace: CreateCollaborativeWorkspaceRequest): Promise<Workspace>;
   inviteTeamMember(
     workspaceId: string,
     userId: string,
@@ -340,22 +301,13 @@ interface TeamMember {
 ```typescript
 interface SecurityMonitoringService {
   // Threat Detection
-  detectAnomalousActivity(
-    userId: string,
-    activities: UserActivity[]
-  ): Promise<SecurityAlert[]>;
+  detectAnomalousActivity(userId: string, activities: UserActivity[]): Promise<SecurityAlert[]>;
   detectSuspiciousLogin(loginAttempt: LoginAttempt): Promise<SecurityAlert[]>;
-  detectDataExfiltration(
-    userId: string,
-    dataAccess: DataAccessPattern[]
-  ): Promise<SecurityAlert>;
+  detectDataExfiltration(userId: string, dataAccess: DataAccessPattern[]): Promise<SecurityAlert>;
 
   // Alert Management
   createAlert(alert: CreateAlertRequest): Promise<SecurityAlert>;
-  updateAlert(
-    alertId: string,
-    updates: UpdateAlertRequest
-  ): Promise<SecurityAlert>;
+  updateAlert(alertId: string, updates: UpdateAlertRequest): Promise<SecurityAlert>;
   resolveAlert(alertId: string, resolution: AlertResolution): Promise<void>;
 
   // Security Metrics
@@ -724,10 +676,7 @@ class DataProtectionService {
   private readonly masterKey: string;
   private readonly keyManager: KeyManager;
 
-  async encryptSensitiveData(
-    data: string,
-    context: EncryptionContext
-  ): Promise<EncryptedData> {
+  async encryptSensitiveData(data: string, context: EncryptionContext): Promise<EncryptedData> {
     // Use envelope encryption with AES-256-GCM
     const dataKey = await this.generateDataKey();
     const encryptedData = await this.encryptWithKey(data, dataKey);

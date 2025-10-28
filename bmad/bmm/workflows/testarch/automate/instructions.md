@@ -2,36 +2,30 @@
 
 # Test Automation Expansion
 
-**Workflow ID**: `bmad/bmm/testarch/automate` **Version**: 4.0 (BMad v6)
+**Workflow ID**: `bmad/bmm/testarch/automate`
+**Version**: 4.0 (BMad v6)
 
 ---
 
 ## Overview
 
-Expands test automation coverage by generating comprehensive test suites at
-appropriate levels (E2E, API, Component, Unit) with supporting infrastructure.
-This workflow operates in **dual mode**:
+Expands test automation coverage by generating comprehensive test suites at appropriate levels (E2E, API, Component, Unit) with supporting infrastructure. This workflow operates in **dual mode**:
 
-1. **BMad-Integrated Mode**: Works WITH BMad artifacts (story, tech-spec, PRD,
-   test-design) to expand coverage after story implementation
-2. **Standalone Mode**: Works WITHOUT BMad artifacts - analyzes existing
-   codebase and generates tests independently
+1. **BMad-Integrated Mode**: Works WITH BMad artifacts (story, tech-spec, PRD, test-design) to expand coverage after story implementation
+2. **Standalone Mode**: Works WITHOUT BMad artifacts - analyzes existing codebase and generates tests independently
 
-**Core Principle**: Generate prioritized, deterministic tests that avoid
-duplicate coverage and follow testing best practices.
+**Core Principle**: Generate prioritized, deterministic tests that avoid duplicate coverage and follow testing best practices.
 
 ---
 
 ## Preflight Requirements
 
-**Flexible:** This workflow can run with minimal prerequisites. Only HALT if
-framework is completely missing.
+**Flexible:** This workflow can run with minimal prerequisites. Only HALT if framework is completely missing.
 
 ### Required (Always)
 
 - ✅ Framework scaffolding configured (run `framework` workflow if missing)
-- ✅ Test framework configuration available (playwright.config.ts or
-  cypress.config.ts)
+- ✅ Test framework configuration available (playwright.config.ts or cypress.config.ts)
 
 ### Optional (BMad-Integrated Mode)
 
@@ -44,8 +38,7 @@ framework is completely missing.
 - Source code to analyze (feature implementation)
 - Existing tests (for gap analysis)
 
-**If framework is missing:** HALT with message: "Framework scaffolding required.
-Run `bmad tea *framework` first."
+**If framework is missing:** HALT with message: "Framework scaffolding required. Run `bmad tea *framework` first."
 
 ---
 
@@ -58,8 +51,7 @@ Run `bmad tea *framework` first."
    Check if BMad artifacts are available:
    - If `{story_file}` variable is set → BMad-Integrated Mode
    - If `{target_feature}` or `{target_files}` set → Standalone Mode
-   - If neither set → Auto-discover mode (scan codebase for features needing
-     tests)
+   - If neither set → Auto-discover mode (scan codebase for features needing tests)
 
 2. **Load BMad Artifacts (If Available)**
 
@@ -91,35 +83,20 @@ Run `bmad tea *framework` first."
 
 5. **Load Knowledge Base Fragments**
 
-   **Critical:** Consult `{project-root}/bmad/bmm/testarch/tea-index.csv` to
-   load:
-   - `test-levels-framework.md` - Test level selection (E2E vs API vs Component
-     vs Unit with decision matrix, 467 lines, 4 examples)
-   - `test-priorities-matrix.md` - Priority classification (P0-P3 with automated
-     scoring, risk mapping, 389 lines, 2 examples)
-   - `fixture-architecture.md` - Test fixture patterns (pure function → fixture
-     → mergeTests, auto-cleanup, 406 lines, 5 examples)
-   - `data-factories.md` - Factory patterns with faker (overrides, nested
-     factories, API seeding, 498 lines, 5 examples)
-   - `selective-testing.md` - Targeted test execution strategies (tag-based,
-     spec filters, diff-based, promotion rules, 727 lines, 4 examples)
-   - `ci-burn-in.md` - Flaky test detection patterns (10-iteration burn-in,
-     sharding, selective execution, 678 lines, 4 examples)
-   - `test-quality.md` - Test design principles (deterministic, isolated,
-     explicit assertions, length/time limits, 658 lines, 5 examples)
-   - `network-first.md` - Route interception patterns (intercept before
-     navigate, HAR capture, deterministic waiting, 489 lines, 5 examples)
+   **Critical:** Consult `{project-root}/bmad/bmm/testarch/tea-index.csv` to load:
+   - `test-levels-framework.md` - Test level selection (E2E vs API vs Component vs Unit with decision matrix, 467 lines, 4 examples)
+   - `test-priorities-matrix.md` - Priority classification (P0-P3 with automated scoring, risk mapping, 389 lines, 2 examples)
+   - `fixture-architecture.md` - Test fixture patterns (pure function → fixture → mergeTests, auto-cleanup, 406 lines, 5 examples)
+   - `data-factories.md` - Factory patterns with faker (overrides, nested factories, API seeding, 498 lines, 5 examples)
+   - `selective-testing.md` - Targeted test execution strategies (tag-based, spec filters, diff-based, promotion rules, 727 lines, 4 examples)
+   - `ci-burn-in.md` - Flaky test detection patterns (10-iteration burn-in, sharding, selective execution, 678 lines, 4 examples)
+   - `test-quality.md` - Test design principles (deterministic, isolated, explicit assertions, length/time limits, 658 lines, 5 examples)
+   - `network-first.md` - Route interception patterns (intercept before navigate, HAR capture, deterministic waiting, 489 lines, 5 examples)
 
    **Healing Knowledge (If `{auto_heal_failures}` is true):**
-   - `test-healing-patterns.md` - Common failure patterns and automated fixes
-     (stale selectors, race conditions, dynamic data, network errors, hard
-     waits, 648 lines, 5 examples)
-   - `selector-resilience.md` - Selector debugging and refactoring guide
-     (data-testid > ARIA > text > CSS hierarchy, anti-patterns, 541 lines, 4
-     examples)
-   - `timing-debugging.md` - Race condition identification and fixes
-     (network-first, deterministic waiting, async debugging, 370 lines, 3
-     examples)
+   - `test-healing-patterns.md` - Common failure patterns and automated fixes (stale selectors, race conditions, dynamic data, network errors, hard waits, 648 lines, 5 examples)
+   - `selector-resilience.md` - Selector debugging and refactoring guide (data-testid > ARIA > text > CSS hierarchy, anti-patterns, 541 lines, 4 examples)
+   - `timing-debugging.md` - Race condition identification and fixes (network-first, deterministic waiting, async debugging, 370 lines, 3 examples)
 
 ---
 
@@ -177,8 +154,7 @@ Run `bmad tea *framework` first."
 
 3. **Avoid Duplicate Coverage**
 
-   **Critical principle:** Don't test same behavior at multiple levels unless
-   necessary
+   **Critical principle:** Don't test same behavior at multiple levels unless necessary
    - Use E2E for critical happy path only
    - Use API tests for business logic variations
    - Use component tests for UI interaction edge cases
@@ -270,8 +246,7 @@ Run `bmad tea *framework` first."
    - Ensure all fixtures have auto-cleanup in teardown
 
    **Common fixtures to create/enhance:**
-   - **authenticatedUser**: User with valid session (auto-deletes user after
-     test)
+   - **authenticatedUser**: User with valid session (auto-deletes user after test)
    - **apiRequest**: Authenticated API client with base URL and headers
    - **mockNetwork**: Network mocking for external services
    - **testDatabase**: Database with test data (auto-cleanup after test)
@@ -332,8 +307,7 @@ Run `bmad tea *framework` first."
      ...overrides
    });
 
-   export const createUsers = (count: number) =>
-     Array.from({ length: count }, () => createUser());
+   export const createUsers = (count: number) => Array.from({ length: count }, () => createUser());
 
    // API helper for cleanup
    export const deleteUser = async (userId: number) => {
@@ -401,9 +375,7 @@ Run `bmad tea *framework` first."
    import { test, expect } from '@playwright/test';
 
    test.describe('User Authentication', () => {
-     test('[P0] should login with valid credentials and load dashboard', async ({
-       page
-     }) => {
+     test('[P0] should login with valid credentials and load dashboard', async ({ page }) => {
        // GIVEN: User is on login page
        await page.goto('/login');
 
@@ -417,9 +389,7 @@ Run `bmad tea *framework` first."
        await expect(page.locator('[data-testid="user-name"]')).toBeVisible();
      });
 
-     test('[P1] should display error for invalid credentials', async ({
-       page
-     }) => {
+     test('[P1] should display error for invalid credentials', async ({ page }) => {
        // GIVEN: User is on login page
        await page.goto('/login');
 
@@ -468,9 +438,7 @@ Run `bmad tea *framework` first."
        expect(response.status()).toBe(200);
        const body = await response.json();
        expect(body).toHaveProperty('token');
-       expect(body.token).toMatch(
-         /^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/
-       ); // JWT format
+       expect(body.token).toMatch(/^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/); // JWT format
      });
 
      test('[P1] POST /api/auth/login - should return 401 for invalid credentials', async ({
@@ -551,12 +519,7 @@ Run `bmad tea *framework` first."
 
      test('[P2] should return false for malformed email', () => {
        // GIVEN: Malformed email addresses
-       const invalidEmails = [
-         'notanemail',
-         '@example.com',
-         'user@',
-         'user @example.com'
-       ];
+       const invalidEmails = ['notanemail', '@example.com', 'user@', 'user @example.com'];
 
        // WHEN/THEN: Each should fail validation
        invalidEmails.forEach(email => {
@@ -585,9 +548,7 @@ Run `bmad tea *framework` first."
      // NOW navigate
      await page.goto('/dashboard');
 
-     await expect(page.locator('[data-testid="user-name"]')).toHaveText(
-       'Test User'
-     );
+     await expect(page.locator('[data-testid="user-name"]')).toHaveText('Test User');
    });
    ```
 
@@ -615,8 +576,7 @@ Run `bmad tea *framework` first."
 
 ## Step 5: Execute, Validate & Heal Generated Tests (NEW - Phase 2.5)
 
-**Purpose**: Automatically validate generated tests and heal common failures
-before delivery
+**Purpose**: Automatically validate generated tests and heal common failures before delivery
 
 ### Actions
 
@@ -669,8 +629,7 @@ before delivery
    Analyze error message and stack trace to classify failure type:
 
    **Stale Selector Failure:**
-   - Error contains: "locator resolved to 0 elements", "element not found",
-     "unable to find element"
+   - Error contains: "locator resolved to 0 elements", "element not found", "unable to find element"
    - Extract selector from error message
    - Apply selector healing (knowledge from `selector-resilience.md`):
      - If CSS class → Replace with `page.getByTestId()`
@@ -679,8 +638,7 @@ before delivery
      - If complex XPath → Replace with ARIA role
 
    **Race Condition Failure:**
-   - Error contains: "timeout waiting for", "element not visible", "timed out
-     retrying"
+   - Error contains: "timeout waiting for", "element not visible", "timed out retrying"
    - Detect missing network waits or hard waits in test code
    - Apply timing healing (knowledge from `timing-debugging.md`):
      - Add network-first interception before navigate
@@ -688,8 +646,7 @@ before delivery
      - Add explicit element state waits (`waitFor({ state: 'visible' })`)
 
    **Dynamic Data Failure:**
-   - Error contains: "Expected 'User 123' but received 'User 456'", timestamp
-     mismatches
+   - Error contains: "Expected 'User 123' but received 'User 456'", timestamp mismatches
    - Identify hardcoded assertions
    - Apply data healing (knowledge from `test-healing-patterns.md`):
      - Replace hardcoded IDs with regex (`/User \d+/`)
@@ -765,8 +722,7 @@ before delivery
    });
    ```
 
-   **Note**: Workflow continues even with unfixable tests (marked as
-   test.fixme() for manual review)
+   **Note**: Workflow continues even with unfixable tests (marked as test.fixme() for manual review)
 
 5. **Generate Healing Report**
 
@@ -775,9 +731,9 @@ before delivery
    ```markdown
    ## Test Healing Report
 
-   **Auto-Heal Enabled**: {auto_heal_failures} **Healing Mode**:
-   {use_mcp_healing ? "MCP-assisted" : "Pattern-based"} **Iterations Allowed**:
-   {max_healing_iterations}
+   **Auto-Heal Enabled**: {auto_heal_failures}
+   **Healing Mode**: {use_mcp_healing ? "MCP-assisted" : "Pattern-based"}
+   **Iterations Allowed**: {max_healing_iterations}
 
    ### Validation Results
 
@@ -790,14 +746,12 @@ before delivery
    **Successfully Healed ({healed_count} tests):**
 
    - `tests/e2e/login.spec.ts:15` - Stale selector (CSS class → data-testid)
-   - `tests/e2e/checkout.spec.ts:42` - Race condition (added network-first
-     interception)
+   - `tests/e2e/checkout.spec.ts:42` - Race condition (added network-first interception)
    - `tests/api/users.spec.ts:28` - Dynamic data (hardcoded ID → regex pattern)
 
    **Unable to Heal ({unfixable_count} tests):**
 
-   - `tests/e2e/complex-flow.spec.ts:67` - Marked as test.fixme() with manual
-     investigation needed
+   - `tests/e2e/complex-flow.spec.ts:67` - Marked as test.fixme() with manual investigation needed
      - Failure: Locator not found after 3 healing attempts
      - Requires application code changes (add data-testid to component)
 
@@ -913,7 +867,9 @@ before delivery
    ````markdown
    # Automation Summary - {feature_name}
 
-   **Date:** {date} **Story:** {story_id} **Coverage Target:** {coverage_target}
+   **Date:** {date}
+   **Story:** {story_id}
+   **Coverage Target:** {coverage_target}
 
    ## Tests Created
 
@@ -940,8 +896,7 @@ before delivery
 
    ### Fixtures
 
-   - `tests/support/fixtures/auth.fixture.ts` - authenticatedUser with
-     auto-cleanup
+   - `tests/support/fixtures/auth.fixture.ts` - authenticatedUser with auto-cleanup
 
    ### Factories
 
@@ -1061,12 +1016,12 @@ before delivery
    ## Automation Complete
 
    **Coverage:** {total_tests} tests created across {test_levels} levels
-   **Priority Breakdown:** P0: {p0_count}, P1: {p1_count}, P2: {p2_count}, P3:
-   {p3_count} **Infrastructure:** {fixture_count} fixtures, {factory_count}
-   factories **Output:** {output_summary}
+   **Priority Breakdown:** P0: {p0_count}, P1: {p1_count}, P2: {p2_count}, P3: {p3_count}
+   **Infrastructure:** {fixture_count} fixtures, {factory_count} factories
+   **Output:** {output_summary}
 
-   **Run tests:** `npm run test:e2e` **Next steps:** Review tests, run in CI,
-   integrate with quality gate
+   **Run tests:** `npm run test:e2e`
+   **Next steps:** Review tests, run in CI, integrate with quality gate
    ```
 
 ---
@@ -1108,12 +1063,10 @@ before delivery
 **Bad coverage (duplicate):**
 
 - E2E: User can login → Dashboard loads
-- E2E: User can login with different emails → Dashboard loads (unnecessary
-  duplication)
+- E2E: User can login with different emails → Dashboard loads (unnecessary duplication)
 - API: POST /auth/login returns 200 (already covered in E2E)
 
-Use E2E sparingly for critical paths. Use API/Component for variations and edge
-cases.
+Use E2E sparingly for critical paths. Use API/Component for variations and edge cases.
 
 ### Priority Tagging
 
@@ -1222,31 +1175,20 @@ test('should login', async ({ page }) => {
 
 **Core Fragments (Auto-loaded in Step 1):**
 
-- `test-levels-framework.md` - E2E vs API vs Component vs Unit decision
-  framework with characteristics matrix (467 lines, 4 examples)
-- `test-priorities-matrix.md` - P0-P3 classification with automated scoring and
-  risk mapping (389 lines, 2 examples)
-- `fixture-architecture.md` - Pure function → fixture → mergeTests composition
-  with auto-cleanup (406 lines, 5 examples)
-- `data-factories.md` - Factory patterns with faker: overrides, nested
-  factories, API seeding (498 lines, 5 examples)
-- `selective-testing.md` - Tag-based, spec filters, diff-based selection,
-  promotion rules (727 lines, 4 examples)
-- `ci-burn-in.md` - 10-iteration burn-in loop, parallel sharding, selective
-  execution (678 lines, 4 examples)
-- `test-quality.md` - Deterministic tests, isolated with cleanup, explicit
-  assertions, length/time optimization (658 lines, 5 examples)
-- `network-first.md` - Intercept before navigate, HAR capture, deterministic
-  waiting strategies (489 lines, 5 examples)
+- `test-levels-framework.md` - E2E vs API vs Component vs Unit decision framework with characteristics matrix (467 lines, 4 examples)
+- `test-priorities-matrix.md` - P0-P3 classification with automated scoring and risk mapping (389 lines, 2 examples)
+- `fixture-architecture.md` - Pure function → fixture → mergeTests composition with auto-cleanup (406 lines, 5 examples)
+- `data-factories.md` - Factory patterns with faker: overrides, nested factories, API seeding (498 lines, 5 examples)
+- `selective-testing.md` - Tag-based, spec filters, diff-based selection, promotion rules (727 lines, 4 examples)
+- `ci-burn-in.md` - 10-iteration burn-in loop, parallel sharding, selective execution (678 lines, 4 examples)
+- `test-quality.md` - Deterministic tests, isolated with cleanup, explicit assertions, length/time optimization (658 lines, 5 examples)
+- `network-first.md` - Intercept before navigate, HAR capture, deterministic waiting strategies (489 lines, 5 examples)
 
 **Healing Fragments (Auto-loaded if `{auto_heal_failures}` enabled):**
 
-- `test-healing-patterns.md` - Common failure patterns: stale selectors, race
-  conditions, dynamic data, network errors, hard waits (648 lines, 5 examples)
-- `selector-resilience.md` - Selector hierarchy (data-testid > ARIA > text >
-  CSS), dynamic patterns, anti-patterns refactoring (541 lines, 4 examples)
-- `timing-debugging.md` - Race condition prevention, deterministic waiting,
-  async debugging techniques (370 lines, 3 examples)
+- `test-healing-patterns.md` - Common failure patterns: stale selectors, race conditions, dynamic data, network errors, hard waits (648 lines, 5 examples)
+- `selector-resilience.md` - Selector hierarchy (data-testid > ARIA > text > CSS), dynamic patterns, anti-patterns refactoring (541 lines, 4 examples)
+- `timing-debugging.md` - Race condition prevention, deterministic waiting, async debugging techniques (370 lines, 3 examples)
 
 **Manual Reference (Optional):**
 
@@ -1261,8 +1203,8 @@ After completing this workflow, provide a summary:
 ````markdown
 ## Automation Complete
 
-**Mode:** {standalone_mode ? "Standalone" : "BMad-Integrated"} **Target:**
-{story_id || target_feature || "Auto-discovered features"}
+**Mode:** {standalone_mode ? "Standalone" : "BMad-Integrated"}
+**Target:** {story_id || target_feature || "Auto-discovered features"}
 
 **Tests Created:**
 

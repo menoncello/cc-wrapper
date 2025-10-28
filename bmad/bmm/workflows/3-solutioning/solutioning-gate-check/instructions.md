@@ -1,11 +1,8 @@
 # Implementation Ready Check - Workflow Instructions
 
-<critical>The workflow execution engine is governed by:
-{project-root}/bmad/core/tasks/workflow.xml</critical> <critical>You MUST have
-already loaded and processed:
-{project-root}/bmad/bmm/workflows/3-solutioning/solutioning-gate-check/workflow.yaml</critical>
-<critical>Communicate all findings and analysis in {communication_language}
-throughout the assessment</critical>
+<critical>The workflow execution engine is governed by: {project-root}/bmad/core/tasks/workflow.xml</critical>
+<critical>You MUST have already loaded and processed: {project-root}/bmad/bmm/workflows/3-solutioning/solutioning-gate-check/workflow.yaml</critical>
+<critical>Communicate all findings and analysis in {communication_language} throughout the assessment</critical>
 
 <workflow>
 
@@ -18,13 +15,14 @@ throughout the assessment</critical>
 <check if="status_exists == false">
   <output>**⚠️ No Workflow Status File Found**
 
-The Implementation Ready Check requires a status file to understand your project
-context.
+The Implementation Ready Check requires a status file to understand your project context.
 
 Please run `workflow-init` first to establish your project configuration.
 
-After setup, return here to validate implementation readiness. </output>
-<action>Exit workflow - cannot proceed without status file</action> </check>
+After setup, return here to validate implementation readiness.
+</output>
+<action>Exit workflow - cannot proceed without status file</action>
+</check>
 
 <check if="status_exists == true">
   <action>Store {{status_file_path}} for later updates</action>
@@ -34,13 +32,14 @@ After setup, return here to validate implementation readiness. </output>
 
 - Level 0-1: Tech spec and simple stories only (no PRD, minimal solutioning)
 - Level 2: PRD, tech spec, epics/stories (no separate architecture doc)
-- Level 3-4: Full suite - PRD, architecture document, epics/stories, possible UX
-  artifacts </action>
+- Level 3-4: Full suite - PRD, architecture document, epics/stories, possible UX artifacts
+  </action>
 
-<critical>The validation approach must adapt to the project level - don't look
-for documents that shouldn't exist at lower levels</critical> </check>
+<critical>The validation approach must adapt to the project level - don't look for documents that shouldn't exist at lower levels</critical>
+</check>
 
-<template-output>project_context</template-output> </step>
+<template-output>project_context</template-output>
+</step>
 
 <step n="1" goal="Discover and inventory project artifacts">
 <action>Search the {output_folder} for relevant planning and solutioning documents based on project level identified in Step 0</action>
@@ -49,7 +48,8 @@ for documents that shouldn't exist at lower levels</critical> </check>
 
 - Technical specification document(s)
 - Story/task lists or simple epic breakdowns
-- Any API or interface definitions </action>
+- Any API or interface definitions
+  </action>
 
 <action>For Level 2-4 projects, locate:
 
@@ -58,16 +58,19 @@ for documents that shouldn't exist at lower levels</critical> </check>
 - Technical Specification (Level 2 includes architecture within)
 - Epic and story breakdowns
 - UX artifacts if the active path includes UX workflow
-- Any supplementary planning documents </action>
+- Any supplementary planning documents
+  </action>
 
 <action>Create an inventory of found documents with:
 
 - Document type and purpose
 - File path and last modified date
 - Brief description of what each contains
-- Any missing expected documents flagged as potential issues </action>
+- Any missing expected documents flagged as potential issues
+  </action>
 
-<template-output>document_inventory</template-output> </step>
+<template-output>document_inventory</template-output>
+</step>
 
 <step n="2" goal="Deep analysis of core planning documents">
 <action>Load and thoroughly analyze each discovered document to extract:
@@ -85,7 +88,8 @@ for documents that shouldn't exist at lower levels</critical> </check>
 - Functional and non-functional requirements
 - Success metrics and acceptance criteria
 - Scope boundaries and explicitly excluded items
-- Priority levels for different features </action>
+- Priority levels for different features
+  </action>
 
 <action>For Architecture/Tech Spec analysis, focus on:
 
@@ -94,7 +98,8 @@ for documents that shouldn't exist at lower levels</critical> </check>
 - Integration points and APIs
 - Data models and storage decisions
 - Security and performance considerations
-- Any architectural constraints that might affect story implementation </action>
+- Any architectural constraints that might affect story implementation
+  </action>
 
 <action>For Epic/Story analysis, focus on:
 
@@ -102,9 +107,11 @@ for documents that shouldn't exist at lower levels</critical> </check>
 - Story sequencing and dependencies
 - Acceptance criteria completeness
 - Technical tasks within stories
-- Estimated complexity and effort indicators </action>
+- Estimated complexity and effort indicators
+  </action>
 
-<template-output>document_analysis</template-output> </step>
+<template-output>document_analysis</template-output>
+</step>
 
 <step n="3" goal="Cross-reference validation and alignment check">
 <action>Systematically validate alignment between all artifacts, adapting validation based on project level</action>
@@ -114,8 +121,7 @@ for documents that shouldn't exist at lower levels</critical> </check>
 - Verify every PRD requirement has corresponding architectural support
 - Check that architectural decisions don't contradict PRD constraints
 - Identify any architectural additions beyond PRD scope (potential gold-plating)
-- Ensure non-functional requirements from PRD are addressed in architecture
-  document
+- Ensure non-functional requirements from PRD are addressed in architecture document
 - If using new architecture workflow: verify implementation patterns are defined
   </action>
 
@@ -139,9 +145,11 @@ for documents that shouldn't exist at lower levels</critical> </check>
 
 - Validate internal consistency within tech spec
 - Check that all specified features have corresponding stories
-- Verify story sequencing matches technical dependencies </action>
+- Verify story sequencing matches technical dependencies
+  </action>
 
-<template-output>alignment_validation</template-output> </step>
+<template-output>alignment_validation</template-output>
+</step>
 
 <step n="4" goal="Gap and risk analysis">
 <action>Identify and categorize all gaps, risks, and potential issues discovered during validation</action>
@@ -152,30 +160,35 @@ for documents that shouldn't exist at lower levels</critical> </check>
 - Unaddressed architectural concerns
 - Absent infrastructure or setup stories for greenfield projects
 - Missing error handling or edge case coverage
-- Security or compliance requirements not addressed </action>
+- Security or compliance requirements not addressed
+  </action>
 
 <action>Identify Sequencing Issues:
 
 - Dependencies not properly ordered
 - Stories that assume components not yet built
 - Parallel work that should be sequential
-- Missing prerequisite technical tasks </action>
+- Missing prerequisite technical tasks
+  </action>
 
 <action>Detect Potential Contradictions:
 
 - Conflicts between PRD and architecture approaches
 - Stories with conflicting technical approaches
 - Acceptance criteria that contradict requirements
-- Resource or technology conflicts </action>
+- Resource or technology conflicts
+  </action>
 
 <action>Find Gold-Plating and Scope Creep:
 
 - Features in architecture not required by PRD
 - Stories implementing beyond requirements
 - Technical complexity beyond project needs
-- Over-engineering indicators </action>
+- Over-engineering indicators
+  </action>
 
-<template-output>gap_risk_analysis</template-output> </step>
+<template-output>gap_risk_analysis</template-output>
+</step>
 
 <step n="5" goal="UX and special concerns validation" optional="true">
 <check if="UX artifacts exist or UX workflow in active path">
@@ -190,9 +203,12 @@ for documents that shouldn't exist at lower levels</critical> </check>
 
 - Check for accessibility requirement coverage in stories
 - Verify responsive design considerations if applicable
-- Ensure user flow completeness across stories </action> </check>
+- Ensure user flow completeness across stories
+  </action>
+  </check>
 
-<template-output>ux_validation</template-output> </step>
+<template-output>ux_validation</template-output>
+</step>
 
 <step n="6" goal="Generate comprehensive readiness assessment">
 <action>Compile all findings into a structured readiness report with:
@@ -209,22 +225,24 @@ for documents that shouldn't exist at lower levels</critical> </check>
 - List any critical issues that must be resolved
 - Suggest specific document updates needed
 - Recommend additional stories or tasks required
-- Propose sequencing adjustments if needed </action>
+- Propose sequencing adjustments if needed
+  </action>
 
 <action>Include positive findings:
 
 - Highlight well-aligned areas
 - Note particularly thorough documentation
 - Recognize good architectural decisions
-- Commend comprehensive story coverage where found </action>
+- Commend comprehensive story coverage where found
+  </action>
 
-<template-output>readiness_assessment</template-output> </step>
+<template-output>readiness_assessment</template-output>
+</step>
 
 <step n="7" goal="Workflow status update offer" optional="true">
 <ask>The readiness assessment is complete. Would you like to update the workflow status to proceed to the next phase? [yes/no]
 
-Note: This will advance the project workflow to the next phase in your current
-path.</ask>
+Note: This will advance the project workflow to the next phase in your current path.</ask>
 
 <action if="user_response == 'yes'">
 Determine the next workflow phase based on current status:
@@ -239,6 +257,7 @@ Acknowledge that the workflow status remains unchanged.
 Remind user they can manually update when ready.
 </action>
 
-<template-output>status_update_result</template-output> </step>
+<template-output>status_update_result</template-output>
+</step>
 
 </workflow>

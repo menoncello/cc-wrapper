@@ -1,8 +1,7 @@
 # Workflow Init - Project Setup Instructions
 
-<critical>The workflow execution engine is governed by:
-{project-root}/bmad/core/tasks/workflow.xml</critical> <critical>You MUST have
-already loaded and processed: workflow-init/workflow.yaml</critical>
+<critical>The workflow execution engine is governed by: {project-root}/bmad/core/tasks/workflow.xml</critical>
+<critical>You MUST have already loaded and processed: workflow-init/workflow.yaml</critical>
 <critical>Communicate in {communication_language} with {user_name}</critical>
 
 <workflow>
@@ -10,7 +9,7 @@ already loaded and processed: workflow-init/workflow.yaml</critical>
 <step n="1" goal="Scan for existing work">
 <action>Search {output_folder}/ for existing BMM artifacts:</action>
 - PRD files (*prd*.md)
-- Architecture docs (architecture*.md, solution-architecture*.md, architecture/*)
+- Architecture docs (architecture*.md, architecture*.md, architecture/*)
 - Briefs (*brief*.md)
 - Brainstorming docs (brainstorm*.md)
 - Research docs (*research*.md)
@@ -54,14 +53,18 @@ Check for existing codebase indicators:
 <step n="2" goal="Confirm inferred settings" if="found artifacts">
 <output>📊 I found existing work! Here's what I detected:
 
-**Project Name:** {{inferred_project_name}} **Type:** {{inferred_type}}
-**Complexity:** {{inferred_level_description}} **Codebase:**
-{{inferred_field_type}} **Current Phase:** {{current_phase}} </output>
+**Project Name:** {{inferred_project_name}}
+**Type:** {{inferred_type}}
+**Complexity:** {{inferred_level_description}}
+**Codebase:** {{inferred_field_type}}
+**Current Phase:** {{current_phase}}
+</output>
 
 <ask>Is this correct?
 
 1. **Yes** - Use these settings
-2. **Start Fresh** - Ignore existing work Or tell me what's different:</ask>
+2. **Start Fresh** - Ignore existing work
+   Or tell me what's different:</ask>
 
 <check if="choice == 1">
   <action>Use inferred settings</action>
@@ -81,25 +84,24 @@ Check for existing codebase indicators:
 <template-output>project_name</template-output>
 <template-output>project_type</template-output>
 <template-output>project_level</template-output>
-<template-output>field_type</template-output> </step>
+<template-output>field_type</template-output>
+</step>
 
 <step n="3" goal="Gather project info">
 <output>Welcome to BMad Method, {user_name}!</output>
 
-<ask>What's your project called? {{#if project_name}}(Config shows:
-{{project_name}}){{/if}}</ask> <action>Set project_name</action>
+<ask>What's your project called? {{#if project_name}}(Config shows: {{project_name}}){{/if}}</ask>
+<action>Set project_name</action>
 <template-output>project_name</template-output>
 
-<ask>Tell me about what you're building. What's the goal? are we adding on to
-something or starting fresh.</ask>
+<ask>Tell me about what you're building. What's the goal? are we adding on to something or starting fresh.</ask>
 
-<action>Analyze description to determine project type, level, and field
-type</action> <action>Set project_type (game or software)</action> <action>Set
-project_level (0-4 based on complexity)</action> <action>Set field_type
-(greenfield or brownfield based on description)</action>
+<action>Analyze description to determine project type, level, and field type</action>
+<action>Set project_type (game or software)</action>
+<action>Set project_level (0-4 based on complexity)</action>
+<action>Set field_type (greenfield or brownfield based on description)</action>
 
-<ask>Based on your description: Level {{project_level}} {{field_type}}
-{{project_type}} project.
+<ask>Based on your description: Level {{project_level}} {{field_type}} {{project_type}} project.
 
 Is that correct? (y/n or tell me what's different)</ask>
 
@@ -109,7 +111,8 @@ Is that correct? (y/n or tell me what's different)</ask>
 
 <template-output>project_type</template-output>
 <template-output>project_level</template-output>
-<template-output>field_type</template-output> </step>
+<template-output>field_type</template-output>
+</step>
 
 <step n="4" goal="Load appropriate workflow path">
 <action>Determine path file based on selections:</action>
@@ -127,7 +130,8 @@ Is that correct? (y/n or tell me what's different)</ask>
 </check>
 
 <action>Parse workflow path file to extract phases and workflows</action>
-<template-output>workflow_path_file</template-output> </step>
+<template-output>workflow_path_file</template-output>
+</step>
 
 <step n="5" goal="Generate workflow summary">
 <action>Build workflow from loaded path file</action>
@@ -139,7 +143,8 @@ Is that correct? (y/n or tell me what's different)</ask>
 <template-output>current_agent</template-output>
 <template-output>next_action</template-output>
 <template-output>next_command</template-output>
-<template-output>next_agent</template-output> </step>
+<template-output>next_agent</template-output>
+</step>
 
 <step n="6" goal="Create status file">
 <action>Initialize all status values</action>

@@ -1,6 +1,9 @@
 # Technical Specification: {{epic_title}}
 
-Date: {{date}} Author: {{user_name}} Epic ID: {{epic_id}} Status: Draft
+Date: {{date}}
+Author: {{user_name}}
+Epic ID: {{epic_id}}
+Status: Draft
 
 ---
 

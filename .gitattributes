@@ -1,0 +1,44 @@
+# Git attributes for security and proper handling
+
+# Prevent Git from diffing binary files that might contain secrets
+*.pem binary
+*.key binary
+*.p12 binary
+*.pfx binary
+*.p8 binary
+*.crt binary
+*.cer binary
+*.der binary
+*.jks binary
+*.jceks binary
+*.bks binary
+*.pgp binary
+*.gpg binary
+*.aes binary
+*.des binary
+*.rsa binary
+*.dsa binary
+*.ec binary
+
+# Treat database dumps as binary
+*.sql binary
+*.dump binary
+*.backup binary
+
+# Large files
+*.zip binary
+*.tar binary
+*.gz binary
+*.bz2 binary
+
+# Sensitive configuration files
+*.secret binary
+*.password binary
+*.credential binary
+*.token binary
+*.auth binary
+
+# Prevent line ending conversion for security files
+*.pem text eol=lf
+*.key text eol=lf
+*.pem text eol=lf

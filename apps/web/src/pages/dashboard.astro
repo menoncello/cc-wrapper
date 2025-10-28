@@ -1,0 +1,157 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TourOverlay from '../components/tour/TourOverlay';
+
+const url = new URL(Astro.request.url);
+const onboardingSkipped = url.searchParams.get('onboarding') === 'skipped';
+---
+
+<BaseLayout title="Dashboard - CC Wrapper">
+  <main class="dashboard-page">
+    <header class="dashboard-header">
+      <h1>Dashboard</h1>
+    </header>
+
+    {onboardingSkipped && (
+      <div class="welcome-banner" role="alert">
+        <p>
+          <strong>Welcome!</strong> Complete your profile setup to unlock all features.
+        </p>
+        <a href="/settings/profile" class="setup-link">Complete Setup</a>
+      </div>
+    )}
+
+    <div class="dashboard-content">
+      <div class="workspace-info" data-tour="context-panel">
+        <h2>Your Workspace</h2>
+        <p data-testid="workspace-name">Loading...</p>
+      </div>
+
+      <div class="terminal-panel" data-tour="terminal-panel">
+        <h3>Terminal Panel</h3>
+        <div class="terminal-output">
+          <p>AI task output will appear here...</p>
+        </div>
+      </div>
+
+      <div class="browser-panel" data-tour="browser-panel">
+        <h3>Browser Panel</h3>
+        <div class="browser-preview">
+          <p>Visual feedback and debugging tools...</p>
+        </div>
+      </div>
+
+      <div class="optimization-panel" data-tour="optimization-panel">
+        <h3>Wait-Time Optimization</h3>
+        <div class="optimization-features">
+          <p>Get automatic task suggestions while AI processes your requests...</p>
+        </div>
+      </div>
+
+      <div class="quick-actions">
+        <h3>Quick Actions</h3>
+        <ul>
+          <li><a href="/settings/profile">Profile Settings</a></li>
+          <li><a href="#">Create Project</a></li>
+          <li><a href="#">View Tasks</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <TourOverlay client:load />
+  </main>
+</BaseLayout>
+
+<style>
+  .dashboard-page {
+    min-height: 100vh;
+    padding: 2rem;
+  }
+
+  .dashboard-header {
+    margin-bottom: 2rem;
+  }
+
+  .dashboard-header h1 {
+    font-size: 2rem;
+    color: #333;
+  }
+
+  .welcome-banner {
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .welcome-banner p {
+    margin: 0;
+    color: #856404;
+  }
+
+  .setup-link {
+    background: #ffc107;
+    color: #000;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .dashboard-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .workspace-info,
+  .terminal-panel,
+  .browser-panel,
+  .optimization-panel,
+  .quick-actions {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .terminal-output,
+  .browser-preview,
+  .optimization-features {
+    background: #f8f9fa;
+    border-radius: 6px;
+    padding: 1rem;
+    margin-top: 0.5rem;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 0.875rem;
+    color: #6b7280;
+  }
+
+  .workspace-info h2,
+  .quick-actions h3 {
+    margin-top: 0;
+    color: #333;
+  }
+
+  .quick-actions ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .quick-actions li {
+    margin-bottom: 0.5rem;
+  }
+
+  .quick-actions a {
+    color: #667eea;
+    text-decoration: none;
+  }
+
+  .quick-actions a:hover {
+    text-decoration: underline;
+  }
+</style>

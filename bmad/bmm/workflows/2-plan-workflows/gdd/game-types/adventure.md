@@ -33,8 +33,7 @@ This game type is **narrative-heavy**. Consider running the Narrative Design wor
 - Character introduction and development
 - Climax and resolution structure
 
-**Note:** Detailed story elements (plot, characters, lore) belong in the
-Narrative Design Document.
+**Note:** Detailed story elements (plot, characters, lore) belong in the Narrative Design Document.
 
 ### Puzzle Systems
 

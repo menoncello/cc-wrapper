@@ -1,7 +1,8 @@
 # Technical Research Report: {{technical_question}}
 
-**Date:** {{date}} **Prepared by:** {{user_name}} **Project Context:**
-{{project_context}}
+**Date:** {{date}}
+**Prepared by:** {{user_name}}
+**Project Context:** {{project_context}}
 
 ---
 
@@ -61,31 +62,36 @@
 
 ### Option 1: [Technology Name]
 
-{{tech_profile_1}} {{/tech_profile_1}}
+{{tech_profile_1}}
+{{/tech_profile_1}}
 
 {{#tech_profile_2}}
 
 ### Option 2: [Technology Name]
 
-{{tech_profile_2}} {{/tech_profile_2}}
+{{tech_profile_2}}
+{{/tech_profile_2}}
 
 {{#tech_profile_3}}
 
 ### Option 3: [Technology Name]
 
-{{tech_profile_3}} {{/tech_profile_3}}
+{{tech_profile_3}}
+{{/tech_profile_3}}
 
 {{#tech_profile_4}}
 
 ### Option 4: [Technology Name]
 
-{{tech_profile_4}} {{/tech_profile_4}}
+{{tech_profile_4}}
+{{/tech_profile_4}}
 
 {{#tech_profile_5}}
 
 ### Option 5: [Technology Name]
 
-{{tech_profile_5}} {{/tech_profile_5}}
+{{tech_profile_5}}
+{{/tech_profile_5}}
 
 ---
 
@@ -95,7 +101,8 @@
 
 ### Weighted Analysis
 
-**Decision Priorities:** {{decision_priorities}}
+**Decision Priorities:**
+{{decision_priorities}}
 
 {{weighted_analysis}}
 
@@ -119,7 +126,8 @@
 
 ## 7. Architecture Pattern Analysis
 
-{{#architecture_pattern_analysis}} {{architecture_pattern_analysis}}
+{{#architecture_pattern_analysis}}
+{{architecture_pattern_analysis}}
 {{/architecture_pattern_analysis}}
 
 ---
@@ -192,12 +200,11 @@
 
 ## Document Information
 
-**Workflow:** BMad Research Workflow - Technical Research v2.0 **Generated:**
-{{date}} **Research Type:** Technical/Architecture Research **Next Review:**
-[Date for review/update]
+**Workflow:** BMad Research Workflow - Technical Research v2.0
+**Generated:** {{date}}
+**Research Type:** Technical/Architecture Research
+**Next Review:** [Date for review/update]
 
 ---
 
-_This technical research report was generated using the BMad Method Research
-Workflow, combining systematic technology evaluation frameworks with real-time
-research and analysis._
+_This technical research report was generated using the BMad Method Research Workflow, combining systematic technology evaluation frameworks with real-time research and analysis._

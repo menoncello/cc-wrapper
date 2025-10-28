@@ -1,0 +1,284 @@
+<story-context id="bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>1</epicId>
+    <storyId>1.1</storyId>
+    <title>Basic Authentication &amp; User Onboarding</title>
+    <status>Ready</status>
+    <generatedAt>2025-10-21</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/stories/story-1.1.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>new developer</asA>
+    <iWant>to create an account and complete basic onboarding</iWant>
+    <soThat>I can start using CC Wrapper immediately and experience the wait-time optimization benefits</soThat>
+    <tasks>
+      - Implement authentication database schema and models (AC: 1)
+      - Build authentication API endpoints with Bun native crypto (AC: 1)
+      - Integrate OAuth providers for social login (AC: 1)
+      - Create onboarding wizard UI component (AC: 2, 3)
+      - Implement default workspace creation (AC: 3)
+      - Build guided tour component for interface introduction (AC: 4)
+      - Implement skip onboarding functionality (AC: 5)
+      - Create user profile settings page (AC: 6)
+      - Write unit tests for authentication service (AC: 1)
+      - Write integration tests for onboarding flow (AC: 2-6)
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    <criterion id="AC1">User can create account with email/password or social login (Google, GitHub)</criterion>
+    <criterion id="AC2">Onboarding wizard collects user type (solo/team/enterprise) and primary AI tools</criterion>
+    <criterion id="AC3">System configures default workspace based on user preferences</criterion>
+    <criterion id="AC4">User receives guided tour of core interface focusing on wait-time optimization</criterion>
+    <criterion id="AC5">User can skip onboarding and access basic functionality immediately</criterion>
+    <criterion id="AC6">Profile includes basic settings: preferred AI tools, notification preferences, default workspace</criterion>
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/tech-spec-epic-1.md</path>
+        <title>Tech Spec - Epic 1: Core Value Delivery &amp; Wait-Time Optimization</title>
+        <section>Authentication API</section>
+        <snippet>Defines authentication endpoints POST /api/auth/register, POST /api/auth/login, POST /api/auth/logout, GET /api/auth/me, PUT /api/auth/profile with Bun-native JWT implementation using Web Crypto API</snippet>
+      </doc>
+      <doc>
+        <path>docs/tech-spec-epic-1.md</path>
+        <title>Tech Spec - Epic 1: Core Value Delivery &amp; Wait-Time Optimization</title>
+        <section>Data Models - Authentication</section>
+        <snippet>Database schema for users table (id, email, name, role, created_at, updated_at) with UUID primary keys and user_role enum</snippet>
+      </doc>
+      <doc>
+        <path>docs/tech-spec-epic-1.md</path>
+        <title>Tech Spec - Epic 1: Core Value Delivery &amp; Wait-Time Optimization</title>
+        <section>Week 1: Core Infrastructure - Basic Authentication</section>
+        <snippet>Implement user registration/login with Bun native crypto, JWT token management using Bun Web Crypto API, basic session handling with Bun password hashing (Argon2), user profile management</snippet>
+      </doc>
+      <doc>
+        <path>docs/solution-architecture.md</path>
+        <title>CC Wrapper Solution Architecture Document</title>
+        <section>Bun Native Security Implementation</section>
+        <snippet>Authentication using Bun's built-in Web Crypto API for JWT signing, Argon2id password hashing with Bun.password.hash, memoryCost: 65536, timeCost: 3, threads: 4 parameters. Zero external dependencies for security.</snippet>
+      </doc>
+      <doc>
+        <path>docs/solution-architecture.md</path>
+        <title>CC Wrapper Solution Architecture Document</title>
+        <section>Authentication Strategy</section>
+        <snippet>Enterprise-grade authentication with SAML 2.0 for enterprise SSO (Okta, Azure AD, Google Workspace), OAuth 2.0/OIDC for third-party integrations, email/password with MFA, API key authentication for service-to-service communication</snippet>
+      </doc>
+      <doc>
+        <path>docs/solution-architecture.md</path>
+        <title>CC Wrapper Solution Architecture Document</title>
+        <section>Session Management</section>
+        <snippet>JWT access tokens (15-minute expiry), secure HTTP-only refresh tokens (7-day expiry), Redis-based session store for real-time invalidation, device fingerprinting for enhanced security</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>CC Wraper - Epic Breakdown</title>
+        <section>Story 1.1: Basic Authentication &amp; User Onboarding</section>
+        <snippet>User can create account with email/password or social login (Google, GitHub), onboarding wizard collects user type and primary AI tools, system configures default workspace, user receives guided tour</snippet>
+      </doc>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>FR017: Role-Based Access Control</section>
+        <snippet>System must support role-based access control with owner, admin, developer, and viewer roles. Access permissions managed at workspace and project level.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <artifact>
+        <path>packages/shared-utils/src/index.ts</path>
+        <kind>utility</kind>
+        <symbol>shared-utils</symbol>
+        <lines></lines>
+        <reason>Existing shared utilities package structure that can be extended for authentication-related utility functions</reason>
+      </artifact>
+      <artifact>
+        <path>package.json</path>
+        <kind>configuration</kind>
+        <symbol>monorepo-config</symbol>
+        <lines>7-11</lines>
+        <reason>Monorepo workspace configuration defining packages/*, services/*, apps/* structure for authentication service placement</reason>
+      </artifact>
+    </code>
+    <dependencies>
+      <runtime>
+        <dep name="Bun" version="1.3.0" />
+        <dep name="Node.js" version=">=20.0.0" />
+      </runtime>
+      <frontend>
+        <dep name="React" version="19.2.0" />
+        <dep name="React DOM" version="19.2.0" />
+        <dep name="Vite" version="7.0.0" />
+        <dep name="@vitejs/plugin-react" version="5.0.4" />
+      </frontend>
+      <backend>
+        <dep name="TypeScript" version="5.9.3" />
+        <dep name="dotenv" version="16.4.5" />
+      </backend>
+      <testing>
+        <dep name="@playwright/test" version="1.56.0" />
+        <dep name="@stryker-mutator/core" version="9.2.0" />
+        <dep name="@stryker-mutator/typescript-checker" version="9.2.0" />
+        <dep name="Bun Test" version="native" />
+      </testing>
+      <quality>
+        <dep name="ESLint" version="9.14.0" />
+        <dep name="@typescript-eslint/eslint-plugin" version="8.14.0" />
+        <dep name="@typescript-eslint/parser" version="8.14.0" />
+        <dep name="Prettier" version="3.3.3" />
+        <dep name="Husky" version="9.1.7" />
+        <dep name="lint-staged" version="16.2.4" />
+      </testing>
+      <tooling>
+        <dep name="Turbo" version="2.5.8" />
+      </tooling>
+      <planned>
+        <dep name="Elysia" version="1.4.12" note="Backend framework for authentication API endpoints" />
+        <dep name="Prisma" version="6.17.0" note="ORM for database operations with PostgreSQL 18.0" />
+        <dep name="Zustand" version="4.5.5" note="State management for React islands" />
+        <dep name="Astro" version="5.14" note="Frontend framework with React 19 integration" />
+        <dep name="Zod" version="latest" note="Schema validation for API inputs" />
+      </planned>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <architecture>
+      - CRITICAL: Use Bun-native authentication with Web Crypto API for JWT signing - NO external JWT libraries (jsonwebtoken, jose, etc.)
+      - CRITICAL: Use Bun.password.hash with Argon2id for password hashing - NO bcrypt or other libraries
+      - Monorepo structure: Place authentication service in services/auth/ with API routes in apps/web/src/pages/api/auth/
+      - Database models must use Prisma 6.17.0 ORM with PostgreSQL 18.0
+      - Frontend must use Astro 5.14 + React 19.2.0 hybrid architecture with island-based interactivity
+      - State management with Zustand 4.5.5 for client-side React islands
+      - All API endpoints must use Elysia 1.4.12 framework on Bun runtime
+      - Shared types must be defined in packages/shared-types/ for reuse across services
+    </architecture>
+    <security>
+      - JWT tokens: 15-minute expiry with secure signing using Bun Web Crypto API
+      - Password hashing: Argon2id with memoryCost: 65536, timeCost: 3, threads: 4
+      - OAuth security: Validate OAuth state parameter, secure token exchange, handle expired tokens
+      - Rate limiting: 100 requests/minute per user/IP for all auth endpoints
+      - Input validation: Comprehensive validation with Zod schemas for all user inputs
+      - No inline ESLint disables allowed - fix all linting issues properly
+    </security>
+    <performance>
+      - API response time: Registration/login must be &lt; 50ms
+      - Database operations: User creation/lookup &lt; 20ms with proper indexing
+      - OAuth flow: Complete OAuth authentication &lt; 2 seconds
+      - Onboarding load: Initial page load &lt; 2 seconds
+    </performance>
+    <testing>
+      - Unit tests: 90% code coverage target using Bun Test
+      - Integration tests: Test complete authentication flows including database operations
+      - E2E tests: Use Playwright 1.56.0 for end-to-end onboarding workflow tests
+      - Security testing: Validate JWT token security, password hashing strength, rate limiting effectiveness
+      - Mutation testing: Required with Stryker for critical authentication code paths
+      - NEVER reduce mutation testing thresholds - improve test quality instead
+    </testing>
+    <code-quality>
+      - All code must be in English (code, comments, documentation)
+      - User communication in English (as per config)
+      - TypeScript strict mode required
+      - NEVER use eslint-disable or eslint-disable-next-line - fix issues properly
+      - All tests use bunx turbo test command for execution
+    </code-quality>
+  </constraints>
+
+  <interfaces>
+    <api>
+      <endpoint>
+        <name>POST /api/auth/register</name>
+        <kind>REST endpoint</kind>
+        <signature>POST /api/auth/register - Body: { email: string, password: string, name?: string } - Response: { user: User, token: string }</signature>
+        <path>apps/web/src/pages/api/auth/register.ts</path>
+      </endpoint>
+      <endpoint>
+        <name>POST /api/auth/login</name>
+        <kind>REST endpoint</kind>
+        <signature>POST /api/auth/login - Body: { email: string, password: string } - Response: { user: User, token: string }</signature>
+        <path>apps/web/src/pages/api/auth/login.ts</path>
+      </endpoint>
+      <endpoint>
+        <name>POST /api/auth/logout</name>
+        <kind>REST endpoint</kind>
+        <signature>POST /api/auth/logout - Headers: { Authorization: 'Bearer {token}' } - Response: { success: boolean }</signature>
+        <path>apps/web/src/pages/api/auth/logout.ts</path>
+      </endpoint>
+      <endpoint>
+        <name>GET /api/auth/me</name>
+        <kind>REST endpoint</kind>
+        <signature>GET /api/auth/me - Headers: { Authorization: 'Bearer {token}' } - Response: { user: User }</signature>
+        <path>apps/web/src/pages/api/auth/me.ts</path>
+      </endpoint>
+      <endpoint>
+        <name>PUT /api/auth/profile</name>
+        <kind>REST endpoint</kind>
+        <signature>PUT /api/auth/profile - Body: { preferredAITools?: string[], notificationPreferences?: object, defaultWorkspaceId?: string } - Response: { profile: UserProfile }</signature>
+        <path>apps/web/src/pages/api/auth/profile.ts</path>
+      </endpoint>
+      <endpoint>
+        <name>GET /api/auth/oauth/:provider/callback</name>
+        <kind>OAuth callback</kind>
+        <signature>GET /api/auth/oauth/:provider/callback - Query: { code: string, state: string } - Response: { user: User, token: string }</signature>
+        <path>apps/web/src/pages/api/auth/oauth/[provider]/callback.ts</path>
+      </endpoint>
+    </api>
+    <database>
+      <schema>
+        <name>users</name>
+        <kind>Prisma schema</kind>
+        <signature>CREATE TABLE users (id UUID PRIMARY KEY, email TEXT UNIQUE NOT NULL, password_hash TEXT, oauth_provider TEXT, oauth_id TEXT, user_type TEXT, created_at TIMESTAMP, updated_at TIMESTAMP)</signature>
+        <path>services/auth/prisma/schema.prisma</path>
+      </schema>
+      <schema>
+        <name>user_profiles</name>
+        <kind>Prisma schema</kind>
+        <signature>CREATE TABLE user_profiles (id UUID PRIMARY KEY, user_id UUID REFERENCES users(id), preferred_ai_tools JSONB, notification_preferences JSONB, default_workspace_id UUID)</signature>
+        <path>services/auth/prisma/schema.prisma</path>
+      </schema>
+    </database>
+    <components>
+      <component>
+        <name>OnboardingWizard</name>
+        <kind>React component</kind>
+        <signature>interface OnboardingWizardProps { onComplete: (data: OnboardingData) => void; onSkip: () => void; }</signature>
+        <path>apps/web/src/components/auth/OnboardingWizard.tsx</path>
+      </component>
+      <component>
+        <name>GuidedTour</name>
+        <kind>React component</kind>
+        <signature>interface GuidedTourProps { steps: TourStep[]; onComplete: () => void; onSkip: () => void; }</signature>
+        <path>apps/web/src/components/onboarding/GuidedTour.tsx</path>
+      </component>
+      <component>
+        <name>ProfileSettings</name>
+        <kind>React component</kind>
+        <signature>interface ProfileSettingsProps { user: User; profile: UserProfile; onSave: (profile: Partial&lt;UserProfile&gt;) => Promise&lt;void&gt;; }</signature>
+        <path>apps/web/src/components/profile/ProfileSettings.tsx</path>
+      </component>
+    </components>
+  </interfaces>
+
+  <tests>
+    <standards>
+      All tests must use Bun Test framework (native to Bun 1.3.0) with 90% code coverage target. Unit tests focus on authentication service logic (registration, login, JWT generation, password hashing). Integration tests cover complete workflows with database operations using SQLite in-memory for fast execution. E2E tests use Playwright 1.56.0 for onboarding flows. Mutation testing with Stryker required for critical authentication paths. All tests run via 'bunx turbo test' command. Security testing validates JWT token security, password hashing strength, and rate limiting effectiveness.
+    </standards>
+    <locations>
+      - tests/unit/auth/ (unit tests for authentication service)
+      - tests/integration/auth/ (integration tests for auth flows)
+      - tests/e2e/onboarding/ (E2E tests for onboarding)
+      - services/auth/tests/ (service-specific tests)
+    </locations>
+    <ideas>
+      <idea ac="AC1">Test user registration with valid email/password, test duplicate email rejection, test OAuth account creation (Google, GitHub), test JWT token generation and verification, test password hashing with Bun Argon2id, test rate limiting enforcement</idea>
+      <idea ac="AC2">Test onboarding wizard step navigation, test user type selection persistence, test AI tools selection with multiple choices, test form validation for all onboarding steps</idea>
+      <idea ac="AC3">Test default workspace creation with templates, test workspace configuration based on user preferences, test workspace linking to user profile</idea>
+      <idea ac="AC4">Test guided tour completion flow, test tour step highlighting and tooltips, test tour skip functionality, test tour completion status storage</idea>
+      <idea ac="AC5">Test skip onboarding button on each step, test default configuration creation when skipped, test redirect to dashboard after skip, test reminder notification display</idea>
+      <idea ac="AC6">Test profile settings page rendering, test preferred AI tools update, test notification preferences update, test default workspace selection, test profile update API validation</idea>
+    </ideas>
+  </tests>
+</story-context>

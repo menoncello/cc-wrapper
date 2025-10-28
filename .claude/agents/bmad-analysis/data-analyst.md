@@ -1,7 +1,6 @@
 ---
 name: bmm-data-analyst
-description:
-  Performs quantitative analysis, market sizing, and metrics calculations. use
+description: Performs quantitative analysis, market sizing, and metrics calculations. use
   PROACTIVELY when calculating TAM/SAM/SOM, analyzing metrics, or performing
   statistical analysis
 tools:

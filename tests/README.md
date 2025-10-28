@@ -112,11 +112,7 @@ test names and documentation
 The test suite uses comprehensive test utilities located in `/test-utils/`:
 
 ```typescript
-import {
-  createMockSetupEnvironment,
-  setupTestEnvironment,
-  setupMockConsole
-} from '../test-utils';
+import { createMockSetupEnvironment, setupTestEnvironment, setupMockConsole } from '../test-utils';
 ```
 
 See `/test-utils/README.md` for detailed usage information.

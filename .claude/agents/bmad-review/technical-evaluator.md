@@ -1,7 +1,6 @@
 ---
 name: bmm-technical-evaluator
-description:
-  Evaluates technology choices, architectural patterns, and technical
+description: Evaluates technology choices, architectural patterns, and technical
   feasibility for product requirements. use PROACTIVELY when making technology
   stack decisions or assessing technical constraints
 tools:

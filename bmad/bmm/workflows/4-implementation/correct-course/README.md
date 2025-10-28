@@ -4,30 +4,11 @@ last-redoc-date: 2025-10-01
 
 # Correct Course Workflow
 
-The correct-course workflow is v6's adaptive response mechanism for stories that
-encounter issues during development or review, enabling intelligent course
-correction without restarting from scratch. Run by the Scrum Master (SM) or Team
-Lead, this workflow analyzes why a story is blocked or has issues, determines
-whether the story scope needs adjustment, requirements need clarification,
-technical approach needs revision, or the story needs to be split or
-reconsidered. This represents the agile principle of embracing change even late
-in the development cycle, but doing so in a structured way that captures
-learning and maintains project coherence.
+The correct-course workflow is v6's adaptive response mechanism for stories that encounter issues during development or review, enabling intelligent course correction without restarting from scratch. Run by the Scrum Master (SM) or Team Lead, this workflow analyzes why a story is blocked or has issues, determines whether the story scope needs adjustment, requirements need clarification, technical approach needs revision, or the story needs to be split or reconsidered. This represents the agile principle of embracing change even late in the development cycle, but doing so in a structured way that captures learning and maintains project coherence.
 
-Unlike simply abandoning failed work or blindly pushing forward, correct-course
-provides a systematic approach to diagnosing issues and determining appropriate
-remediation. The workflow examines the original story specification, what was
-actually implemented, what issues arose during development or review, and the
-broader epic context to recommend the best path forward. This might involve
-clarifying requirements, adjusting acceptance criteria, revising technical
-approach, splitting the story into smaller pieces, or even determining the story
-should be deprioritized.
+Unlike simply abandoning failed work or blindly pushing forward, correct-course provides a systematic approach to diagnosing issues and determining appropriate remediation. The workflow examines the original story specification, what was actually implemented, what issues arose during development or review, and the broader epic context to recommend the best path forward. This might involve clarifying requirements, adjusting acceptance criteria, revising technical approach, splitting the story into smaller pieces, or even determining the story should be deprioritized.
 
-The critical value of this workflow is that it prevents thrashing—endless cycles
-of implementation and rework without clear direction. By stepping back to
-analyze what went wrong and charting a clear path forward, the correct-course
-workflow enables teams to learn from difficulties and adapt intelligently rather
-than stubbornly proceeding with a flawed approach.
+The critical value of this workflow is that it prevents thrashing—endless cycles of implementation and rework without clear direction. By stepping back to analyze what went wrong and charting a clear path forward, the correct-course workflow enables teams to learn from difficulties and adapt intelligently rather than stubbornly proceeding with a flawed approach.
 
 ## Usage
 
@@ -66,8 +47,7 @@ The workflow should be run when:
 
 **Primary Deliverable:**
 
-- **Course Correction Report** (`[story-id]-correction.md`): Analysis and
-  recommendations including:
+- **Course Correction Report** (`[story-id]-correction.md`): Analysis and recommendations including:
   - Issue root cause analysis
   - Impact assessment on epic and project
   - Recommended corrective actions with rationale

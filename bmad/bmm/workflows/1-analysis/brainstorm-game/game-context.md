@@ -1,7 +1,6 @@
 # Game Brainstorming Context
 
-This context guide provides game-specific considerations for brainstorming
-sessions focused on game design and development.
+This context guide provides game-specific considerations for brainstorming sessions focused on game design and development.
 
 ## Session Focus Areas
 

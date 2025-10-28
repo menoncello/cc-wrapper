@@ -70,8 +70,7 @@
 ### Greenfield Project Specifics
 
 - [ ] Initial project setup and configuration stories exist
-- [ ] If using architecture.md: First story is starter template initialization
-      command
+- [ ] If using architecture.md: First story is starter template initialization command
 - [ ] Development environment setup is documented
 - [ ] CI/CD pipeline stories are included early in sequence
 - [ ] Database/storage initialization stories are properly placed
@@ -173,5 +172,4 @@
 
 ---
 
-_Use this checklist to ensure comprehensive validation of implementation
-readiness_
+_Use this checklist to ensure comprehensive validation of implementation readiness_

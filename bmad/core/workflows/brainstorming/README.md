@@ -6,27 +6,17 @@ last-redoc-date: 2025-09-28
 
 ## Overview
 
-The brainstorming workflow facilitates interactive brainstorming sessions using
-diverse creative techniques. This workflow acts as an AI facilitator guiding
-users through various ideation methods to generate and refine creative solutions
-in a structured, energetic, and highly interactive manner.
+The brainstorming workflow facilitates interactive brainstorming sessions using diverse creative techniques. This workflow acts as an AI facilitator guiding users through various ideation methods to generate and refine creative solutions in a structured, energetic, and highly interactive manner.
 
 ## Key Features
 
-- **36 Creative Techniques**: Comprehensive library spanning collaborative,
-  structured, creative, deep, theatrical, wild, and introspective approaches
-- **Interactive Facilitation**: AI acts as a skilled facilitator using "Yes,
-  and..." methodology
-- **Flexible Approach Selection**: User-guided, AI-recommended, random, or
-  progressive technique flows
-- **Context-Aware Sessions**: Supports domain-specific brainstorming through
-  context document input
-- **Systematic Organization**: Converges ideas into immediate opportunities,
-  future innovations, and moonshots
-- **Action Planning**: Prioritizes top ideas with concrete next steps and
-  timelines
-- **Session Documentation**: Comprehensive structured reports capturing all
-  insights and outcomes
+- **36 Creative Techniques**: Comprehensive library spanning collaborative, structured, creative, deep, theatrical, wild, and introspective approaches
+- **Interactive Facilitation**: AI acts as a skilled facilitator using "Yes, and..." methodology
+- **Flexible Approach Selection**: User-guided, AI-recommended, random, or progressive technique flows
+- **Context-Aware Sessions**: Supports domain-specific brainstorming through context document input
+- **Systematic Organization**: Converges ideas into immediate opportunities, future innovations, and moonshots
+- **Action Planning**: Prioritizes top ideas with concrete next steps and timelines
+- **Session Documentation**: Comprehensive structured reports capturing all insights and outcomes
 
 ## Usage
 
@@ -77,21 +67,17 @@ The workflow includes 36 techniques organized into 7 categories:
 
 ### Structured Approaches
 
-- **SCAMPER Method**: Systematic creativity through seven lenses
-  (Substitute/Combine/Adapt/Modify/Put/Eliminate/Reverse)
-- **Six Thinking Hats**: Explore through six perspectives
-  (facts/emotions/benefits/risks/creativity/process)
+- **SCAMPER Method**: Systematic creativity through seven lenses (Substitute/Combine/Adapt/Modify/Put/Eliminate/Reverse)
+- **Six Thinking Hats**: Explore through six perspectives (facts/emotions/benefits/risks/creativity/process)
 - **Mind Mapping**: Visual branching from central concepts
 - **Resource Constraints**: Innovation through extreme limitations
 
 ### Creative Methods
 
-- **What If Scenarios**: Explore radical possibilities by questioning
-  constraints
+- **What If Scenarios**: Explore radical possibilities by questioning constraints
 - **Analogical Thinking**: Find solutions through domain parallels
 - **Reversal Inversion**: Flip problems upside down for fresh angles
-- **First Principles Thinking**: Strip away assumptions to rebuild from
-  fundamentals
+- **First Principles Thinking**: Strip away assumptions to rebuild from fundamentals
 - **Forced Relationships**: Connect unrelated concepts for innovation
 - **Time Shifting**: Explore solutions across different time periods
 - **Metaphor Mapping**: Use extended metaphors as thinking tools
@@ -185,22 +171,16 @@ The workflow includes 36 techniques organized into 7 categories:
 
 ### Generated Files
 
-- **Primary output**: Structured session report saved to
-  `{output_folder}/brainstorming-session-results-{date}.md`
+- **Primary output**: Structured session report saved to `{output_folder}/brainstorming-session-results-{date}.md`
 - **Context integration**: Links to previous brainstorming sessions if available
 
 ### Output Structure
 
-1. **Executive Summary** - Topic, goals, techniques used, total ideas generated,
-   key themes
-2. **Technique Sessions** - Detailed capture of each technique's ideation
-   process
-3. **Idea Categorization** - Immediate opportunities, future innovations,
-   moonshots, insights
-4. **Action Planning** - Top 3 priorities with rationale, steps, resources,
-   timelines
-5. **Reflection and Follow-up** - Session analysis, recommendations, next steps
-   planning
+1. **Executive Summary** - Topic, goals, techniques used, total ideas generated, key themes
+2. **Technique Sessions** - Detailed capture of each technique's ideation process
+3. **Idea Categorization** - Immediate opportunities, future innovations, moonshots, insights
+4. **Action Planning** - Top 3 priorities with rationale, steps, resources, timelines
+5. **Reflection and Follow-up** - Session analysis, recommendations, next steps planning
 
 ## Requirements
 
@@ -213,21 +193,17 @@ The workflow includes 36 techniques organized into 7 categories:
 
 ### Before Starting
 
-1. **Define Clear Intent**: Know whether you want broad exploration or focused
-   problem-solving
-2. **Gather Context**: Prepare any relevant background documents or domain
-   knowledge
+1. **Define Clear Intent**: Know whether you want broad exploration or focused problem-solving
+2. **Gather Context**: Prepare any relevant background documents or domain knowledge
 3. **Set Time Expectations**: Plan for 45-90 minutes for a comprehensive session
-4. **Create Open Environment**: Ensure distraction-free space for creative
-   thinking
+4. **Create Open Environment**: Ensure distraction-free space for creative thinking
 
 ### During Execution
 
 1. **Embrace Quantity**: Generate many ideas without self-censoring
 2. **Build with "Yes, And"**: Accept and expand on ideas rather than judging
 3. **Stay Curious**: Follow unexpected connections and tangents
-4. **Trust the Process**: Let the facilitator guide you through technique
-   transitions
+4. **Trust the Process**: Let the facilitator guide you through technique transitions
 5. **Capture Everything**: Document all ideas, even seemingly silly ones
 6. **Monitor Energy**: Communicate when you need technique changes or breaks
 
@@ -236,8 +212,7 @@ The workflow includes 36 techniques organized into 7 categories:
 1. **Review Within 24 Hours**: Re-read the report while insights are fresh
 2. **Act on Quick Wins**: Implement immediate opportunities within one week
 3. **Schedule Follow-ups**: Plan development sessions for promising concepts
-4. **Share Selectively**: Distribute relevant insights to appropriate
-   stakeholders
+4. **Share Selectively**: Distribute relevant insights to appropriate stakeholders
 
 ## Facilitation Principles
 
@@ -257,29 +232,22 @@ The AI facilitator operates using these core principles:
 1. **Mind Mapping** (10 min) - Build the landscape of possibilities
 2. **SCAMPER** (15 min) - Systematic exploration of improvement angles
 3. **Six Thinking Hats** (15 min) - Multiple perspectives on solutions
-4. **Forced Relationships** (10 min) - Creative synthesis of unexpected
-   connections
+4. **Forced Relationships** (10 min) - Creative synthesis of unexpected connections
 
 ### Energy Checkpoints
 
-- After 15-20 minutes: "Should we continue with this technique or try something
-  new?"
-- Before convergent phase: "Are you ready to start organizing ideas, or explore
-  more?"
+- After 15-20 minutes: "Should we continue with this technique or try something new?"
+- Before convergent phase: "Are you ready to start organizing ideas, or explore more?"
 - During action planning: "How's your energy for the final planning phase?"
 
 ## Customization
 
 To customize this workflow:
 
-1. **Add New Techniques**: Extend `brain-methods.csv` with additional creative
-   methods
-2. **Modify Facilitation Style**: Adjust prompts in `instructions.md` for
-   different energy levels
-3. **Update Report Structure**: Modify `template.md` to include additional
-   analysis sections
-4. **Create Domain Variants**: Develop specialized technique sets for specific
-   industries
+1. **Add New Techniques**: Extend `brain-methods.csv` with additional creative methods
+2. **Modify Facilitation Style**: Adjust prompts in `instructions.md` for different energy levels
+3. **Update Report Structure**: Modify `template.md` to include additional analysis sections
+4. **Create Domain Variants**: Develop specialized technique sets for specific industries
 
 ## Version History
 
@@ -294,8 +262,7 @@ To customize this workflow:
 For issues or questions:
 
 - Review technique descriptions in `brain-methods.csv` for facilitation guidance
-- Consult the workflow instructions in `instructions.md` for step-by-step
-  details
+- Consult the workflow instructions in `instructions.md` for step-by-step details
 - Reference the template structure in `template.md` for output expectations
 - Follow BMAD documentation standards for workflow customization
 

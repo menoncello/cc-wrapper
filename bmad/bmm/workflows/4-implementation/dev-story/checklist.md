@@ -7,9 +7,7 @@ optional-inputs:
   - 'Test results output (if saved)'
   - 'CI logs (if applicable)'
 validation-rules:
-  - 'Only permitted sections in story were modified: Tasks/Subtasks checkboxes,
-    Dev Agent Record (Debug Log, Completion Notes), File List, Change Log, and
-    Status'
+  - 'Only permitted sections in story were modified: Tasks/Subtasks checkboxes, Dev Agent Record (Debug Log, Completion Notes), File List, Change Log, and Status'
 ---
 
 # Dev Story Completion Checklist
@@ -29,10 +27,8 @@ validation-rules:
 
 ## Story File Updates
 
-- [ ] File List section includes every new/modified/deleted file (paths relative
-      to repo root)
-- [ ] Dev Agent Record contains relevant Debug Log and/or Completion Notes for
-      this work
+- [ ] File List section includes every new/modified/deleted file (paths relative to repo root)
+- [ ] Dev Agent Record contains relevant Debug Log and/or Completion Notes for this work
 - [ ] Change Log includes a brief summary of what changed
 - [ ] Only permitted sections of the story file were modified
 

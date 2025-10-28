@@ -1,7 +1,6 @@
 ---
 name: bmm-tech-debt-auditor
-description:
-  Identifies and documents technical debt, code smells, and areas requiring
+description: Identifies and documents technical debt, code smells, and areas requiring
   refactoring with risk assessment and remediation strategies. use PROACTIVELY
   when documenting brownfield projects or planning refactoring
 tools:

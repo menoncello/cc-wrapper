@@ -225,14 +225,7 @@ test('user test');
 ### Using Test Lifecycle Hooks
 
 ```typescript
-import {
-  describe,
-  test,
-  beforeAll,
-  afterAll,
-  beforeEach,
-  afterEach
-} from 'bun:test';
+import { describe, test, beforeAll, afterAll, beforeEach, afterEach } from 'bun:test';
 
 describe('TestSuite', () => {
   // Run once before all tests in this describe block

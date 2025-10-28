@@ -126,9 +126,7 @@ const requiredVersions = {
 ```typescript
 // ✅ Better approach (recommended)
 // test-utils/factories/version-factory.ts
-export const createVersionConfig = (
-  overrides: Partial<VersionConfig> = {}
-): VersionConfig => ({
+export const createVersionConfig = (overrides: Partial<VersionConfig> = {}): VersionConfig => ({
   bun: '1.3.0',
   typescript: '5.9.3',
   docker: '28.5.1',

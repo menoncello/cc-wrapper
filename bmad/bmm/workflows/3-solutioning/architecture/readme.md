@@ -2,29 +2,20 @@
 
 ## Overview
 
-The Decision Architecture workflow is a complete reimagining of how
-architectural decisions are made in the BMAD Method. Instead of template-driven
-documentation, this workflow facilitates an intelligent conversation that
-produces a **decision-focused architecture document** optimized for preventing
-AI agent conflicts during implementation.
+The Decision Architecture workflow is a complete reimagining of how architectural decisions are made in the BMAD Method. Instead of template-driven documentation, this workflow facilitates an intelligent conversation that produces a **decision-focused architecture document** optimized for preventing AI agent conflicts during implementation.
 
 ## Core Philosophy
 
-**The Problem**: When multiple AI agents implement different parts of a system,
-they make conflicting technical decisions leading to incompatible
-implementations.
+**The Problem**: When multiple AI agents implement different parts of a system, they make conflicting technical decisions leading to incompatible implementations.
 
-**The Solution**: A "consistency contract" that documents all critical technical
-decisions upfront, ensuring every agent follows the same patterns and uses the
-same technologies.
+**The Solution**: A "consistency contract" that documents all critical technical decisions upfront, ensuring every agent follows the same patterns and uses the same technologies.
 
 ## Key Features
 
 ### 1. Starter Template Intelligence ⭐ NEW
 
 - Discovers relevant starter templates (create-next-app, create-t3-app, etc.)
-- Considers UX requirements when selecting templates (animations, accessibility,
-  etc.)
+- Considers UX requirements when selecting templates (animations, accessibility, etc.)
 - Searches for current CLI options and defaults
 - Documents decisions made BY the starter template
 - Makes remaining architectural decisions around the starter foundation
@@ -32,8 +23,7 @@ same technologies.
 
 ### 2. Adaptive Facilitation
 
-- Adjusts conversation style based on user skill level
-  (beginner/intermediate/expert)
+- Adjusts conversation style based on user skill level (beginner/intermediate/expert)
 - Experts get rapid, technical discussions
 - Beginners receive education and protection from complexity
 - Everyone produces the same high-quality output
@@ -91,12 +81,11 @@ Step 12: Final review and update workflow status
 - **instructions.md** - The adaptive facilitation flow
 - **decision-catalog.yaml** - Knowledge base of all architectural decisions
 - **architecture-patterns.yaml** - Common patterns identified from requirements
-- **pattern-categories.csv** - Pattern principles that teach LLM what needs
-  defining
+- **pattern-categories.csv** - Pattern principles that teach LLM what needs defining
 - **checklist.md** - Validation requirements for the output document
 - **architecture-template.md** - Strict format for the final document
 
-## How It's Different from Old Solution-Architecture
+## How It's Different from Old architecture
 
 | Aspect               | Old Workflow                                 | New Workflow                                    |
 | -------------------- | -------------------------------------------- | ----------------------------------------------- |
@@ -143,23 +132,23 @@ A single `architecture.md` file containing:
 
 Step 7 handles unique or complex patterns that need to be INVENTED:
 
-1. **Detection**: The workflow analyzes the PRD for concepts that don't have
-   standard solutions:
-   - Novel interaction patterns (e.g., "swipe to match" when Tinder doesn't
-     exist)
+1. **Detection**:
+   The workflow analyzes the PRD for concepts that don't have standard solutions:
+   - Novel interaction patterns (e.g., "swipe to match" when Tinder doesn't exist)
    - Complex multi-epic workflows (e.g., "viral invitation system")
    - Unique data relationships (e.g., "social graph" before Facebook)
    - New paradigms (e.g., "ephemeral messages" before Snapchat)
 
-2. **Design Collaboration**: Instead of just picking technologies, the workflow
-   helps DESIGN the solution:
+2. **Design Collaboration**:
+   Instead of just picking technologies, the workflow helps DESIGN the solution:
    - Identifies the core problem to solve
    - Explores different approaches with the user
    - Documents how components interact
    - Creates sequence diagrams for complex flows
    - Uses elicitation to find innovative solutions
 
-3. **Documentation**: Novel patterns become part of the architecture with:
+3. **Documentation**:
+   Novel patterns become part of the architecture with:
    - Pattern name and purpose
    - Component interactions
    - Data flow diagrams
@@ -185,8 +174,7 @@ Step 8 prevents agent conflicts by defining patterns for consistency:
 
 1. **The Core Principle**:
 
-   > "Any time multiple agents might make the SAME decision DIFFERENTLY, that's
-   > a pattern to capture"
+   > "Any time multiple agents might make the SAME decision DIFFERENTLY, that's a pattern to capture"
 
    The LLM asks: "What could an agent encounter where they'd have to guess?"
 
@@ -263,16 +251,11 @@ The AI agent will:
 
 ## Design Principles
 
-1. **Facilitation over Prescription** - Guide users to good decisions rather
-   than imposing templates
-2. **Intelligence over Templates** - Use AI understanding rather than rigid
-   structures
-3. **Decisions over Details** - Focus on what prevents agent conflicts, not
-   implementation minutiae
-4. **Adaptation over Uniformity** - Meet users where they are while ensuring
-   quality output
-5. **Collaboration over Output** - The conversation matters as much as the
-   document
+1. **Facilitation over Prescription** - Guide users to good decisions rather than imposing templates
+2. **Intelligence over Templates** - Use AI understanding rather than rigid structures
+3. **Decisions over Details** - Focus on what prevents agent conflicts, not implementation minutiae
+4. **Adaptation over Uniformity** - Meet users where they are while ensuring quality output
+5. **Collaboration over Output** - The conversation matters as much as the document
 
 ## For Developers
 
@@ -283,9 +266,9 @@ This workflow assumes:
 - AI agents need clear constraints to prevent conflicts
 - The architecture document is for agents, not humans
 
-## Migration from solution-architecture
+## Migration from architecture
 
-Projects using the old `solution-architecture` workflow should:
+Projects using the old `architecture` workflow should:
 
 1. Complete any in-progress architecture work
 2. Use `architecture` for new projects
@@ -320,8 +303,7 @@ Projects using the old `solution-architecture` workflow should:
   1.2.0 - Implementation patterns for agent consistency
 
 - Added implementation patterns (now Step 8, formerly Step 5.5)
-- Created principle-based pattern-categories.csv (7 principles, not 118
-  prescriptions)
+- Created principle-based pattern-categories.csv (7 principles, not 118 prescriptions)
 - Core principle: "What could agents decide differently?"
 - LLM uses principle to identify patterns beyond the categories
 - Prevents agent conflicts through intelligent pattern discovery
@@ -333,4 +315,4 @@ Projects using the old `solution-architecture` workflow should:
 - Starter decisions are documented as "PROVIDED BY STARTER"
 - First implementation story uses starter initialization command
 
-  1.0.0 - Initial release replacing solution-architecture workflow
+  1.0.0 - Initial release replacing architecture workflow

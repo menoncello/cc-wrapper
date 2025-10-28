@@ -83,10 +83,7 @@ boundaries
 ```typescript
 interface ContainerManagementService {
   // Container Lifecycle
-  createProjectContainer(
-    projectId: string,
-    config: ContainerConfig
-  ): Promise<Container>;
+  createProjectContainer(projectId: string, config: ContainerConfig): Promise<Container>;
   startContainer(containerId: string): Promise<void>;
   stopContainer(containerId: string): Promise<void>;
   restartContainer(containerId: string): Promise<void>;
@@ -95,10 +92,7 @@ interface ContainerManagementService {
   // Container Management
   getContainerStatus(containerId: string): Promise<ContainerStatus>;
   listContainers(userId: string): Promise<Container[]>;
-  updateContainerConfig(
-    containerId: string,
-    config: ContainerConfig
-  ): Promise<void>;
+  updateContainerConfig(containerId: string, config: ContainerConfig): Promise<void>;
 
   // Resource Management
   getContainerMetrics(containerId: string): Promise<ContainerMetrics>;
@@ -138,10 +132,7 @@ interface ContainerConfig {
 interface ProjectTemplateService {
   // Template Management
   createTemplate(template: CreateTemplateRequest): Promise<ProjectTemplate>;
-  updateTemplate(
-    templateId: string,
-    updates: UpdateTemplateRequest
-  ): Promise<ProjectTemplate>;
+  updateTemplate(templateId: string, updates: UpdateTemplateRequest): Promise<ProjectTemplate>;
   deleteTemplate(templateId: string): Promise<void>;
   listTemplates(organizationId?: string): Promise<ProjectTemplate[]>;
 
@@ -194,25 +185,14 @@ interface ProjectTemplate {
 ```typescript
 interface AdvancedWorkspaceService {
   // Workspace Organization
-  createWorkspace(
-    workspace: CreateAdvancedWorkspaceRequest
-  ): Promise<AdvancedWorkspace>;
-  updateWorkspaceMetadata(
-    workspaceId: string,
-    metadata: WorkspaceMetadata
-  ): Promise<void>;
+  createWorkspace(workspace: CreateAdvancedWorkspaceRequest): Promise<AdvancedWorkspace>;
+  updateWorkspaceMetadata(workspaceId: string, metadata: WorkspaceMetadata): Promise<void>;
   organizeWorkspaces(organization: WorkspaceOrganization): Promise<void>;
   tagWorkspaces(workspaceIds: string[], tags: string[]): Promise<void>;
 
   // Workspace Sharing and Collaboration
-  shareWorkspace(
-    workspaceId: string,
-    sharingConfig: SharingConfig
-  ): Promise<ShareLink>;
-  acceptWorkspaceInvite(
-    inviteId: string,
-    acceptance: InviteAcceptance
-  ): Promise<void>;
+  shareWorkspace(workspaceId: string, sharingConfig: SharingConfig): Promise<ShareLink>;
+  acceptWorkspaceInvite(inviteId: string, acceptance: InviteAcceptance): Promise<void>;
   updateWorkspacePermissions(
     workspaceId: string,
     userId: string,
@@ -220,28 +200,13 @@ interface AdvancedWorkspaceService {
   ): Promise<void>;
 
   // Workspace Backup and Recovery
-  createWorkspaceBackup(
-    workspaceId: string,
-    config: BackupConfig
-  ): Promise<WorkspaceBackup>;
-  restoreWorkspaceFromBackup(
-    backupId: string,
-    targetWorkspaceId?: string
-  ): Promise<void>;
-  scheduleAutomatedBackups(
-    workspaceId: string,
-    schedule: BackupSchedule
-  ): Promise<void>;
+  createWorkspaceBackup(workspaceId: string, config: BackupConfig): Promise<WorkspaceBackup>;
+  restoreWorkspaceFromBackup(backupId: string, targetWorkspaceId?: string): Promise<void>;
+  scheduleAutomatedBackups(workspaceId: string, schedule: BackupSchedule): Promise<void>;
 
   // Cross-Workspace Features
-  searchAcrossWorkspaces(
-    userId: string,
-    query: SearchQuery
-  ): Promise<SearchResult[]>;
-  transferWorkspaceOwnership(
-    workspaceId: string,
-    newOwnerId: string
-  ): Promise<void>;
+  searchAcrossWorkspaces(userId: string, query: SearchQuery): Promise<SearchResult[]>;
+  transferWorkspaceOwnership(workspaceId: string, newOwnerId: string): Promise<void>;
   duplicateWorkspace(
     workspaceId: string,
     customizations: DuplicationCustomizations
@@ -281,47 +246,25 @@ interface AdvancedWorkspace extends Workspace {
 ```typescript
 interface TeamCollaborationService {
   // Team Project Management
-  createTeamProject(
-    teamId: string,
-    project: CreateTeamProjectRequest
-  ): Promise<TeamProject>;
-  updateTeamProject(
-    projectId: string,
-    updates: UpdateTeamProjectRequest
-  ): Promise<void>;
+  createTeamProject(teamId: string, project: CreateTeamProjectRequest): Promise<TeamProject>;
+  updateTeamProject(projectId: string, updates: UpdateTeamProjectRequest): Promise<void>;
   archiveTeamProject(projectId: string): Promise<void>;
 
   // Team Member Management
-  inviteTeamMember(
-    teamId: string,
-    invitation: TeamInvitation
-  ): Promise<TeamInvitation>;
-  updateTeamMemberRole(
-    teamId: string,
-    userId: string,
-    role: TeamRole
-  ): Promise<void>;
+  inviteTeamMember(teamId: string, invitation: TeamInvitation): Promise<TeamInvitation>;
+  updateTeamMemberRole(teamId: string, userId: string, role: TeamRole): Promise<void>;
   removeTeamMember(teamId: string, userId: string): Promise<void>;
 
   // Team Activity Tracking
-  getTeamActivity(
-    teamId: string,
-    timeframe: TimeFrame
-  ): Promise<TeamActivity[]>;
+  getTeamActivity(teamId: string, timeframe: TimeFrame): Promise<TeamActivity[]>;
   getTeamProductivityMetrics(
     teamId: string,
     timeframe: TimeFrame
   ): Promise<TeamProductivityMetrics>;
-  generateTeamReport(
-    teamId: string,
-    config: TeamReportConfig
-  ): Promise<TeamReport>;
+  generateTeamReport(teamId: string, config: TeamReportConfig): Promise<TeamReport>;
 
   // Team Resource Management
-  setTeamResourceQuotas(
-    teamId: string,
-    quotas: TeamResourceQuotas
-  ): Promise<void>;
+  setTeamResourceQuotas(teamId: string, quotas: TeamResourceQuotas): Promise<void>;
   getTeamResourceUsage(teamId: string): Promise<TeamResourceUsage>;
   optimizeTeamResourceAllocation(teamId: string): Promise<ResourceOptimization>;
 }
@@ -658,15 +601,10 @@ POST   /api/teams/:teamId/optimize-resources
 ```typescript
 // Container Service Implementation
 class DockerContainerService implements ContainerManagementService {
-  async createProjectContainer(
-    projectId: string,
-    config: ContainerConfig
-  ): Promise<Container> {
+  async createProjectContainer(projectId: string, config: ContainerConfig): Promise<Container> {
     const containerConfig = {
       Image: config.image,
-      Env: Object.entries(config.environment).map(
-        ([key, value]) => `${key}=${value}`
-      ),
+      Env: Object.entries(config.environment).map(([key, value]) => `${key}=${value}`),
       HostConfig: {
         Memory: config.resources.memory * 1024 * 1024, // Convert MB to bytes
         CpuQuota: config.resources.cpu * 100000, // Convert cores to nanoseconds

@@ -85,6 +85,8 @@ quality_standards:
     - "no-undef: error"
     - "@typescript-eslint/no-unused-vars: error"
     - "@typescript-eslint/no-explicit-any: warn"
+    - "For TypeScript files, ALWAYS disable base 'no-unused-vars' and only use '@typescript-eslint/no-unused-vars' to avoid conflicts with TypeScript-specific constructs like enums"
+    - "Configure @typescript-eslint/no-unused-vars with ignoreRestSiblings: true for better TypeScript support"
 
   typescript_rules:
     - "strict: true"

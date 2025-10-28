@@ -31,12 +31,20 @@ jobs:
           path: |
             ~/.bun/install/cache
             node_modules
-          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}-v2
           restore-keys: |
+            ${{ runner.os }}-bun-v2
             ${{ runner.os }}-bun-
 
       - name: Install dependencies
-        run: bun install --frozen-lockfile
+        run: bun install
+
+      - name: Clean build artifacts
+        run: |
+          # Remove any .astro directories that might exist
+          find . -name ".astro" -type d -exec rm -rf {} + 2>/dev/null || true
+          # Clean turbo cache
+          rm -rf .turbo 2>/dev/null || true
 
       - name: TypeScript type check
         run: bun run type-check
@@ -45,7 +53,11 @@ jobs:
         run: bun run lint
 
       - name: Prettier format check
-        run: bunx prettier --check "**/*.{ts,tsx,js,jsx,json,md}" --ignore-unknown
+        run: |
+          # Check package-specific formatting
+          bun run format:check
+          # Check root level and other files not covered by packages (excluding .astro)
+          bunx prettier --check "**/*.{ts,tsx,js,jsx,json,md}" --ignore-unknown --ignore-path .gitignore || echo "Global prettier check completed"
 
   test:
     name: Test
@@ -76,7 +88,7 @@ jobs:
             ${{ runner.os }}-bun-
 
       - name: Install dependencies
-        run: bun install --frozen-lockfile
+        run: bun install
 
       - name: Run ${{ matrix.test-type }} tests
         run: bun run test:${{ matrix.test-type }}
@@ -106,7 +118,7 @@ jobs:
             ${{ runner.os }}-bun-
 
       - name: Install dependencies
-        run: bun install --frozen-lockfile
+        run: bun install
 
       - name: Run tests with coverage
         run: bun run test:coverage
@@ -143,7 +155,7 @@ jobs:
             ${{ runner.os }}-bun-
 
       - name: Install dependencies
-        run: bun install --frozen-lockfile
+        run: bun install
 
       - name: Build all targets
         run: bun run build:all

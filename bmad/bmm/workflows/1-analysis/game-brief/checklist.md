@@ -1,7 +1,6 @@
 # Game Brief Validation Checklist
 
-Use this checklist to ensure your game brief is complete and ready for GDD
-creation.
+Use this checklist to ensure your game brief is complete and ready for GDD creation.
 
 ## Game Vision ✓
 
@@ -126,5 +125,4 @@ If you've checked most boxes and have no major red flags:
 
 ---
 
-_This checklist is a guide, not a gate. Use your judgment based on project
-needs._
+_This checklist is a guide, not a gate. Use your judgment based on project needs._

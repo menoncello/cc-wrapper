@@ -1,7 +1,6 @@
 ---
 name: bmm-trend-spotter
-description:
-  Identifies emerging trends, weak signals, and future opportunities. use
+description: Identifies emerging trends, weak signals, and future opportunities. use
   PROACTIVELY when analyzing market trends, identifying disruptions, or
   forecasting future developments
 tools:

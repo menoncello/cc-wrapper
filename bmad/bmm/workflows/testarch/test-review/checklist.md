@@ -1,7 +1,6 @@
 # Test Quality Review - Validation Checklist
 
-Use this checklist to validate that the test quality review workflow completed
-successfully and all quality criteria were properly evaluated.
+Use this checklist to validate that the test quality review workflow completed successfully and all quality criteria were properly evaluated.
 
 ---
 
@@ -12,8 +11,7 @@ successfully and all quality criteria were properly evaluated.
 - [ ] Test file(s) identified for review (single/directory/suite scope)
 - [ ] Test files exist and are readable
 - [ ] Test framework detected (Playwright, Jest, Cypress, Vitest, etc.)
-- [ ] Test framework configuration found (playwright.config.ts, jest.config.js,
-      etc.)
+- [ ] Test framework configuration found (playwright.config.ts, jest.config.js, etc.)
 
 ### Knowledge Base Loading
 
@@ -229,8 +227,7 @@ successfully and all quality criteria were properly evaluated.
   - [ ] Overall assessment (Excellent/Good/Needs Improvement/Critical)
   - [ ] Key strengths listed (3-5 bullet points)
   - [ ] Key weaknesses listed (3-5 bullet points)
-  - [ ] Recommendation stated (Approve/Approve with comments/Request
-        changes/Block)
+  - [ ] Recommendation stated (Approve/Approve with comments/Request changes/Block)
 
 - [ ] **Quality Criteria Assessment**:
   - [ ] Table with all criteria evaluated
@@ -267,8 +264,7 @@ successfully and all quality criteria were properly evaluated.
 **Inline Comments** (if `generate_inline_comments: true`):
 
 - [ ] Inline comments generated at violation locations
-- [ ] Comment format:
-      `// TODO (TEA Review): [Issue] - See test-review-{filename}.md`
+- [ ] Comment format: `// TODO (TEA Review): [Issue] - See test-review-{filename}.md`
 - [ ] Comments added to test files (no logic changes)
 - [ ] Test files remain valid and executable
 
@@ -355,12 +351,9 @@ successfully and all quality criteria were properly evaluated.
 
 ### Severity Classification
 
-- [ ] Critical (P0) issues are genuinely critical (hard waits, race conditions,
-      no assertions)
-- [ ] High (P1) issues impact maintainability/reliability (missing IDs,
-      hardcoded data)
-- [ ] Medium (P2) issues are nice-to-have improvements (long files, missing
-      priorities)
+- [ ] Critical (P0) issues are genuinely critical (hard waits, race conditions, no assertions)
+- [ ] High (P1) issues impact maintainability/reliability (missing IDs, hardcoded data)
+- [ ] Medium (P2) issues are nice-to-have improvements (long files, missing priorities)
 - [ ] Low (P3) issues are minor style/preference (verbose tests)
 
 ### Context Awareness
@@ -472,7 +465,6 @@ Record any issues, observations, or important context during workflow execution:
 - **Review Scope**: [single file, directory, full suite]
 - **Quality Score**: [0-100 score, letter grade]
 - **Critical Issues**: [Count of P0/P1 violations]
-- **Recommendation**: [Approve / Approve with comments / Request changes /
-  Block]
+- **Recommendation**: [Approve / Approve with comments / Request changes / Block]
 - **Special Considerations**: [Legacy code, justified patterns, edge cases]
 - **Follow-up Actions**: [Re-review after fixes, pair programming, etc.]

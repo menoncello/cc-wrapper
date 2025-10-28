@@ -1,9 +1,136 @@
-# Security Policy
+# Security Guidelines
 
-## Security Status
+This document outlines security best practices for preventing sensitive data leaks in this repository.
 
-This document outlines the security practices and policies for the CC Wrapper
-project.
+## 🚫 Never Commit These Files
+
+### Sensitive File Types
+
+- **Keys & Certificates**: `.pem`, `.key`, `.p12`, `.pfx`, `.p8`, `.crt`, `.cer`, `.jks`, `.jceks`
+- **Encrypted Files**: `.gpg`, `.pgp`, `.aes`, `.des`, `.enc`, `.rsa`, `.dsa`, `.ec`
+- **Database Files**: `.sql`, `.dump`, `.backup`, `.pg_dump`, `.mysqldump`
+- **Secret Files**: `*.secret`, `*.password`, `*.credential`, `*.token`, `*.auth`
+
+### Configuration Files
+
+- **Environment files**: `.env*`, `secrets.yml`, `docker-compose.override.yml`
+- **API Keys & Tokens**: Files containing API keys, tokens, or secrets
+- **Database Credentials**: Connection strings, DSNs, or auth credentials
+
+## ✅ Safe Alternatives
+
+### Environment Variables
+
+```bash
+# Use environment variables instead of hardcoding
+# ✅ Good
+const dbUrl = process.env.DATABASE_URL
+
+# ❌ Bad
+const dbUrl = "postgresql://user:password@localhost/db"
+```
+
+### Configuration Templates
+
+```bash
+# Use example templates instead of real configs
+# ✅ Good
+.env.example
+config.template.json
+docker-compose.example.yml
+
+# ❌ Bad
+.env
+config.json
+docker-compose.yml
+```
+
+### Test Data
+
+```typescript
+// Use mock/test data that's clearly identifiable
+// ✅ Good
+const testSecret = 'mock-test-key-for-testing-only-32-chars';
+
+// ❌ Bad
+const secret = 'real-production-key-12345';
+```
+
+## 🛡️ Automated Protection
+
+This repository includes multiple layers of automated protection:
+
+### 1. Pre-commit Hooks
+
+- **Git-secrets**: Scans for common secret patterns
+- **Gitleaks**: Comprehensive secret detection
+- **File Pattern Checks**: Prevents sensitive file types
+- **Size Checks**: Warns about large files
+
+### 2. Git Hooks
+
+- `.git/hooks/pre-commit`: Combined security scanning
+- `.git/hooks/pre-commit-security`: Custom security checks
+- `.git/hooks/commit-msg`: Commit message validation
+
+### 3. .gitignore Rules
+
+Comprehensive ignore rules prevent accidental commits of sensitive files.
+
+## 🔍 Manual Security Checklist
+
+### Before Committing
+
+1. **Review diff**: `git diff --cached` - check for secrets
+2. **Search patterns**: Look for `password`, `secret`, `key`, `token`
+3. **File review**: Ensure no sensitive files are staged
+4. **Test data**: Verify test secrets are clearly marked as test data
+
+### Code Review
+
+1. **Secret detection**: Review for hardcoded credentials
+2. **Environment usage**: Check for proper environment variable usage
+3. **File inclusion**: Ensure sensitive files aren't accidentally included
+4. **Dependencies**: Review third-party dependencies for security issues
+
+## 🚨 If You Find a Leak
+
+1. **Stop the commit** immediately
+2. **Remove the sensitive data** from the working directory
+3. **Remove from git history** if already committed:
+   ```bash
+   git filter-branch --force --index-filter 'git rm --cached --ignore-unmatch sensitive-file' --prune-empty --tag-name-filter cat -- --all
+   ```
+4. **Rotate/Revoke** any exposed credentials immediately
+5. **Notify security team** if this is a production repository
+
+## 📞 Security Contacts
+
+If you discover a security vulnerability or leak:
+
+- **Internal**: Contact your security team immediately
+- **External**: Follow responsible disclosure practices
+
+## 🔧 Tools Used
+
+- **[Gitleaks](https://github.com/zricethezav/gitleaks)**: Secret scanning
+- **[Git-secrets](https://github.com/awslabs/git-secrets)**: Prevent secret commits
+- **Pre-commit hooks**: Automated security checks
+- **Comprehensive .gitignore**: Prevents accidental file inclusion
+
+## 📚 References
+
+- [OWASP Secrets in Code](https://owasp.org/www-project-secrets-in-code/)
+- [Git Security Best Practices](https://github.com/topics/git-security)
+- [Secrets Detection Patterns](https://github.com/zricethezav/gitleaks#configuration)
+
+---
+
+## CC Wrapper Project Security
+
+### Security Status
+
+This document outlines the security practices and policies for the CC Wrapper project.
 
 ## Security Practices
 

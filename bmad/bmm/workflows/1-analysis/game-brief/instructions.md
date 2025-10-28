@@ -1,15 +1,11 @@
 # Game Brief - Interactive Workflow Instructions
 
-<critical>The workflow execution engine is governed by:
-{project-root}/bmad/core/tasks/workflow.xml</critical> <critical>You MUST have
-already loaded and processed: {installed_path}/workflow.yaml</critical>
-<critical>Communicate all responses in {communication_language} and language
-MUST be tailored to {user_skill_level}</critical> <critical>Generate all
-documents in {document_output_language}</critical>
+<critical>The workflow execution engine is governed by: {project-root}/bmad/core/tasks/workflow.xml</critical>
+<critical>You MUST have already loaded and processed: {installed_path}/workflow.yaml</critical>
+<critical>Communicate all responses in {communication_language} and language MUST be tailored to {user_skill_level}</critical>
+<critical>Generate all documents in {document_output_language}</critical>
 
-<critical>DOCUMENT OUTPUT: Concise, professional, game-design focused. Use
-tables/lists over prose. User skill level ({user_skill_level}) affects
-conversation style ONLY, not document content.</critical>
+<critical>DOCUMENT OUTPUT: Concise, professional, game-design focused. Use tables/lists over prose. User skill level ({user_skill_level}) affects conversation style ONLY, not document content.</critical>
 
 <workflow>
 
@@ -57,19 +53,20 @@ conversation style ONLY, not document content.</critical>
 <action>Engage the user about their core vision: what gameplay experience they want to create, what emotions players should feel, and what sparked this game idea</action>
 <action>Build initial understanding through conversational exploration rather than rigid questioning</action>
 
-<template-output>initial_context</template-output> </step>
+<template-output>initial_context</template-output>
+</step>
 
 <step n="2" goal="Choose collaboration mode">
 <ask>How would you like to work through the brief?
 
-**1. Interactive Mode** - We'll work through each section together, discussing
-and refining as we go **2. YOLO Mode** - I'll generate a complete draft based on
-our conversation so far, then we'll refine it together
+**1. Interactive Mode** - We'll work through each section together, discussing and refining as we go
+**2. YOLO Mode** - I'll generate a complete draft based on our conversation so far, then we'll refine it together
 
 Which approach works best for you?</ask>
 
 <action>Store the user's preference for mode</action>
-<template-output>collaboration_mode</template-output> </step>
+<template-output>collaboration_mode</template-output>
+</step>
 
 <step n="3" goal="Define game vision" if="collaboration_mode == 'interactive'">
 <action>Guide user to articulate their game vision across three levels of depth</action>
@@ -80,7 +77,8 @@ Which approach works best for you?</ask>
 
 <template-output>core_concept</template-output>
 <template-output>elevator_pitch</template-output>
-<template-output>vision_statement</template-output> </step>
+<template-output>vision_statement</template-output>
+</step>
 
 <step n="4" goal="Identify target market" if="collaboration_mode == 'interactive'">
 <action>Guide user to define their primary target audience with specific demographics, gaming preferences, and behavioral characteristics</action>
@@ -91,7 +89,8 @@ Which approach works best for you?</ask>
 
 <template-output>primary_audience</template-output>
 <template-output>secondary_audience</template-output>
-<template-output>market_context</template-output> </step>
+<template-output>market_context</template-output>
+</step>
 
 <step n="5" goal="Define game fundamentals" if="collaboration_mode == 'interactive'">
 <action>Help user identify 2-4 core gameplay pillars that fundamentally define their game - everything should support these pillars</action>
@@ -103,7 +102,8 @@ Which approach works best for you?</ask>
 
 <template-output>core_gameplay_pillars</template-output>
 <template-output>primary_mechanics</template-output>
-<template-output>player_experience_goals</template-output> </step>
+<template-output>player_experience_goals</template-output>
+</step>
 
 <step n="6" goal="Define scope and constraints" if="collaboration_mode == 'interactive'">
 <action>Help user establish realistic project constraints across all key dimensions</action>
@@ -118,7 +118,8 @@ Which approach works best for you?</ask>
 <template-output>development_timeline</template-output>
 <template-output>budget_considerations</template-output>
 <template-output>team_resources</template-output>
-<template-output>technical_constraints</template-output> </step>
+<template-output>technical_constraints</template-output>
+</step>
 
 <step n="7" goal="Establish reference framework" if="collaboration_mode == 'interactive'">
 <action>Guide user to identify 3-5 inspiration games and articulate what they're drawing from each (mechanics, feel, art style) and explicitly what they're NOT taking</action>
@@ -129,7 +130,8 @@ Which approach works best for you?</ask>
 
 <template-output>inspiration_games</template-output>
 <template-output>competitive_analysis</template-output>
-<template-output>key_differentiators</template-output> </step>
+<template-output>key_differentiators</template-output>
+</step>
 
 <step n="8" goal="Define content framework" if="collaboration_mode == 'interactive'">
 <action>Explore the game's world and setting: location, time period, world-building depth, narrative importance, and genre context</action>
@@ -140,7 +142,8 @@ Which approach works best for you?</ask>
 
 <template-output>world_setting</template-output>
 <template-output>narrative_approach</template-output>
-<template-output>content_volume</template-output> </step>
+<template-output>content_volume</template-output>
+</step>
 
 <step n="9" goal="Define art and audio direction" if="collaboration_mode == 'interactive'">
 <action>Explore visual style direction: art style preference, color palette and mood, reference games/images, 2D vs 3D, animation requirements</action>
@@ -151,7 +154,8 @@ Which approach works best for you?</ask>
 
 <template-output>visual_style</template-output>
 <template-output>audio_style</template-output>
-<template-output>production_approach</template-output> </step>
+<template-output>production_approach</template-output>
+</step>
 
 <step n="10" goal="Assess risks" if="collaboration_mode == 'interactive'">
 <action>Facilitate honest risk assessment across all dimensions - what could prevent completion, what could make it unfun, what assumptions might be wrong</action>
@@ -163,7 +167,8 @@ Which approach works best for you?</ask>
 <template-output>key_risks</template-output>
 <template-output>technical_challenges</template-output>
 <template-output>market_risks</template-output>
-<template-output>mitigation_strategies</template-output> </step>
+<template-output>mitigation_strategies</template-output>
+</step>
 
 <step n="11" goal="Define success criteria" if="collaboration_mode == 'interactive'">
 <action>Define the MVP (Minimum Playable Version) - what's the absolute minimum where the core loop is fun and complete, with essential content only</action>
@@ -174,7 +179,8 @@ Which approach works best for you?</ask>
 
 <template-output>mvp_definition</template-output>
 <template-output>success_metrics</template-output>
-<template-output>launch_goals</template-output> </step>
+<template-output>launch_goals</template-output>
+</step>
 
 <step n="12" goal="Identify immediate next steps" if="collaboration_mode == 'interactive'">
 <action>Identify immediate actions to take right after this brief: prototype core mechanics, create art style tests, validate technical feasibility, build vertical slice, playtest with target audience</action>
@@ -185,7 +191,8 @@ Which approach works best for you?</ask>
 
 <template-output>immediate_actions</template-output>
 <template-output>research_needs</template-output>
-<template-output>open_questions</template-output> </step>
+<template-output>open_questions</template-output>
+</step>
 
 <!-- YOLO Mode - Generate everything then refine -->
 <step n="3" goal="Generate complete brief draft" if="collaboration_mode == 'yolo'">
@@ -227,8 +234,9 @@ Which approach works best for you?</ask>
 <template-output>research_needs</template-output>
 <template-output>open_questions</template-output>
 
-<action>Present the complete draft to the user</action> <ask>Here's the complete
-game brief draft. What would you like to adjust or refine?</ask> </step>
+<action>Present the complete draft to the user</action>
+<ask>Here's the complete game brief draft. What would you like to adjust or refine?</ask>
+</step>
 
 <step n="4" goal="Refine brief sections" repeat="until-approved" if="collaboration_mode == 'yolo'">
 <ask>Which section would you like to refine?
@@ -245,8 +253,9 @@ game brief draft. What would you like to adjust or refine?</ask> </step>
 10. Next Steps
 11. Save and continue</ask>
 
-<action>Work with user to refine selected section</action> <action>Update
-relevant template outputs</action> </step>
+<action>Work with user to refine selected section</action>
+<action>Update relevant template outputs</action>
+</step>
 
 <!-- Final steps for both modes -->
 <step n="13" goal="Create executive summary">
@@ -258,7 +267,8 @@ relevant template outputs</action> </step>
 - Key differentiators
 - Success vision</action>
 
-<template-output>executive_summary</template-output> </step>
+<template-output>executive_summary</template-output>
+</step>
 
 <step n="14" goal="Compile supporting materials">
 <action>If research documents were provided, create a summary of key findings</action>
@@ -267,7 +277,8 @@ relevant template outputs</action> </step>
 
 <template-output>research_summary</template-output>
 <template-output>stakeholder_input</template-output>
-<template-output>references</template-output> </step>
+<template-output>references</template-output>
+</step>
 
 <step n="15" goal="Final review and handoff">
 <action>Generate the complete game brief document</action>
@@ -281,8 +292,7 @@ relevant template outputs</action> </step>
 3. Generate an executive summary version (3-page limit)
 4. Save and prepare for GDD creation
 
-This brief will serve as the primary input for creating the Game Design Document
-(GDD).
+This brief will serve as the primary input for creating the Game Design Document (GDD).
 
 **Recommended next steps:**
 
@@ -290,14 +300,14 @@ This brief will serve as the primary input for creating the Game Design Document
 - Proceed to GDD workflow: `workflow gdd`
 - Validate assumptions with target players</ask>
 
-<check>If user chooses option 3 (executive summary):</check> <action>Create
-condensed 3-page executive brief focusing on: core concept, target market,
-gameplay pillars, key differentiators, and success criteria</action>
-<action>Save as:
-{output_folder}/game-brief-executive-{{game_name}}-{{date}}.md</action>
+<check if="user chooses option 3 (executive summary)">
+  <action>Create condensed 3-page executive brief focusing on: core concept, target market, gameplay pillars, key differentiators, and success criteria</action>
+  <action>Save as: {output_folder}/game-brief-executive-{{game_name}}-{{date}}.md</action>
+</check>
 
 <template-output>final_brief</template-output>
-<template-output>executive_brief</template-output> </step>
+<template-output>executive_brief</template-output>
+</step>
 
 <step n="16" goal="Update status and complete">
 <check if="standalone_mode != true">
@@ -318,10 +328,14 @@ gameplay pillars, key differentiators, and success criteria</action>
 
 - Game brief saved to {output_folder}/bmm-game-brief-{{game_name}}-{{date}}.md
 
-{{#if standalone_mode != true}} **Status Updated:**
+{{#if standalone_mode != true}}
+**Status Updated:**
 
-- Progress tracking updated {{else}} Note: Running in standalone mode (no status
-  file). To track progress across workflows, run `workflow-init` first. {{/if}}
+- Progress tracking updated
+  {{else}}
+  Note: Running in standalone mode (no status file).
+  To track progress across workflows, run `workflow-init` first.
+  {{/if}}
 
 **Next Steps:**
 
@@ -330,7 +344,10 @@ gameplay pillars, key differentiators, and success criteria</action>
 3. Run `plan-project` workflow to create GDD from this brief
 4. Validate assumptions with target players
 
-{{#if standalone_mode != true}} Check status anytime with: `workflow-status`
-{{/if}} </output> </step>
+{{#if standalone_mode != true}}
+Check status anytime with: `workflow-status`
+{{/if}}
+</output>
+</step>
 
 </workflow>

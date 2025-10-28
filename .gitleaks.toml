@@ -1,0 +1,52 @@
+title = "Gitleaks Configuration for CC Wrapper"
+
+# Extend default rules
+[extend]
+useDefault = true
+
+# Allowlist configuration to reduce false positives
+[allowlist]
+description = "Global allowlist for CC Wrapper project"
+paths = [
+    '''bmad/_cfg/files-manifest.csv''',
+    '''.*\.md$''',
+    '''.*\.toml$''',
+    '''.*\.json$'''
+]
+
+# Regex patterns to ignore (SHA256 hashes, common test patterns)
+regexes = [
+    "[a-f0-9]{64}",  # Ignore SHA256 hashes
+    "test[-_]secret[-_]key[-_][a-zA-Z0-9-]*",  # Ignore test secret patterns
+    "dummy[-_]test[-_]key[-_][a-zA-Z0-9-]*",  # Ignore dummy test patterns
+    "mock[-_]key[-_][a-zA-Z0-9-]*",  # Ignore mock key patterns
+    "test[-_]key[-_]placeholder[-_][a-zA-Z0-9-]*",  # Ignore test placeholder patterns
+    "wrong[-_]test[-_]secret[-_]key[-_][a-zA-Z0-9-]*",  # Ignore wrong test secret patterns
+    "different[-_]test[-_]secret[-_][a-zA-Z0-9-]*",  # Ignore different test secret patterns
+    "different[-_]test[-_]secret[-_]key[-_][a-zA-Z0-9-]*",  # Ignore different test secret key patterns
+    "dummy[-_]test[-_]key[-_][a-zA-Z0-9-]*",  # Ignore dummy test patterns (duplicate)
+]
+
+# Custom rule modifications
+[[rules]]
+description = "Generic API Key - Modified for CC Wrapper"
+id = "generic-api-key-custom"
+regex = '''(?i)(?:['"]|\\s)(?:token|secret|key|api[_-]?key|password|pwd|auth)[\\s:=]+['"]?[a-zA-Z0-9_\-]{20,}['"]?'''
+keywords = ["token", "secret", "key", "api", "password", "pwd", "auth"]
+
+# Add rule exceptions for test files
+[[rules.allowlists]]
+description = "Allow test patterns in test files"
+target = "regex"
+regexes = [
+    "test[-_]secret[-_]key[-_][a-zA-Z0-9-]*",
+    "dummy[-_]test[-_]key[-_][a-zA-Z0-9-]*",
+    "wrong[-_]test[-_]secret[-_][a-zA-Z0-9-]*",
+    "mock[-_]key[-_][a-zA-Z0-9-]*",
+    "example[-_]key[-_][a-zA-Z0-9-]*",
+    "test[-_]key[-_]placeholder[-_][a-zA-Z0-9-]*"
+]
+paths = [
+    ".*\\.test\\.(ts|js|tsx|jsx)$",
+    ".*\\.spec\\.(ts|js|tsx|jsx)$"
+]

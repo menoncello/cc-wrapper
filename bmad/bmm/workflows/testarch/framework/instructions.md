@@ -2,27 +2,23 @@
 
 # Test Framework Setup
 
-**Workflow ID**: `bmad/bmm/testarch/framework` **Version**: 4.0 (BMad v6)
+**Workflow ID**: `bmad/bmm/testarch/framework`
+**Version**: 4.0 (BMad v6)
 
 ---
 
 ## Overview
 
-Initialize a production-ready test framework architecture (Playwright or
-Cypress) with fixtures, helpers, configuration, and best practices. This
-workflow scaffolds the complete testing infrastructure for modern web
-applications.
+Initialize a production-ready test framework architecture (Playwright or Cypress) with fixtures, helpers, configuration, and best practices. This workflow scaffolds the complete testing infrastructure for modern web applications.
 
 ---
 
 ## Preflight Requirements
 
-**Critical:** Verify these requirements before proceeding. If any fail, HALT and
-notify the user.
+**Critical:** Verify these requirements before proceeding. If any fail, HALT and notify the user.
 
 - ✅ `package.json` exists in project root
-- ✅ No modern E2E test harness is already configured (check for existing
-  `playwright.config.*` or `cypress.config.*`)
+- ✅ No modern E2E test harness is already configured (check for existing `playwright.config.*` or `cypress.config.*`)
 - ✅ Architectural/stack context available (project type, bundler, dependencies)
 
 ---
@@ -40,16 +36,14 @@ notify the user.
 2. **Check for Existing Framework**
    - Search for `playwright.config.*`, `cypress.config.*`, `cypress.json`
    - Check `package.json` for `@playwright/test` or `cypress` dependencies
-   - If found, HALT with message: "Existing test framework detected. Use
-     workflow `upgrade-framework` instead."
+   - If found, HALT with message: "Existing test framework detected. Use workflow `upgrade-framework` instead."
 
 3. **Gather Context**
    - Look for architecture documents (`architecture.md`, `tech-spec*.md`)
    - Check for API documentation or endpoint lists
    - Identify authentication requirements
 
-**Halt Condition:** If preflight checks fail, stop immediately and report which
-requirement failed.
+**Halt Condition:** If preflight checks fail, stop immediately and report which requirement failed.
 
 ---
 
@@ -92,9 +86,7 @@ requirement failed.
    │   └── README.md                 # Test suite documentation
    ```
 
-   **Note**: Users organize test files (e2e/, api/, integration/, component/) as
-   needed. The **support/** folder is the critical pattern for fixtures and
-   helpers used across tests.
+   **Note**: Users organize test files (e2e/, api/, integration/, component/) as needed. The **support/** folder is the critical pattern for fixtures and helpers used across tests.
 
 3. **Generate Configuration File**
 
@@ -309,8 +301,7 @@ requirement failed.
    }
    ```
 
-   **Note**: Users can add additional scripts as needed (e.g., `--ui`,
-   `--headed`, `--debug`, `show-report`).
+   **Note**: Users can add additional scripts as needed (e.g., `--ui`, `--headed`, `--debug`, `show-report`).
 
 10. **Generate Documentation**
 
@@ -362,20 +353,13 @@ The generated `tests/README.md` should include:
 
 ### Knowledge Base Integration
 
-**Critical:** Consult `{project-root}/bmad/bmm/testarch/tea-index.csv` to
-identify and load relevant knowledge fragments:
+**Critical:** Consult `{project-root}/bmad/bmm/testarch/tea-index.csv` to identify and load relevant knowledge fragments:
 
-- `fixture-architecture.md` - Pure function → fixture → `mergeTests` composition
-  with auto-cleanup (406 lines, 5 examples)
-- `data-factories.md` - Faker-based factories with overrides, nested factories,
-  API seeding, auto-cleanup (498 lines, 5 examples)
-- `network-first.md` - Network-first testing safeguards: intercept before
-  navigate, HAR capture, deterministic waiting (489 lines, 5 examples)
-- `playwright-config.md` - Playwright-specific configuration: environment-based,
-  timeout standards, artifact output, parallelization, project config (722
-  lines, 5 examples)
-- `test-quality.md` - Test design principles: deterministic, isolated with
-  cleanup, explicit assertions, length/time limits (658 lines, 5 examples)
+- `fixture-architecture.md` - Pure function → fixture → `mergeTests` composition with auto-cleanup (406 lines, 5 examples)
+- `data-factories.md` - Faker-based factories with overrides, nested factories, API seeding, auto-cleanup (498 lines, 5 examples)
+- `network-first.md` - Network-first testing safeguards: intercept before navigate, HAR capture, deterministic waiting (489 lines, 5 examples)
+- `playwright-config.md` - Playwright-specific configuration: environment-based, timeout standards, artifact output, parallelization, project config (722 lines, 5 examples)
+- `test-quality.md` - Test design principles: deterministic, isolated with cleanup, explicit assertions, length/time limits (658 lines, 5 examples)
 
 ### Framework-Specific Guidance
 
@@ -410,8 +394,7 @@ identify and load relevant knowledge fragments:
 
 ### Contract Testing
 
-For microservices architectures, **recommend Pact** for consumer-driven contract
-testing alongside E2E tests.
+For microservices architectures, **recommend Pact** for consumer-driven contract testing alongside E2E tests.
 
 ### Failure Artifacts
 

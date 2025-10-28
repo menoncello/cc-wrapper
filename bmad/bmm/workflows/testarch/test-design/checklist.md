@@ -16,8 +16,7 @@
 - [ ] Story markdown with acceptance criteria analyzed
 - [ ] Architecture documents reviewed (if available)
 - [ ] Existing test coverage analyzed
-- [ ] Knowledge base fragments loaded (risk-governance, probability-impact,
-      test-levels, test-priorities)
+- [ ] Knowledge base fragments loaded (risk-governance, probability-impact, test-levels, test-priorities)
 
 ### Step 2: Risk Assessment
 
@@ -38,8 +37,7 @@
 - [ ] Test levels selected (E2E/API/Component/Unit)
 - [ ] No duplicate coverage across levels
 - [ ] Priority levels assigned (P0/P1/P2/P3)
-- [ ] P0 scenarios meet strict criteria (blocks core + high risk + no
-      workaround)
+- [ ] P0 scenarios meet strict criteria (blocks core + high risk + no workaround)
 - [ ] Data prerequisites identified
 - [ ] Tooling requirements documented
 - [ ] Execution order defined (smoke → P0 → P1 → P2/P3)
@@ -204,8 +202,7 @@ If workflow fails:
 
 **Issue**: Too many P0 tests
 
-- **Solution**: Apply strict P0 criteria - must block core AND high risk AND no
-  workaround
+- **Solution**: Apply strict P0 criteria - must block core AND high risk AND no workaround
 
 **Issue**: Risk scores all high
 
@@ -231,6 +228,7 @@ If workflow fails:
 
 **Checklist Complete**: Sign off when all items validated.
 
-**Completed by:** **\*\***\_\_\_**\*\*** **Date:** **\*\***\_\_\_**\*\***
+**Completed by:** **\*\***\_\_\_**\*\***
+**Date:** **\*\***\_\_\_**\*\***
 **Epic:** **\*\***\_\_\_**\*\***
 **Notes:** \***\*\*\*\*\***\*\*\***\*\*\*\*\***\_\_\_\***\*\*\*\*\***\*\*\***\*\*\*\*\***

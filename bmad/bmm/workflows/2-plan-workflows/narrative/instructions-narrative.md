@@ -2,17 +2,13 @@
 
 <workflow>
 
-<critical>The workflow execution engine is governed by:
-{project_root}/bmad/core/tasks/workflow.xml</critical> <critical>You MUST have
-already completed the GDD workflow</critical> <critical>Communicate all
-responses in {communication_language}</critical> <critical>This workflow creates
-detailed narrative content for story-driven games</critical> <critical>Uses
-narrative_template for output</critical> <critical>If users mention gameplay
-mechanics, note them but keep focus on narrative</critical> <critical>Facilitate
-good brainstorming techniques throughout with the user, pushing them to come up
-with much of the narrative you will help weave together. The goal is for the
-user to feel that they crafted the narrative and story arc unless they push you
-to do it all or indicate YOLO</critical>
+<critical>The workflow execution engine is governed by: {project_root}/bmad/core/tasks/workflow.xml</critical>
+<critical>You MUST have already completed the GDD workflow</critical>
+<critical>Communicate all responses in {communication_language}</critical>
+<critical>This workflow creates detailed narrative content for story-driven games</critical>
+<critical>Uses narrative_template for output</critical>
+<critical>If users mention gameplay mechanics, note them but keep focus on narrative</critical>
+<critical>Facilitate good brainstorming techniques throughout with the user, pushing them to come up with much of the narrative you will help weave together. The goal is for the user to feel that they crafted the narrative and story arc unless they push you to do it all or indicate YOLO</critical>
 
 <step n="0" goal="Check for workflow status">
 
@@ -33,21 +29,19 @@ to do it all or indicate YOLO</critical>
 
 <step n="1" goal="Load GDD context and assess narrative complexity">
 
-<action>Load GDD.md from {output_folder}</action> <action>Extract game_type,
-game_name, and any narrative mentions</action>
+<action>Load GDD.md from {output_folder}</action>
+<action>Extract game_type, game_name, and any narrative mentions</action>
 
 <ask>What level of narrative complexity does your game have?
 
 **Narrative Complexity:**
 
 1. **Critical** - Story IS the game (Visual Novel, Text-Based Adventure)
-2. **Heavy** - Story drives the experience (Story-driven RPG, Narrative
-   Adventure)
+2. **Heavy** - Story drives the experience (Story-driven RPG, Narrative Adventure)
 3. **Moderate** - Story enhances gameplay (Metroidvania, Tactics RPG, Horror)
 4. **Light** - Story provides context (most other genres)
 
-Your game type ({{game_type}}) suggests **{{suggested_complexity}}**. Confirm or
-adjust:</ask>
+Your game type ({{game_type}}) suggests **{{suggested_complexity}}**. Confirm or adjust:</ask>
 
 <action>Set narrative_complexity</action>
 
@@ -74,10 +68,8 @@ This is the "elevator pitch" of your story.
 
 Examples:
 
-- "A young knight discovers they're the last hope to stop an ancient evil, but
-  must choose between saving the kingdom or their own family."
-- "After a mysterious pandemic, survivors must navigate a world where telling
-  the truth is deadly but lying corrupts your soul."
+- "A young knight discovers they're the last hope to stop an ancient evil, but must choose between saving the kingdom or their own family."
+- "After a mysterious pandemic, survivors must navigate a world where telling the truth is deadly but lying corrupts your soul."
 
 Your premise:</ask>
 
@@ -87,8 +79,7 @@ Your premise:</ask>
 
 Themes are the underlying ideas/messages.
 
-Examples: redemption, sacrifice, identity, corruption, hope vs. despair, nature
-vs. technology
+Examples: redemption, sacrifice, identity, corruption, hope vs. despair, nature vs. technology
 
 Your themes:</ask>
 
@@ -145,7 +136,8 @@ Story beats are significant events that drive the narrative forward.
 Format:
 
 1. [Beat name] - Brief description
-2. [Beat name] - Brief description ...
+2. [Beat name] - Brief description
+   ...
 
 Your story beats:</ask>
 
@@ -275,8 +267,7 @@ Your history:</ask>
 
 <step n="10" goal="Define factions and locations">
 
-<ask optional="true">Describe factions, organizations, or groups (if
-applicable).
+<ask optional="true">Describe factions, organizations, or groups (if applicable).
 
 For each:
 
@@ -344,7 +335,8 @@ Your key conversations:</ask>
 
 Your branching system:</ask>
 
-<template-output>branching_dialogue</template-output> </check>
+<template-output>branching_dialogue</template-output>
+</check>
 
 </step>
 
@@ -437,7 +429,8 @@ Your optional content:</ask>
 
 Your endings:</ask>
 
-<template-output>multiple_endings</template-output> </check>
+<template-output>multiple_endings</template-output>
+</check>
 
 </step>
 

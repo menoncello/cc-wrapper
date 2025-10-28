@@ -1076,8 +1076,7 @@ traceability_and_gate:
       traceability: 'docs/traceability-matrix-0.2-2025-10-20.md'
       test_design: 'docs/test-design-epic-0.md'
       story: 'docs/stories/story-0.2.md'
-    next_steps:
-      'Fix critical configuration files (playwright.config.ts,
+    next_steps: 'Fix critical configuration files (playwright.config.ts,
       stryker.config.json, test:mutation script), resolve E2E framework
       incompatibility, add CI/CD workflow validation tests'
 ```

@@ -22,8 +22,7 @@
 
 ### Step 2: CI Pipeline Configuration
 
-- [ ] CI configuration file created (`.github/workflows/test.yml` or
-      `.gitlab-ci.yml`)
+- [ ] CI configuration file created (`.github/workflows/test.yml` or `.gitlab-ci.yml`)
 - [ ] File is syntactically valid (no YAML errors)
 - [ ] Correct framework commands configured
 - [ ] Node version matches project
@@ -241,6 +240,7 @@ If workflow fails:
 
 **Checklist Complete**: Sign off when all items validated.
 
-**Completed by:** **\*\***\_\_\_**\*\*** **Date:** **\*\***\_\_\_**\*\***
+**Completed by:** **\*\***\_\_\_**\*\***
+**Date:** **\*\***\_\_\_**\*\***
 **Platform:** **\*\***\_\_\_**\*\*** (GitHub Actions / GitLab CI)
 **Notes:** \***\*\*\*\*\***\*\*\***\*\*\*\*\***\_\_\_\***\*\*\*\*\***\*\*\***\*\*\*\*\***
