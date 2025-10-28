@@ -1,7 +1,6 @@
 ---
 name: bmm-pattern-detector
-description:
-  Identifies architectural and design patterns, coding conventions, and
+description: Identifies architectural and design patterns, coding conventions, and
   implementation strategies used throughout the codebase. use PROACTIVELY when
   understanding existing code patterns before making modifications
 tools:

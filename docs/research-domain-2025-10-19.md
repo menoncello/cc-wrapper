@@ -795,8 +795,7 @@ class WaitTimeOptimizationDomain {
 
     if (waitTime > PRODUCTIVITY_THRESHOLD) {
       // Suggest productive activities during wait time
-      const activities =
-        await this.productivityEngine.suggestActivities(session);
+      const activities = await this.productivityEngine.suggestActivities(session);
 
       // Maintain context across task switching
       await this.contextManager.preserveContext(session);

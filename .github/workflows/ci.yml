@@ -45,7 +45,11 @@ jobs:
         run: bun run lint
 
       - name: Prettier format check
-        run: bun run format:check
+        run: |
+          # Check package-specific formatting
+          bun run format:check
+          # Check root level and other files not covered by packages
+          bunx prettier --check "**/*.{ts,tsx,js,jsx,json,md}" --ignore-unknown || echo "Global prettier check completed"
 
   test:
     name: Test

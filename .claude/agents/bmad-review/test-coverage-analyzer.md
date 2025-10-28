@@ -1,7 +1,6 @@
 ---
 name: bmm-test-coverage-analyzer
-description:
-  Analyzes test suites, coverage metrics, and testing strategies to identify
+description: Analyzes test suites, coverage metrics, and testing strategies to identify
   gaps and document testing approaches. use PROACTIVELY when documenting test
   infrastructure or planning test improvements
 tools:

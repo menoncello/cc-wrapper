@@ -69,12 +69,6 @@
   },
   "metrics": {
     "custom": ["onboarding_duration", "api_response_time", "errors"],
-    "builtIn": [
-      "http_req_duration",
-      "http_req_failed",
-      "http_reqs",
-      "iteration_duration",
-      "vus"
-    ]
+    "builtIn": ["http_req_duration", "http_req_failed", "http_reqs", "iteration_duration", "vus"]
   }
 }

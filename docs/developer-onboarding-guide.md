@@ -536,10 +536,7 @@ git push origin feature/ai-chat-improvements
 ```json
 // .eslintrc.json
 {
-  "extends": [
-    "@typescript-eslint/recommended",
-    "plugin:react-hooks/recommended"
-  ],
+  "extends": ["@typescript-eslint/recommended", "plugin:react-hooks/recommended"],
   "rules": {
     "@typescript-eslint/no-unused-vars": "error",
     "prefer-const": "error",
@@ -582,10 +579,7 @@ describe('AuthService', () => {
 
   test('should reject invalid credentials', async () => {
     const authService = new AuthService();
-    const result = await authService.login(
-      'user@example.com',
-      'wrong-password'
-    );
+    const result = await authService.login('user@example.com', 'wrong-password');
 
     expect(result.success).toBe(false);
     expect(result.error).toBe('Invalid credentials');
@@ -692,9 +686,7 @@ test('user can have conversation with AI', async ({ page }) => {
 
   // Verify response
   await expect(page.locator('[data-testid="ai-response"]')).toBeVisible();
-  await expect(page.locator('[data-testid="ai-response"]')).toContainText(
-    'function'
-  );
+  await expect(page.locator('[data-testid="ai-response"]')).toContainText('function');
 });
 ```
 

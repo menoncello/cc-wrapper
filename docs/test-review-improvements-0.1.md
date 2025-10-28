@@ -141,10 +141,7 @@ import * as fs from 'fs';
 // ... more imports
 
 // After: Centralized test utilities
-import {
-  setupTestEnvironment,
-  createMockSetupEnvironment
-} from '../test-utils';
+import { setupTestEnvironment, createMockSetupEnvironment } from '../test-utils';
 ```
 
 **Factory Usage:**
@@ -200,10 +197,7 @@ const userData = createMockSetupEnvironment({
 
 ```typescript
 import { describe, test, expect, beforeEach, afterEach } from 'bun:test';
-import {
-  setupTestEnvironment,
-  createMockSetupEnvironment
-} from '../test-utils';
+import { setupTestEnvironment, createMockSetupEnvironment } from '../test-utils';
 
 describe('New Test Pattern', () => {
   let testEnv: ReturnType<typeof setupTestEnvironment>;

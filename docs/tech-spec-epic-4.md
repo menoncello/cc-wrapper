@@ -115,54 +115,27 @@ interface ProductivityEvent {
 ```typescript
 interface MetricsCalculationService {
   // Productivity Metrics
-  calculateTimeSaved(
-    userId: string,
-    timeframe: TimeFrame
-  ): Promise<TimeSavedMetrics>;
-  calculateWaitTimeOptimization(
-    userId: string,
-    timeframe: TimeFrame
-  ): Promise<WaitTimeMetrics>;
-  calculateTaskCompletionRate(
-    userId: string,
-    timeframe: TimeFrame
-  ): Promise<TaskCompletionMetrics>;
-  calculateProductivityScore(
-    userId: string,
-    timeframe: TimeFrame
-  ): Promise<ProductivityScore>;
+  calculateTimeSaved(userId: string, timeframe: TimeFrame): Promise<TimeSavedMetrics>;
+  calculateWaitTimeOptimization(userId: string, timeframe: TimeFrame): Promise<WaitTimeMetrics>;
+  calculateTaskCompletionRate(userId: string, timeframe: TimeFrame): Promise<TaskCompletionMetrics>;
+  calculateProductivityScore(userId: string, timeframe: TimeFrame): Promise<ProductivityScore>;
 
   // Usage Metrics
-  calculateProviderUsage(
-    userId: string,
-    timeframe: TimeFrame
-  ): Promise<ProviderUsageMetrics[]>;
+  calculateProviderUsage(userId: string, timeframe: TimeFrame): Promise<ProviderUsageMetrics[]>;
   calculateTaskTypeDistribution(
     userId: string,
     timeframe: TimeFrame
   ): Promise<TaskTypeDistribution>;
-  calculatePeakUsageTimes(
-    userId: string,
-    timeframe: TimeFrame
-  ): Promise<UsagePattern[]>;
+  calculatePeakUsageTimes(userId: string, timeframe: TimeFrame): Promise<UsagePattern[]>;
   calculateToolSwitchingFrequency(
     userId: string,
     timeframe: TimeFrame
   ): Promise<ToolSwitchingMetrics>;
 
   // Cost Metrics
-  calculateTotalCost(
-    userId: string,
-    timeframe: TimeFrame
-  ): Promise<CostMetrics>;
-  calculateCostByProvider(
-    userId: string,
-    timeframe: TimeFrame
-  ): Promise<ProviderCostMetrics[]>;
-  calculateCostPerTask(
-    userId: string,
-    timeframe: TimeFrame
-  ): Promise<CostEfficiencyMetrics>;
+  calculateTotalCost(userId: string, timeframe: TimeFrame): Promise<CostMetrics>;
+  calculateCostByProvider(userId: string, timeframe: TimeFrame): Promise<ProviderCostMetrics[]>;
+  calculateCostPerTask(userId: string, timeframe: TimeFrame): Promise<CostEfficiencyMetrics>;
   calculateROI(userId: string, timeframe: TimeFrame): Promise<ROIMetrics>;
 
   // Performance Metrics
@@ -170,10 +143,7 @@ interface MetricsCalculationService {
     providerId: string,
     timeframe: TimeFrame
   ): Promise<ProviderPerformanceMetrics>;
-  calculateResponseTimeMetrics(
-    userId: string,
-    timeframe: TimeFrame
-  ): Promise<ResponseTimeMetrics>;
+  calculateResponseTimeMetrics(userId: string, timeframe: TimeFrame): Promise<ResponseTimeMetrics>;
   calculateReliabilityMetrics(
     providerId: string,
     timeframe: TimeFrame
@@ -186,47 +156,25 @@ interface MetricsCalculationService {
 ```typescript
 interface AnalyticsIntelligenceService {
   // Cost Optimization
-  generateCostOptimizationRecommendations(
-    userId: string
-  ): Promise<CostRecommendation[]>;
-  suggestProviderSwitching(
-    requests: AIRequest[]
-  ): Promise<ProviderSwitchingRecommendation[]>;
-  recommendBatchingOpportunities(
-    usage: UsageData
-  ): Promise<BatchingRecommendation[]>;
+  generateCostOptimizationRecommendations(userId: string): Promise<CostRecommendation[]>;
+  suggestProviderSwitching(requests: AIRequest[]): Promise<ProviderSwitchingRecommendation[]>;
+  recommendBatchingOpportunities(usage: UsageData): Promise<BatchingRecommendation[]>;
   suggestBudgetOptimizations(teamId: string): Promise<BudgetOptimization[]>;
 
   // Productivity Optimization
-  generateWorkflowOptimizations(
-    userId: string
-  ): Promise<WorkflowOptimization[]>;
-  suggestOptimalWorkSchedule(
-    usage: UsageData
-  ): Promise<WorkScheduleRecommendation[]>;
-  recommendTaskSequencing(
-    tasks: Task[]
-  ): Promise<TaskSequencingRecommendation[]>;
-  identifyProductivityBarriers(
-    metrics: UserMetrics
-  ): Promise<ProductivityBarrier[]>;
+  generateWorkflowOptimizations(userId: string): Promise<WorkflowOptimization[]>;
+  suggestOptimalWorkSchedule(usage: UsageData): Promise<WorkScheduleRecommendation[]>;
+  recommendTaskSequencing(tasks: Task[]): Promise<TaskSequencingRecommendation[]>;
+  identifyProductivityBarriers(metrics: UserMetrics): Promise<ProductivityBarrier[]>;
 
   // Predictive Analytics
-  predictFutureUsage(
-    userId: string,
-    timeframe: TimeFrame
-  ): Promise<UsagePrediction[]>;
+  predictFutureUsage(userId: string, timeframe: TimeFrame): Promise<UsagePrediction[]>;
   forecastCosts(userId: string, timeframe: TimeFrame): Promise<CostForecast[]>;
-  predictResourceNeeds(
-    teamId: string,
-    timeframe: TimeFrame
-  ): Promise<ResourcePrediction[]>;
+  predictResourceNeeds(teamId: string, timeframe: TimeFrame): Promise<ResourcePrediction[]>;
   identifyTrends(data: HistoricalData[]): Promise<TrendAnalysis>;
 
   // Benchmarking
-  generatePerformanceBenchmarks(
-    userId: string
-  ): Promise<PerformanceBenchmark[]>;
+  generatePerformanceBenchmarks(userId: string): Promise<PerformanceBenchmark[]>;
   compareWithPeers(metrics: UserMetrics): Promise<PeerComparison[]>;
   generateTeamBenchmark(teamId: string): Promise<TeamBenchmark[]>;
   identifyBestPractices(data: AnalyticsData): Promise<BestPractice[]>;
@@ -242,10 +190,7 @@ interface CostManagementService {
   // Cost Tracking
   trackUsageCost(userId: string, usage: AIUsage): Promise<CostRecord>;
   calculateRealTimeCosts(userId: string): Promise<RealTimeCosts>;
-  getCostBreakdown(
-    userId: string,
-    timeframe: TimeFrame
-  ): Promise<CostBreakdown>;
+  getCostBreakdown(userId: string, timeframe: TimeFrame): Promise<CostBreakdown>;
   trackTeamCosts(teamId: string, timeframe: TimeFrame): Promise<TeamCosts>;
 
   // Budget Management
@@ -255,29 +200,16 @@ interface CostManagementService {
   generateBudgetAlerts(userId: string): Promise<BudgetAlert[]>;
 
   // Cost Optimization
-  identifyCostSavingOpportunities(
-    userId: string
-  ): Promise<CostSavingOpportunity[]>;
-  suggestCheaperAlternatives(
-    request: AIRequest
-  ): Promise<AlternativeProvider[]>;
+  identifyCostSavingOpportunities(userId: string): Promise<CostSavingOpportunity[]>;
+  suggestCheaperAlternatives(request: AIRequest): Promise<AlternativeProvider[]>;
   optimizeRequestRouting(requests: AIRequest[]): Promise<OptimizedRouting[]>;
   calculatePotentialSavings(userId: string): Promise<PotentialSavings>;
 
   // Financial Reporting
-  generateCostReport(
-    userId: string,
-    config: CostReportConfig
-  ): Promise<CostReport>;
-  exportFinancialData(
-    teamId: string,
-    format: ExportFormat
-  ): Promise<ExportResult>;
+  generateCostReport(userId: string, config: CostReportConfig): Promise<CostReport>;
+  exportFinancialData(teamId: string, format: ExportFormat): Promise<ExportResult>;
   calculateROI(userId: string, timeframe: TimeFrame): Promise<ROIReport>;
-  generateInvoiceData(
-    teamId: string,
-    period: BillingPeriod
-  ): Promise<InvoiceData>;
+  generateInvoiceData(teamId: string, period: BillingPeriod): Promise<InvoiceData>;
 }
 
 interface BudgetConfig {
@@ -311,15 +243,9 @@ interface ReportingService {
 
   // Custom Reports
   createCustomReport(config: CustomReportConfig): Promise<CustomReport>;
-  generateReport(
-    reportId: string,
-    parameters: ReportParameters
-  ): Promise<GeneratedReport>;
+  generateReport(reportId: string, parameters: ReportParameters): Promise<GeneratedReport>;
   scheduleReport(reportId: string, schedule: ReportSchedule): Promise<void>;
-  shareReport(
-    reportId: string,
-    sharingConfig: ReportSharingConfig
-  ): Promise<void>;
+  shareReport(reportId: string, sharingConfig: ReportSharingConfig): Promise<void>;
 
   // Data Visualization
   generateChart(config: ChartConfig, data: AnalyticsData): Promise<Chart>;
@@ -658,26 +584,14 @@ GET    /api/teams/:teamId/insights
 ```typescript
 // Productivity Metrics Calculation
 class ProductivityMetricsCalculator {
-  async calculateTimeSaved(
-    userId: string,
-    timeframe: TimeFrame
-  ): Promise<TimeSavedMetrics> {
-    const events = await this.analyticsEvents.findByUserAndTimeframe(
-      userId,
-      timeframe
-    );
+  async calculateTimeSaved(userId: string, timeframe: TimeFrame): Promise<TimeSavedMetrics> {
+    const events = await this.analyticsEvents.findByUserAndTimeframe(userId, timeframe);
 
     const aiRequests = events.filter(e => e.eventType === 'ai_request');
     const parallelTasks = events.filter(e => e.eventType === 'parallel_task');
 
-    const totalWaitTime = aiRequests.reduce(
-      (sum, req) => sum + (req.metadata.waitTime || 0),
-      0
-    );
-    const productiveTimeUsed = parallelTasks.reduce(
-      (sum, task) => sum + task.duration,
-      0
-    );
+    const totalWaitTime = aiRequests.reduce((sum, req) => sum + (req.metadata.waitTime || 0), 0);
+    const productiveTimeUsed = parallelTasks.reduce((sum, task) => sum + task.duration, 0);
 
     return {
       totalWaitTimeMinutes: Math.round(totalWaitTime / 60000),
@@ -689,16 +603,10 @@ class ProductivityMetricsCalculator {
     };
   }
 
-  async calculateProductivityScore(
-    userId: string,
-    timeframe: TimeFrame
-  ): Promise<number> {
+  async calculateProductivityScore(userId: string, timeframe: TimeFrame): Promise<number> {
     const timeSaved = await this.calculateTimeSaved(userId, timeframe);
     const tasksCompleted = await this.getTasksCompleted(userId, timeframe);
-    const costEfficiency = await this.calculateCostEfficiency(
-      userId,
-      timeframe
-    );
+    const costEfficiency = await this.calculateCostEfficiency(userId, timeframe);
 
     // Weighted productivity score calculation
     const timeWeight = 0.4;
@@ -709,9 +617,7 @@ class ProductivityMetricsCalculator {
     const taskScore = Math.min(tasksCompleted.completionRate * 100, 100);
     const costScore = Math.min(costEfficiency.efficiency * 100, 100);
 
-    return Math.round(
-      timeScore * timeWeight + taskScore * taskWeight + costScore * costWeight
-    );
+    return Math.round(timeScore * timeWeight + taskScore * taskWeight + costScore * costWeight);
   }
 }
 ```
@@ -727,13 +633,11 @@ class CostOptimizationEngine {
     const recommendations: CostRecommendation[] = [];
 
     // Provider switching recommendations
-    const providerSwitches =
-      await this.identifyProviderSwitchingOpportunities(usage);
+    const providerSwitches = await this.identifyProviderSwitchingOpportunities(usage);
     recommendations.push(...providerSwitches);
 
     // Batching recommendations
-    const batchingOpportunities =
-      await this.identifyBatchingOpportunities(usage);
+    const batchingOpportunities = await this.identifyBatchingOpportunities(usage);
     recommendations.push(...batchingOpportunities);
 
     // Time-based optimization
@@ -744,9 +648,7 @@ class CostOptimizationEngine {
     const modelOptimizations = await this.identifyModelOptimizations(usage);
     recommendations.push(...modelOptimizations);
 
-    return recommendations.sort(
-      (a, b) => b.potentialSavings - a.potentialSavings
-    );
+    return recommendations.sort((a, b) => b.potentialSavings - a.potentialSavings);
   }
 
   private async identifyProviderSwitchingOpportunities(
@@ -755,15 +657,10 @@ class CostOptimizationEngine {
     const recommendations: ProviderSwitchingRecommendation[] = [];
 
     for (const providerUsage of usage.byProvider) {
-      const alternativeProviders = await this.findCheaperAlternatives(
-        providerProvider.provider
-      );
+      const alternativeProviders = await this.findCheaperAlternatives(providerProvider.provider);
 
       for (const alternative of alternativeProviders) {
-        const potentialSavings = this.calculatePotentialSavings(
-          providerUsage,
-          alternative
-        );
+        const potentialSavings = this.calculatePotentialSavings(providerUsage, alternative);
 
         if (potentialSavings > 100) {
           // Only recommend if savings > $1
@@ -790,10 +687,7 @@ class CostOptimizationEngine {
 ```typescript
 // Usage Prediction Model
 class UsagePredictionEngine {
-  async predictUsage(
-    userId: string,
-    timeframe: TimeFrame
-  ): Promise<UsagePrediction[]> {
+  async predictUsage(userId: string, timeframe: TimeFrame): Promise<UsagePrediction[]> {
     const historicalData = await this.getHistoricalUsage(userId, { days: 90 });
     const trends = await this.analyzeTrends(historicalData);
     const seasonality = await this.detectSeasonality(historicalData);
@@ -802,14 +696,10 @@ class UsagePredictionEngine {
 
     for (const day of this.generateTimeframeDates(timeframe)) {
       const baselineUsage = this.calculateBaselineUsage(day, trends);
-      const seasonalAdjustment = this.calculateSeasonalAdjustment(
-        day,
-        seasonality
-      );
+      const seasonalAdjustment = this.calculateSeasonalAdjustment(day, seasonality);
       const trendAdjustment = this.calculateTrendAdjustment(day, trends);
 
-      const predictedUsage =
-        baselineUsage * seasonalAdjustment * trendAdjustment;
+      const predictedUsage = baselineUsage * seasonalAdjustment * trendAdjustment;
 
       predictions.push({
         date: day,
@@ -835,12 +725,7 @@ class UsagePredictionEngine {
       slope: regression.slope,
       intercept: regression.intercept,
       correlation: regression.correlation,
-      trend:
-        regression.slope > 0
-          ? 'increasing'
-          : regression.slope < 0
-            ? 'decreasing'
-            : 'stable',
+      trend: regression.slope > 0 ? 'increasing' : regression.slope < 0 ? 'decreasing' : 'stable',
       strength: Math.abs(regression.correlation)
     };
   }

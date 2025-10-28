@@ -471,10 +471,7 @@ import { test } from '../fixtures/merged.fixture';
 test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
   // User has 3 workspaces available
   await page.goto('/settings/profile');
-  await page.selectOption(
-    '[data-testid="default-workspace-select"]',
-    testWorkspaces[1].id
-  );
+  await page.selectOption('[data-testid="default-workspace-select"]', testWorkspaces[1].id);
 });
 ```
 
@@ -758,11 +755,7 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 
 ```tsx
 <div data-testid="tour-overlay">
-  <div
-    data-testid="tour-spotlight"
-    data-target="terminal-panel"
-    style={spotlightPosition}
-  />
+  <div data-testid="tour-spotlight" data-target="terminal-panel" style={spotlightPosition} />
   <div className="tour-tooltip">
     <h3 data-testid="tour-step-title">Terminal Panel</h3>
     <button data-testid="tour-previous-button">Previous</button>
@@ -988,10 +981,7 @@ test('profile settings with workspaces', async ({ page, testWorkspaces }) => {
 **Implementation Example:**
 
 ```tsx
-<button
-  data-testid="restart-onboarding-button"
-  onClick={() => navigate('/onboarding')}
->
+<button data-testid="restart-onboarding-button" onClick={() => navigate('/onboarding')}>
   Restart Onboarding
 </button>
 ```

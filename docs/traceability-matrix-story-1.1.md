@@ -816,8 +816,7 @@ traceability_and_gate:
       traceability: 'docs/traceability-matrix-story-1.1.md'
       nfr_assessment: 'N/A'
       code_coverage: 'Backend: ~90% estimated'
-    next_steps:
-      'Implement frontend UI for AC-2, 3, 4, 5, 6. Re-run gate after E2E tests
+    next_steps: 'Implement frontend UI for AC-2, 3, 4, 5, 6. Re-run gate after E2E tests
       pass.'
 ```
 

@@ -1,7 +1,6 @@
 ---
 name: bmm-document-reviewer
-description:
-  Reviews and validates product documentation against quality standards and
+description: Reviews and validates product documentation against quality standards and
   completeness criteria. use PROACTIVELY when finalizing PRDs, architecture
   docs, or other critical documents
 tools:

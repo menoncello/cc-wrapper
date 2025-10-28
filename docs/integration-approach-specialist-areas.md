@@ -122,11 +122,7 @@ interface Role {
 }
 
 class AuthorizationMiddleware {
-  async checkPermission(
-    user: User,
-    resource: string,
-    action: string
-  ): Promise<boolean> {
+  async checkPermission(user: User, resource: string, action: string): Promise<boolean> {
     const userPermissions = await this.getUserPermissions(user);
     return this.hasPermission(userPermissions, resource, action);
   }
@@ -134,11 +130,7 @@ class AuthorizationMiddleware {
   // Applied to all API routes
   middleware = async ({ request, set, error }: Context) => {
     const user = await this.authenticate(request);
-    const hasPermission = await this.checkPermission(
-      user,
-      request.route,
-      request.method
-    );
+    const hasPermission = await this.checkPermission(user, request.route, request.method);
 
     if (!hasPermission) {
       return error(403, 'Insufficient permissions');
@@ -663,14 +655,7 @@ test('API response time under 100ms', async () => {
 
 ```typescript
 // tests/integration/database.test.ts
-import {
-  test,
-  expect,
-  describe,
-  beforeAll,
-  afterAll,
-  beforeEach
-} from 'bun:test';
+import { test, expect, describe, beforeAll, afterAll, beforeEach } from 'bun:test';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient({
@@ -732,23 +717,16 @@ test.describe('AI Chat Workflow', () => {
     await page.click('[data-testid="login-button"]');
 
     // Navigate to workspace
-    await expect(
-      page.locator('[data-testid="workspace-selector"]')
-    ).toBeVisible();
+    await expect(page.locator('[data-testid="workspace-selector"]')).toBeVisible();
     await page.click('[data-testid="workspace-1"]');
 
     // Start AI conversation
-    await page.fill(
-      '[data-testid="ai-input"]',
-      'Write a Python function to calculate factorial'
-    );
+    await page.fill('[data-testid="ai-input"]', 'Write a Python function to calculate factorial');
     await page.click('[data-testid="send-button"]');
 
     // Verify AI response
     await expect(page.locator('[data-testid="ai-response"]')).toBeVisible();
-    await expect(page.locator('[data-testid="ai-response"]')).toContainText(
-      'def factorial'
-    );
+    await expect(page.locator('[data-testid="ai-response"]')).toContainText('def factorial');
 
     // Verify cost tracking
     await expect(page.locator('[data-testid="cost-indicator"]')).toBeVisible();
@@ -780,9 +758,9 @@ test.describe('AI Chat Workflow', () => {
     await page1.click('[data-testid="send-button"]');
 
     // Verify sync to page2
-    await expect(
-      page2.locator('[data-testid="conversation-history"]')
-    ).toContainText('Hello from page 1');
+    await expect(page2.locator('[data-testid="conversation-history"]')).toContainText(
+      'Hello from page 1'
+    );
   });
 });
 ```

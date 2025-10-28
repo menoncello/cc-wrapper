@@ -1,7 +1,6 @@
 ---
 name: bmm-epic-optimizer
-description:
-  Optimizes epic boundaries and scope definition for PRDs, ensuring logical
+description: Optimizes epic boundaries and scope definition for PRDs, ensuring logical
   sequencing and value delivery. Use PROACTIVELY when defining epic overviews
   and scopes in PRDs.
 tools:

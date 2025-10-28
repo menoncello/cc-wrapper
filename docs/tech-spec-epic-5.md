@@ -92,10 +92,7 @@ interface AdvancedLayoutSystem {
   collapsePanel(panelId: string): Promise<void>;
   expandPanel(panelId: string): Promise<void>;
   swapPanels(panelId1: string, panelId2: string): Promise<void>;
-  splitPanel(
-    panelId: string,
-    direction: 'horizontal' | 'vertical'
-  ): Promise<void>;
+  splitPanel(panelId: string, direction: 'horizontal' | 'vertical'): Promise<void>;
 
   // Responsive Adaptation
   adaptToDevice(deviceInfo: DeviceInfo): Promise<Layout>;
@@ -139,16 +136,9 @@ interface ResponsiveLayoutEngine {
   detectInputCapabilities(): Promise<InputCapabilities>;
 
   // Layout Adaptation
-  generateResponsiveLayout(
-    baseLayout: Layout,
-    deviceInfo: DeviceInfo
-  ): Promise<ResponsiveLayout>;
-  optimizeForPerformance(
-    deviceInfo: DeviceInfo
-  ): Promise<PerformanceOptimizations>;
-  adaptForAccessibility(
-    accessibilityNeeds: AccessibilityNeeds
-  ): Promise<AccessibilityAdaptations>;
+  generateResponsiveLayout(baseLayout: Layout, deviceInfo: DeviceInfo): Promise<ResponsiveLayout>;
+  optimizeForPerformance(deviceInfo: DeviceInfo): Promise<PerformanceOptimizations>;
+  adaptForAccessibility(accessibilityNeeds: AccessibilityNeeds): Promise<AccessibilityAdaptations>;
 
   // Breakpoint Management
   defineBreakpoints(breakpoints: BreakpointConfig): void;
@@ -157,9 +147,7 @@ interface ResponsiveLayoutEngine {
 
   // Cross-Device Sync
   syncLayoutState(userId: string): Promise<void>;
-  resolveLayoutConflicts(
-    conflicts: LayoutConflict[]
-  ): Promise<LayoutResolution>;
+  resolveLayoutConflicts(conflicts: LayoutConflict[]): Promise<LayoutResolution>;
   maintainLayoutConsistency(): Promise<void>;
 }
 
@@ -232,19 +220,13 @@ interface ThemeSystem {
   deleteTheme(themeId: string): Promise<void>;
 
   // Customization
-  customizeTheme(
-    baseTheme: string,
-    customizations: ThemeCustomizations
-  ): Promise<Theme>;
+  customizeTheme(baseTheme: string, customizations: ThemeCustomizations): Promise<Theme>;
   previewTheme(themeConfig: ThemeConfig): Promise<ThemePreview>;
   resetToDefaults(): Promise<void>;
 
   // Accessibility
   generateHighContrastTheme(baseTheme: string): Promise<Theme>;
-  generateColorblindTheme(
-    baseTheme: string,
-    type: ColorblindType
-  ): Promise<Theme>;
+  generateColorblindTheme(baseTheme: string, type: ColorblindType): Promise<Theme>;
   validateAccessibility(theme: Theme): Promise<AccessibilityReport>;
 
   // Dynamic Theming
@@ -1010,10 +992,7 @@ describe('Cross-Device Continuity', () => {
 ```typescript
 // Accessibility Manager
 class AccessibilityManager {
-  announceToScreenReader(
-    message: string,
-    priority: 'polite' | 'assertive' = 'polite'
-  ): void {
+  announceToScreenReader(message: string, priority: 'polite' | 'assertive' = 'polite'): void {
     const announcement = document.createElement('div');
     announcement.setAttribute('aria-live', priority);
     announcement.setAttribute('aria-atomic', 'true');
@@ -1029,10 +1008,7 @@ class AccessibilityManager {
       ...baseTheme,
       colors: {
         ...baseTheme.colors,
-        primary: this.generateHighContrastColor(
-          baseTheme.colors.primary,
-          '#000000'
-        ),
+        primary: this.generateHighContrastColor(baseTheme.colors.primary, '#000000'),
         text: '#000000',
         background: '#FFFFFF',
         border: '#000000'

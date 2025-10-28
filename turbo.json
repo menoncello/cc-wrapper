@@ -129,13 +129,7 @@
     },
     "typecheck": {
       "dependsOn": ["^build"],
-      "inputs": [
-        "src/**/*.ts",
-        "src/**/*.tsx",
-        "tsconfig.json",
-        "tsconfig.*.json",
-        "package.json"
-      ],
+      "inputs": ["src/**/*.ts", "src/**/*.tsx", "tsconfig.json", "tsconfig.*.json", "package.json"],
       "outputs": [],
       "cache": true
     },

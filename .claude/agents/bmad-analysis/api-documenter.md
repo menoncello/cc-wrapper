@@ -1,7 +1,6 @@
 ---
 name: bmm-api-documenter
-description:
-  Documents APIs, interfaces, and integration points including REST endpoints,
+description: Documents APIs, interfaces, and integration points including REST endpoints,
   GraphQL schemas, message contracts, and service boundaries. use PROACTIVELY
   when documenting system interfaces or planning integrations
 tools:

@@ -1,7 +1,6 @@
 ---
 name: bmm-user-journey-mapper
-description:
-  Maps comprehensive user journeys to identify touchpoints, friction areas, and
+description: Maps comprehensive user journeys to identify touchpoints, friction areas, and
   epic boundaries. use PROACTIVELY when analyzing user flows, defining MVPs, or
   aligning development priorities with user value
 tools:

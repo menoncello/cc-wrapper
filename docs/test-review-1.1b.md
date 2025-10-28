@@ -143,10 +143,7 @@ GIVEN/WHEN/THEN comments, making test intent immediately readable.
 
 ```typescript
 // ✅ Excellent pattern demonstrated in all tests
-test('should complete full onboarding wizard', async ({
-  page,
-  authenticatedUser
-}) => {
+test('should complete full onboarding wizard', async ({ page, authenticatedUser }) => {
   // GIVEN: Authenticated user lands on onboarding wizard
   await page.setExtraHTTPHeaders({
     Authorization: `Bearer ${authenticatedUser.token}`
@@ -159,9 +156,7 @@ test('should complete full onboarding wizard', async ({
 
   // THEN: User is redirected to dashboard with created workspace
   await expect(page).toHaveURL('/dashboard');
-  await expect(page.locator('[data-testid="workspace-name"]')).toHaveText(
-    'My First Workspace'
-  );
+  await expect(page.locator('[data-testid="workspace-name"]')).toHaveText('My First Workspace');
 });
 ```
 

@@ -67,10 +67,7 @@ class CircuitBreaker {
   failureThreshold: number = 5;
   timeout: number = 60000; // 1 minute
 
-  async execute<T>(
-    operation: () => Promise<T>,
-    fallback: () => Promise<T>
-  ): Promise<T>;
+  async execute<T>(operation: () => Promise<T>, fallback: () => Promise<T>): Promise<T>;
 }
 ```
 

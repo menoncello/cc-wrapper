@@ -19,10 +19,7 @@ test-utils/
 ### Data Factories
 
 ```typescript
-import {
-  createMockSetupEnvironment,
-  createMockHealthCheck
-} from '../test-utils';
+import { createMockSetupEnvironment, createMockHealthCheck } from '../test-utils';
 
 // Create mock setup environment with overrides
 const setupConfig = createMockSetupEnvironment({

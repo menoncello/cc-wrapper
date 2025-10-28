@@ -1,7 +1,6 @@
 ---
 name: bmm-technical-decisions-curator
-description:
-  Curates and maintains technical decisions document throughout project
+description: Curates and maintains technical decisions document throughout project
   lifecycle, capturing architecture choices and technology selections. use
   PROACTIVELY when technical decisions are made or discussed
 tools:

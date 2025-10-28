@@ -1,7 +1,6 @@
 ---
 name: bmm-user-researcher
-description:
-  Conducts user research, develops personas, and analyzes user behavior
+description: Conducts user research, develops personas, and analyzes user behavior
   patterns. use PROACTIVELY when creating user personas, analyzing user needs,
   or conducting user journey mapping
 tools:

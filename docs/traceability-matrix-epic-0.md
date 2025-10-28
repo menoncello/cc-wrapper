@@ -806,8 +806,7 @@ traceability_and_gate:
       traceability: 'docs/traceability-matrix-epic-0.md'
       nfr_assessment: 'infrastructure_validation'
       code_coverage: 'not_applicable'
-    next_steps:
-      'Proceed with feature development using established infrastructure'
+    next_steps: 'Proceed with feature development using established infrastructure'
     waiver: # Not applicable - PASS decision
 ```
 

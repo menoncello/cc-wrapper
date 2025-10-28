@@ -107,10 +107,7 @@ collisions in parallel runs.
 ```typescript
 // ⚠️ Could be improved (current implementation)
 await page.fill('[data-testid="workspace-name-input"]', 'My First Workspace');
-await page.fill(
-  '[data-testid="workspace-description-input"]',
-  'Testing CC Wrapper'
-);
+await page.fill('[data-testid="workspace-description-input"]', 'Testing CC Wrapper');
 ```
 
 **Recommended Improvement**:
@@ -180,24 +177,16 @@ could be more specific for better error messages.
 
 ```typescript
 // ⚠️ Could be improved (current implementation)
-await expect(page.locator('[data-testid="selected-ai-tools"]')).toContainText(
-  'Claude'
-);
-await expect(
-  page.locator('[data-testid="email-notifications-toggle"]')
-).toBeChecked();
+await expect(page.locator('[data-testid="selected-ai-tools"]')).toContainText('Claude');
+await expect(page.locator('[data-testid="email-notifications-toggle"]')).toBeChecked();
 ```
 
 **Recommended Improvement**:
 
 ```typescript
 // ✅ Better approach (recommended)
-await expect(page.locator('[data-testid="selected-ai-tools"]')).toHaveText(
-  'Claude'
-); // More specific than containText
-await expect(
-  page.locator('[data-testid="email-notifications-toggle"]')
-).toBeChecked(); // Already good
+await expect(page.locator('[data-testid="selected-ai-tools"]')).toHaveText('Claude'); // More specific than containText
+await expect(page.locator('[data-testid="email-notifications-toggle"]')).toBeChecked(); // Already good
 ```
 
 **Benefits**: More precise error messages when tests fail
@@ -288,9 +277,7 @@ test('should complete full onboarding wizard and create default workspace', asyn
 
   // THEN: User is redirected to dashboard with created workspace
   await expect(page).toHaveURL('/dashboard');
-  await expect(page.locator('[data-testid="workspace-name"]')).toHaveText(
-    'My First Workspace'
-  );
+  await expect(page.locator('[data-testid="workspace-name"]')).toHaveText('My First Workspace');
 });
 ```
 

@@ -187,9 +187,7 @@ it impossible to:
 ```typescript
 // ✅ Good (priority in test name and comment)
 test.describe('User Registration - P0 Critical Path', () => {
-  test('[1.1-E2E-001][P0] should successfully register new user', async ({
-    page
-  }) => {
+  test('[1.1-E2E-001][P0] should successfully register new user', async ({ page }) => {
     // Priority: P0 - Critical authentication flow, blocks core journey
     // Risk: R-005 (API credential storage)
     // ...
@@ -204,9 +202,7 @@ test.describe('User Registration - P1 Validation', () => {
 });
 
 test.describe('User Registration - P2 Edge Cases', () => {
-  test('[1.1-E2E-015][P2] should handle registration timeout gracefully', async ({
-    page
-  }) => {
+  test('[1.1-E2E-015][P2] should handle registration timeout gracefully', async ({ page }) => {
     // Priority: P2 - Edge case, low probability
     // ...
   });
@@ -343,10 +339,7 @@ integration.
 
 ```typescript
 // ✅ Excellent pattern
-import {
-  createRegistrationData,
-  createLoginCredentials
-} from '../factories/user.factory';
+import { createRegistrationData, createLoginCredentials } from '../factories/user.factory';
 
 test('should successfully register new user', async ({ page }) => {
   const userData = createRegistrationData(); // ✅ Unique data

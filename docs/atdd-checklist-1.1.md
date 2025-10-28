@@ -596,10 +596,7 @@ based on workspace type
 ```typescript
 import { test, expect } from './fixtures/auth.fixture';
 
-test('should access protected route', async ({
-  authenticatedUser,
-  request
-}) => {
+test('should access protected route', async ({ authenticatedUser, request }) => {
   const response = await request.get('/api/workspaces', {
     headers: {
       Authorization: `Bearer ${authenticatedUser.token}`
@@ -611,9 +608,7 @@ test('should access protected route', async ({
 
 test('should see dashboard', async ({ authenticatedPage }) => {
   // User is already logged in
-  await expect(
-    authenticatedPage.locator('[data-testid="workspace-name"]')
-  ).toBeVisible();
+  await expect(authenticatedPage.locator('[data-testid="workspace-name"]')).toBeVisible();
 });
 ```
 
@@ -641,20 +636,14 @@ test('should see dashboard', async ({ authenticatedPage }) => {
 ```typescript
 import { test, expect } from './fixtures/merged.fixture';
 
-test('should load default workspace', async ({
-  authenticatedUser,
-  defaultWorkspace,
-  page
-}) => {
+test('should load default workspace', async ({ authenticatedUser, defaultWorkspace, page }) => {
   await page.setExtraHTTPHeaders({
     Authorization: `Bearer ${authenticatedUser.token}`
   });
 
   await page.goto('/dashboard');
 
-  await expect(page.locator('[data-testid="workspace-name"]')).toHaveText(
-    defaultWorkspace.name
-  );
+  await expect(page.locator('[data-testid="workspace-name"]')).toHaveText(defaultWorkspace.name);
 });
 ```
 
@@ -669,11 +658,7 @@ test('should load default workspace', async ({
 ```typescript
 import { test, expect } from './fixtures/merged.fixture';
 
-test('complete workflow', async ({
-  authenticatedUser,
-  defaultWorkspace,
-  authenticatedPage
-}) => {
+test('complete workflow', async ({ authenticatedUser, defaultWorkspace, authenticatedPage }) => {
   // All fixtures available in single test
 });
 ```

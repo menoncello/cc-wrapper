@@ -101,10 +101,7 @@ wait times
 ```typescript
 interface AIOrchestrationService {
   // Provider Management
-  connectProvider(
-    provider: AIProvider,
-    credentials: Credentials
-  ): Promise<void>;
+  connectProvider(provider: AIProvider, credentials: Credentials): Promise<void>;
   disconnectProvider(providerId: string): Promise<void>;
   getAvailableProviders(): Promise<AIProvider[]>;
 

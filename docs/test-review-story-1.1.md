@@ -179,9 +179,7 @@ assumes `'existing@example.com'` exists but doesn't guarantee it.
 
 ```typescript
 // ❌ Bad (current - no cleanup)
-test('should create new user with valid email and password', async ({
-  request
-}) => {
+test('should create new user with valid email and password', async ({ request }) => {
   const userData = {
     email: 'newuser@example.com',
     password: 'SecureP@ss123',
@@ -299,25 +297,19 @@ describe('User registration flow', () => {
     const userData = createUserData({ email: 'duplicate@example.com' });
 
     // Create user via API
-    const firstResponse = await fetch(
-      'http://localhost:3000/api/auth/register',
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(userData)
-      }
-    );
+    const firstResponse = await fetch('http://localhost:3000/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(userData)
+    });
     expect(firstResponse.status).toBe(201);
 
     // Attempt duplicate registration
-    const secondResponse = await fetch(
-      'http://localhost:3000/api/auth/register',
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(userData)
-      }
-    );
+    const secondResponse = await fetch('http://localhost:3000/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(userData)
+    });
 
     expect(secondResponse.status).toBe(409);
     const error = await secondResponse.json();
@@ -413,9 +405,7 @@ export const test = base.extend<AuthFixture>({
 });
 
 // Usage
-test('authenticated user can access dashboard', async ({
-  authenticatedPage
-}) => {
+test('authenticated user can access dashboard', async ({ authenticatedPage }) => {
   await authenticatedPage.goto('/dashboard');
   await expect(authenticatedPage).toHaveURL('/dashboard');
   // Already logged in - no manual login steps!
@@ -446,10 +436,7 @@ OAuth callbacks would be faster and more reliable.
 
 ```typescript
 // ⚠️ Could be improved (current)
-test('should successfully authenticate via Google OAuth', async ({
-  page,
-  context
-}) => {
+test('should successfully authenticate via Google OAuth', async ({ page, context }) => {
   await page.goto('/auth/login');
 
   const [popup] = await Promise.all([
@@ -489,8 +476,7 @@ test('should successfully authenticate via Google OAuth', async ({ page }) => {
 
   // Mock OAuth redirect (no real popup needed)
   await page.evaluate(() => {
-    window.location.href =
-      '/api/auth/oauth/google/callback?code=mock-code&state=mock-state';
+    window.location.href = '/api/auth/oauth/google/callback?code=mock-code&state=mock-state';
   });
 
   // Verify redirect to dashboard
@@ -521,26 +507,21 @@ limiter or test with lower threshold.
 
 ```typescript
 // ⚠️ Could be improved (current - slow)
-test('should enforce rate limit after excessive login attempts', async ({
-  page
-}) => {
+test('should enforce rate limit after excessive login attempts', async ({ page }) => {
   await page.goto('/auth/login');
 
   // WHEN: User makes 101 login attempts (exceeds 100/minute limit)
   for (let i = 0; i < 101; i++) {
-    await page.fill(
-      '[data-testid="login-email-input"]',
-      `test${i}@example.com`
-    );
+    await page.fill('[data-testid="login-email-input"]', `test${i}@example.com`);
     await page.fill('[data-testid="login-password-input"]', 'password');
     await page.click('[data-testid="login-submit-button"]');
 
     if (i === 100) break;
   }
 
-  await expect(
-    page.locator('[data-testid="rate-limit-error-message"]')
-  ).toContainText('Too many login attempts');
+  await expect(page.locator('[data-testid="rate-limit-error-message"]')).toContainText(
+    'Too many login attempts'
+  );
 });
 ```
 
@@ -640,22 +621,14 @@ make test intent immediately obvious. This is exemplary test documentation.
 
 ```typescript
 // ✅ Excellent pattern demonstrated in this test
-test('should successfully register new user with valid credentials', async ({
-  page
-}) => {
+test('should successfully register new user with valid credentials', async ({ page }) => {
   // GIVEN: User is on registration page
   await page.goto('/auth/register');
 
   // WHEN: User fills registration form with valid data
-  await page.fill(
-    '[data-testid="register-email-input"]',
-    'newuser@example.com'
-  );
+  await page.fill('[data-testid="register-email-input"]', 'newuser@example.com');
   await page.fill('[data-testid="register-password-input"]', 'SecureP@ss123');
-  await page.fill(
-    '[data-testid="register-confirm-password-input"]',
-    'SecureP@ss123'
-  );
+  await page.fill('[data-testid="register-confirm-password-input"]', 'SecureP@ss123');
   await page.click('[data-testid="register-submit-button"]');
 
   // THEN: User is redirected to onboarding wizard
@@ -706,9 +679,7 @@ fast feedback and isolates issues.
 
 ```typescript
 // ✅ Good API-level testing
-test('should return JWT token after successful registration', async ({
-  request
-}) => {
+test('should return JWT token after successful registration', async ({ request }) => {
   const userData = {
     email: 'tokenuser@example.com',
     password: 'SecureP@ss123',
