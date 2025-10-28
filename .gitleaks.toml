@@ -23,6 +23,7 @@ regexes = [
     "test[-_]key[-_]placeholder[-_][a-zA-Z0-9-]*",  # Ignore test placeholder patterns
     "wrong[-_]test[-_]secret[-_]key[-_][a-zA-Z0-9-]*",  # Ignore wrong test secret patterns
     "different[-_]test[-_]secret[-_][a-zA-Z0-9-]*",  # Ignore different test secret patterns
+    "different[-_]test[-_]secret[-_]key[-_][a-zA-Z0-9-]*",  # Ignore different test secret key patterns
     "dummy[-_]test[-_]key[-_][a-zA-Z0-9-]*",  # Ignore dummy test patterns (duplicate)
 ]
 
