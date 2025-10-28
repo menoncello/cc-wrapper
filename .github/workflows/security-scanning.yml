@@ -24,7 +24,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Full history for better analysis
+          fetch-depth: 0 # Full history for better analysis
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
@@ -56,7 +56,7 @@ jobs:
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
         with:
-          category: "/language:javascript"
+          category: '/language:javascript'
 
       - name: Run npm audit (security vulnerabilities)
         run: |
@@ -169,6 +169,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
+        with:
+          config_path: .gitleaks.toml
 
       - name: Run GitGuardian Security Scan
         uses: GitGuardian/ggshield-action@v1
