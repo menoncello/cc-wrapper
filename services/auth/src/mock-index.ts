@@ -1,5 +1,16 @@
 import { Elysia } from 'elysia';
 
+// Type definitions for mock auth endpoints
+interface LoginRequest {
+  email?: string;
+  password?: string;
+}
+
+interface RegisterRequest {
+  email?: string;
+  password?: string;
+}
+
 const PORT = process.env.AUTH_PORT || 20001;
 
 // CORS middleware
@@ -23,24 +34,26 @@ const app = new Elysia()
   }))
   // Mock auth endpoints for testing
   .post('/api/auth/login', async ({ body }) => {
-    console.log('Mock login request:', body);
+    const loginData = body as LoginRequest;
+    console.log('Mock login request:', loginData);
     return {
       success: true,
       user: {
         id: 'mock-user-id',
-        email: body.email || 'test@example.com',
+        email: loginData.email || 'test@example.com',
         role: 'DEVELOPER'
       },
       token: 'mock-jwt-token-for-testing'
     };
   })
   .post('/api/auth/register', async ({ body }) => {
-    console.log('Mock register request:', body);
+    const registerData = body as RegisterRequest;
+    console.log('Mock register request:', registerData);
     return {
       success: true,
       user: {
         id: 'mock-user-id',
-        email: body.email || 'test@example.com',
+        email: registerData.email || 'test@example.com',
         role: 'DEVELOPER'
       },
       token: 'mock-jwt-token-for-testing'
