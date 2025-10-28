@@ -2,38 +2,26 @@
 
 ## Principle
 
-Risk governance transforms subjective "should we ship?" debates into objective,
-data-driven decisions. By scoring risk (probability × impact), classifying by
-category (TECH, SEC, PERF, etc.), and tracking mitigation ownership, teams
-create transparent quality gates that balance speed with safety.
+Risk governance transforms subjective "should we ship?" debates into objective, data-driven decisions. By scoring risk (probability × impact), classifying by category (TECH, SEC, PERF, etc.), and tracking mitigation ownership, teams create transparent quality gates that balance speed with safety.
 
 ## Rationale
 
-**The Problem**: Without formal risk governance, releases become political—loud
-voices win, quiet risks hide, and teams discover critical issues in production.
-"We thought it was fine" isn't a release strategy.
+**The Problem**: Without formal risk governance, releases become political—loud voices win, quiet risks hide, and teams discover critical issues in production. "We thought it was fine" isn't a release strategy.
 
-**The Solution**: Risk scoring (1-3 scale for probability and impact, total 1-9)
-creates shared language. Scores ≥6 demand documented mitigation. Scores = 9
-mandate gate failure. Every acceptance criterion maps to a test, and gaps
-require explicit waivers with owners and expiry dates.
+**The Solution**: Risk scoring (1-3 scale for probability and impact, total 1-9) creates shared language. Scores ≥6 demand documented mitigation. Scores = 9 mandate gate failure. Every acceptance criterion maps to a test, and gaps require explicit waivers with owners and expiry dates.
 
 **Why This Matters**:
 
-- Removes ambiguity from release decisions (objective scores vs subjective
-  opinions)
-- Creates audit trail for compliance (FDA, SOC2, ISO require documented risk
-  management)
+- Removes ambiguity from release decisions (objective scores vs subjective opinions)
+- Creates audit trail for compliance (FDA, SOC2, ISO require documented risk management)
 - Identifies true blockers early (prevents last-minute production fires)
-- Distributes responsibility (owners, mitigation plans, deadlines for every
-  risk >4)
+- Distributes responsibility (owners, mitigation plans, deadlines for every risk >4)
 
 ## Pattern Examples
 
 ### Example 1: Risk Scoring Matrix with Automated Classification (TypeScript)
 
-**Context**: Calculate risk scores automatically from test results and
-categorize by risk type
+**Context**: Calculate risk scores automatically from test results and categorize by risk type
 
 **Implementation**:
 
@@ -68,10 +56,7 @@ export type RiskScore = {
 };
 
 // Risk scoring rules
-export function calculateRiskScore(
-  probability: 1 | 2 | 3,
-  impact: 1 | 2 | 3
-): number {
+export function calculateRiskScore(probability: 1 | 2 | 3, impact: 1 | 2 | 3): number {
   return probability * impact;
 }
 
@@ -83,9 +68,7 @@ export function isCriticalBlocker(score: number): boolean {
   return score === 9; // Probability=3 AND Impact=3 → FAIL gate
 }
 
-export function classifyRiskLevel(
-  score: number
-): 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL' {
+export function classifyRiskLevel(score: number): 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL' {
   if (score === 9) return 'CRITICAL';
   if (score >= 6) return 'HIGH';
   if (score >= 4) return 'MEDIUM';
@@ -170,9 +153,7 @@ export function evaluateGate(params: {
 
   // Categorize risks
   const criticalRisks = risks.filter(r => r.score === 9 && r.status === 'OPEN');
-  const highRisks = risks.filter(
-    r => r.score >= 6 && r.score < 9 && r.status === 'OPEN'
-  );
+  const highRisks = risks.filter(r => r.score >= 6 && r.score < 9 && r.status === 'OPEN');
   const unresolvedGaps = coverageGaps.filter(g => !g.reason);
 
   // Decision logic
@@ -206,19 +187,13 @@ export function evaluateGate(params: {
     );
   }
   if (unresolvedGaps.length > 0) {
-    recommendations.push(
-      `📋 ${unresolvedGaps.length} acceptance criteria lack test coverage`
-    );
+    recommendations.push(`📋 ${unresolvedGaps.length} acceptance criteria lack test coverage`);
   }
   if (highRisks.some(r => !r.mitigationPlan)) {
-    recommendations.push(
-      `⚠️  High risks without mitigation plans: assign owners and deadlines`
-    );
+    recommendations.push(`⚠️  High risks without mitigation plans: assign owners and deadlines`);
   }
   if (decision === 'PASS') {
-    recommendations.push(
-      `✅ All risks mitigated or acceptable. Ready for release.`
-    );
+    recommendations.push(`✅ All risks mitigated or acceptable. Ready for release.`);
   }
 
   return {
@@ -232,11 +207,7 @@ export function evaluateGate(params: {
   };
 }
 
-function generateSummary(
-  decision: GateDecision,
-  risks: RiskScore[],
-  gaps: CoverageGap[]
-): string {
+function generateSummary(decision: GateDecision, risks: RiskScore[], gaps: CoverageGap[]): string {
   const total = risks.length;
   const critical = risks.filter(r => r.score === 9).length;
   const high = risks.filter(r => r.score >= 6 && r.score < 9).length;
@@ -295,8 +266,7 @@ console.log(gateResult.recommendations);
 **Key Points**:
 
 - **Automated decision**: No human interpretation required
-- **Clear criteria**: FAIL = critical risks or gaps, CONCERNS = high risks with
-  plans, PASS = low risks
+- **Clear criteria**: FAIL = critical risks or gaps, CONCERNS = high risks with plans, PASS = low risks
 - **Actionable output**: Recommendations drive next steps
 - **Audit trail**: Timestamp, decision, and context for compliance
 
@@ -323,16 +293,12 @@ export type MitigationAction = {
 export class RiskMitigationTracker {
   private risks: Map<string, RiskScore> = new Map();
   private actions: Map<string, MitigationAction[]> = new Map();
-  private history: Array<{ riskId: string; event: string; timestamp: Date }> =
-    [];
+  private history: Array<{ riskId: string; event: string; timestamp: Date }> = [];
 
   // Register a new risk
   addRisk(risk: RiskScore): void {
     this.risks.set(risk.id, risk);
-    this.logHistory(
-      risk.id,
-      `Risk registered: ${risk.title} (Score: ${risk.score})`
-    );
+    this.logHistory(risk.id, `Risk registered: ${risk.title} (Score: ${risk.score})`);
 
     // Auto-assign mitigation requirements for score ≥6
     if (requiresMitigation(risk.score) && !risk.mitigationPlan) {
@@ -366,10 +332,7 @@ export class RiskMitigationTracker {
     actions[actionIndex].status = 'COMPLETED';
     actions[actionIndex].completedAt = new Date();
 
-    this.logHistory(
-      riskId,
-      `Mitigation completed: ${actions[actionIndex].action}`
-    );
+    this.logHistory(riskId, `Mitigation completed: ${actions[actionIndex].action}`);
 
     // If all actions completed, mark risk as MITIGATED
     if (actions.every(a => a.status === 'COMPLETED')) {
@@ -380,12 +343,7 @@ export class RiskMitigationTracker {
   }
 
   // Request waiver for a risk
-  requestWaiver(
-    riskId: string,
-    reason: string,
-    approver: string,
-    expiryDays: number
-  ): void {
+  requestWaiver(riskId: string, reason: string, approver: string, expiryDays: number): void {
     const risk = this.risks.get(riskId);
     if (!risk) throw new Error(`Risk ${riskId} not found`);
 
@@ -394,19 +352,14 @@ export class RiskMitigationTracker {
     risk.waiverApprover = approver;
     risk.waiverExpiry = new Date(Date.now() + expiryDays * 24 * 60 * 60 * 1000);
 
-    this.logHistory(
-      riskId,
-      `⚠️  Waiver granted by ${approver}. Expires: ${risk.waiverExpiry}`
-    );
+    this.logHistory(riskId, `⚠️  Waiver granted by ${approver}. Expires: ${risk.waiverExpiry}`);
   }
 
   // Generate risk report
   generateReport(): string {
     const allRisks = Array.from(this.risks.values());
     const critical = allRisks.filter(r => r.score === 9 && r.status === 'OPEN');
-    const high = allRisks.filter(
-      r => r.score >= 6 && r.score < 9 && r.status === 'OPEN'
-    );
+    const high = allRisks.filter(r => r.score >= 6 && r.score < 9 && r.status === 'OPEN');
     const mitigated = allRisks.filter(r => r.status === 'MITIGATED');
     const waived = allRisks.filter(r => r.status === 'WAIVED');
 
@@ -547,9 +500,7 @@ export function buildCoverageMatrix(
   tests: TestCase[]
 ): CoverageMatrix[] {
   return criteria.map(criterion => {
-    const matchingTests = tests.filter(t =>
-      t.criteriaIds.includes(criterion.id)
-    );
+    const matchingTests = tests.filter(t => t.criteriaIds.includes(criterion.id));
 
     return {
       criterion,
@@ -630,12 +581,7 @@ export function generateTraceabilityReport(matrix: CoverageMatrix[]): string {
 ```typescript
 // Define acceptance criteria
 const criteria: AcceptanceCriterion[] = [
-  {
-    id: 'AC-001',
-    story: 'US-123',
-    criterion: 'User can login with email',
-    priority: 'P0'
-  },
+  { id: 'AC-001', story: 'US-123', criterion: 'User can login with email', priority: 'P0' },
   {
     id: 'AC-002',
     story: 'US-123',
@@ -648,12 +594,7 @@ const criteria: AcceptanceCriterion[] = [
     criterion: 'User receives password reset email',
     priority: 'P1'
   },
-  {
-    id: 'AC-004',
-    story: 'US-125',
-    criterion: 'User can update profile',
-    priority: 'P2'
-  } // NO TEST
+  { id: 'AC-004', story: 'US-125', criterion: 'User can update profile', priority: 'P2' } // NO TEST
 ];
 
 // Extract tests
@@ -689,11 +630,9 @@ console.log(report);
 
 Before deploying to production, ensure:
 
-- [ ] **Risk scoring complete**: All identified risks scored (Probability ×
-      Impact)
+- [ ] **Risk scoring complete**: All identified risks scored (Probability × Impact)
 - [ ] **Ownership assigned**: Every risk >4 has owner, mitigation plan, deadline
-- [ ] **Coverage validated**: Every acceptance criterion maps to at least one
-      test
+- [ ] **Coverage validated**: Every acceptance criterion maps to at least one test
 - [ ] **Gate decision documented**: PASS/CONCERNS/FAIL/WAIVED with rationale
 - [ ] **Waivers approved**: All waivers have approver, reason, expiry date
 - [ ] **Audit trail captured**: Risk history log available for compliance review
@@ -702,13 +641,8 @@ Before deploying to production, ensure:
 
 ## Integration Points
 
-- **Used in workflows**: `*trace` (Phase 2: gate decision), `*nfr-assess` (risk
-  scoring), `*test-design` (risk identification)
-- **Related fragments**: `probability-impact.md` (scoring definitions),
-  `test-priorities-matrix.md` (P0-P3 classification), `nfr-criteria.md`
-  (non-functional risks)
-- **Tools**: Risk tracking dashboards (Jira, Linear), gate automation (CI/CD),
-  traceability reports (Markdown, Confluence)
+- **Used in workflows**: `*trace` (Phase 2: gate decision), `*nfr-assess` (risk scoring), `*test-design` (risk identification)
+- **Related fragments**: `probability-impact.md` (scoring definitions), `test-priorities-matrix.md` (P0-P3 classification), `nfr-criteria.md` (non-functional risks)
+- **Tools**: Risk tracking dashboards (Jira, Linear), gate automation (CI/CD), traceability reports (Markdown, Confluence)
 
-_Source: Murat risk governance notes, gate schema guidance, SEON production gate
-workflows, ISO 31000 risk management standards_
+_Source: Murat risk governance notes, gate schema guidance, SEON production gate workflows, ISO 31000 risk management standards_

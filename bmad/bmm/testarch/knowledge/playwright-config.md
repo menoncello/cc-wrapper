@@ -2,30 +2,17 @@
 
 ## Principle
 
-Load environment configs via a central map (`envConfigMap`), standardize
-timeouts (action 15s, navigation 30s, expect 10s, test 60s), emit HTML + JUnit
-reporters, and store artifacts under `test-results/` for CI upload. Keep
-`.env.example`, `.nvmrc`, and browser dependencies versioned so local and CI
-runs stay aligned.
+Load environment configs via a central map (`envConfigMap`), standardize timeouts (action 15s, navigation 30s, expect 10s, test 60s), emit HTML + JUnit reporters, and store artifacts under `test-results/` for CI upload. Keep `.env.example`, `.nvmrc`, and browser dependencies versioned so local and CI runs stay aligned.
 
 ## Rationale
 
-Environment-specific configuration prevents hardcoded URLs, timeouts, and
-credentials from leaking into tests. A central config map with fail-fast
-validation catches missing environments early. Standardized timeouts reduce
-flakiness while remaining long enough for real-world network conditions.
-Consistent artifact storage (`test-results/`, `playwright-report/`) enables CI
-pipelines to upload failure evidence automatically. Versioned dependencies
-(`.nvmrc`, `package.json` browser versions) eliminate "works on my machine"
-issues between local and CI environments.
+Environment-specific configuration prevents hardcoded URLs, timeouts, and credentials from leaking into tests. A central config map with fail-fast validation catches missing environments early. Standardized timeouts reduce flakiness while remaining long enough for real-world network conditions. Consistent artifact storage (`test-results/`, `playwright-report/`) enables CI pipelines to upload failure evidence automatically. Versioned dependencies (`.nvmrc`, `package.json` browser versions) eliminate "works on my machine" issues between local and CI environments.
 
 ## Pattern Examples
 
 ### Example 1: Environment-Based Configuration
 
-**Context**: When testing against multiple environments (local, staging,
-production), use a central config map that loads environment-specific settings
-and fails fast if `TEST_ENV` is invalid.
+**Context**: When testing against multiple environments (local, staging, production), use a central config map that loads environment-specific settings and fails fast if `TEST_ENV` is invalid.
 
 **Implementation**:
 
@@ -51,9 +38,7 @@ const environment = process.env.TEST_ENV || 'local';
 // Fail fast if environment not supported
 if (!Object.keys(envConfigMap).includes(environment)) {
   console.error(`❌ No configuration found for environment: ${environment}`);
-  console.error(
-    `   Available environments: ${Object.keys(envConfigMap).join(', ')}`
-  );
+  console.error(`   Available environments: ${Object.keys(envConfigMap).join(', ')}`);
   process.exit(1);
 }
 
@@ -162,9 +147,7 @@ DATABASE_URL=postgresql://localhost:5432/test_db
 
 ### Example 2: Timeout Standards
 
-**Context**: When tests fail due to inconsistent timeout settings, standardize
-timeouts across all tests: action 15s, navigation 30s, expect 10s, test 60s.
-Expose overrides through fixtures rather than inline literals.
+**Context**: When tests fail due to inconsistent timeout settings, standardize timeouts across all tests: action 15s, navigation 30s, expect 10s, test 60s. Expose overrides through fixtures rather than inline literals.
 
 **Implementation**:
 
@@ -255,28 +238,21 @@ test('API returns quickly', async ({ page }) => {
   await expect(page.getByTestId('user-name')).toBeVisible({ timeout: 5000 }); // 5s instead of 10s
 
   // Override expect timeout for slow external API
-  await expect(page.getByTestId('weather-widget')).toBeVisible({
-    timeout: 20000
-  }); // 20s instead of 10s
+  await expect(page.getByTestId('weather-widget')).toBeVisible({ timeout: 20000 }); // 20s instead of 10s
 });
 ```
 
 **Key Points**:
 
-- **Standardized timeouts**: action 15s, navigation 30s, expect 10s, test 60s
-  (global defaults)
-- Fixture-based override (`extendedTimeout`) for slow tests (preferred over
-  inline)
+- **Standardized timeouts**: action 15s, navigation 30s, expect 10s, test 60s (global defaults)
+- Fixture-based override (`extendedTimeout`) for slow tests (preferred over inline)
 - Per-assertion timeout override via `{ timeout: X }` option (use sparingly)
 - Avoid hard waits (`page.waitForTimeout(3000)`) - use event-based waits instead
-- CI environments may need longer timeouts (handle in environment-specific
-  config)
+- CI environments may need longer timeouts (handle in environment-specific config)
 
 ### Example 3: Artifact Output Configuration
 
-**Context**: When debugging failures in CI, configure artifacts (screenshots,
-videos, traces, HTML reports) to be captured on failure and stored in consistent
-locations for upload.
+**Context**: When debugging failures in CI, configure artifacts (screenshots, videos, traces, HTML reports) to be captured on failure and stored in consistent locations for upload.
 
 **Implementation**:
 
@@ -429,9 +405,7 @@ test('capture screenshot on specific error', async ({ page }) => {
 
 ### Example 4: Parallelization Configuration
 
-**Context**: When tests run slowly in CI, configure parallelization with worker
-count, sharding, and fully parallel execution to maximize speed while
-maintaining stability.
+**Context**: When tests run slowly in CI, configure parallelization with worker count, sharding, and fully parallel execution to maximize speed while maintaining stability.
 
 **Implementation**:
 
@@ -565,9 +539,7 @@ test.describe('Product Catalog', () => {
 
 ### Example 5: Project Configuration
 
-**Context**: When testing across multiple browsers, devices, or configurations,
-use Playwright projects to run the same tests against different environments
-(chromium, firefox, webkit, mobile).
+**Context**: When testing across multiple browsers, devices, or configurations, use Playwright projects to run the same tests against different environments (chromium, firefox, webkit, mobile).
 
 **Implementation**:
 
@@ -726,8 +698,7 @@ jobs:
 **Key Points**:
 
 - Projects enable testing across browsers, devices, and configurations
-- `devices` from `@playwright/test` provide preset configurations (Pixel 5,
-  iPhone 13, etc.)
+- `devices` from `@playwright/test` provide preset configurations (Pixel 5, iPhone 13, etc.)
 - `dependencies` ensures setup project runs first (auth, data seeding)
 - `storageState` shares authentication across tests (0 seconds auth per test)
 - `testMatch` filters which tests run in which project
@@ -736,8 +707,7 @@ jobs:
 
 ## Integration Points
 
-- **Used in workflows**: `*framework` (config setup), `*ci` (parallelization,
-  artifact upload)
+- **Used in workflows**: `*framework` (config setup), `*ci` (parallelization, artifact upload)
 - **Related fragments**:
   - `fixture-architecture.md` - Fixture-based timeout overrides
   - `ci-burn-in.md` - CI pipeline artifact upload
@@ -757,5 +727,4 @@ jobs:
 - [ ] Projects defined for cross-browser/device testing (if needed)
 - [ ] CI uploads artifacts on failure with 30-day retention
 
-_Source: Playwright book repo, SEON configuration example, Murat testing
-philosophy (lines 216-271)._
+_Source: Playwright book repo, SEON configuration example, Murat testing philosophy (lines 216-271)._

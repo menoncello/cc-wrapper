@@ -4,8 +4,7 @@ This directory contains template files for the `document-project` workflow.
 
 ## Template Files
 
-- **index-template.md** - Master index template (adapts for single/multi-part
-  projects)
+- **index-template.md** - Master index template (adapts for single/multi-part projects)
 - **project-overview-template.md** - Executive summary and high-level overview
 - **source-tree-template.md** - Annotated directory structure
 
@@ -35,6 +34,5 @@ Based on the matched architecture type from the registry.
 ## Notes
 
 - Templates support both simple and complex project structures
-- Multi-part projects get part-specific file naming (e.g.,
-  `architecture-{part_id}.md`)
+- Multi-part projects get part-specific file naming (e.g., `architecture-{part_id}.md`)
 - Single-part projects use simplified naming (e.g., `architecture.md`)

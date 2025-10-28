@@ -2,25 +2,16 @@
 
 ## Overview
 
-Generate a comprehensive Technical Specification for a single epic from PRD,
-Epics file and Solution Architecture to produce a document with full acceptance
-criteria and traceability mapping. Creates detailed implementation guidance that
-bridges business requirements with technical execution.
+Generate a comprehensive Technical Specification for a single epic from PRD, Epics file and Architecture to produce a document with full acceptance criteria and traceability mapping. Creates detailed implementation guidance that bridges business requirements with technical execution.
 
 ## Key Features
 
-- **PRD-Architecture Integration** - Synthesizes business requirements with
-  technical constraints
-- **Traceability Mapping** - Links acceptance criteria to technical components
-  and tests
-- **Multi-Input Support** - Leverages PRD, architecture, front-end specs, and
-  brownfield notes
-- **Implementation Focus** - Provides concrete technical guidance for
-  development teams
-- **Testing Integration** - Includes test strategy aligned with acceptance
-  criteria
-- **Validation Ready** - Generates specifications suitable for architectural
-  review
+- **PRD-Architecture Integration** - Synthesizes business requirements with technical constraints
+- **Traceability Mapping** - Links acceptance criteria to technical components and tests
+- **Multi-Input Support** - Leverages PRD, architecture, front-end specs, and brownfield notes
+- **Implementation Focus** - Provides concrete technical guidance for development teams
+- **Testing Integration** - Includes test strategy aligned with acceptance criteria
+- **Validation Ready** - Generates specifications suitable for architectural review
 
 ## Usage
 
@@ -44,8 +35,7 @@ workflow tech-spec --input PRD.md --input architecture.md --input front-end-spec
 
 - **output_folder**: Location for generated technical specification
 - **epic_id**: Used in output filename (extracted from PRD or prompted)
-- **recommended_inputs**: PRD, solution-architecture, front-end spec, brownfield
-  notes
+- **recommended_inputs**: PRD, architecture, front-end spec, brownfield notes
 
 ## Workflow Structure
 
@@ -71,30 +61,23 @@ tech-spec/
 
 ### Phase 2: Technical Design Specification (Step 3)
 
-- **Service Architecture**: Defines services/modules with responsibilities and
-  interfaces
+- **Service Architecture**: Defines services/modules with responsibilities and interfaces
 - **Data Modeling**: Specifies entities, schemas, and relationships
-- **API Design**: Documents endpoints, request/response models, and error
-  handling
+- **API Design**: Documents endpoints, request/response models, and error handling
 - **Workflow Definition**: Details sequence flows and data processing patterns
 
 ### Phase 3: Non-Functional Requirements (Step 4)
 
-- **Performance Specs**: Defines measurable latency, throughput, and scalability
-  targets
-- **Security Requirements**: Specifies authentication, authorization, and data
-  protection
-- **Reliability Standards**: Documents availability, recovery, and degradation
-  behavior
-- **Observability Framework**: Defines logging, metrics, and tracing
-  requirements
+- **Performance Specs**: Defines measurable latency, throughput, and scalability targets
+- **Security Requirements**: Specifies authentication, authorization, and data protection
+- **Reliability Standards**: Documents availability, recovery, and degradation behavior
+- **Observability Framework**: Defines logging, metrics, and tracing requirements
 
 ### Phase 4: Dependencies and Integration (Step 5)
 
 - **Dependency Analysis**: Scans repository for package manifests and frameworks
 - **Integration Mapping**: Identifies external systems and API dependencies
-- **Version Management**: Documents version constraints and compatibility
-  requirements
+- **Version Management**: Documents version constraints and compatibility requirements
 - **Infrastructure Needs**: Specifies deployment and runtime dependencies
 
 ### Phase 5: Acceptance and Testing (Step 6)
@@ -106,8 +89,7 @@ tech-spec/
 
 ### Phase 6: Risk and Validation (Steps 7-8)
 
-- **Risk Assessment**: Identifies technical risks, assumptions, and open
-  questions
+- **Risk Assessment**: Identifies technical risks, assumptions, and open questions
 - **Mitigation Planning**: Provides strategies for addressing identified risks
 - **Quality Validation**: Ensures specification meets completeness criteria
 - **Checklist Verification**: Validates against workflow quality standards
@@ -117,18 +99,15 @@ tech-spec/
 ### Generated Files
 
 - **Primary output**: tech-spec-{epic_id}-{date}.md
-- **Traceability data**: Embedded mapping tables linking requirements to
-  implementation
+- **Traceability data**: Embedded mapping tables linking requirements to implementation
 
 ### Output Structure
 
 1. **Overview and Scope** - Project context and boundaries
-2. **System Architecture Alignment** - Connection to solution-architecture
+2. **System Architecture Alignment** - Connection to architecture
 3. **Detailed Design** - Services, data models, APIs, and workflows
-4. **Non-Functional Requirements** - Performance, security, reliability,
-   observability
-5. **Dependencies and Integrations** - External systems and technical
-   dependencies
+4. **Non-Functional Requirements** - Performance, security, reliability, observability
+5. **Dependencies and Integrations** - External systems and technical dependencies
 6. **Acceptance Criteria** - Testable requirements from PRD
 7. **Traceability Mapping** - Requirements-to-implementation mapping
 8. **Test Strategy** - Testing approach and framework alignment
@@ -137,7 +116,7 @@ tech-spec/
 ## Requirements
 
 - **PRD Document**: Product Requirements Document with clear acceptance criteria
-- **Architecture Document**: solution-architecture or technical design
+- **Architecture Document**: architecture or technical design
 - **Repository Access**: For dependency analysis and framework detection
 - **Epic Context**: Clear epic identification and scope definition
 
@@ -145,27 +124,20 @@ tech-spec/
 
 ### Before Starting
 
-1. **Validate Inputs**: Ensure PRD and architecture documents are complete and
-   current
-2. **Review Requirements**: Confirm acceptance criteria are specific and
-   testable
-3. **Check Dependencies**: Verify repository structure supports automated
-   dependency analysis
+1. **Validate Inputs**: Ensure PRD and architecture documents are complete and current
+2. **Review Requirements**: Confirm acceptance criteria are specific and testable
+3. **Check Dependencies**: Verify repository structure supports automated dependency analysis
 
 ### During Execution
 
-1. **Maintain Traceability**: Ensure every acceptance criterion maps to
-   implementation
-2. **Be Implementation-Specific**: Provide concrete technical guidance, not
-   high-level concepts
-3. **Consider Constraints**: Factor in existing system limitations and
-   brownfield challenges
+1. **Maintain Traceability**: Ensure every acceptance criterion maps to implementation
+2. **Be Implementation-Specific**: Provide concrete technical guidance, not high-level concepts
+3. **Consider Constraints**: Factor in existing system limitations and brownfield challenges
 
 ### After Completion
 
 1. **Architect Review**: Have technical lead validate design decisions
-2. **Developer Walkthrough**: Ensure implementation team understands
-   specifications
+2. **Developer Walkthrough**: Ensure implementation team understands specifications
 3. **Test Planning**: Use traceability matrix for test case development
 
 ## Troubleshooting
@@ -185,27 +157,21 @@ tech-spec/
 **Issue**: Dependency analysis fails or is incomplete
 
 - **Solution**: Check repository structure and manifest file locations
-- **Check**: Verify repository contains standard dependency files (package.json,
-  etc.)
+- **Check**: Verify repository contains standard dependency files (package.json, etc.)
 
 **Issue**: Non-functional requirements are too vague
 
-- **Solution**: Extract specific performance and quality targets from
-  architecture
+- **Solution**: Extract specific performance and quality targets from architecture
 - **Check**: Ensure architecture document contains measurable NFR specifications
 
 ## Customization
 
 To customize this workflow:
 
-1. **Modify Template**: Update template.md to match organizational technical
-   spec standards
-2. **Extend Dependencies**: Add support for additional package managers or
-   frameworks
-3. **Enhance Validation**: Extend checklist.md with company-specific technical
-   criteria
-4. **Add Sections**: Include additional technical concerns like DevOps or
-   monitoring
+1. **Modify Template**: Update template.md to match organizational technical spec standards
+2. **Extend Dependencies**: Add support for additional package managers or frameworks
+3. **Enhance Validation**: Extend checklist.md with company-specific technical criteria
+4. **Add Sections**: Include additional technical concerns like DevOps or monitoring
 
 ## Version History
 
@@ -219,8 +185,7 @@ To customize this workflow:
 
 For issues or questions:
 
-- Review the workflow creation guide at
-  `/bmad/bmb/workflows/create-workflow/workflow-creation-guide.md`
+- Review the workflow creation guide at `/bmad/bmb/workflows/create-workflow/workflow-creation-guide.md`
 - Validate output using `checklist.md`
 - Ensure PRD and architecture documents are complete before starting
 - Consult BMAD documentation for technical specification standards

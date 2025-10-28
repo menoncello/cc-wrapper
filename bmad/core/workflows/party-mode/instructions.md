@@ -1,8 +1,7 @@
 # Party Mode - Multi-Agent Discussion Instructions
 
-<critical>The workflow execution engine is governed by:
-{project_root}/bmad/core/tasks/workflow.xml</critical> <critical>This workflow
-orchestrates group discussions between all installed BMAD agents</critical>
+<critical>The workflow execution engine is governed by: {project_root}/bmad/core/tasks/workflow.xml</critical>
+<critical>This workflow orchestrates group discussions between all installed BMAD agents</critical>
 
 <workflow>
 
@@ -20,18 +19,14 @@ orchestrates group discussions between all installed BMAD agents</critical>
     - module (source module)
     - path (file location)
 
-<action>For each agent found in manifest:</action> <check>Look for config
-override at {{agent_overrides}}[module]-[agent-name].customize.yaml</check>
+<action>For each agent found in manifest:</action>
+<check>Look for config override at {{agent_overrides}}[module]-[agent-name].customize.yaml</check>
 <action if="agent override exists">Load the override configuration</action>
-<action>MERGE override data with manifest data (overrides take
-precedence):</action> - Override role replaces manifest role if present -
-Override identity replaces manifest identity if present - Override
-communicationStyle replaces manifest communicationStyle if present - Override
-principles replace manifest principles if present - Any additional persona
-elements from override are added
+<action>MERGE override data with manifest data (overrides take precedence):</action> - Override role replaces manifest role if present - Override identity replaces manifest identity if present - Override communicationStyle replaces manifest communicationStyle if present - Override principles replace manifest principles if present - Any additional persona elements from override are added
 
 <action>Build complete agent roster with merged personalities</action>
-<action>Store agent data for use in conversation orchestration</action> </step>
+<action>Store agent data for use in conversation orchestration</action>
+</step>
 
 <step n="2" goal="Initialize Party Mode">
   <action>Announce party mode activation with enthusiasm</action>
@@ -83,20 +78,23 @@ elements from override are added
   </substep>
 
   <substep n="3c" goal="Handle Questions and Interactions">
-    <check>If an agent asks the user a direct question:</check>
+    <check if="an agent asks the user a direct question">
       <action>Clearly highlight the question</action>
       <action>End that round of responses</action>
       <action>Display: "[Agent Name]: [Their question]"</action>
       <action>Display: "[Awaiting user response...]"</action>
       <action>WAIT for user input before continuing</action>
+    </check>
 
-    <check>If agents ask each other questions:</check>
+    <check if="agents ask each other questions">
       <action>Allow natural back-and-forth in the same response round</action>
       <action>Maintain conversational flow</action>
+    </check>
 
-    <check>If discussion becomes circular or repetitive:</check>
+    <check if="discussion becomes circular or repetitive">
       <action>The BMad Master will summarize</action>
       <action>Redirect to new aspects or ask for user guidance</action>
+    </check>
 
   </substep>
 
@@ -116,15 +114,18 @@ elements from override are added
   </substep>
 
   <substep n="3e" goal="Check for Exit Conditions">
-    <check>If user message contains any {{exit_triggers}}:</check>
+    <check if="user message contains any {{exit_triggers}}">
       <action>Have agents provide brief farewells in character</action>
       <action>Thank user for the discussion</action>
       <goto step="4">Exit party mode</goto>
+    </check>
 
-    <check>If user seems done or conversation naturally concludes:</check>
+    <check if="user seems done or conversation naturally concludes">
       <ask>Would you like to continue the discussion or end party mode?</ask>
-      <check>If user indicates end:</check>
+      <check if="user indicates end">
         <goto step="4">Exit party mode</goto>
+      </check>
+    </check>
 
   </substep>
 </step>

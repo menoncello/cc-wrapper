@@ -75,8 +75,7 @@ This game type is **narrative-critical**. You MUST run the Narrative Design work
 - Branching narrative (if applicable)
 - Multiple endings (if applicable)
 
-**Note:** All narrative content must be written in the Narrative Design
-Document.
+**Note:** All narrative content must be written in the Narrative Design Document.
 
 ### Game Flow and Pacing
 

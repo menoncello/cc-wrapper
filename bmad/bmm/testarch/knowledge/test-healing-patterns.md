@@ -2,26 +2,17 @@
 
 ## Principle
 
-Common test failures follow predictable patterns (stale selectors, race
-conditions, dynamic data assertions, network errors, hard waits). **Automated
-healing** identifies failure signatures and applies pattern-based fixes. Manual
-healing captures these patterns for future automation.
+Common test failures follow predictable patterns (stale selectors, race conditions, dynamic data assertions, network errors, hard waits). **Automated healing** identifies failure signatures and applies pattern-based fixes. Manual healing captures these patterns for future automation.
 
 ## Rationale
 
-**The Problem**: Test failures waste developer time on repetitive debugging.
-Teams manually fix the same selector issues, timing bugs, and data mismatches
-repeatedly across test suites.
+**The Problem**: Test failures waste developer time on repetitive debugging. Teams manually fix the same selector issues, timing bugs, and data mismatches repeatedly across test suites.
 
-**The Solution**: Catalog common failure patterns with diagnostic signatures and
-automated fixes. When a test fails, match the error message/stack trace against
-known patterns and apply the corresponding fix. This transforms test maintenance
-from reactive debugging to proactive pattern application.
+**The Solution**: Catalog common failure patterns with diagnostic signatures and automated fixes. When a test fails, match the error message/stack trace against known patterns and apply the corresponding fix. This transforms test maintenance from reactive debugging to proactive pattern application.
 
 **Why This Matters**:
 
-- Reduces test maintenance time by 60-80% (pattern-based fixes vs manual
-  debugging)
+- Reduces test maintenance time by 60-80% (pattern-based fixes vs manual debugging)
 - Prevents flakiness regression (same bug fixed once, applied everywhere)
 - Builds institutional knowledge (failure catalog grows over time)
 - Enables self-healing test suites (automate workflow validates and heals)
@@ -30,8 +21,7 @@ from reactive debugging to proactive pattern application.
 
 ### Example 1: Common Failure Pattern - Stale Selectors (Element Not Found)
 
-**Context**: Test fails with "Element not found" or "Locator resolved to 0
-elements" errors
+**Context**: Test fails with "Element not found" or "Locator resolved to 0 elements" errors
 
 **Diagnostic Signature**:
 
@@ -70,9 +60,7 @@ export function extractSelector(errorMessage: string): string | null {
   if (playwrightMatch) return playwrightMatch[1];
 
   // Cypress: "Timed out retrying: Expected to find element: '.submit-button'"
-  const cypressMatch = errorMessage.match(
-    /Expected to find element: ['"]([^'"]+)['"]/i
-  );
+  const cypressMatch = errorMessage.match(/Expected to find element: ['"]([^'"]+)['"]/i);
   if (cypressMatch) return cypressMatch[1];
 
   return null;
@@ -84,8 +72,7 @@ export function extractSelector(errorMessage: string): string | null {
 export function suggestBetterSelector(badSelector: string): string {
   // If using CSS class → suggest data-testid
   if (badSelector.startsWith('.') || badSelector.includes('class=')) {
-    const elementName =
-      badSelector.match(/class=["']([^"']+)["']/)?.[1] || badSelector.slice(1);
+    const elementName = badSelector.match(/class=["']([^"']+)["']/)?.[1] || badSelector.slice(1);
     return `page.getByTestId('${elementName}') // Prefer data-testid over CSS class`;
   }
 
@@ -128,9 +115,7 @@ test('heal stale selector failures automatically', async ({ page }) => {
   } catch (error: any) {
     if (isSelectorFailure(error)) {
       const badSelector = extractSelector(error.message);
-      const suggestion = badSelector
-        ? suggestBetterSelector(badSelector)
-        : null;
+      const suggestion = badSelector ? suggestBetterSelector(badSelector) : null;
 
       console.log('HEALING SUGGESTION:', suggestion);
 
@@ -147,10 +132,8 @@ test('heal stale selector failures automatically', async ({ page }) => {
 
 **Key Points**:
 
-- Diagnosis: Error message contains "locator resolved to 0 elements" or "element
-  not found"
-- Fix: Replace brittle selector (CSS class, ID, nth) with robust alternative
-  (data-testid, ARIA role)
+- Diagnosis: Error message contains "locator resolved to 0 elements" or "element not found"
+- Fix: Replace brittle selector (CSS class, ID, nth) with robust alternative (data-testid, ARIA role)
 - Prevention: Follow selector hierarchy (data-testid > ARIA > text > CSS)
 - Automation: Pattern matching on error message + stack trace
 
@@ -158,8 +141,7 @@ test('heal stale selector failures automatically', async ({ page }) => {
 
 ### Example 2: Common Failure Pattern - Race Conditions (Timing Errors)
 
-**Context**: Test fails with "timeout waiting for element" or "element not
-visible" errors
+**Context**: Test fails with "timeout waiting for element" or "element not visible" errors
 
 **Diagnostic Signature**:
 
@@ -253,10 +235,7 @@ import {
   suggestDeterministicWait
 } from '../../src/testing/healing/timing-healing';
 
-test('heal race condition with network-first pattern', async ({
-  page,
-  context
-}) => {
+test('heal race condition with network-first pattern', async ({ page, context }) => {
   // Setup interception BEFORE navigation (prevent race)
   await context.route('**/api/products', route => {
     route.fulfill({
@@ -298,8 +277,7 @@ test('heal hard wait with event-based wait', async ({ page }) => {
 
 ### Example 3: Common Failure Pattern - Dynamic Data Assertions (Non-Deterministic IDs)
 
-**Context**: Test fails with "Expected 'User 123' but received 'User 456'" or
-timestamp mismatches
+**Context**: Test fails with "Expected 'User 123' but received 'User 456'" or timestamp mismatches
 
 **Diagnostic Signature**:
 
@@ -419,20 +397,16 @@ test('heal order ID assertion with capture', async ({ page, request }) => {
 
 **Key Points**:
 
-- Diagnosis: Error message shows expected vs actual value mismatch with
-  IDs/timestamps
-- Fix: Use regex patterns (`/User \d+/`), partial matching, or capture dynamic
-  values
+- Diagnosis: Error message shows expected vs actual value mismatch with IDs/timestamps
+- Fix: Use regex patterns (`/User \d+/`), partial matching, or capture dynamic values
 - Prevention: Never hardcode IDs, timestamps, or random data in assertions
-- Automation: Parse error message for expected/actual values, suggest regex
-  patterns
+- Automation: Parse error message for expected/actual values, suggest regex patterns
 
 ---
 
 ### Example 4: Common Failure Pattern - Network Errors (Missing Route Interception)
 
-**Context**: Test fails with "API call failed" or "500 error" during test
-execution
+**Context**: Test fails with "API call failed" or "500 error" during test execution
 
 **Diagnostic Signature**:
 
@@ -520,10 +494,7 @@ test('heal network failure with route mocking', async ({ page, context }) => {
 test('heal 500 error with error state mocking', async ({ page, context }) => {
   // Mock API failure scenario
   await context.route('**/api/products', route => {
-    route.fulfill({
-      status: 500,
-      body: JSON.stringify({ error: 'Internal Server Error' })
-    });
+    route.fulfill({ status: 500, body: JSON.stringify({ error: 'Internal Server Error' }) });
   });
 
   await page.goto('/products');
@@ -536,8 +507,7 @@ test('heal 500 error with error state mocking', async ({ page, context }) => {
 
 **Key Points**:
 
-- Diagnosis: Error message contains "API call failed", "500 error", or
-  network-related failures
+- Diagnosis: Error message contains "API call failed", "500 error", or network-related failures
 - Fix: Add `page.route()` or `cy.intercept()` to mock API responses
 - Prevention: Mock ALL external dependencies (APIs, third-party services)
 - Automation: Extract URL from error message, generate route interception code
@@ -546,8 +516,7 @@ test('heal 500 error with error state mocking', async ({ page, context }) => {
 
 ### Example 5: Common Failure Pattern - Hard Waits (Unreliable Timing)
 
-**Context**: Test fails intermittently with "timeout exceeded" or passes/fails
-randomly
+**Context**: Test fails intermittently with "timeout exceeded" or passes/fails randomly
 
 **Diagnostic Signature**:
 
@@ -557,9 +526,7 @@ randomly
 /**
  * Detect hard wait anti-pattern in test code
  */
-export function detectHardWaits(
-  testCode: string
-): Array<{ line: number; code: string }> {
+export function detectHardWaits(testCode: string): Array<{ line: number; code: string }> {
   const lines = testCode.split('\n');
   const violations: Array<{ line: number; code: string }> = [];
 
@@ -626,9 +593,7 @@ test('heal hard wait with deterministic wait', async ({ page }) => {
   await page.getByTestId('loading-spinner').waitFor({ state: 'detached' });
 
   // OR wait for specific network response
-  await page.waitForResponse(
-    resp => resp.url().includes('/api/dashboard') && resp.ok()
-  );
+  await page.waitForResponse(resp => resp.url().includes('/api/dashboard') && resp.ok());
 
   await expect(page.getByText('Dashboard ready')).toBeVisible();
 });
@@ -651,11 +616,9 @@ test('heal implicit wait with explicit network wait', async ({ page }) => {
 **Key Points**:
 
 - Diagnosis: Test code contains `page.waitForTimeout()` or `cy.wait(number)`
-- Fix: Replace with `waitForResponse()`, `waitFor({ state })`, or aliased
-  intercepts
+- Fix: Replace with `waitForResponse()`, `waitFor({ state })`, or aliased intercepts
 - Prevention: NEVER use hard waits, always use event-based/response-based waits
-- Automation: Scan test code for hard wait patterns, suggest deterministic
-  replacements
+- Automation: Scan test code for hard wait patterns, suggest deterministic replacements
 
 ---
 
@@ -681,28 +644,19 @@ test('heal implicit wait with explicit network wait', async ({ page }) => {
 
 Before enabling auto-healing in workflows:
 
-- [ ] **Failure catalog documented**: Common patterns identified (selectors,
-      timing, data, network, hard waits)
-- [ ] **Diagnostic signatures defined**: Error message patterns for each failure
-      type
+- [ ] **Failure catalog documented**: Common patterns identified (selectors, timing, data, network, hard waits)
+- [ ] **Diagnostic signatures defined**: Error message patterns for each failure type
 - [ ] **Healing strategies documented**: Fix patterns for each failure type
 - [ ] **Prevention patterns documented**: Best practices to avoid recurrence
-- [ ] **Healing iteration limit set**: Max 3 attempts before marking
-      test.fixme()
+- [ ] **Healing iteration limit set**: Max 3 attempts before marking test.fixme()
 - [ ] **MCP integration optional**: Graceful degradation without Playwright MCP
-- [ ] **Pattern-based fallback**: Use knowledge base patterns when MCP
-      unavailable
+- [ ] **Pattern-based fallback**: Use knowledge base patterns when MCP unavailable
 - [ ] **Healing report generated**: Document what was healed and how
 
 ## Integration Points
 
-- **Used in workflows**: `*automate` (auto-healing after test generation),
-  `*atdd` (optional healing for acceptance tests)
-- **Related fragments**: `selector-resilience.md` (selector debugging),
-  `timing-debugging.md` (race condition fixes), `network-first.md` (interception
-  patterns), `data-factories.md` (dynamic data handling)
-- **Tools**: Error message parsing, AST analysis for code patterns, Playwright
-  MCP (optional), pattern matching
+- **Used in workflows**: `*automate` (auto-healing after test generation), `*atdd` (optional healing for acceptance tests)
+- **Related fragments**: `selector-resilience.md` (selector debugging), `timing-debugging.md` (race condition fixes), `network-first.md` (interception patterns), `data-factories.md` (dynamic data handling)
+- **Tools**: Error message parsing, AST analysis for code patterns, Playwright MCP (optional), pattern matching
 
-_Source: Playwright test-healer patterns, production test failure analysis,
-common anti-patterns from test-resources-for-ai_
+_Source: Playwright test-healer patterns, production test failure analysis, common anti-patterns from test-resources-for-ai_

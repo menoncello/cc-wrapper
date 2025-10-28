@@ -1,14 +1,15 @@
 # {{project_name}} - Epic Breakdown
 
-**Author:** {{user_name}} **Date:** {{date}} **Project Level:**
-{{project_level}} **Target Scale:** {{target_scale}}
+**Author:** {{user_name}}
+**Date:** {{date}}
+**Project Level:** {{project_level}}
+**Target Scale:** {{target_scale}}
 
 ---
 
 ## Overview
 
-This document provides the detailed epic breakdown for {{project_name}},
-expanding on the high-level epic list in the [PRD](./PRD.md).
+This document provides the detailed epic breakdown for {{project_name}}, expanding on the high-level epic list in the [PRD](./PRD.md).
 
 Each epic includes:
 
@@ -20,8 +21,7 @@ Each epic includes:
 **Epic Sequencing Principles:**
 
 - Epic 1 establishes foundational infrastructure and initial functionality
-- Subsequent epics build progressively, each delivering significant end-to-end
-  value
+- Subsequent epics build progressively, each delivering significant end-to-end value
 - Stories within epics are vertically sliced and sequentially ordered
 - No forward dependencies - each story builds only on previous work
 
@@ -60,5 +60,4 @@ So that [benefit/value].
 
 ---
 
-**For implementation:** Use the `create-story` workflow to generate individual
-story implementation plans from this epic breakdown.
+**For implementation:** Use the `create-story` workflow to generate individual story implementation plans from this epic breakdown.

@@ -1,7 +1,8 @@
 # Game Brief: {{game_name}}
 
-**Date:** {{date}} **Author:** {{user_name}} **Status:** Draft for GDD
-Development
+**Date:** {{date}}
+**Author:** {{user_name}}
+**Status:** Draft for GDD Development
 
 ---
 
@@ -199,8 +200,6 @@ Development
 
 ---
 
-_This Game Brief serves as the foundational input for Game Design Document (GDD)
-creation._
+_This Game Brief serves as the foundational input for Game Design Document (GDD) creation._
 
-_Next Steps: Use the `workflow gdd` command to create detailed game design
-documentation._
+_Next Steps: Use the `workflow gdd` command to create detailed game design documentation._

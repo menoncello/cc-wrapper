@@ -1,10 +1,7 @@
-<critical>The workflow execution engine is governed by:
-{project_root}/bmad/core/tasks/workflow.xml</critical> <critical>You MUST have
-already loaded and processed: {installed_path}/workflow.yaml</critical>
+<critical>The workflow execution engine is governed by: {project_root}/bmad/core/tasks/workflow.xml</critical>
+<critical>You MUST have already loaded and processed: {installed_path}/workflow.yaml</critical>
 <critical>Communicate all responses in {communication_language}</critical>
-<critical>This is a meta-workflow that orchestrates the CIS brainstorming
-workflow with game-specific context and additional game design
-techniques</critical>
+<critical>This is a meta-workflow that orchestrates the CIS brainstorming workflow with game-specific context and additional game design techniques</critical>
 
 <workflow>
 
@@ -86,13 +83,16 @@ techniques</critical>
 
 **Session Results:**
 
-- Game brainstorming results saved to:
-  {output_folder}/bmm-brainstorming-session-{{date}}.md
+- Game brainstorming results saved to: {output_folder}/bmm-brainstorming-session-{{date}}.md
 
-{{#if standalone_mode != true}} **Status Updated:**
+{{#if standalone_mode != true}}
+**Status Updated:**
 
-- Progress tracking updated {{else}} Note: Running in standalone mode (no status
-  file). To track progress across workflows, run `workflow-init` first. {{/if}}
+- Progress tracking updated
+  {{else}}
+  Note: Running in standalone mode (no status file).
+  To track progress across workflows, run `workflow-init` first.
+  {{/if}}
 
 **Next Steps:**
 
@@ -102,7 +102,10 @@ techniques</critical>
    - `game-brief` workflow to formalize game vision
    - Or proceed directly to `plan-project` if ready
 
-{{#if standalone_mode != true}} Check status anytime with: `workflow-status`
-{{/if}} </output> </step>
+{{#if standalone_mode != true}}
+Check status anytime with: `workflow-status`
+{{/if}}
+</output>
+</step>
 
 </workflow>

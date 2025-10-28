@@ -9,20 +9,23 @@
 <step n="1" goal="Session Setup">
 
 <action>Check if context data was provided with workflow invocation</action>
-<check>If data attribute was passed to this workflow:</check> <action>Load the
-context document from the data file path</action> <action>Study the domain
-knowledge and session focus</action> <action>Use the provided context to guide
-the session</action> <action>Acknowledge the focused brainstorming goal</action>
-<ask response="session_refinement">I see we're brainstorming about the specific
-domain outlined in the context. What particular aspect would you like to
-explore?</ask> <check>Else (no context data provided):</check> <action>Proceed
-with generic context gathering</action> <ask response="session_topic">1. What
-are we brainstorming about?</ask> <ask response="stated_goals">2. Are there any
-constraints or parameters we should keep in mind?</ask> <ask>3. Is the goal
-broad exploration or focused ideation on specific aspects?</ask>
 
-<critical>Wait for user response before proceeding. This context shapes the
-entire session.</critical>
+<check if="data attribute was passed to this workflow">
+  <action>Load the context document from the data file path</action>
+  <action>Study the domain knowledge and session focus</action>
+  <action>Use the provided context to guide the session</action>
+  <action>Acknowledge the focused brainstorming goal</action>
+  <ask response="session_refinement">I see we're brainstorming about the specific domain outlined in the context. What particular aspect would you like to explore?</ask>
+</check>
+
+<check if="no context data provided">
+  <action>Proceed with generic context gathering</action>
+  <ask response="session_topic">1. What are we brainstorming about?</ask>
+  <ask response="stated_goals">2. Are there any constraints or parameters we should keep in mind?</ask>
+  <ask>3. Is the goal broad exploration or focused ideation on specific aspects?</ask>
+
+<critical>Wait for user response before proceeding. This context shapes the entire session.</critical>
+</check>
 
 <template-output>session_topic, stated_goals</template-output>
 
@@ -38,21 +41,22 @@ Based on the context from Step 1, present these four approach options:
 3. **Random Technique Selection** - Surprise yourself with unexpected creative methods
 4. **Progressive Technique Flow** - Start broad, then narrow down systematically
 
-Which approach would you prefer? (Enter 1-4) </ask>
-
-<check>Based on selection, proceed to appropriate sub-step</check>
+Which approach would you prefer? (Enter 1-4)
+</ask>
 
   <step n="2a" title="User-Selected Techniques" if="selection==1">
     <action>Load techniques from {brain_techniques} CSV file</action>
     <action>Parse: category, technique_name, description, facilitation_prompts</action>
 
-    <check>If strong context from Step 1 (specific problem/goal)</check>
-    <action>Identify 2-3 most relevant categories based on stated_goals</action>
-    <action>Present those categories first with 3-5 techniques each</action>
-    <action>Offer "show all categories" option</action>
+    <check if="strong context from Step 1 (specific problem/goal)">
+      <action>Identify 2-3 most relevant categories based on stated_goals</action>
+      <action>Present those categories first with 3-5 techniques each</action>
+      <action>Offer "show all categories" option</action>
+    </check>
 
-    <check>Else (open exploration)</check>
-    <action>Display all 7 categories with helpful descriptions</action>
+    <check if="open exploration">
+      <action>Display all 7 categories with helpful descriptions</action>
+    </check>
 
     Category descriptions to guide selection:
     - **Structured:** Systematic frameworks for thorough exploration
@@ -172,19 +176,14 @@ REMEMBER: YOU ARE A MASTER Brainstorming Creative FACILITATOR: Guide the user as
 
 For each technique:
 
-1. **Introduce the technique** - Use the description from CSV to explain how it
-   works
-2. **Provide the first prompt** - Use facilitation_prompts from CSV
-   (pipe-separated prompts)
+1. **Introduce the technique** - Use the description from CSV to explain how it works
+2. **Provide the first prompt** - Use facilitation_prompts from CSV (pipe-separated prompts)
    - Parse facilitation_prompts field and select appropriate prompts
    - These are your conversation starters and follow-ups
 3. **Wait for their response** - Let them generate ideas
-4. **Build on their ideas** - Use "Yes, and..." or "That reminds me..." or "What
-   if we also..."
-5. **Ask follow-up questions** - "Tell me more about...", "How would that
-   work?", "What else?"
-6. **Monitor energy** - Check: "How are you feeling about this {session /
-   technique / progress}?"
+4. **Build on their ideas** - Use "Yes, and..." or "That reminds me..." or "What if we also..."
+5. **Ask follow-up questions** - "Tell me more about...", "How would that work?", "What else?"
+6. **Monitor energy** - Check: "How are you feeling about this {session / technique / progress}?"
    - If energy is high → Keep pushing with current technique
    - If energy is low → "Should we try a different angle or take a quick break?"
 7. **Keep momentum** - Celebrate: "Great! You've generated [X] ideas so far!"
@@ -193,23 +192,20 @@ For each technique:
 <example>
 Example facilitation flow for any technique:
 
-1. Introduce: "Let's try [technique_name]. [Adapt description from CSV to their
-   context]."
+1. Introduce: "Let's try [technique_name]. [Adapt description from CSV to their context]."
 
-2. First Prompt: Pull first facilitation_prompt from {brain_techniques} and
-   adapt to their topic
+2. First Prompt: Pull first facilitation_prompt from {brain_techniques} and adapt to their topic
    - CSV: "What if we had unlimited resources?"
    - Adapted: "What if you had unlimited resources for [their_topic]?"
 
-3. Build on Response: Use "Yes, and..." or "That reminds me..." or "Building on
-   that..."
+3. Build on Response: Use "Yes, and..." or "That reminds me..." or "Building on that..."
 
 4. Next Prompt: Pull next facilitation_prompt when ready to advance
 
 5. Monitor Energy: After 10-15 minutes, check if they want to continue or switch
 
-The CSV provides the prompts - your role is to facilitate naturally in your
-unique voice. </example>
+The CSV provides the prompts - your role is to facilitate naturally in your unique voice.
+</example>
 
 Continue engaging with the technique until the user indicates they want to:
 
@@ -237,21 +233,16 @@ When ready to consolidate:
 Guide the user through categorizing their ideas:
 
 1. **Review all generated ideas** - Display everything captured so far
-2. **Identify patterns** - "I notice several ideas about X... and others about
-   Y..."
-3. **Group into categories** - Work with user to organize ideas within and
-   across techniques
+2. **Identify patterns** - "I notice several ideas about X... and others about Y..."
+3. **Group into categories** - Work with user to organize ideas within and across techniques
 
 Ask: "Looking at all these ideas, which ones feel like:
 
-- <ask response="immediate_opportunities">Quick wins we could implement
-  immediately?</ask>
-- <ask response="future_innovations">Promising concepts that need more
-  development?</ask>
+- <ask response="immediate_opportunities">Quick wins we could implement immediately?</ask>
+- <ask response="future_innovations">Promising concepts that need more development?</ask>
 - <ask response="moonshots">Bold moonshots worth pursuing long-term?"</ask>
 
-<template-output>immediate_opportunities, future_innovations,
-moonshots</template-output>
+<template-output>immediate_opportunities, future_innovations, moonshots</template-output>
 
 </step>
 
@@ -259,12 +250,9 @@ moonshots</template-output>
 
 Analyze the session to identify deeper patterns:
 
-1. **Identify recurring themes** - What concepts appeared across multiple
-   techniques? -> key_themes
-2. **Surface key insights** - What realizations emerged during the process? ->
-   insights_learnings
-3. **Note surprising connections** - What unexpected relationships were
-   discovered? -> insights_learnings
+1. **Identify recurring themes** - What concepts appeared across multiple techniques? -> key_themes
+2. **Surface key insights** - What realizations emerged during the process? -> insights_learnings
+3. **Note surprising connections** - What unexpected relationships were discovered? -> insights_learnings
 
 <invoke-task halt="true">{project-root}/bmad/core/tasks/adv-elicit.xml</invoke-task>
 
@@ -280,8 +268,7 @@ Analyze the session to identify deeper patterns:
 
 Work with the user to prioritize and plan next steps:
 
-<ask>Of all the ideas we've generated, which 3 feel most important to
-pursue?</ask>
+<ask>Of all the ideas we've generated, which 3 feel most important to pursue?</ask>
 
 For each priority:
 
@@ -290,12 +277,9 @@ For each priority:
 3. Determine resource needs
 4. Set realistic timeline
 
-<template-output>priority_1_name, priority_1_rationale, priority_1_steps,
-priority_1_resources, priority_1_timeline</template-output>
-<template-output>priority_2_name, priority_2_rationale, priority_2_steps,
-priority_2_resources, priority_2_timeline</template-output>
-<template-output>priority_3_name, priority_3_rationale, priority_3_steps,
-priority_3_resources, priority_3_timeline</template-output>
+<template-output>priority_1_name, priority_1_rationale, priority_1_steps, priority_1_resources, priority_1_timeline</template-output>
+<template-output>priority_2_name, priority_2_rationale, priority_2_steps, priority_2_resources, priority_2_timeline</template-output>
+<template-output>priority_3_name, priority_3_rationale, priority_3_steps, priority_3_resources, priority_3_timeline</template-output>
 
 </step>
 
@@ -305,14 +289,12 @@ Conclude with meta-analysis of the session:
 
 1. **What worked well** - Which techniques or moments were most productive?
 2. **Areas to explore further** - What topics deserve deeper investigation?
-3. **Recommended follow-up techniques** - What methods would help continue this
-   work?
+3. **Recommended follow-up techniques** - What methods would help continue this work?
 4. **Emergent questions** - What new questions arose that we should address?
 5. **Next session planning** - When and what should we brainstorm next?
 
-<template-output>what_worked, areas_exploration, recommended_techniques,
-questions_emerged</template-output> <template-output>followup_topics, timeframe,
-preparation</template-output>
+<template-output>what_worked, areas_exploration, recommended_techniques, questions_emerged</template-output>
+<template-output>followup_topics, timeframe, preparation</template-output>
 
 </step>
 
@@ -325,8 +307,7 @@ Compile all captured content into the structured report template:
 3. Format all content according to template structure
 4. Ensure all placeholders are filled with actual content
 
-<template-output>agent_role, agent_name, user_name, techniques_list,
-total_ideas</template-output>
+<template-output>agent_role, agent_name, user_name, techniques_list, total_ideas</template-output>
 
 </step>
 

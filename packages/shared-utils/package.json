@@ -15,8 +15,7 @@
     "format:check": "prettier --check \"src/**/*.{ts,tsx,json,md}\"",
     "type-check": "tsc --noEmit",
     "test": "bun test",
-    "test:unit": "bun test tests/unit",
-    "test:integration": "bun test tests/integration",
+    "test:unit": "bun test tests",
     "test:coverage": "bun test --coverage",
     "test:mutate": "stryker run"
   },

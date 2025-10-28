@@ -1,7 +1,7 @@
 # Non-Functional Requirements Assessment - Validation Checklist
 
-**Workflow:** `testarch-nfr` **Purpose:** Ensure comprehensive and
-evidence-based NFR assessment with actionable recommendations
+**Workflow:** `testarch-nfr`
+**Purpose:** Ensure comprehensive and evidence-based NFR assessment with actionable recommendations
 
 ---
 
@@ -9,10 +9,8 @@ evidence-based NFR assessment with actionable recommendations
 
 - [ ] Implementation is deployed and accessible for evaluation
 - [ ] Evidence sources are available (test results, metrics, logs, CI results)
-- [ ] NFR categories are determined (performance, security, reliability,
-      maintainability, custom)
-- [ ] Evidence directories exist and are accessible (`test_results_dir`,
-      `metrics_dir`, `logs_dir`)
+- [ ] NFR categories are determined (performance, security, reliability, maintainability, custom)
+- [ ] Evidence directories exist and are accessible (`test_results_dir`, `metrics_dir`, `logs_dir`)
 - [ ] Knowledge base is loaded (nfr-criteria, ci-burn-in, test-quality)
 
 ---
@@ -230,8 +228,7 @@ evidence-based NFR assessment with actionable recommendations
 - [ ] File created at `{output_folder}/nfr-assessment.md`
 - [ ] Template from `nfr-report-template.md` used
 - [ ] Executive summary included (overall status, critical issues)
-- [ ] Assessment by category included (performance, security, reliability,
-      maintainability)
+- [ ] Assessment by category included (performance, security, reliability, maintainability)
 - [ ] Evidence for each NFR documented
 - [ ] Status classifications documented (PASS/CONCERNS/FAIL)
 - [ ] Findings summary included (PASS count, CONCERNS count, FAIL count)
@@ -243,8 +240,7 @@ evidence-based NFR assessment with actionable recommendations
 
 - [ ] YAML snippet generated
 - [ ] Date included
-- [ ] Categories status included (performance, security, reliability,
-      maintainability)
+- [ ] Categories status included (performance, security, reliability, maintainability)
 - [ ] Overall status included (PASS/CONCERNS/FAIL)
 - [ ] Issue counts included (critical, high, medium, concerns)
 - [ ] Blockers flag included (true/false)
@@ -279,8 +275,7 @@ evidence-based NFR assessment with actionable recommendations
 
 ### Completeness Checks
 
-- [ ] All NFR categories covered (performance, security, reliability,
-      maintainability, custom)
+- [ ] All NFR categories covered (performance, security, reliability, maintainability, custom)
 - [ ] All evidence sources checked (test results, metrics, logs, CI results)
 - [ ] All status types used appropriately (PASS, CONCERNS, FAIL)
 - [ ] All NFRs with CONCERNS/FAIL have recommendations
@@ -355,8 +350,7 @@ evidence-based NFR assessment with actionable recommendations
 - [ ] Thresholds appropriate for project context
 - [ ] Assessment criteria customized as needed
 - [ ] Teams can extend with custom NFR categories
-- [ ] Integration with external tools supported (New Relic, Datadog, SonarQube,
-      JIRA)
+- [ ] Integration with external tools supported (New Relic, Datadog, SonarQube, JIRA)
 
 ---
 
@@ -402,8 +396,9 @@ evidence-based NFR assessment with actionable recommendations
 - If CONCERNS ⚠️: Address HIGH/CRITICAL issues, re-run `*nfr-assess`
 - If FAIL ❌: Resolve FAIL status NFRs, re-run `*nfr-assess`
 
-**Critical Issues:** {COUNT} **High Priority Issues:** {COUNT} **Concerns:**
-{COUNT}
+**Critical Issues:** {COUNT}
+**High Priority Issues:** {COUNT}
+**Concerns:** {COUNT}
 
 ---
 

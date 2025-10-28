@@ -1,8 +1,10 @@
 # {{project_name}} - Technical Specification
 
-**Author:** {{user_name}} **Date:** {{date}} **Project Level:**
-{{project_level}} **Project Type:** {{project_type}} **Development Context:**
-{{development_context}}
+**Author:** {{user_name}}
+**Date:** {{date}}
+**Project Level:** {{project_level}}
+**Project Type:** {{project_type}}
+**Development Context:** {{development_context}}
 
 ---
 

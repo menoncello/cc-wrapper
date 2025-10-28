@@ -2,21 +2,13 @@
 
 ## Principle
 
-Risk scoring uses a **probability × impact** matrix (1-9 scale) to prioritize
-testing efforts. Higher scores (6-9) demand immediate action; lower scores (1-3)
-require documentation only. This systematic approach ensures testing resources
-focus on the highest-value risks.
+Risk scoring uses a **probability × impact** matrix (1-9 scale) to prioritize testing efforts. Higher scores (6-9) demand immediate action; lower scores (1-3) require documentation only. This systematic approach ensures testing resources focus on the highest-value risks.
 
 ## Rationale
 
-**The Problem**: Without quantifiable risk assessment, teams over-test low-value
-scenarios while missing critical risks. Gut feeling leads to inconsistent
-prioritization and missed edge cases.
+**The Problem**: Without quantifiable risk assessment, teams over-test low-value scenarios while missing critical risks. Gut feeling leads to inconsistent prioritization and missed edge cases.
 
-**The Solution**: Standardize risk evaluation with a 3×3 matrix (probability:
-1-3, impact: 1-3). Multiply to derive risk score (1-9). Automate classification
-(DOCUMENT, MONITOR, MITIGATE, BLOCK) based on thresholds. This approach surfaces
-hidden risks early and justifies testing decisions to stakeholders.
+**The Solution**: Standardize risk evaluation with a 3×3 matrix (probability: 1-3, impact: 1-3). Multiply to derive risk score (1-9). Automate classification (DOCUMENT, MONITOR, MITIGATE, BLOCK) based on thresholds. This approach surfaces hidden risks early and justifies testing decisions to stakeholders.
 
 **Why This Matters**:
 
@@ -29,8 +21,7 @@ hidden risks early and justifies testing decisions to stakeholders.
 
 ### Example 1: Probability-Impact Matrix Implementation (Automated Classification)
 
-**Context**: Implement a reusable risk scoring system with automatic threshold
-classification
+**Context**: Implement a reusable risk scoring system with automatic threshold classification
 
 **Implementation**:
 
@@ -74,10 +65,7 @@ export type RiskAssessment = {
 /**
  * Calculate risk score: probability × impact
  */
-export function calculateRiskScore(
-  probability: Probability,
-  impact: Impact
-): RiskScore {
+export function calculateRiskScore(probability: Probability, impact: Impact): RiskScore {
   return (probability * impact) as RiskScore;
 }
 
@@ -117,22 +105,14 @@ export function assessRisk(params: {
  */
 export function generateRiskMatrix(): string {
   const matrix: string[][] = [];
-  const header = [
-    'Impact \\ Probability',
-    'Unlikely (1)',
-    'Possible (2)',
-    'Likely (3)'
-  ];
+  const header = ['Impact \\ Probability', 'Unlikely (1)', 'Possible (2)', 'Likely (3)'];
   matrix.push(header);
 
   const impactLabels = ['Critical (3)', 'Degraded (2)', 'Minor (1)'];
   for (let impact = 3; impact >= 1; impact--) {
     const row = [impactLabels[3 - impact]];
     for (let probability = 1; probability <= 3; probability++) {
-      const score = calculateRiskScore(
-        probability as Probability,
-        impact as Impact
-      );
+      const score = calculateRiskScore(probability as Probability, impact as Impact);
       const action = classifyRiskAction(score);
       const emoji =
         action === 'BLOCK'
@@ -307,10 +287,7 @@ ${generateRiskMatrix()}
 ## Scenarios by Risk Score (Highest First)
 ${scenarios
   .sort((a, b) => b.risk.score - a.risk.score)
-  .map(
-    s =>
-      `- **[${s.priority}]** ${s.id}: ${s.title} (Score: ${s.risk.score} - ${s.risk.action})`
-  )
+  .map(s => `- **[${s.priority}]** ${s.id}: ${s.title} (Score: ${s.risk.score} - ${s.risk.action})`)
   .join('\n')}
 `.trim();
 }
@@ -328,19 +305,13 @@ ${scenarios
 
 ### Example 3: Dynamic Risk Re-Assessment (Continuous Evaluation)
 
-**Context**: Recalculate risk scores as project evolves (requirements change,
-mitigations implemented)
+**Context**: Recalculate risk scores as project evolves (requirements change, mitigations implemented)
 
 **Implementation**:
 
 ```typescript
 // src/testing/risk-tracking.ts
-import {
-  type RiskAssessment,
-  assessRisk,
-  type Probability,
-  type Impact
-} from './risk-matrix';
+import { type RiskAssessment, assessRisk, type Probability, type Impact } from './risk-matrix';
 
 export type RiskHistory = {
   timestamp: Date;
@@ -374,8 +345,7 @@ export class RiskTracker {
     reasoning: string;
     changedBy: string;
   }): TrackedRisk {
-    const { id, title, feature, probability, impact, reasoning, changedBy } =
-      params;
+    const { id, title, feature, probability, impact, reasoning, changedBy } = params;
 
     const assessment = assessRisk({ probability, impact, reasoning });
 
@@ -455,10 +425,7 @@ export class RiskTracker {
 
     if (risk) {
       risk.mitigations.push(mitigation);
-      if (
-        risk.currentRisk.action === 'DOCUMENT' ||
-        risk.currentRisk.action === 'MONITOR'
-      ) {
+      if (risk.currentRisk.action === 'DOCUMENT' || risk.currentRisk.action === 'MONITOR') {
         risk.status = 'MITIGATED';
       }
     }
@@ -473,8 +440,7 @@ export class RiskTracker {
     return Array.from(this.risks.values()).filter(
       r =>
         r.status === 'OPEN' &&
-        (r.currentRisk.action === 'MITIGATE' ||
-          r.currentRisk.action === 'BLOCK')
+        (r.currentRisk.action === 'MITIGATE' || r.currentRisk.action === 'BLOCK')
     );
   }
 
@@ -527,18 +493,13 @@ ${risk.history
 
 ### Example 4: Risk Matrix in Gate Decision (Integration with Trace Workflow)
 
-**Context**: Use probability-impact scores to drive gate decisions
-(PASS/CONCERNS/FAIL/WAIVED)
+**Context**: Use probability-impact scores to drive gate decisions (PASS/CONCERNS/FAIL/WAIVED)
 
 **Implementation**:
 
 ```typescript
 // src/testing/gate-decision.ts
-import {
-  type RiskScore,
-  classifyRiskAction,
-  type RiskAction
-} from './risk-matrix';
+import { type RiskScore, classifyRiskAction, type RiskAction } from './risk-matrix';
 import { type TrackedRisk } from './risk-tracking';
 
 export type GateDecision = 'PASS' | 'CONCERNS' | 'FAIL' | 'WAIVED';
@@ -556,12 +517,8 @@ export type GateResult = {
  * Evaluate gate based on risk assessments
  */
 export function evaluateGateFromRisks(risks: TrackedRisk[]): GateResult {
-  const blockers = risks.filter(
-    r => r.currentRisk.action === 'BLOCK' && r.status === 'OPEN'
-  );
-  const concerns = risks.filter(
-    r => r.currentRisk.action === 'MITIGATE' && r.status === 'OPEN'
-  );
+  const blockers = risks.filter(r => r.currentRisk.action === 'BLOCK' && r.status === 'OPEN');
+  const concerns = risks.filter(r => r.currentRisk.action === 'MITIGATE' && r.status === 'OPEN');
   const monitored = risks.filter(r => r.currentRisk.action === 'MONITOR');
   const documented = risks.filter(r => r.currentRisk.action === 'DOCUMENT');
 
@@ -575,13 +532,7 @@ export function evaluateGateFromRisks(risks: TrackedRisk[]): GateResult {
     decision = 'PASS';
   }
 
-  const summary = generateGateSummary({
-    decision,
-    blockers,
-    concerns,
-    monitored,
-    documented
-  });
+  const summary = generateGateSummary({ decision, blockers, concerns, monitored, documented });
 
   return { decision, blockers, concerns, monitored, documented, summary };
 }
@@ -595,14 +546,10 @@ function generateGateSummary(result: Omit<GateResult, 'summary'>): string {
   const lines: string[] = [`## Gate Decision: ${decision}`];
 
   if (decision === 'FAIL') {
-    lines.push(
-      `\n**Blockers** (${blockers.length}): Automatic FAIL until resolved or waived`
-    );
+    lines.push(`\n**Blockers** (${blockers.length}): Automatic FAIL until resolved or waived`);
     blockers.forEach(r => {
       lines.push(`- **${r.id}**: ${r.title} (Score: ${r.currentRisk.score})`);
-      lines.push(
-        `  - Probability: ${r.currentRisk.probability}, Impact: ${r.currentRisk.impact}`
-      );
+      lines.push(`  - Probability: ${r.currentRisk.probability}, Impact: ${r.currentRisk.impact}`);
       lines.push(`  - Reasoning: ${r.currentRisk.reasoning}`);
     });
   }
@@ -617,9 +564,7 @@ function generateGateSummary(result: Omit<GateResult, 'summary'>): string {
 
   if (monitored.length > 0) {
     lines.push(`\n**Monitored** (${monitored.length}): Watch closely`);
-    monitored.forEach(r =>
-      lines.push(`- **${r.id}**: ${r.title} (Score: ${r.currentRisk.score})`)
-    );
+    monitored.forEach(r => lines.push(`- **${r.id}**: ${r.title} (Score: ${r.currentRisk.score})`));
   }
 
   if (documented.length > 0) {
@@ -665,30 +610,19 @@ function generateGateSummary(result: Omit<GateResult, 'summary'>): string {
 
 Before deploying risk matrix:
 
-- [ ] **Probability scale defined**: 1 (unlikely), 2 (possible), 3 (likely) with
-      clear examples
-- [ ] **Impact scale defined**: 1 (minor), 2 (degraded), 3 (critical) with
-      concrete criteria
-- [ ] **Threshold rules documented**: Score → Action mapping (1-3 = DOCUMENT,
-      4-5 = MONITOR, 6-8 = MITIGATE, 9 = BLOCK)
-- [ ] **Gate integration**: Risk scores drive gate decisions
-      (PASS/CONCERNS/FAIL/WAIVED)
-- [ ] **Re-assessment process**: Risks re-evaluated as project evolves
-      (requirements change, mitigations applied)
+- [ ] **Probability scale defined**: 1 (unlikely), 2 (possible), 3 (likely) with clear examples
+- [ ] **Impact scale defined**: 1 (minor), 2 (degraded), 3 (critical) with concrete criteria
+- [ ] **Threshold rules documented**: Score → Action mapping (1-3 = DOCUMENT, 4-5 = MONITOR, 6-8 = MITIGATE, 9 = BLOCK)
+- [ ] **Gate integration**: Risk scores drive gate decisions (PASS/CONCERNS/FAIL/WAIVED)
+- [ ] **Re-assessment process**: Risks re-evaluated as project evolves (requirements change, mitigations applied)
 - [ ] **Audit trail**: Historical tracking for risk changes (who, when, why)
-- [ ] **Mitigation tracking**: Link mitigations to probability reduction
-      (quantify impact)
+- [ ] **Mitigation tracking**: Link mitigations to probability reduction (quantify impact)
 - [ ] **Reporting**: Risk matrix visualization, trend reports, gate summaries
 
 ## Integration Points
 
-- **Used in workflows**: `*test-design` (initial risk assessment), `*trace`
-  (gate decision Phase 2), `*nfr-assess` (security/performance risks)
-- **Related fragments**: `risk-governance.md` (risk scoring matrix, gate
-  decision engine), `test-priorities-matrix.md` (P0-P3 mapping),
-  `nfr-criteria.md` (impact assessment for NFRs)
-- **Tools**: TypeScript for type safety, markdown for reports, version control
-  for audit trail
+- **Used in workflows**: `*test-design` (initial risk assessment), `*trace` (gate decision Phase 2), `*nfr-assess` (security/performance risks)
+- **Related fragments**: `risk-governance.md` (risk scoring matrix, gate decision engine), `test-priorities-matrix.md` (P0-P3 mapping), `nfr-criteria.md` (impact assessment for NFRs)
+- **Tools**: TypeScript for type safety, markdown for reports, version control for audit trail
 
-_Source: Murat risk model summary, gate decision patterns from production
-systems, probability-impact matrix from risk governance practices_
+_Source: Murat risk model summary, gate decision patterns from production systems, probability-impact matrix from risk governance practices_

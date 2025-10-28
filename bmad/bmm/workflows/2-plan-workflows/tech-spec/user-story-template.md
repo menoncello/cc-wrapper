@@ -4,7 +4,9 @@ Status: Draft
 
 ## Story
 
-As a {{role}}, I want {{capability}}, so that {{benefit}}.
+As a {{role}},
+I want {{capability}},
+so that {{benefit}}.
 
 ## Acceptance Criteria
 

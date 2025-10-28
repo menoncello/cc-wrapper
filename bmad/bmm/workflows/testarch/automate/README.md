@@ -1,12 +1,8 @@
 # Automate Workflow
 
-Expands test automation coverage by generating comprehensive test suites at
-appropriate levels (E2E, API, Component, Unit) with supporting infrastructure.
-This workflow operates in **dual mode** - works seamlessly WITH or WITHOUT BMad
-artifacts.
+Expands test automation coverage by generating comprehensive test suites at appropriate levels (E2E, API, Component, Unit) with supporting infrastructure. This workflow operates in **dual mode** - works seamlessly WITH or WITHOUT BMad artifacts.
 
-**Core Principle**: Generate prioritized, deterministic tests that avoid
-duplicate coverage and follow testing best practices.
+**Core Principle**: Generate prioritized, deterministic tests that avoid duplicate coverage and follow testing best practices.
 
 ## Usage
 
@@ -16,12 +12,9 @@ bmad tea *automate
 
 The TEA agent runs this workflow when:
 
-- **BMad-Integrated**: After story implementation to expand coverage beyond ATDD
-  tests
-- **Standalone**: Point at any codebase/feature and generate tests independently
-  ("work out of thin air")
-- **Auto-discover**: No targets specified - scans codebase for features needing
-  tests
+- **BMad-Integrated**: After story implementation to expand coverage beyond ATDD tests
+- **Standalone**: Point at any codebase/feature and generate tests independently ("work out of thin air")
+- **Auto-discover**: No targets specified - scans codebase for features needing tests
 
 ## Inputs
 
@@ -33,13 +26,11 @@ The TEA agent runs this workflow when:
 
 **Required Context Files:**
 
-- **Framework configuration**: Test framework config (playwright.config.ts or
-  cypress.config.ts) - REQUIRED
+- **Framework configuration**: Test framework config (playwright.config.ts or cypress.config.ts) - REQUIRED
 
 **Optional Context (BMad-Integrated Mode):**
 
-- **Story markdown** (`{story_file}`): User story with acceptance criteria
-  (enhances coverage targeting but NOT required)
+- **Story markdown** (`{story_file}`): User story with acceptance criteria (enhances coverage targeting but NOT required)
 - **Tech spec**: Technical specification (provides architectural context)
 - **Test design**: Risk/priority context (P0-P3 alignment)
 - **PRD**: Product requirements (business context)
@@ -53,20 +44,15 @@ The TEA agent runs this workflow when:
 
 - `standalone_mode`: Can work without BMad artifacts (default: true)
 - `story_file`: Path to story markdown (optional)
-- `target_feature`: Feature name or directory to analyze (e.g.,
-  "user-authentication" or "src/auth/")
+- `target_feature`: Feature name or directory to analyze (e.g., "user-authentication" or "src/auth/")
 - `target_files`: Specific files to analyze (comma-separated paths)
 - `test_dir`: Directory for test files (default: `{project-root}/tests`)
 - `source_dir`: Source code directory (default: `{project-root}/src`)
-- `auto_discover_features`: Automatically find features needing tests (default:
-  true)
+- `auto_discover_features`: Automatically find features needing tests (default: true)
 - `analyze_coverage`: Check existing test coverage gaps (default: true)
-- `coverage_target`: Coverage strategy - "critical-paths", "comprehensive",
-  "selective" (default: "critical-paths")
-- `test_levels`: Which levels to generate - "e2e,api,component,unit" (default:
-  all)
-- `avoid_duplicate_coverage`: Don't test same behavior at multiple levels
-  (default: true)
+- `coverage_target`: Coverage strategy - "critical-paths", "comprehensive", "selective" (default: "critical-paths")
+- `test_levels`: Which levels to generate - "e2e,api,component,unit" (default: all)
+- `avoid_duplicate_coverage`: Don't test same behavior at multiple levels (default: true)
 - `include_p0`: Include P0 critical path tests (default: true)
 - `include_p1`: Include P1 high priority tests (default: true)
 - `include_p2`: Include P2 medium priority tests (default: true)
@@ -83,33 +69,25 @@ The TEA agent runs this workflow when:
 - `use_prd`: Load PRD.md if exists (default: true)
 - `update_readme`: Update test README with new specs (default: true)
 - `update_package_scripts`: Add test execution scripts (default: true)
-- `output_summary`: Path for automation summary (default:
-  `{output_folder}/automation-summary.md`)
+- `output_summary`: Path for automation summary (default: `{output_folder}/automation-summary.md`)
 - `max_test_duration`: Maximum seconds per test (default: 90)
 - `max_file_lines`: Maximum lines per test file (default: 300)
 - `require_self_cleaning`: All tests must clean up data (default: true)
 - `auto_load_knowledge`: Load relevant knowledge fragments (default: true)
-- `run_tests_after_generation`: Verify tests pass/fail as expected (default:
-  true)
+- `run_tests_after_generation`: Verify tests pass/fail as expected (default: true)
 - `auto_validate`: Run generated tests after creation (default: true) **NEW**
-- `auto_heal_failures`: Enable automatic healing (default: false, opt-in)
-  **NEW**
-- `max_healing_iterations`: Maximum healing attempts per test (default: 3)
-  **NEW**
-- `fail_on_unhealable`: Fail workflow if tests can't be healed (default: false)
-  **NEW**
-- `mark_unhealable_as_fixme`: Mark unfixable tests with test.fixme() (default:
-  true) **NEW**
+- `auto_heal_failures`: Enable automatic healing (default: false, opt-in) **NEW**
+- `max_healing_iterations`: Maximum healing attempts per test (default: 3) **NEW**
+- `fail_on_unhealable`: Fail workflow if tests can't be healed (default: false) **NEW**
+- `mark_unhealable_as_fixme`: Mark unfixable tests with test.fixme() (default: true) **NEW**
 - `use_mcp_healing`: Use Playwright MCP if available (default: true) **NEW**
-- `healing_knowledge_fragments`: Healing patterns to load (default:
-  "test-healing-patterns,selector-resilience,timing-debugging") **NEW**
+- `healing_knowledge_fragments`: Healing patterns to load (default: "test-healing-patterns,selector-resilience,timing-debugging") **NEW**
 
 ## Outputs
 
 **Primary Deliverable:**
 
-- **Automation Summary** (`automation-summary.md`): Comprehensive report
-  containing:
+- **Automation Summary** (`automation-summary.md`): Comprehensive report containing:
   - Execution mode (BMad-Integrated, Standalone, Auto-discover)
   - Feature analysis (source files analyzed, coverage gaps)
   - Tests created (E2E, API, Component, Unit) with counts and paths
@@ -121,29 +99,21 @@ The TEA agent runs this workflow when:
 
 **Test Files Created:**
 
-- **E2E tests** (`tests/e2e/{feature-name}.spec.ts`): Critical user journeys
-  (P0-P1)
-- **API tests** (`tests/api/{feature-name}.api.spec.ts`): Business logic and
-  contracts (P1-P2)
-- **Component tests** (`tests/component/{ComponentName}.test.tsx`): UI behavior
-  (P1-P2)
+- **E2E tests** (`tests/e2e/{feature-name}.spec.ts`): Critical user journeys (P0-P1)
+- **API tests** (`tests/api/{feature-name}.api.spec.ts`): Business logic and contracts (P1-P2)
+- **Component tests** (`tests/component/{ComponentName}.test.tsx`): UI behavior (P1-P2)
 - **Unit tests** (`tests/unit/{module-name}.test.ts`): Pure logic (P2-P3)
 
 **Supporting Infrastructure:**
 
-- **Fixtures** (`tests/support/fixtures/{feature}.fixture.ts`): Setup/teardown
-  with auto-cleanup
-- **Data factories** (`tests/support/factories/{entity}.factory.ts`): Random
-  test data using faker
-- **Helpers** (`tests/support/helpers/{utility}.ts`): Utility functions
-  (waitFor, retry, etc.)
+- **Fixtures** (`tests/support/fixtures/{feature}.fixture.ts`): Setup/teardown with auto-cleanup
+- **Data factories** (`tests/support/factories/{entity}.factory.ts`): Random test data using faker
+- **Helpers** (`tests/support/helpers/{utility}.ts`): Utility functions (waitFor, retry, etc.)
 
 **Documentation Updates:**
 
-- **Test README** (`tests/README.md`): Test suite overview, execution
-  instructions, priority tagging, patterns
-- **package.json scripts**: Test execution commands (test:e2e, test:e2e:p0,
-  test:api, etc.)
+- **Test README** (`tests/README.md`): Test suite overview, execution instructions, priority tagging, patterns
+- **package.json scripts**: Test execution commands (test:e2e, test:e2e:p0, test:api, etc.)
 
 **Validation Safeguards:**
 
@@ -186,28 +156,23 @@ The TEA agent runs this workflow when:
 **Good coverage strategy:**
 
 - **E2E**: User can login → Dashboard loads (critical happy path only)
-- **API**: POST /auth/login returns correct status codes (variations: 200,
-  401, 400)
-- **Component**: LoginForm validates input (UI edge cases: empty fields, invalid
-  format)
+- **API**: POST /auth/login returns correct status codes (variations: 200, 401, 400)
+- **Component**: LoginForm validates input (UI edge cases: empty fields, invalid format)
 - **Unit**: validateEmail() logic (pure function edge cases)
 
 **Bad coverage (duplicate):**
 
 - E2E: User can login → Dashboard loads
-- E2E: User can login with different emails → Dashboard loads (unnecessary
-  duplication)
+- E2E: User can login with different emails → Dashboard loads (unnecessary duplication)
 - API: POST /auth/login returns 200 (already covered in E2E)
 
-Use E2E sparingly for critical paths. Use API/Component/Unit for variations and
-edge cases.
+Use E2E sparingly for critical paths. Use API/Component/Unit for variations and edge cases.
 
 ### Healing Capabilities (NEW - Phase 2.5)
 
 **automate** automatically validates and heals test failures after generation.
 
-**Configuration**: Controlled by `config.tea_use_mcp_enhancements` (default:
-true)
+**Configuration**: Controlled by `config.tea_use_mcp_enhancements` (default: true)
 
 - If true + MCP available → MCP-assisted healing
 - If true + MCP unavailable → Pattern-based healing
@@ -222,12 +187,9 @@ TEA heals tests using pattern-based analysis by:
 1. **Parsing error messages** from test output logs
 2. **Matching patterns** against known failure signatures
 3. **Applying fixes** from healing knowledge fragments:
-   - `test-healing-patterns.md` - Common failure patterns (selectors, timing,
-     data, network)
-   - `selector-resilience.md` - Selector refactoring (CSS → data-testid, nth() →
-     filter())
-   - `timing-debugging.md` - Race condition fixes (hard waits → event-based
-     waits)
+   - `test-healing-patterns.md` - Common failure patterns (selectors, timing, data, network)
+   - `selector-resilience.md` - Selector refactoring (CSS → data-testid, nth() → filter())
+   - `timing-debugging.md` - Race condition fixes (hard waits → event-based waits)
 4. **Re-running tests** to verify fix (max 3 iterations)
 5. **Marking unfixable tests** as `test.fixme()` with detailed comments
 
@@ -243,48 +205,34 @@ TEA heals tests using pattern-based analysis by:
 When Playwright MCP is available, TEA **additionally**:
 
 1. **Debugs failures interactively** before applying pattern-based fixes:
-   - **Pause test execution** with `playwright_test_debug_test` (step through,
-     inspect state)
-   - **See visual failure context** with `browser_snapshot` (screenshot of
-     failure state)
+   - **Pause test execution** with `playwright_test_debug_test` (step through, inspect state)
+   - **See visual failure context** with `browser_snapshot` (screenshot of failure state)
    - **Inspect live DOM** with browser tools (find why selector doesn't match)
-   - **Analyze console logs** with `browser_console_messages` (JS errors,
-     warnings, debug output)
-   - **Inspect network activity** with `browser_network_requests` (failed API
-     calls, CORS errors, timeouts)
+   - **Analyze console logs** with `browser_console_messages` (JS errors, warnings, debug output)
+   - **Inspect network activity** with `browser_network_requests` (failed API calls, CORS errors, timeouts)
 
 2. **Enhances pattern-based fixes** with real-world data:
    - **Pattern match identifies issue** (e.g., "stale selector")
-   - **MCP discovers actual selector** with `browser_generate_locator` from live
-     page
-   - **TEA applies refined fix** using real DOM structure (not just pattern
-     guess)
+   - **MCP discovers actual selector** with `browser_generate_locator` from live page
+   - **TEA applies refined fix** using real DOM structure (not just pattern guess)
    - **Verification happens in browser** (see if fix works visually)
 
 3. **Catches root causes** pattern matching might miss:
    - **Network failures**: MCP shows 500 error on API call (not just timeout)
-   - **JS errors**: MCP shows `TypeError: undefined` in console (not just
-     "element not found")
-   - **Timing issues**: MCP shows loading spinner still visible (not just
-     "selector timeout")
-   - **State problems**: MCP shows modal blocking button (not just "not
-     clickable")
+   - **JS errors**: MCP shows `TypeError: undefined` in console (not just "element not found")
+   - **Timing issues**: MCP shows loading spinner still visible (not just "selector timeout")
+   - **State problems**: MCP shows modal blocking button (not just "not clickable")
 
 **Key Benefits of MCP Enhancement:**
 
-- ✅ **Pattern-based fixes** (fast, automated) **+** **MCP verification**
-  (accurate, context-aware)
+- ✅ **Pattern-based fixes** (fast, automated) **+** **MCP verification** (accurate, context-aware)
 - ✅ **Visual debugging**: See exactly what user sees when test fails
-- ✅ **DOM inspection**: Discover why selectors don't match (element missing,
-  wrong attributes, dynamic IDs)
+- ✅ **DOM inspection**: Discover why selectors don't match (element missing, wrong attributes, dynamic IDs)
 - ✅ **Network visibility**: Identify API failures, slow requests, CORS issues
 - ✅ **Console analysis**: Catch JS errors that break page functionality
-- ✅ **Robust selectors**: Generate locators from actual DOM (role, text, testid
-  hierarchy)
-- ✅ **Faster iteration**: Debug and fix in same browser session (no restart
-  needed)
-- ✅ **Higher success rate**: MCP helps diagnose failures pattern matching can't
-  solve
+- ✅ **Robust selectors**: Generate locators from actual DOM (role, text, testid hierarchy)
+- ✅ **Faster iteration**: Debug and fix in same browser session (no restart needed)
+- ✅ **Higher success rate**: MCP helps diagnose failures pattern matching can't solve
 
 **Example Enhancement Flow:**
 
@@ -384,8 +332,9 @@ test.fixme('[P1] should handle complex interaction', async ({ page }) => {
 ```markdown
 ## Test Healing Report
 
-**Auto-Heal Enabled**: true **Healing Mode**: Pattern-based **Iterations
-Allowed**: 3
+**Auto-Heal Enabled**: true
+**Healing Mode**: Pattern-based
+**Iterations Allowed**: 3
 
 ### Validation Results
 
@@ -398,8 +347,7 @@ Allowed**: 3
 **Successfully Healed (2 tests):**
 
 - `tests/e2e/login.spec.ts:15` - Stale selector (CSS class → data-testid)
-- `tests/e2e/checkout.spec.ts:42` - Race condition (added network-first
-  interception)
+- `tests/e2e/checkout.spec.ts:42` - Race condition (added network-first interception)
 
 **Unable to Heal (1 test):**
 
@@ -423,8 +371,7 @@ Allowed**: 3
 
 **automate** can record complex UI interactions instead of AI generation.
 
-**Activation**: Automatic for complex UI scenarios when
-config.tea_use_mcp_enhancements is true and MCP available
+**Activation**: Automatic for complex UI scenarios when config.tea_use_mcp_enhancements is true and MCP available
 
 - Complex scenarios: drag-drop, wizards, multi-page flows
 - Fallback: AI generation (silent, automatic)
@@ -556,9 +503,7 @@ npm run test:e2e:p1  # Run P0 + P1 tests (pre-merge)
 All tests follow BDD format for clarity:
 
 ```typescript
-test('[P0] should login with valid credentials and load dashboard', async ({
-  page
-}) => {
+test('[P0] should login with valid credentials and load dashboard', async ({ page }) => {
   // GIVEN: User is on login page
   await page.goto('/login');
 
@@ -586,14 +531,11 @@ test('[P0] should display user name', async ({ page }) => {
 // ❌ WRONG: Multiple assertions (not atomic)
 test('[P0] should display user info', async ({ page }) => {
   await expect(page.locator('[data-testid="user-name"]')).toHaveText('John');
-  await expect(page.locator('[data-testid="user-email"]')).toHaveText(
-    'john@example.com'
-  );
+  await expect(page.locator('[data-testid="user-email"]')).toHaveText('john@example.com');
 });
 ```
 
-**Why?** If second assertion fails, you don't know if first is still valid.
-Split into separate tests for clear failure diagnosis.
+**Why?** If second assertion fails, you don't know if first is still valid. Split into separate tests for clear failure diagnosis.
 
 ### Network-First Testing Pattern
 
@@ -612,14 +554,11 @@ test('should load user dashboard after login', async ({ page }) => {
   // NOW navigate
   await page.goto('/dashboard');
 
-  await expect(page.locator('[data-testid="user-name"]')).toHaveText(
-    'Test User'
-  );
+  await expect(page.locator('[data-testid="user-name"]')).toHaveText('Test User');
 });
 ```
 
-Always set up route interception before navigating to pages that make network
-requests.
+Always set up route interception before navigating to pages that make network requests.
 
 ### Fixture Architecture with Auto-Cleanup
 
@@ -674,8 +613,7 @@ export const createUser = (overrides = {}) => ({
   ...overrides
 });
 
-export const createUsers = (count: number) =>
-  Array.from({ length: count }, () => createUser());
+export const createUsers = (count: number) => Array.from({ length: count }, () => createUser());
 
 // API helper for cleanup
 export const deleteUser = async (userId: number) => {
@@ -747,24 +685,19 @@ await element.click();
 
 **Before this workflow:**
 
-- **framework** workflow: Establish test framework architecture
-  (Playwright/Cypress config, directory structure) - REQUIRED
-- **test-design** workflow: Optional for P0-P3 priority alignment and risk
-  assessment context (BMad-Integrated mode only)
-- **atdd** workflow: Optional - automate expands beyond ATDD tests with edge
-  cases (BMad-Integrated mode only)
+- **framework** workflow: Establish test framework architecture (Playwright/Cypress config, directory structure) - REQUIRED
+- **test-design** workflow: Optional for P0-P3 priority alignment and risk assessment context (BMad-Integrated mode only)
+- **atdd** workflow: Optional - automate expands beyond ATDD tests with edge cases (BMad-Integrated mode only)
 
 **After this workflow:**
 
-- **trace** workflow: Update traceability matrix with new test coverage
-  (Phase 1) and make quality gate decision (Phase 2)
+- **trace** workflow: Update traceability matrix with new test coverage (Phase 1) and make quality gate decision (Phase 2)
 - **CI pipeline**: Run tests in burn-in loop to detect flaky patterns
 
 **Coordinates with:**
 
 - **DEV agent**: Tests validate implementation correctness
-- **Story workflow**: Tests cover acceptance criteria (BMad-Integrated mode
-  only)
+- **Story workflow**: Tests cover acceptance criteria (BMad-Integrated mode only)
 
 ## Important Notes
 
@@ -775,8 +708,7 @@ await element.click();
 - Can analyze any codebase independently
 - User can point TEA at a feature: "automate tests for src/auth/"
 - Works on non-BMad projects
-- BMad artifacts (story, tech-spec, PRD) are OPTIONAL enhancements, not
-  requirements
+- BMad artifacts (story, tech-spec, PRD) are OPTIONAL enhancements, not requirements
 
 **Similar to:**
 
@@ -823,32 +755,21 @@ await element.click();
 
 This workflow automatically consults:
 
-- **test-levels-framework.md** - Test level selection (E2E vs API vs Component
-  vs Unit) with characteristics and use cases
-- **test-priorities.md** - Priority classification (P0-P3) with execution timing
-  and risk alignment
-- **fixture-architecture.md** - Test fixture patterns with setup/teardown and
-  auto-cleanup using Playwright's test.extend()
-- **data-factories.md** - Factory patterns using @faker-js/faker for random test
-  data generation with overrides
-- **selective-testing.md** - Targeted test execution strategies for CI
-  optimization
-- **ci-burn-in.md** - Flaky test detection patterns (10 iterations to catch
-  intermittent failures)
-- **test-quality.md** - Test design principles (Given-When-Then, determinism,
-  isolation, atomic assertions)
+- **test-levels-framework.md** - Test level selection (E2E vs API vs Component vs Unit) with characteristics and use cases
+- **test-priorities.md** - Priority classification (P0-P3) with execution timing and risk alignment
+- **fixture-architecture.md** - Test fixture patterns with setup/teardown and auto-cleanup using Playwright's test.extend()
+- **data-factories.md** - Factory patterns using @faker-js/faker for random test data generation with overrides
+- **selective-testing.md** - Targeted test execution strategies for CI optimization
+- **ci-burn-in.md** - Flaky test detection patterns (10 iterations to catch intermittent failures)
+- **test-quality.md** - Test design principles (Given-When-Then, determinism, isolation, atomic assertions)
 
 **Healing Knowledge (If `auto_heal_failures` enabled):**
 
-- **test-healing-patterns.md** - Common failure patterns and automated fixes
-  (selectors, timing, data, network, hard waits)
-- **selector-resilience.md** - Robust selector strategies and debugging
-  (data-testid hierarchy, filter vs nth, anti-patterns)
-- **timing-debugging.md** - Race condition identification and deterministic wait
-  fixes (network-first, event-based waits)
+- **test-healing-patterns.md** - Common failure patterns and automated fixes (selectors, timing, data, network, hard waits)
+- **selector-resilience.md** - Robust selector strategies and debugging (data-testid hierarchy, filter vs nth, anti-patterns)
+- **timing-debugging.md** - Race condition identification and deterministic wait fixes (network-first, event-based waits)
 
-See `tea-index.csv` for complete knowledge fragment mapping (22 fragments
-total).
+See `tea-index.csv` for complete knowledge fragment mapping (22 fragments total).
 
 ## Example Output
 
@@ -857,8 +778,9 @@ total).
 ````markdown
 # Automation Summary - User Authentication
 
-**Date:** 2025-10-14 **Story:** Epic 3, Story 5 **Coverage Target:**
-critical-paths
+**Date:** 2025-10-14
+**Story:** Epic 3, Story 5
+**Coverage Target:** critical-paths
 
 ## Tests Created
 
@@ -897,11 +819,13 @@ npm run test:e2e:p1    # P0 + P1 tests
 
 ## Coverage Analysis
 
-**Total:** 7 tests (P0: 1, P1: 5, P2: 1) **Levels:** E2E: 2, API: 3, Component:
-2
+**Total:** 7 tests (P0: 1, P1: 5, P2: 1)
+**Levels:** E2E: 2, API: 3, Component: 2
 
-✅ All acceptance criteria covered ✅ Happy path (E2E + API) ✅ Error cases
-(API) ✅ UI validation (Component)
+✅ All acceptance criteria covered
+✅ Happy path (E2E + API)
+✅ Error cases (API)
+✅ UI validation (Component)
 
 ````
 

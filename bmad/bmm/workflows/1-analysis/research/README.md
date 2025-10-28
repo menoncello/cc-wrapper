@@ -2,11 +2,7 @@
 
 ## Overview
 
-The Research Workflow is a comprehensive, adaptive research system that supports
-multiple research types through an intelligent router pattern. This workflow
-consolidates various research methodologies into a single, powerful tool that
-adapts to your specific research needs - from market analysis to technical
-evaluation to AI prompt generation.
+The Research Workflow is a comprehensive, adaptive research system that supports multiple research types through an intelligent router pattern. This workflow consolidates various research methodologies into a single, powerful tool that adapts to your specific research needs - from market analysis to technical evaluation to AI prompt generation.
 
 **Version 2.0.0** - Multi-type research system with router-based architecture
 
@@ -14,10 +10,8 @@ evaluation to AI prompt generation.
 
 ### 🔀 Intelligent Research Router
 
-- **6 Research Types**: Market, Deep Prompt, Technical, Competitive, User,
-  Domain
-- **Dynamic Instructions**: Loads appropriate instruction set based on research
-  type
+- **6 Research Types**: Market, Deep Prompt, Technical, Competitive, User, Domain
+- **Dynamic Instructions**: Loads appropriate instruction set based on research type
 - **Adaptive Templates**: Selects optimal output format for research goal
 - **Context-Aware**: Adjusts frameworks and methods per research type
 
@@ -32,15 +26,11 @@ evaluation to AI prompt generation.
 
 ### 🤖 Deep Research Prompt Generation (Type: `deep_prompt`)
 
-- **Optimized for AI Research Platforms**: ChatGPT Deep Research, Gemini, Grok
-  DeepSearch, Claude Projects
-- **Prompt Engineering Best Practices**: Multi-stage research workflows,
-  iterative refinement
+- **Optimized for AI Research Platforms**: ChatGPT Deep Research, Gemini, Grok DeepSearch, Claude Projects
+- **Prompt Engineering Best Practices**: Multi-stage research workflows, iterative refinement
 - **Platform-Specific Optimization**: Tailored prompts for each AI research tool
-- **Context Packaging**: Structures background information for optimal AI
-  understanding
-- **Research Question Refinement**: Transforms vague questions into precise
-  research prompts
+- **Context Packaging**: Structures background information for optimal AI understanding
+- **Research Question Refinement**: Transforms vague questions into precise research prompts
 
 ### 🏗️ Technical/Architecture Research (Type: `technical`)
 
@@ -159,8 +149,7 @@ research/
 ### Phase 1: Research Type Selection and Setup
 
 1. Router presents research type menu
-2. User selects research type (market, deep_prompt, technical, competitive,
-   user, domain)
+2. User selects research type (market, deep_prompt, technical, competitive, user, domain)
 3. Router loads appropriate instructions and template
 4. Gather research parameters and inputs
 
@@ -280,8 +269,7 @@ research/
 
 1. **Know Your Research Goal**: Select the most appropriate research type
 2. **Gather Context**: Collect relevant documents before starting
-3. **Set Depth Level**: Choose appropriate research_depth
-   (quick/standard/comprehensive)
+3. **Set Depth Level**: Choose appropriate research_depth (quick/standard/comprehensive)
 4. **Define Success Criteria**: What decisions will this research inform?
 
 ### During Execution
@@ -371,8 +359,7 @@ The workflow leverages multiple data sources:
 5. **bmm-user-researcher** - Customer insights and personas
 6. **bmm-technical-evaluator** - Technology assessment
 
-These are automatically invoked during workflow execution if Claude Code
-integration is configured.
+These are automatically invoked during workflow execution if Claude Code integration is configured.
 
 ## Troubleshooting
 
@@ -400,8 +387,7 @@ integration is configured.
 
 ### Issue: Technical comparison is subjective
 
-- **Solution**: Add more objective criteria (performance metrics, cost,
-  community size)
+- **Solution**: Add more objective criteria (performance metrics, cost, community size)
 - **Check**: Weight criteria by business importance
 - **Try**: Run pilot implementations for top 2 options
 
@@ -442,8 +428,7 @@ Add to `workflow.yaml` `frameworks` section under appropriate research type.
 
 For issues or questions:
 
-- Review workflow creation guide at
-  `/bmad/bmb/workflows/create-workflow/workflow-creation-guide.md`
+- Review workflow creation guide at `/bmad/bmb/workflows/create-workflow/workflow-creation-guide.md`
 - Check validation against `checklist.md`
 - Examine router logic in `instructions-router.md`
 - Review research type-specific instructions
@@ -466,5 +451,4 @@ All market research functionality is preserved and enhanced in v2.0.0.
 
 ---
 
-_Part of the BMad Method v6 - BMM (BMad Method) Module - Empowering systematic
-research and analysis_
+_Part of the BMad Method v6 - BMM (BMad Method) Module - Empowering systematic research and analysis_

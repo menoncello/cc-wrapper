@@ -2,27 +2,17 @@
 
 ## Principle
 
-Feature flags enable controlled rollouts and A/B testing, but require
-disciplined testing governance. Centralize flag definitions in a frozen enum,
-test both enabled and disabled states, clean up targeting after each spec, and
-maintain a comprehensive flag lifecycle checklist. For LaunchDarkly-style
-systems, script API helpers to seed variations programmatically rather than
-manual UI mutations.
+Feature flags enable controlled rollouts and A/B testing, but require disciplined testing governance. Centralize flag definitions in a frozen enum, test both enabled and disabled states, clean up targeting after each spec, and maintain a comprehensive flag lifecycle checklist. For LaunchDarkly-style systems, script API helpers to seed variations programmatically rather than manual UI mutations.
 
 ## Rationale
 
-Poorly managed feature flags become technical debt: untested variations ship
-broken code, forgotten flags clutter the codebase, and shared environments
-become unstable from leftover targeting rules. Structured governance ensures
-flags are testable, traceable, temporary, and safe. Testing both states prevents
-surprises when flags flip in production.
+Poorly managed feature flags become technical debt: untested variations ship broken code, forgotten flags clutter the codebase, and shared environments become unstable from leftover targeting rules. Structured governance ensures flags are testable, traceable, temporary, and safe. Testing both states prevents surprises when flags flip in production.
 
 ## Pattern Examples
 
 ### Example 1: Feature Flag Enum Pattern with Type Safety
 
-**Context**: Centralized flag management with TypeScript type safety and runtime
-validation.
+**Context**: Centralized flag management with TypeScript type safety and runtime validation.
 
 **Implementation**:
 
@@ -156,8 +146,7 @@ export function Checkout() {
 
 ### Example 2: Feature Flag Testing Pattern (Both States)
 
-**Context**: Comprehensive testing of feature flag variations with proper
-cleanup.
+**Context**: Comprehensive testing of feature flag variations with proper cleanup.
 
 **Implementation**:
 
@@ -192,10 +181,7 @@ test.describe('Checkout Flow - Feature Flag Variations', () => {
     });
   });
 
-  test('should use NEW checkout flow when flag is ENABLED', async ({
-    page,
-    request
-  }) => {
+  test('should use NEW checkout flow when flag is ENABLED', async ({ page, request }) => {
     // Arrange: Enable flag for test user
     await request.post('/api/feature-flags/target', {
       data: {
@@ -221,9 +207,7 @@ test.describe('Checkout Flow - Feature Flag Variations', () => {
     await expect(page.getByTestId('checkout-v1-container')).not.toBeVisible();
 
     // Assert: Telemetry event fired
-    const analyticsEvents = await page.evaluate(
-      () => (window as any).__ANALYTICS_EVENTS__ || []
-    );
+    const analyticsEvents = await page.evaluate(() => (window as any).__ANALYTICS_EVENTS__ || []);
     expect(analyticsEvents).toContainEqual(
       expect.objectContaining({
         event: 'checkout_started',
@@ -234,10 +218,7 @@ test.describe('Checkout Flow - Feature Flag Variations', () => {
     );
   });
 
-  test('should use LEGACY checkout flow when flag is DISABLED', async ({
-    page,
-    request
-  }) => {
+  test('should use LEGACY checkout flow when flag is DISABLED', async ({ page, request }) => {
     // Arrange: Disable flag for test user (or don't target at all)
     await request.post('/api/feature-flags/target', {
       data: {
@@ -263,9 +244,7 @@ test.describe('Checkout Flow - Feature Flag Variations', () => {
     await expect(page.getByTestId('express-payment-options')).not.toBeVisible();
 
     // Assert: Telemetry event fired with correct variant
-    const analyticsEvents = await page.evaluate(
-      () => (window as any).__ANALYTICS_EVENTS__ || []
-    );
+    const analyticsEvents = await page.evaluate(() => (window as any).__ANALYTICS_EVENTS__ || []);
     expect(analyticsEvents).toContainEqual(
       expect.objectContaining({
         event: 'checkout_started',
@@ -276,10 +255,7 @@ test.describe('Checkout Flow - Feature Flag Variations', () => {
     );
   });
 
-  test('should handle flag evaluation errors gracefully', async ({
-    page,
-    request
-  }) => {
+  test('should handle flag evaluation errors gracefully', async ({ page, request }) => {
     // Arrange: Simulate flag service unavailable
     await page.route('**/api/feature-flags/evaluate', route =>
       route.fulfill({ status: 500, body: 'Service Unavailable' })
@@ -300,9 +276,7 @@ test.describe('Checkout Flow - Feature Flag Variations', () => {
     page.on('console', msg => {
       if (msg.type() === 'error') consoleErrors.push(msg.text());
     });
-    expect(consoleErrors).toContain(
-      expect.stringContaining('Feature flag evaluation failed')
-    );
+    expect(consoleErrors).toContain(expect.stringContaining('Feature flag evaluation failed'));
   });
 });
 ```
@@ -378,8 +352,7 @@ describe('Checkout Flow - Feature Flag Variations', () => {
 
 ### Example 3: Feature Flag Targeting Helper Pattern
 
-**Context**: Reusable helpers for programmatic flag control via
-LaunchDarkly/Split.io API.
+**Context**: Reusable helpers for programmatic flag control via LaunchDarkly/Split.io API.
 
 **Implementation**:
 
@@ -424,9 +397,7 @@ export async function setFlagForUser(
   );
 
   if (!response.ok()) {
-    throw new Error(
-      `Failed to set flag ${flagKey} for user ${userId}: ${response.status()}`
-    );
+    throw new Error(`Failed to set flag ${flagKey} for user ${userId}: ${response.status()}`);
   }
 }
 
@@ -434,10 +405,7 @@ export async function setFlagForUser(
  * Remove user from flag targeting
  * CRITICAL for test cleanup
  */
-export async function removeFlagTarget(
-  flagKey: FlagKey,
-  userId: string
-): Promise<void> {
+export async function removeFlagTarget(flagKey: FlagKey, userId: string): Promise<void> {
   const response = await playwrightRequest.newContext().then(ctx =>
     ctx.delete(`${LD_API_BASE}/flags/${flagKey}/targeting/users/${userId}`, {
       headers: {
@@ -484,9 +452,7 @@ export async function setFlagRolloutPercentage(
   );
 
   if (!response.ok()) {
-    throw new Error(
-      `Failed to set rollout for flag ${flagKey}: ${response.status()}`
-    );
+    throw new Error(`Failed to set rollout for flag ${flagKey}: ${response.status()}`);
   }
 }
 
@@ -521,10 +487,7 @@ export function stubFeatureFlags(flags: Record<FlagKey, FlagVariation>): void {
 ```typescript
 // playwright/fixtures/feature-flag-fixture.ts
 import { test as base } from '@playwright/test';
-import {
-  setFlagForUser,
-  removeFlagTarget
-} from '../support/feature-flag-helpers';
+import { setFlagForUser, removeFlagTarget } from '../support/feature-flag-helpers';
 import { FlagKey } from '@/utils/feature-flags';
 
 type FeatureFlagFixture = {
@@ -573,8 +536,7 @@ export const test = base.extend<FeatureFlagFixture>({
 
 ### Example 4: Feature Flag Lifecycle Checklist & Cleanup Strategy
 
-**Context**: Governance checklist and automated cleanup detection for stale
-flags.
+**Context**: Governance checklist and automated cleanup detection for stale flags.
 
 **Implementation**:
 
@@ -585,12 +547,7 @@ flags.
  * Run weekly to detect stale flags requiring cleanup
  */
 
-import {
-  FLAG_REGISTRY,
-  FLAGS,
-  getExpiredFlags,
-  FlagKey
-} from '../src/utils/feature-flags';
+import { FLAG_REGISTRY, FLAGS, getExpiredFlags, FlagKey } from '../src/utils/feature-flags';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -621,9 +578,7 @@ function auditFeatureFlags(): AuditResult {
 
   // Missing metadata
   const missingOwners = allFlags.filter(flag => !FLAG_REGISTRY[flag].owner);
-  const missingDates = allFlags.filter(
-    flag => !FLAG_REGISTRY[flag].createdDate
-  );
+  const missingDates = allFlags.filter(flag => !FLAG_REGISTRY[flag].createdDate);
 
   // Permanent flags (no expiry, requiresCleanup = false)
   const permanentFlags = allFlags.filter(flag => {
@@ -749,10 +704,7 @@ const report = generateReport(audit);
 // Save report
 const outputPath = path.join(__dirname, '../feature-flag-audit-report.md');
 fs.writeFileSync(outputPath, report);
-fs.writeFileSync(
-  path.join(__dirname, '../FEATURE-FLAG-CHECKLIST.md'),
-  FLAG_LIFECYCLE_CHECKLIST
-);
+fs.writeFileSync(path.join(__dirname, '../FEATURE-FLAG-CHECKLIST.md'), FLAG_LIFECYCLE_CHECKLIST);
 
 console.log(`✅ Audit complete. Report saved to: ${outputPath}`);
 console.log(`Total flags: ${audit.totalFlags}`);
@@ -806,5 +758,4 @@ Before merging flag-related code, verify:
 - Related fragments: `test-quality.md`, `selective-testing.md`
 - Flag services: LaunchDarkly, Split.io, Unleash, custom implementations
 
-_Source: LaunchDarkly strategy blog, Murat test architecture notes, SEON feature
-flag governance_
+_Source: LaunchDarkly strategy blog, Murat test architecture notes, SEON feature flag governance_

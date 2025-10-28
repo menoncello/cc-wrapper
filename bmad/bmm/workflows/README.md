@@ -4,28 +4,17 @@ last-redoc-date: 2025-10-12
 
 # BMM Workflows - The Complete v6 Flow
 
-The BMM (BMAD Method Module) orchestrates software development through four
-distinct phases, each with specialized workflows that adapt to project scale
-(Level 0-4) and context (greenfield vs brownfield). This document serves as the
-master guide for understanding how these workflows interconnect to deliver the
-revolutionary v6 methodology.
+The BMM (BMAD Method Module) orchestrates software development through four distinct phases, each with specialized workflows that adapt to project scale (Level 0-4) and context (greenfield vs brownfield). This document serves as the master guide for understanding how these workflows interconnect to deliver the revolutionary v6 methodology.
 
 ## Core v6 Innovations
 
-**Scale-Adaptive Planning**: Projects automatically route through different
-workflows based on complexity (Level 0-4), ensuring appropriate documentation
-and process overhead.
+**Scale-Adaptive Planning**: Projects automatically route through different workflows based on complexity (Level 0-4), ensuring appropriate documentation and process overhead.
 
-**Just-In-Time Design**: Technical specifications are created one epic at a time
-during implementation, not all upfront, incorporating learnings as the project
-evolves.
+**Just-In-Time Design**: Technical specifications are created one epic at a time during implementation, not all upfront, incorporating learnings as the project evolves.
 
-**Dynamic Expertise Injection**: Story-context workflows provide targeted
-technical guidance per story, replacing static documentation with contextual
-expertise.
+**Dynamic Expertise Injection**: Story-context workflows provide targeted technical guidance per story, replacing static documentation with contextual expertise.
 
-**Continuous Learning Loop**: Retrospectives feed improvements back into
-workflows, making each epic smoother than the last.
+**Continuous Learning Loop**: Retrospectives feed improvements back into workflows, making each epic smoother than the last.
 
 ## The Four Phases
 
@@ -75,8 +64,7 @@ workflows, making each epic smoother than the last.
 
 **Before starting any workflow, check your status!**
 
-The `workflow-status` workflow is the **universal entry point** for all BMM
-workflows:
+The `workflow-status` workflow is the **universal entry point** for all BMM workflows:
 
 ```bash
 bmad analyst workflow-status
@@ -111,8 +99,7 @@ bmad pm workflow-status
 
 ## Phase 1: Analysis (Optional)
 
-Optional workflows for project discovery and requirements gathering. Output
-feeds into Phase 2 planning.
+Optional workflows for project discovery and requirements gathering. Output feeds into Phase 2 planning.
 
 ### Workflows
 
@@ -133,8 +120,7 @@ workflow-status (check) → Brainstorming → Research → Brief → Planning (P
 
 ## Phase 2: Planning (Required)
 
-The central orchestrator that determines project scale and generates appropriate
-planning artifacts.
+The central orchestrator that determines project scale and generates appropriate planning artifacts.
 
 ### Scale Levels
 
@@ -149,8 +135,7 @@ planning artifacts.
 **Key Changes (v6a):**
 
 - **Level 0**: Now generates a single user story in addition to tech-spec
-- **Level 1**: Now generates 2-3 stories as part of planning (prefer longer
-  stories over more stories)
+- **Level 1**: Now generates 2-3 stories as part of planning (prefer longer stories over more stories)
 - Both Level 0/1 skip Phase 3 and populate Phase 4 story backlog automatically
 
 ### Routing Logic
@@ -189,7 +174,7 @@ workflow-status determines routing:
     └─→ Level 3-4 → bmad pm prd
         └─→ Validates status file + level
         └─→ Generates PRD.md + epics.md
-        └─→ Then: Phase 3 (solution-architecture)
+        └─→ Then: Phase 3 (architecture)
         └─→ Then: Phase 4 (implementation)
 
     GAME PROJECTS:
@@ -207,11 +192,9 @@ workflow-status determines routing:
 - **epic-stories.md**: Epic summary with story links (Level 1)
 - **tech-spec.md**: Technical specification (Levels 0-2 only)
 - **story-{slug}.md**: Single user story (Level 0)
-- **story-{slug}-1.md, story-{slug}-2.md, story-{slug}-3.md**: User stories
-  (Level 1)
+- **story-{slug}-1.md, story-{slug}-2.md, story-{slug}-3.md**: User stories (Level 1)
 - **GDD.md**: Game Design Document (game projects)
-- **bmm-workflow-status.md**: Versioned workflow state tracking with story
-  backlog
+- **bmm-workflow-status.md**: Versioned workflow state tracking with story backlog
 
 ## Phase 3: Solutioning (Levels 3-4 Only)
 
@@ -236,9 +219,7 @@ FOR each epic in sequence:
     THEN move to next epic
 ```
 
-**Critical**: Tech specs are created ONE AT A TIME as epics are ready for
-implementation, not all upfront. This prevents over-engineering and incorporates
-learning.
+**Critical**: Tech specs are created ONE AT A TIME as epics are ready for implementation, not all upfront. This prevents over-engineering and incorporates learning.
 
 ## Phase 4: Implementation (Iterative)
 
@@ -246,8 +227,7 @@ The core development cycle that transforms requirements into working software.
 
 ### The Story State Machine
 
-Phase 4 uses a 4-state lifecycle to manage story progression, tracked in
-`bmm-workflow-status.md`:
+Phase 4 uses a 4-state lifecycle to manage story progression, tracked in `bmm-workflow-status.md`:
 
 ```
 BACKLOG → TODO → IN PROGRESS → DONE
@@ -255,8 +235,7 @@ BACKLOG → TODO → IN PROGRESS → DONE
 
 #### State Definitions
 
-- **BACKLOG**: Ordered list of stories to be drafted (populated at phase
-  transition)
+- **BACKLOG**: Ordered list of stories to be drafted (populated at phase transition)
   - Contains all stories with IDs, titles, and file names
   - Order is sequential (Epic 1 stories first, then Epic 2, etc.)
 
@@ -271,11 +250,10 @@ BACKLOG → TODO → IN PROGRESS → DONE
   - Story status is "Ready" or "In Review"
 
 - **DONE**: Completed stories with dates and points
-  - Moved here by `story-approved` workflow after DoD complete
+  - Moved here by `story-done` workflow after DoD complete
   - Immutable record of completed work
 
-**Key Innovation**: Agents never search for "next story" - they always read the
-exact story from the status file.
+**Key Innovation**: Agents never search for "next story" - they always read the exact story from the status file.
 
 ### The Implementation Loop
 
@@ -316,7 +294,7 @@ Phase Transition (Phase 2 or 3 → Phase 4)
 ┌─────────────────────────────────────────────────┐
 │  User reviews implementation (DoD check)         │
 │  ↓                                               │
-│  DEV: story-approved (marks story done)          │
+│  DEV: story-done (marks story done)          │
 │  Actions: IN PROGRESS → DONE                     │
 │           TODO → IN PROGRESS (if exists)         │
 │           BACKLOG → TODO (if exists)             │
@@ -341,15 +319,14 @@ Phase Transition (Phase 2 or 3 → Phase 4)
 | **story-ready**    | SM     | Approve drafted story for development | TODO → IN PROGRESS    | Reads TODO section       |
 | **story-context**  | SM     | Generate expertise injection XML      | (No state change)     | Reads IN PROGRESS        |
 | **dev-story**      | DEV    | Implement story                       | (No state change)     | Reads IN PROGRESS        |
-| **story-approved** | DEV    | Mark story done after DoD complete    | IN PROGRESS → DONE    | Reads IN PROGRESS        |
+| **story-done**     | DEV    | Mark story done after DoD complete    | IN PROGRESS → DONE    | Reads IN PROGRESS        |
 | **review-story**   | SR/DEV | Quality validation (optional)         | (No state change)     | Manual story selection   |
 | **correct-course** | SM     | Handle issues/changes                 | (Adaptive)            | Manual story selection   |
 | **retrospective**  | SM     | Capture epic learnings                | (No state change)     | Manual or epic-triggered |
 
 ### Story File Status Values
 
-Stories have a `Status:` field in their markdown file that reflects their
-position in the state machine:
+Stories have a `Status:` field in their markdown file that reflects their position in the state machine:
 
 ```
 Status: Draft       (Story created by create-story, awaiting user review)
@@ -358,7 +335,7 @@ Status: Ready       (User approved via story-ready, ready for implementation)
   ↓
 Status: In Review   (Implementation complete, awaiting final approval)
   ↓
-Status: Done        (User approved via story-approved, DoD complete)
+Status: Done        (User approved via story-done, DoD complete)
 ```
 
 **Status File Position vs Story File Status:**
@@ -395,9 +372,7 @@ plan-project (Phase 2)
     └─→ Continue with scale-adaptive planning
 ```
 
-**Critical for Brownfield**: Without adequate documentation of the existing
-system, the planning phase cannot accurately assess scope or create meaningful
-requirements. The brownfield-analysis workflow (coming soon) will:
+**Critical for Brownfield**: Without adequate documentation of the existing system, the planning phase cannot accurately assess scope or create meaningful requirements. The brownfield-analysis workflow (coming soon) will:
 
 - Map existing architecture
 - Document current patterns
@@ -410,7 +385,7 @@ requirements. The brownfield-analysis workflow (coming soon) will:
 | Phase              | Primary Agents      | Supporting Agents           |
 | ------------------ | ------------------- | --------------------------- |
 | **Analysis**       | Analyst, Researcher | PM, PO                      |
-| **Planning**       | PM                  | Analyst, UX Expert          |
+| **Planning**       | PM                  | Analyst, UX Designer        |
 | **Solutioning**    | Architect           | PM, Tech Lead               |
 | **Implementation** | SM, DEV             | SR, PM (for correct-course) |
 
@@ -418,8 +393,7 @@ requirements. The brownfield-analysis workflow (coming soon) will:
 
 ### Tracking Documents
 
-- **bmm-workflow-status.md**: Versioned workflow state tracking with 4-section
-  story backlog
+- **bmm-workflow-status.md**: Versioned workflow state tracking with 4-section story backlog
   - **BACKLOG**: Ordered list of stories to be drafted
   - **TODO**: Single story ready for drafting (or drafted, awaiting approval)
   - **IN PROGRESS**: Single story approved for development
@@ -428,8 +402,7 @@ requirements. The brownfield-analysis workflow (coming soon) will:
   - Single source of truth for story progression
   - Agents read (never search) to know what to work on next
 
-- **Epics.md**: Master list of epics and stories (source of truth for planning,
-  Level 2-4)
+- **Epics.md**: Master list of epics and stories (source of truth for planning, Level 2-4)
 
 ### Phase Outputs
 
@@ -502,7 +475,7 @@ bmad architect tech-spec # Level 0-1 software projects
 bmad pm gdd             # Game projects
 
 # Phase 3: Solutioning (L3-4)
-bmad architect solution-architecture
+bmad architect architecture
 bmad architect tech-spec  # Per epic, JIT
 
 # Phase 4: Implementation
@@ -510,7 +483,7 @@ bmad sm create-story      # Draft story from TODO section
 bmad sm story-ready       # Approve story for development (after user review)
 bmad sm story-context     # Generate context XML (optional but recommended)
 bmad dev dev-story        # Implement story from IN PROGRESS section
-bmad dev story-approved   # Mark story done (after user confirms DoD)
+bmad dev story-done   # Mark story done (after user confirms DoD)
 bmad dev review-story     # Quality validation (optional)
 bmad sm correct-course    # If issues arise
 bmad sm retrospective     # After epic complete
@@ -534,6 +507,4 @@ bmad sm retrospective     # After epic complete
 
 ---
 
-This document serves as the authoritative guide to BMM v6a workflow execution.
-For detailed information about individual workflows, see their respective README
-files in the workflow folders.
+This document serves as the authoritative guide to BMM v6a workflow execution. For detailed information about individual workflows, see their respective README files in the workflow folders.

@@ -2,8 +2,7 @@
 
 # Test Levels Framework
 
-Comprehensive guide for determining appropriate test levels (unit, integration,
-E2E) for different scenarios.
+Comprehensive guide for determining appropriate test levels (unit, integration, E2E) for different scenarios.
 
 ## Test Level Decision Matrix
 
@@ -128,8 +127,7 @@ e2e_test:
 
 **Coverage overlap is only acceptable when:**
 
-- Testing different aspects (unit: logic, integration: interaction, e2e: user
-  experience)
+- Testing different aspects (unit: logic, integration: interaction, e2e: user experience)
 - Critical paths requiring defense in depth
 - Regression prevention for previously broken functionality
 
@@ -161,10 +159,7 @@ import { test, expect } from '@playwright/test';
 import { createUser, createProduct } from '../test-utils/factories';
 
 test.describe('Checkout Flow', () => {
-  test('user can complete purchase with saved payment method', async ({
-    page,
-    apiRequest
-  }) => {
+  test('user can complete purchase with saved payment method', async ({ page, apiRequest }) => {
     // Setup: Seed data via API (fast!)
     const user = createUser({ email: 'buyer@example.com', hasSavedCard: true });
     const product = createProduct({ name: 'Widget', price: 29.99, stock: 10 });
@@ -284,8 +279,7 @@ test.describe('UserService Integration', () => {
 
 ### Example 3: Component Test (Isolated UI Component)
 
-**Scenario**: Test button component in isolation with props and user
-interactions.
+**Scenario**: Test button component in isolation with props and user interactions.
 
 ```typescript
 // src/components/Button.cy.tsx (Cypress Component Test)
@@ -362,11 +356,7 @@ test.describe('Button Component', () => {
 
 ```typescript
 // src/utils/price-calculator.test.ts (Jest/Vitest)
-import {
-  calculateDiscount,
-  applyTaxes,
-  calculateTotal
-} from './price-calculator';
+import { calculateDiscount, applyTaxes, calculateTotal } from './price-calculator';
 
 describe('PriceCalculator', () => {
   describe('calculateDiscount', () => {
@@ -422,21 +412,13 @@ describe('PriceCalculator', () => {
     });
 
     it('should handle empty items array', () => {
-      const result = calculateTotal(
-        [],
-        { type: 'none', value: 0 },
-        { country: 'US', rate: 0 }
-      );
+      const result = calculateTotal([], { type: 'none', value: 0 }, { country: 'US', rate: 0 });
       expect(result).toBe(0);
     });
 
     it('should calculate correctly without discount or tax', () => {
       const items = [{ price: 25, quantity: 4 }];
-      const result = calculateTotal(
-        items,
-        { type: 'none', value: 0 },
-        { country: 'US', rate: 0 }
-      );
+      const result = calculateTotal(items, { type: 'none', value: 0 }, { country: 'US', rate: 0 });
       expect(result).toBe(100);
     });
   });
@@ -488,5 +470,4 @@ test('calculate discount', () => {
 // Fast, reliable, isolated
 ```
 
-_Source: Murat Testing Philosophy (test pyramid), existing
-test-levels-framework.md structure._
+_Source: Murat Testing Philosophy (test pyramid), existing test-levels-framework.md structure._

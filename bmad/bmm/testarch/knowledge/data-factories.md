@@ -2,10 +2,7 @@
 
 ## Principle
 
-Prefer factory functions that accept overrides and return complete objects
-(`createUser(overrides)`). Seed test state through APIs, tasks, or direct DB
-helpers before visiting the UI—never via slow UI interactions. UI is for
-validation only, not setup.
+Prefer factory functions that accept overrides and return complete objects (`createUser(overrides)`). Seed test state through APIs, tasks, or direct DB helpers before visiting the UI—never via slow UI interactions. UI is for validation only, not setup.
 
 ## Rationale
 
@@ -26,9 +23,7 @@ Dynamic factories with overrides provide:
 
 ### Example 1: Factory Function with Overrides
 
-**Context**: When creating test data, build factory functions with sensible
-defaults and explicit overrides. Use `faker` for dynamic values that prevent
-collisions.
+**Context**: When creating test data, build factory functions with sensible defaults and explicit overrides. Use `faker` for dynamic values that prevent collisions.
 
 **Implementation**:
 
@@ -101,9 +96,7 @@ test('admin can delete users', async ({ page, apiRequest }) => {
 
 ### Example 2: Nested Factory Pattern
 
-**Context**: When testing relationships (orders with users and products), nest
-factories to create complete object graphs. Control relationship data
-explicitly.
+**Context**: When testing relationships (orders with users and products), nest factories to create complete object graphs. Control relationship data explicitly.
 
 **Implementation**:
 
@@ -127,9 +120,7 @@ type Order = {
   createdAt: Date;
 };
 
-export const createOrderItem = (
-  overrides: Partial<OrderItem> = {}
-): OrderItem => {
+export const createOrderItem = (overrides: Partial<OrderItem> = {}): OrderItem => {
   const product = overrides.product || createProduct();
   const quantity = overrides.quantity || faker.number.int({ min: 1, max: 5 });
 
@@ -194,9 +185,7 @@ test('user can view order details', async ({ page, apiRequest }) => {
 
 ### Example 3: Factory with API Seeding
 
-**Context**: When tests need data setup, always use API calls or database
-tasks—never UI navigation. Wrap factory usage with seeding utilities for clean
-test setup.
+**Context**: When tests need data setup, always use API calls or database tasks—never UI navigation. Wrap factory usage with seeding utilities for clean test setup.
 
 **Implementation**:
 
@@ -204,10 +193,7 @@ test setup.
 // playwright/support/helpers/seed-helpers.ts
 import { APIRequestContext } from '@playwright/test';
 import { User, createUser } from '../../test-utils/factories/user-factory';
-import {
-  Product,
-  createProduct
-} from '../../test-utils/factories/product-factory';
+import { Product, createProduct } from '../../test-utils/factories/product-factory';
 
 export async function seedUser(
   request: APIRequestContext,
@@ -324,12 +310,9 @@ test('admin can delete user', async ({ page }) => {
 
 **Why It Fails**:
 
-- **Parallel collisions**: Hardcoded IDs (`id: 1`, `email: 'test@test.com'`)
-  cause failures when tests run concurrently
-- **Schema drift**: Adding required fields (`phoneNumber`, `address`) breaks all
-  tests using fixtures
-- **Hidden intent**: Does this test need `email: 'test@test.com'` specifically,
-  or any email?
+- **Parallel collisions**: Hardcoded IDs (`id: 1`, `email: 'test@test.com'`) cause failures when tests run concurrently
+- **Schema drift**: Adding required fields (`phoneNumber`, `address`) breaks all tests using fixtures
+- **Hidden intent**: Does this test need `email: 'test@test.com'` specifically, or any email?
 - **Slow setup**: UI-based data creation is 10-50x slower than API
 
 **Better Approach**: Use factories
@@ -337,10 +320,7 @@ test('admin can delete user', async ({ page }) => {
 ```typescript
 // ✅ GOOD: Factory-based data
 test('user can login', async ({ page, apiRequest }) => {
-  const user = createUser({
-    email: 'unique@example.com',
-    password: 'secure123'
-  });
+  const user = createUser({ email: 'unique@example.com', password: 'secure123' });
 
   // Seed via API (fast, parallel-safe)
   await apiRequest({ method: 'POST', url: '/api/users', data: user });
@@ -375,8 +355,7 @@ export const createUser = (overrides: Partial<User> = {}): User => ({
 
 ### Example 5: Factory Composition
 
-**Context**: When building specialized factories, compose simpler factories
-instead of duplicating logic. Layer overrides for specific test scenarios.
+**Context**: When building specialized factories, compose simpler factories instead of duplicating logic. Layer overrides for specific test scenarios.
 
 **Implementation**:
 
@@ -428,9 +407,7 @@ export const createProAccount = (overrides: Partial<Account> = {}): Account =>
     ...overrides
   });
 
-export const createEnterpriseAccount = (
-  overrides: Partial<Account> = {}
-): Account =>
+export const createEnterpriseAccount = (overrides: Partial<Account> = {}): Account =>
   createAccount({
     plan: 'enterprise',
     features: ['advanced-analytics', 'priority-support', 'sso', 'audit-logs'],
@@ -464,20 +441,16 @@ test('free accounts cannot access analytics', async ({ page, apiRequest }) => {
 
 **Key Points**:
 
-- Compose specialized factories from base factories (`createAdminUser` →
-  `createUser`)
+- Compose specialized factories from base factories (`createAdminUser` → `createUser`)
 - Defaults cascade: `createProAccount` sets plan + features automatically
 - Still allow overrides: `createProAccount({ maxUsers: 50 })` works
-- Test intent clear: `createProAccount()` vs
-  `createAccount({ plan: 'pro', features: [...] })`
+- Test intent clear: `createProAccount()` vs `createAccount({ plan: 'pro', features: [...] })`
 
 ## Integration Points
 
-- **Used in workflows**: `*atdd` (test generation), `*automate` (test
-  expansion), `*framework` (factory setup)
+- **Used in workflows**: `*atdd` (test generation), `*automate` (test expansion), `*framework` (factory setup)
 - **Related fragments**:
-  - `fixture-architecture.md` - Pure functions and fixtures for factory
-    integration
+  - `fixture-architecture.md` - Pure functions and fixtures for factory integration
   - `network-first.md` - API-first setup patterns
   - `test-quality.md` - Parallel-safe, deterministic test design
 
@@ -533,5 +506,4 @@ const user = createUserWithFlags(
 );
 ```
 
-_Source: Murat Testing Philosophy (lines 94-120), API-first testing patterns,
-faker.js documentation._
+_Source: Murat Testing Philosophy (lines 94-120), API-first testing patterns, faker.js documentation._

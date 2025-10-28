@@ -1,13 +1,8 @@
 # ATDD (Acceptance Test-Driven Development) Workflow
 
-Generates failing acceptance tests BEFORE implementation following TDD's
-red-green-refactor cycle. Creates comprehensive test coverage at appropriate
-levels (E2E, API, Component) with supporting infrastructure (fixtures,
-factories, mocks) and provides an implementation checklist to guide development
-toward passing tests.
+Generates failing acceptance tests BEFORE implementation following TDD's red-green-refactor cycle. Creates comprehensive test coverage at appropriate levels (E2E, API, Component) with supporting infrastructure (fixtures, factories, mocks) and provides an implementation checklist to guide development toward passing tests.
 
-**Core Principle**: Tests fail first (red phase), guide development to green,
-then enable confident refactoring.
+**Core Principle**: Tests fail first (red phase), guide development to green, then enable confident refactoring.
 
 ## Usage
 
@@ -26,10 +21,8 @@ The TEA agent runs this workflow when:
 
 **Required Context Files:**
 
-- **Story markdown** (`{story_file}`): User story with acceptance criteria,
-  functional requirements, and technical constraints
-- **Framework configuration**: Test framework config (playwright.config.ts or
-  cypress.config.ts) from framework workflow
+- **Story markdown** (`{story_file}`): User story with acceptance criteria, functional requirements, and technical constraints
+- **Framework configuration**: Test framework config (playwright.config.ts or cypress.config.ts) from framework workflow
 
 **Workflow Variables:**
 
@@ -40,37 +33,28 @@ The TEA agent runs this workflow when:
 - `primary_level`: Primary test level for acceptance criteria (default: "e2e")
 - `start_failing`: Tests must fail initially - red phase (default: true)
 - `use_given_when_then`: BDD-style test structure (default: true)
-- `network_first`: Route interception before navigation to prevent race
-  conditions (default: true)
+- `network_first`: Route interception before navigation to prevent race conditions (default: true)
 - `one_assertion_per_test`: Atomic test design (default: true)
 - `generate_factories`: Create data factory stubs using faker (default: true)
-- `generate_fixtures`: Create fixture architecture with auto-cleanup (default:
-  true)
+- `generate_fixtures`: Create fixture architecture with auto-cleanup (default: true)
 - `auto_cleanup`: Fixtures clean up their data automatically (default: true)
-- `include_data_testids`: List required data-testid attributes for DEV (default:
-  true)
+- `include_data_testids`: List required data-testid attributes for DEV (default: true)
 - `include_mock_requirements`: Document mock/stub needs (default: true)
-- `auto_load_knowledge`: Load fixture-architecture, data-factories,
-  component-tdd fragments (default: true)
-- `share_with_dev`: Provide implementation checklist to DEV agent (default:
-  true)
-- `output_checklist`: Path for implementation checklist (default:
-  `{output_folder}/atdd-checklist-{story_id}.md`)
+- `auto_load_knowledge`: Load fixture-architecture, data-factories, component-tdd fragments (default: true)
+- `share_with_dev`: Provide implementation checklist to DEV agent (default: true)
+- `output_checklist`: Path for implementation checklist (default: `{output_folder}/atdd-checklist-{story_id}.md`)
 
 **Optional Context:**
 
-- **Test design document**: For risk/priority context alignment (P0-P3
-  scenarios)
+- **Test design document**: For risk/priority context alignment (P0-P3 scenarios)
 - **Existing fixtures/helpers**: For consistency with established patterns
-- **Architecture documents**: For understanding system boundaries and
-  integration points
+- **Architecture documents**: For understanding system boundaries and integration points
 
 ## Outputs
 
 **Primary Deliverable:**
 
-- **ATDD Checklist** (`atdd-checklist-{story_id}.md`): Implementation guide
-  containing:
+- **ATDD Checklist** (`atdd-checklist-{story_id}.md`): Implementation guide containing:
   - Story summary and acceptance criteria breakdown
   - Test files created with paths and line counts
   - Data factories created with patterns
@@ -83,24 +67,16 @@ The TEA agent runs this workflow when:
 
 **Test Files Created:**
 
-- **E2E tests** (`tests/e2e/{feature-name}.spec.ts`): Full user journey tests
-  for critical paths
-- **API tests** (`tests/api/{feature-name}.api.spec.ts`): Business logic and
-  service contract tests
-- **Component tests** (`tests/component/{ComponentName}.test.tsx`): UI component
-  behavior tests
+- **E2E tests** (`tests/e2e/{feature-name}.spec.ts`): Full user journey tests for critical paths
+- **API tests** (`tests/api/{feature-name}.api.spec.ts`): Business logic and service contract tests
+- **Component tests** (`tests/component/{ComponentName}.test.tsx`): UI component behavior tests
 
 **Supporting Infrastructure:**
 
-- **Data factories** (`tests/support/factories/{entity}.factory.ts`): Factory
-  functions using @faker-js/faker for generating test data with overrides
-  support
-- **Test fixtures** (`tests/support/fixtures/{feature}.fixture.ts`): Playwright
-  fixtures with setup/teardown and auto-cleanup
-- **Mock/stub documentation**: Requirements for external service mocking
-  (payment gateways, email services, etc.)
-- **data-testid requirements**: List of required test IDs for stable selectors
-  in UI implementation
+- **Data factories** (`tests/support/factories/{entity}.factory.ts`): Factory functions using @faker-js/faker for generating test data with overrides support
+- **Test fixtures** (`tests/support/fixtures/{feature}.fixture.ts`): Playwright fixtures with setup/teardown and auto-cleanup
+- **Mock/stub documentation**: Requirements for external service mocking (payment gateways, email services, etc.)
+- **data-testid requirements**: List of required test IDs for stable selectors in UI implementation
 
 **Validation Safeguards:**
 
@@ -163,16 +139,13 @@ The TEA agent runs this workflow when:
 - Minimal dependencies
 - Characteristics: Fastest, most granular
 
-**Selection Strategy**: Avoid duplicate coverage. Use E2E for critical happy
-path, API for business logic variations, component for UI edge cases, unit for
-pure logic.
+**Selection Strategy**: Avoid duplicate coverage. Use E2E for critical happy path, API for business logic variations, component for UI edge cases, unit for pure logic.
 
 ### Recording Mode (NEW - Phase 2.5)
 
 **atdd** can record complex UI interactions instead of AI generation.
 
-**Activation**: Automatic for complex UI when config.tea_use_mcp_enhancements is
-true and MCP available
+**Activation**: Automatic for complex UI when config.tea_use_mcp_enhancements is true and MCP available
 
 - Fallback: AI generation (silent, automatic)
 
@@ -197,12 +170,10 @@ true and MCP available
 TEA generates tests using AI by:
 
 1. **Analyzing acceptance criteria** from story markdown
-2. **Inferring selectors** from requirement descriptions (e.g., "login button" →
-   `[data-testid="login-button"]`)
+2. **Inferring selectors** from requirement descriptions (e.g., "login button" → `[data-testid="login-button"]`)
 3. **Synthesizing test code** based on knowledge base patterns
 4. **Estimating interactions** using common UI patterns (click, type, verify)
-5. **Applying best practices** from knowledge fragments (Given-When-Then,
-   network-first, fixtures)
+5. **Applying best practices** from knowledge fragments (Given-When-Then, network-first, fixtures)
 
 **This works well for:**
 
@@ -216,37 +187,29 @@ When Playwright MCP is available, TEA **additionally**:
 
 1. **Verifies generated tests** by:
    - **Launching real browser** with `generator_setup_page`
-   - **Executing generated test steps** with `browser_*` tools (`navigate`,
-     `click`, `type`)
+   - **Executing generated test steps** with `browser_*` tools (`navigate`, `click`, `type`)
    - **Seeing actual UI** with `browser_snapshot` (visual verification)
-   - **Discovering real selectors** with `browser_generate_locator`
-     (auto-generate from live DOM)
+   - **Discovering real selectors** with `browser_generate_locator` (auto-generate from live DOM)
 
 2. **Enhances AI-generated tests** by:
    - **Validating selectors exist** in actual DOM (not just guesses)
-   - **Verifying behavior** with `browser_verify_text`,
-     `browser_verify_visible`, `browser_verify_url`
+   - **Verifying behavior** with `browser_verify_text`, `browser_verify_visible`, `browser_verify_url`
    - **Capturing actual interaction log** with `generator_read_log`
    - **Refining test code** with real observed behavior
 
 3. **Catches issues early** by:
-   - **Finding missing selectors** before DEV implements (requirements
-     clarification)
-   - **Discovering edge cases** not in requirements (loading states, error
-     messages)
+   - **Finding missing selectors** before DEV implements (requirements clarification)
+   - **Discovering edge cases** not in requirements (loading states, error messages)
    - **Validating assumptions** about UI structure and behavior
 
 **Key Benefits of MCP Enhancement:**
 
-- ✅ **AI generates tests** (fast, based on requirements) **+** **MCP verifies
-  tests** (accurate, based on reality)
+- ✅ **AI generates tests** (fast, based on requirements) **+** **MCP verifies tests** (accurate, based on reality)
 - ✅ **Accurate selectors**: Validated against actual DOM, not just inferred
-- ✅ **Visual validation**: TEA sees what user sees (modals, animations, state
-  changes)
+- ✅ **Visual validation**: TEA sees what user sees (modals, animations, state changes)
 - ✅ **Complex flows**: Records multi-step interactions precisely
 - ✅ **Edge case discovery**: Observes actual app behavior beyond requirements
-- ✅ **Selector resilience**: MCP generates robust locators from live page
-  (role-based, text-based, fallback chains)
+- ✅ **Selector resilience**: MCP generates robust locators from live page (role-based, text-based, fallback chains)
 
 **Example Enhancement Flow:**
 
@@ -352,8 +315,7 @@ await page.goto('/page');
 await page.route('**/api/data', handler); // Too late!
 ```
 
-Always set up route interception before navigating to pages that make network
-requests.
+Always set up route interception before navigating to pages that make network requests.
 
 ### Data Factory Architecture
 
@@ -371,8 +333,7 @@ export const createUser = (overrides = {}) => ({
   ...overrides
 });
 
-export const createUsers = (count: number) =>
-  Array.from({ length: count }, () => createUser());
+export const createUsers = (count: number) => Array.from({ length: count }, () => createUser());
 ```
 
 **Factory principles:**
@@ -429,14 +390,11 @@ test('should display user name', async ({ page }) => {
 // ❌ WRONG: Multiple assertions (not atomic)
 test('should display user info', async ({ page }) => {
   await expect(page.locator('[data-testid="user-name"]')).toHaveText('John');
-  await expect(page.locator('[data-testid="user-email"]')).toHaveText(
-    'john@example.com'
-  );
+  await expect(page.locator('[data-testid="user-email"]')).toHaveText('john@example.com');
 });
 ```
 
-**Why?** If second assertion fails, you don't know if first is still valid.
-Split into separate tests for clear failure diagnosis.
+**Why?** If second assertion fails, you don't know if first is still valid. Split into separate tests for clear failure diagnosis.
 
 ### Implementation Checklist for DEV
 
@@ -451,8 +409,7 @@ Maps each failing test to concrete implementation tasks:
 - [ ] Implement login form component
 - [ ] Add email/password validation
 - [ ] Integrate authentication API
-- [ ] Add `data-testid` attributes: `email-input`, `password-input`,
-      `login-button`
+- [ ] Add `data-testid` attributes: `email-input`, `password-input`, `login-button`
 - [ ] Implement error handling
 - [ ] Run test: `npm run test:e2e -- login.spec.ts`
 - [ ] ✅ Test passes (green phase)
@@ -464,34 +421,25 @@ Provides clear path from red to green for each test.
 
 **Before this workflow:**
 
-- **framework** workflow: Must run first to establish test framework
-  architecture (Playwright or Cypress config, directory structure, base
-  fixtures)
-- **test-design** workflow: Optional but recommended for P0-P3 priority
-  alignment and risk assessment context
+- **framework** workflow: Must run first to establish test framework architecture (Playwright or Cypress config, directory structure, base fixtures)
+- **test-design** workflow: Optional but recommended for P0-P3 priority alignment and risk assessment context
 
 **After this workflow:**
 
-- **DEV agent** implements features guided by failing tests and implementation
-  checklist
-- **test-review** workflow: Review generated test quality before sharing with
-  DEV team
-- **automate** workflow: After story completion, expand regression suite with
-  additional edge case coverage
+- **DEV agent** implements features guided by failing tests and implementation checklist
+- **test-review** workflow: Review generated test quality before sharing with DEV team
+- **automate** workflow: After story completion, expand regression suite with additional edge case coverage
 
 **Coordinates with:**
 
-- **Story approval process**: ATDD runs after story is approved but before DEV
-  begins implementation
-- **Quality gates**: Failing tests serve as acceptance criteria for story
-  completion (all tests must pass)
+- **Story approval process**: ATDD runs after story is approved but before DEV begins implementation
+- **Quality gates**: Failing tests serve as acceptance criteria for story completion (all tests must pass)
 
 ## Important Notes
 
 ### ATDD is Test-First, Not Test-After
 
-**Critical timing**: Tests must be written BEFORE any implementation code. This
-ensures:
+**Critical timing**: Tests must be written BEFORE any implementation code. This ensures:
 
 - Tests define the contract (what needs to be built)
 - Implementation is guided by tests (no over-engineering)
@@ -526,8 +474,7 @@ await page.click('[data-testid="login-button"]');
 await page.click('.btn.btn-primary.login-btn');
 ```
 
-ATDD checklist includes complete list of required data-testid attributes for DEV
-team.
+ATDD checklist includes complete list of required data-testid attributes for DEV team.
 
 ### No Hard Waits or Sleeps
 
@@ -542,8 +489,7 @@ await expect(page.locator('[data-testid="user-name"]')).toBeVisible();
 await page.waitForTimeout(2000);
 ```
 
-Playwright's auto-waiting is preferred (expect() automatically waits up to
-timeout).
+Playwright's auto-waiting is preferred (expect() automatically waits up to timeout).
 
 ### Component Tests for Complex UI Only
 
@@ -560,8 +506,7 @@ timeout).
 - Integration with backend (use E2E or API tests)
 - Full user journeys (use E2E tests)
 
-Component tests are valuable but should complement, not replace, E2E and API
-tests.
+Component tests are valuable but should complement, not replace, E2E and API tests.
 
 ### Auto-Cleanup is Non-Negotiable
 
@@ -583,21 +528,14 @@ Without auto-cleanup, tests become flaky and depend on execution order.
 
 This workflow automatically consults:
 
-- **fixture-architecture.md** - Test fixture patterns with setup/teardown and
-  auto-cleanup using Playwright's test.extend()
-- **data-factories.md** - Factory patterns using @faker-js/faker for random test
-  data generation with overrides support
-- **component-tdd.md** - Component test strategies using Playwright Component
-  Testing (@playwright/experimental-ct-react)
-- **network-first.md** - Route interception patterns (intercept before
-  navigation to prevent race conditions)
-- **test-quality.md** - Test design principles (Given-When-Then, one assertion
-  per test, determinism, isolation)
-- **test-levels-framework.md** - Test level selection framework (E2E vs API vs
-  Component vs Unit)
+- **fixture-architecture.md** - Test fixture patterns with setup/teardown and auto-cleanup using Playwright's test.extend()
+- **data-factories.md** - Factory patterns using @faker-js/faker for random test data generation with overrides support
+- **component-tdd.md** - Component test strategies using Playwright Component Testing (@playwright/experimental-ct-react)
+- **network-first.md** - Route interception patterns (intercept before navigation to prevent race conditions)
+- **test-quality.md** - Test design principles (Given-When-Then, one assertion per test, determinism, isolation)
+- **test-levels-framework.md** - Test level selection framework (E2E vs API vs Component vs Unit)
 
-See `tea-index.csv` for complete knowledge fragment mapping and additional
-references.
+See `tea-index.csv` for complete knowledge fragment mapping and additional references.
 
 ## Example Output
 
@@ -608,8 +546,7 @@ After running this workflow, the ATDD checklist will contain:
 
 ## Story Summary
 
-As a user, I want to log in with email and password so that I can access my
-personalized dashboard.
+As a user, I want to log in with email and password so that I can access my personalized dashboard.
 
 ## Acceptance Criteria
 
@@ -623,17 +560,14 @@ personalized dashboard.
 
 - `tests/e2e/user-authentication.spec.ts` (87 lines)
   - ✅ should log in with valid credentials (RED - missing /login route)
-  - ✅ should display error for invalid credentials (RED - error message not
-    implemented)
+  - ✅ should display error for invalid credentials (RED - error message not implemented)
   - ✅ should redirect to dashboard after login (RED - redirect logic missing)
 
 ### API Tests (2 tests)
 
 - `tests/api/auth.api.spec.ts` (54 lines)
-  - ✅ POST /api/auth/login - should return token for valid credentials (RED -
-    endpoint not implemented)
-  - ✅ POST /api/auth/login - should return 401 for invalid credentials (RED -
-    validation missing)
+  - ✅ POST /api/auth/login - should return token for valid credentials (RED - endpoint not implemented)
+  - ✅ POST /api/auth/login - should return 401 for invalid credentials (RED - validation missing)
 
 ## Data Factories Created
 
@@ -641,8 +575,7 @@ personalized dashboard.
 
 ## Fixtures Created
 
-- `tests/support/fixtures/auth.fixture.ts` - authenticatedUser fixture with
-  auto-cleanup
+- `tests/support/fixtures/auth.fixture.ts` - authenticatedUser fixture with auto-cleanup
 
 ## Required data-testid Attributes
 
@@ -666,8 +599,7 @@ personalized dashboard.
 - [ ] Implement login form component
 - [ ] Add email/password validation
 - [ ] Integrate authentication API
-- [ ] Add data-testid attributes: `email-input`, `password-input`,
-      `login-button`
+- [ ] Add data-testid attributes: `email-input`, `password-input`, `login-button`
 - [ ] Run test: `npm run test:e2e -- user-authentication.spec.ts`
 - [ ] ✅ Test passes (green phase)
 
@@ -734,7 +666,7 @@ npm run test:e2e -- user-authentication.spec.ts --debug
 2. Run failing tests to confirm RED phase: `npm run test:e2e`
 3. Begin implementation using checklist as guide
 4. Share progress in daily standup
-5. When all tests pass, run `bmad sm story-approved` to move story to DONE
+5. When all tests pass, run `bmad sm story-done` to move story to DONE
 
 ```
 

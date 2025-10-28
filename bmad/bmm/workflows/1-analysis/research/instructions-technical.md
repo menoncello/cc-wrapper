@@ -1,10 +1,8 @@
 # Technical/Architecture Research Instructions
 
-<critical>The workflow execution engine is governed by:
-{project_root}/bmad/core/tasks/workflow.xml</critical> <critical>You MUST have
-already loaded and processed: {installed_path}/workflow.yaml</critical>
-<critical>This workflow conducts technical research for architecture and
-technology decisions</critical>
+<critical>The workflow execution engine is governed by: {project_root}/bmad/core/tasks/workflow.xml</critical>
+<critical>You MUST have already loaded and processed: {installed_path}/workflow.yaml</critical>
+<critical>This workflow conducts technical research for architecture and technology decisions</critical>
 
 <workflow>
 
@@ -87,11 +85,9 @@ Consider:
 <step n="3" goal="Identify Alternatives and Options">
 <action>Research and identify technology options to evaluate</action>
 
-<ask>Do you have specific technologies in mind to compare, or should I discover
-options?
+<ask>Do you have specific technologies in mind to compare, or should I discover options?
 
-If you have specific options, list them. Otherwise, I'll research current
-leading solutions based on your requirements.</ask>
+If you have specific options, list them. Otherwise, I'll research current leading solutions based on your requirements.</ask>
 
 <template-output if="user provides options">user_provided_options</template-output>
 
@@ -102,7 +98,8 @@ leading solutions based on your requirements.</ask>
 - "[technical_category] best tools 2025"
 - "[technical_category] comparison [use_case]"
 - "[technical_category] production experiences reddit"
-- "State of [technical_category] 2025" </action>
+- "State of [technical_category] 2025"
+  </action>
 
   <invoke-task halt="true">{project-root}/bmad/core/tasks/adv-elicit.xml</invoke-task>
 
@@ -203,8 +200,7 @@ Research and document:
 9. **Operations** - Deployment, monitoring, maintenance
 10. **Future-Proofing** - Roadmap, innovation, sustainability
 
-<action>Rate each option on relevant dimensions (High/Medium/Low or 1-5
-scale)</action>
+<action>Rate each option on relevant dimensions (High/Medium/Low or 1-5 scale)</action>
 
 <template-output>comparative_analysis</template-output>
 
@@ -258,8 +254,7 @@ Based on:
 
 Analyze which option(s) best fit your specific scenario.
 
-<ask>Are there any specific concerns or "must-haves" that would immediately
-eliminate any options?</ask>
+<ask>Are there any specific concerns or "must-haves" that would immediately eliminate any options?</ask>
 
 <template-output>use_case_fit</template-output>
 
@@ -287,8 +282,7 @@ For top 2-3 candidates:
 <step n="9" goal="Architecture Pattern Research" optional="true">
 <action>If researching architecture patterns, provide pattern analysis</action>
 
-<ask>Are you researching architecture patterns (microservices, event-driven,
-etc.)?</ask>
+<ask>Are you researching architecture patterns (microservices, event-driven, etc.)?</ask>
 
 <check if="yes">
 
@@ -314,7 +308,8 @@ Research and document:
 - Team skill requirements
 - Operational overhead
 
-<template-output>architecture_pattern_analysis</template-output> </check>
+<template-output>architecture_pattern_analysis</template-output>
+</check>
 
 </step>
 
@@ -480,7 +475,9 @@ Select option (1-5):</ask>
 2. Share with architecture team
 3. Run `plan-project` to incorporate findings into PRD
 
-Check status anytime with: `workflow-status` </output> </check>
+Check status anytime with: `workflow-status`
+</output>
+</check>
 
 <check if="status file not found">
   <output>**✅ Technical Research Complete**
@@ -494,6 +491,9 @@ Note: Running in standalone mode (no status file).
 **Next Steps:**
 
 1. Review technical research findings
-2. Run plan-project workflow </output> </check> </step>
+2. Run plan-project workflow
+   </output>
+   </check>
+   </step>
 
 </workflow>

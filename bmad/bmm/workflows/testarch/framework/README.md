@@ -1,9 +1,6 @@
 # Test Framework Setup Workflow
 
-Initializes a production-ready test framework architecture (Playwright or
-Cypress) with fixtures, helpers, configuration, and industry best practices.
-This workflow scaffolds the complete testing infrastructure for modern web
-applications, providing a robust foundation for test automation.
+Initializes a production-ready test framework architecture (Playwright or Cypress) with fixtures, helpers, configuration, and industry best practices. This workflow scaffolds the complete testing infrastructure for modern web applications, providing a robust foundation for test automation.
 
 ## Usage
 
@@ -22,13 +19,11 @@ The TEA agent runs this workflow when:
 
 **Required Context Files:**
 
-- **package.json**: Project dependencies and scripts to detect project type and
-  bundler
+- **package.json**: Project dependencies and scripts to detect project type and bundler
 
 **Optional Context Files:**
 
-- **Architecture docs** (architecture.md, tech-spec.md): Informs framework
-  configuration decisions
+- **Architecture docs** (architecture.md, tech-spec.md): Informs framework configuration decisions
 - **Existing tests**: Detects current framework to avoid conflicts
 
 **Workflow Variables:**
@@ -38,16 +33,14 @@ The TEA agent runs this workflow when:
 - `bundler`: Auto-detected from package.json (vite/webpack/rollup/esbuild)
 - `test_dir`: Root test directory (default: `{project-root}/tests`)
 - `use_typescript`: Prefer TypeScript configuration (default: true)
-- `framework_preference`: Auto-detection or force specific framework (default:
-  "auto")
+- `framework_preference`: Auto-detection or force specific framework (default: "auto")
 
 ## Outputs
 
 **Primary Deliverables:**
 
 1. **Configuration File**
-   - `playwright.config.ts` or `cypress.config.ts` with production-ready
-     settings
+   - `playwright.config.ts` or `cypress.config.ts` with production-ready settings
    - Timeouts: action 15s, navigation 30s, test 60s
    - Reporters: HTML + JUnit XML
    - Failure-only artifacts (traces, screenshots, videos)
@@ -66,9 +59,7 @@ The TEA agent runs this workflow when:
    └── README.md                    # Setup and usage guide
    ```
 
-   **Note**: Test organization (e2e/, api/, integration/, etc.) is flexible. The
-   **support/** folder contains reusable fixtures, helpers, and factories - the
-   core framework pattern.
+   **Note**: Test organization (e2e/, api/, integration/, etc.) is flexible. The **support/** folder contains reusable fixtures, helpers, and factories - the core framework pattern.
 
 3. **Environment Configuration**
    - `.env.example` with `TEST_ENV`, `BASE_URL`, `API_URL`, auth credentials
@@ -105,21 +96,16 @@ The TEA agent runs this workflow when:
 ### Smart Framework Selection
 
 - **Auto-detection logic** based on project characteristics:
-  - **Playwright** recommended for: Large repos (100+ files),
-    performance-critical apps, multi-browser support, complex debugging needs
-  - **Cypress** recommended for: Small teams prioritizing DX, component testing
-    focus, real-time test development
+  - **Playwright** recommended for: Large repos (100+ files), performance-critical apps, multi-browser support, complex debugging needs
+  - **Cypress** recommended for: Small teams prioritizing DX, component testing focus, real-time test development
 - Falls back to Playwright as default if uncertain
 
 ### Production-Ready Patterns
 
-- **Fixture Architecture**: Pure function → fixture → `mergeTests` composition
-  pattern
+- **Fixture Architecture**: Pure function → fixture → `mergeTests` composition pattern
 - **Auto-Cleanup**: Fixtures automatically clean up test data in teardown
-- **Network-First**: Route interception before navigation to prevent race
-  conditions
-- **Failure-Only Artifacts**: Screenshots/videos/traces only captured on failure
-  to reduce storage
+- **Network-First**: Route interception before navigation to prevent race conditions
+- **Failure-Only Artifacts**: Screenshots/videos/traces only captured on failure to reduce storage
 - **Parallel Execution**: Configured for optimal CI performance
 
 ### Industry Best Practices
@@ -155,14 +141,12 @@ Automatically consults TEA knowledge base:
 
 **Coordinates with:**
 
-- **solution-architecture** (Phase 3): Aligns test structure with system
-  architecture
+- **architecture** (Phase 3): Aligns test structure with system architecture
 - **tech-spec**: Uses technical specifications to inform test configuration
 
 **Updates:**
 
-- `bmm-workflow-status.md`: Adds framework initialization to Quality & Testing
-  Progress section
+- `bmm-workflow-status.md`: Adds framework initialization to Quality & Testing Progress section
 
 ## Important Notes
 
@@ -325,8 +309,7 @@ bmad tea *framework
 **Issue: "Existing test framework detected"**
 
 - **Cause**: playwright.config._ or cypress.config._ already exists
-- **Solution**: Use `upgrade-framework` workflow (TBD) or manually remove
-  existing config
+- **Solution**: Use `upgrade-framework` workflow (TBD) or manually remove existing config
 
 **Issue: "Cannot detect project type"**
 
@@ -346,15 +329,12 @@ bmad tea *framework
 ## Related Workflows
 
 - **ci**: Scaffold CI/CD pipeline → [ci/README.md](../ci/README.md)
-- **test-design**: Plan test coverage →
-  [test-design/README.md](../test-design/README.md)
+- **test-design**: Plan test coverage → [test-design/README.md](../test-design/README.md)
 - **atdd**: Generate acceptance tests → [atdd/README.md](../atdd/README.md)
-- **automate**: Expand regression suite →
-  [automate/README.md](../automate/README.md)
+- **automate**: Expand regression suite → [automate/README.md](../automate/README.md)
 
 ## Version History
 
-- **v4.0 (BMad v6)**: Pure markdown instructions, enhanced workflow.yaml,
-  comprehensive README
+- **v4.0 (BMad v6)**: Pure markdown instructions, enhanced workflow.yaml, comprehensive README
 - **v3.x**: XML format instructions
 - **v2.x**: Legacy task-based approach
