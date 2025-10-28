@@ -45,7 +45,7 @@ jobs:
         run: bun run lint
 
       - name: Prettier format check
-        run: bunx prettier --check "**/*.{ts,tsx,js,jsx,json,md}" --ignore-unknown
+        run: bun run format:check
 
   test:
     name: Test
