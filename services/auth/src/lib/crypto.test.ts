@@ -65,7 +65,7 @@ describe('Crypto utilities', () => {
   });
 
   describe('JWT operations', () => {
-    const secret = process.env.JWT_SECRET || 'test-secret-key-for-jwt-purposes-only-32-chars';
+    const secret = process.env.JWT_SECRET || 'test-key-placeholder-32-chars-minimum-length';
 
     it('should generate and verify valid JWT', async () => {
       const payload = {
