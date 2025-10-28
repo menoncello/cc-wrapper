@@ -1,4 +1,4 @@
-import { PrismaClient } from '../../node_modules/.prisma/client/index.js';
+import { PrismaClient } from '@prisma/client';
 
 // Initialize Prisma Client with logging for development
 const prismaClientSingleton = () => {
