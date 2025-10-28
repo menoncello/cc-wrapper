@@ -3,6 +3,10 @@
 dist/
 coverage/
 
+# Astro build artifacts
+**/.astro/
+!.astro/.gitkeep
+
 # Dependencies
 node_modules/
 
