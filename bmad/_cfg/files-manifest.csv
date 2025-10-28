@@ -55,7 +55,7 @@ type,name,module,path,hash
 "md","deep-dive-instructions","bmm","bmad/bmm/workflows/1-analysis/document-project/workflows/deep-dive-instructions.md","5df994e4e77a2a64f98fb7af4642812378f15898c984fb4f79b45fb2201f0000"
 "md","deep-dive-template","bmm","bmad/bmm/workflows/1-analysis/document-project/templates/deep-dive-template.md","6198aa731d87d6a318b5b8d180fc29b9aa53ff0966e02391c17333818e94ffe9"
 "md","dev","bmm","bmad/bmm/agents/dev.md","bce9ccd862a1a00a39ce68881143f016170a0c55a5c18367b621b71ba9282e5e"
-"md","email-auth","bmm","bmad/bmm/testarch/knowledge/email-auth.md","43f4cc3138a905a91f4a69f358be6664a790b192811b4dfc238188e826f6b41b"
+"md","email-auth","bmm","bmad/bmm/testarch/knowledge/email-auth.md","d7428fe7675da02b6f5c4c03213fc4e542063f61ab033efb47c1c5669b835d88"
 "md","epics-template","bmm","bmad/bmm/workflows/2-plan-workflows/prd/epics-template.md","01b8a6e6febdb6c96848ce3fee71458d31f11910e90bd7e01b7ed3200b88644d"
 "md","epics-template","bmm","bmad/bmm/workflows/2-plan-workflows/tech-spec/epics-template.md","dc49a7e00debebda36a9762756cead9406e8e0a5e09315cbed35cea5bb3503db"
 "md","error-handling","bmm","bmad/bmm/testarch/knowledge/error-handling.md","8a314eafb31e78020e2709d88aaf4445160cbefb3aba788b62d1701557eb81c1"
