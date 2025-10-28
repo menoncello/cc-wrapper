@@ -148,7 +148,6 @@ credential/
 *dev*.token
 
 # Tool-specific files
-.gitleaks.toml
 .git-secrets
 .gitsecret
 .git-crypt
