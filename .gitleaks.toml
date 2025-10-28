@@ -21,6 +21,7 @@ regexes = [
     "dummy[-_]test[-_]key[-_][a-zA-Z0-9-]*",  # Ignore dummy test patterns
     "mock[-_]key[-_][a-zA-Z0-9-]*",  # Ignore mock key patterns
     "test[-_]key[-_]placeholder[-_][a-zA-Z0-9-]*",  # Ignore test placeholder patterns
+    "wrong[-_]test[-_]secret[-_]key[-_][a-zA-Z0-9-]*",  # Ignore wrong test secret patterns
     "dummy[-_]test[-_]key[-_][a-zA-Z0-9-]*",  # Ignore dummy test patterns (duplicate)
 ]
 
