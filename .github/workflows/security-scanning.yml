@@ -169,6 +169,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
+        with:
+          args: --log-level=info --no-merges --max-depth=10
 
       - name: Run GitGuardian Security Scan
         uses: GitGuardian/ggshield-action@v1
