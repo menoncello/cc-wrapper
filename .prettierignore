@@ -13,6 +13,12 @@ coverage/
 # Generated files
 *.d.ts
 
+# Astro build artifacts
+**/.astro/
+
+# Turbo cache
+.turbo/
+
 # Lock files
 package-lock.json
 yarn.lock
