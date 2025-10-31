@@ -211,8 +211,8 @@ export class UserDatabaseOperations {
     const profile = await prisma.userProfile.update({
       where: { userId },
       data: {
-        preferredAITools: data.preferredAITools as any,
-        notificationPreferences: data.notificationPreferences as any,
+        preferredAITools: data.preferredAITools as unknown,
+        notificationPreferences: data.notificationPreferences as unknown,
         defaultWorkspaceId: data.defaultWorkspaceId || undefined
       }
     });

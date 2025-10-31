@@ -15,7 +15,7 @@ export class WorkspaceService {
    */
   public async createDefaultWorkspace(userId: string, data: OnboardingData): Promise<Workspace> {
     // Create workspace with template configuration
-    const workspace: any = await prisma.workspace.create({
+    const workspace = await prisma.workspace.create({
       data: {
         name: data.workspaceName,
         description: data.workspaceDescription,
@@ -44,7 +44,7 @@ export class WorkspaceService {
       data: {
         userType: data.userType
       }
-    } as any);
+    } as unknown);
 
     return {
       id: workspace.id,
@@ -90,7 +90,7 @@ export class WorkspaceService {
    * @returns {Promise<Workspace[]>} Array of workspace objects owned by the user
    */
   public async getUserWorkspaces(userId: string): Promise<Workspace[]> {
-    const workspaces: any[] = await prisma.workspace.findMany({
+    const workspaces = await prisma.workspace.findMany({
       where: { ownerId: userId },
       orderBy: { createdAt: 'desc' }
     });

@@ -2,25 +2,28 @@
  * Prisma helper types to avoid complex type conflicts
  */
 
-// Simple interface for Prisma operations
+// Generic operation type for Prisma methods
+type PrismaOperation<T = unknown> = (args: T) => Promise<unknown>;
+
+// Simple interface for Prisma operations with proper typing
 interface SafePrismaClient {
   user: {
-    create: (args: any) => Promise<any>;
-    findUnique: (args: any) => Promise<any>;
-    findFirst: (args: any) => Promise<any>;
-    update: (args: any) => Promise<any>;
+    create: PrismaOperation;
+    findUnique: PrismaOperation;
+    findFirst: PrismaOperation;
+    update: PrismaOperation;
   };
   userProfile: {
-    update: (args: any) => Promise<any>;
+    update: PrismaOperation;
   };
   workspace: {
-    create: (args: any) => Promise<any>;
-    findUnique: (args: any) => Promise<any>;
-    findMany: (args: any) => Promise<any>;
+    create: PrismaOperation;
+    findUnique: PrismaOperation;
+    findMany: PrismaOperation;
   };
   session: {
-    create: (args: any) => Promise<any>;
-    delete: (args: any) => Promise<any>;
+    create: PrismaOperation;
+    delete: PrismaOperation;
   };
 }
 
