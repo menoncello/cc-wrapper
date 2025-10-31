@@ -13,6 +13,10 @@ import * as fs from 'fs/promises';
 import { setTimeout } from 'timers/promises';
 
 // Helper function to check if a file/directory exists
+/**
+ *
+ * @param path
+ */
 async function fileExists(path: string): Promise<boolean> {
   try {
     await fs.access(path);
@@ -50,10 +54,16 @@ interface EnvironmentStatus {
   ready: boolean;
 }
 
+/**
+ *
+ */
 class SetupEnvironment {
   private startTime: number = Date.now();
   private platformInfo: PlatformInfo;
 
+  /**
+   *
+   */
   constructor() {
     this.platformInfo = this.detectPlatform();
   }
@@ -156,6 +166,9 @@ class SetupEnvironment {
     return status;
   }
 
+  /**
+   *
+   */
   private async checkBun(): Promise<{ installed: boolean; version?: string; required: string }> {
     try {
       const result = await $`bun --version`.quiet();
@@ -170,6 +183,9 @@ class SetupEnvironment {
     }
   }
 
+  /**
+   *
+   */
   private async checkTypeScript(): Promise<{
     installed: boolean;
     version?: string;
@@ -188,6 +204,9 @@ class SetupEnvironment {
     }
   }
 
+  /**
+   *
+   */
   private async checkDocker(): Promise<{ installed: boolean; version?: string; required: string }> {
     try {
       const result = await $`docker --version`.quiet();
@@ -202,6 +221,9 @@ class SetupEnvironment {
     }
   }
 
+  /**
+   *
+   */
   private async checkDockerCompose(): Promise<{
     installed: boolean;
     version?: string;
@@ -220,6 +242,9 @@ class SetupEnvironment {
     }
   }
 
+  /**
+   *
+   */
   private async checkPostgreSQL(): Promise<{
     installed: boolean;
     version?: string;
@@ -238,6 +263,9 @@ class SetupEnvironment {
     }
   }
 
+  /**
+   *
+   */
   private async checkRedis(): Promise<{ installed: boolean; version?: string; required: string }> {
     try {
       const result = await $`redis-server --version`.quiet();
@@ -254,22 +282,24 @@ class SetupEnvironment {
 
   /**
    * Display current environment status
+   * @param status
    */
   private displayStatus(status: EnvironmentStatus): void {
     console.log('\n📊 Environment Status:');
     console.log(`Platform: ${status.platform.os} (${status.platform.arch})`);
 
     console.log('\n📦 Dependencies:');
-    Object.entries(status.dependencies).forEach(([name, info]) => {
+    for (const [name, info] of Object.entries(status.dependencies)) {
       const statusIcon = info.installed ? '✅' : '❌';
       const versionInfo = info.version ? ` (${info.version})` : '';
       const requiredInfo = ` [required: ${info.required}]`;
       console.log(`  ${statusIcon} ${name}${versionInfo}${requiredInfo}`);
-    });
+    }
   }
 
   /**
    * Install missing dependencies
+   * @param status
    */
   private async installDependencies(status: EnvironmentStatus): Promise<void> {
     console.log('\n📦 Installing missing dependencies...');
@@ -300,6 +330,9 @@ class SetupEnvironment {
     }
   }
 
+  /**
+   *
+   */
   private async installBun(): Promise<void> {
     console.log('  🔄 Installing Bun...');
     const installScript =
@@ -311,12 +344,18 @@ class SetupEnvironment {
     console.log('  ✅ Bun installed');
   }
 
+  /**
+   *
+   */
   private async installTypeScript(): Promise<void> {
     console.log('  🔄 Installing TypeScript...');
     await $`bun add -D typescript`.quiet();
     console.log('  ✅ TypeScript installed');
   }
 
+  /**
+   *
+   */
   private async installDocker(): Promise<void> {
     console.log('  📋 Docker installation required:');
     console.log(`    Please install Docker Desktop for ${this.platformInfo.os}:`);
@@ -325,6 +364,9 @@ class SetupEnvironment {
     throw new Error('Docker requires manual installation');
   }
 
+  /**
+   *
+   */
   private async installPostgreSQL(): Promise<void> {
     if (this.platformInfo.os === 'macos') {
       console.log('  🔄 Installing PostgreSQL via Homebrew...');
@@ -344,6 +386,9 @@ class SetupEnvironment {
     console.log('  ✅ PostgreSQL installed');
   }
 
+  /**
+   *
+   */
   private async installRedis(): Promise<void> {
     if (this.platformInfo.os === 'macos') {
       console.log('  🔄 Installing Redis via Homebrew...');
@@ -399,6 +444,9 @@ COMPOSE_FILE="docker-compose.dev.yml"
     await this.validateEnvironment();
   }
 
+  /**
+   *
+   */
   private async validateEnvironment(): Promise<void> {
     console.log('  🔍 Validating environment configuration...');
 
@@ -434,6 +482,9 @@ COMPOSE_FILE="docker-compose.dev.yml"
     await this.waitForServices();
   }
 
+  /**
+   *
+   */
   private async createDockerComposeFile(): Promise<void> {
     const composeContent = `version: '3.8'
 
@@ -474,6 +525,9 @@ volumes:
     }
   }
 
+  /**
+   *
+   */
   private async waitForServices(): Promise<void> {
     console.log('  ⏳ Waiting for services to be healthy...');
 

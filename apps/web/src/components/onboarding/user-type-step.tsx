@@ -1,4 +1,6 @@
-import { useOnboardingStore, type UserType } from '@stores/onboardingStore';
+import React from 'react';
+
+import { useOnboardingStore, type UserType } from '../../stores/onboarding-store';
 
 const userTypeOptions: Array<{
   value: UserType;
@@ -26,7 +28,12 @@ const userTypeOptions: Array<{
   }
 ];
 
-export default function UserTypeStep() {
+/**
+ * User type selection step component for onboarding
+ * @returns {JSX.Element} JSX element for user type selection
+ * @type {React.ReactElement}
+ */
+export function UserTypeStep(): React.ReactElement {
   const { userType, setUserType } = useOnboardingStore();
 
   return (

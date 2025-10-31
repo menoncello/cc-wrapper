@@ -45,7 +45,7 @@ describe('Shared Utils', () => {
     });
 
     it('should return false for undefined', () => {
-      expect(isDefined(undefined)).toBe(false);
+      expect(isDefined()).toBe(false);
     });
 
     it('should act as type guard', () => {

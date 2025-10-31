@@ -1,10 +1,26 @@
+import React from 'react';
+
+// Constants
+const PERCENTAGE_MULTIPLIER = 100;
+
 interface ProgressIndicatorProps {
   currentStep: number;
   totalSteps: number;
 }
 
-export default function ProgressIndicator({ currentStep, totalSteps }: ProgressIndicatorProps) {
-  const percentage = Math.round((currentStep / totalSteps) * 100);
+/**
+ * Progress indicator component for the onboarding wizard
+ * @param {object} props - Component props
+ * @param {number} props.currentStep - The current step number (0-indexed)
+ * @param {number} props.totalSteps - The total number of steps in the wizard
+ * @returns {JSX.Element} JSX element for progress indicator
+ * @type {React.ReactElement}
+ */
+export function ProgressIndicator({
+  currentStep,
+  totalSteps
+}: ProgressIndicatorProps): React.ReactElement {
+  const percentage = Math.round((currentStep / totalSteps) * PERCENTAGE_MULTIPLIER);
 
   return (
     <div className="progress-indicator" data-testid="onboarding-progress">
