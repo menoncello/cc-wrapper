@@ -4,7 +4,7 @@
 import './api.constructor.test';
 import './api.auth.test';
 import './api.request.get-basic.test';
-import './api.request.get-auth.test';
+import './api.request.authenticated.test';
 import './api.request.post.test';
 import './api.request.headers.test';
 import './api.request.errors.test';
