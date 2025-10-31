@@ -137,14 +137,23 @@ const localStorageMock = (() => {
     })
   };
 })();
+
+// Set localStorage and sessionStorage on global window before any stores are created
 Object.defineProperty(window, 'localStorage', {
-  value: localStorageMock
+  value: localStorageMock,
+  writable: true
 });
 
-// Mock sessionStorage
 Object.defineProperty(window, 'sessionStorage', {
-  value: localStorageMock
+  value: localStorageMock,
+  writable: true
 });
+
+// Also ensure localStorage is available globally for Zustand
+(global as any).localStorage = localStorageMock;
+
+// Set test environment flag for Zustand stores
+(window as any).__vitest__ = true;
 
 // Clean up after each test
 afterEach((): void => {

@@ -12,6 +12,7 @@ import { KeyRotationService } from '../key-rotation.service';
 import { SecureDerivationService } from '../secure-derivation.service';
 import { setupTestMocks, cleanupTestMocks } from '../../test-mocks/test-setup';
 import { mockPrisma } from '../../test-mocks/prisma.mock';
+import { generateSecureId } from '../../lib/crypto-utils';
 
 beforeAll(() => {
   setupTestMocks();
@@ -33,14 +34,14 @@ describe.skip('Security and Encryption Tests', () => {
   // Helper function to create mock key data - simplified for testing
   const createMockKey = async (keyName: string, overrides: any = {}) => {
     // Generate real encryption data for the mock key
-    const sessionKeyData = `mock-session-key-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+    const sessionKeyData = `mock-session-key-${generateSecureId()}`;
     const realSalt = generateSalt();
     const encryptedSessionKey = await encryptData(sessionKeyData, testPassword, realSalt);
 
     return {
-      id: `key_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+      id: generateSecureId('key'),
       userId: testUserId,
-      keyId: `key_id_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+      keyId: generateSecureId('key_id'),
       keyName,
       encryptedKey: encryptedSessionKey.data,
       salt: realSalt,
@@ -61,7 +62,7 @@ describe.skip('Security and Encryption Tests', () => {
     keyRotationService = new KeyRotationService();
     secureDerivationService = new SecureDerivationService();
 
-    testUserId = `test_user_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+    testUserId = generateSecureId('test_user');
     testPassword = 'MyStr0ng!S3cur3P@ssw0rd2024';
 
     // createMockKey is now defined at test level scope

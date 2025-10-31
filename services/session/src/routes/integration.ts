@@ -6,35 +6,37 @@
 import { Elysia, t } from 'elysia';
 
 import { IntegrationService } from '../services/integration.service';
+import { EnvValidator } from '../lib/env-validation.js';
+import { generateSecureUrlId } from '../lib/crypto-utils.js';
 
-// Default integration configuration
+// Default integration configuration with validation
 const defaultConfig = {
   services: {
     auth: {
-      endpoint: process.env.AUTH_SERVICE_ENDPOINT || 'http://localhost:20001/auth',
-      apiKey: process.env.AUTH_SERVICE_API_KEY || 'test-key',
-      tokenValidationEndpoint: process.env.AUTH_TOKEN_VALIDATION || 'http://localhost:20001/auth/validate',
-      userEndpoint: process.env.AUTH_USER_ENDPOINT || 'http://localhost:20001/auth/user'
+      endpoint: EnvValidator.endpoint('AUTH_SERVICE_ENDPOINT', 'http://localhost:20001/auth'),
+      apiKey: EnvValidator.apiKey('AUTH_SERVICE_API_KEY', 'test-key'),
+      tokenValidationEndpoint: EnvValidator.endpoint('AUTH_TOKEN_VALIDATION', 'http://localhost:20001/auth/validate'),
+      userEndpoint: EnvValidator.endpoint('AUTH_USER_ENDPOINT', 'http://localhost:20001/auth/user')
     },
     terminal: {
-      socketEndpoint: process.env.TERMINAL_SOCKET_ENDPOINT || 'ws://localhost:20002/terminal',
-      commandHistoryEndpoint: process.env.TERMINAL_HISTORY_ENDPOINT || 'http://localhost:20002/terminal/history',
-      workingDirectoryEndpoint: process.env.TERMINAL_WORKING_DIR_ENDPOINT || 'http://localhost:20002/terminal/pwd'
+      socketEndpoint: EnvValidator.endpoint('TERMINAL_SOCKET_ENDPOINT', 'ws://localhost:20002/terminal'),
+      commandHistoryEndpoint: EnvValidator.endpoint('TERMINAL_HISTORY_ENDPOINT', 'http://localhost:20002/terminal/history'),
+      workingDirectoryEndpoint: EnvValidator.endpoint('TERMINAL_WORKING_DIR_ENDPOINT', 'http://localhost:20002/terminal/pwd')
     },
     browser: {
-      extensionEndpoint: process.env.BROWSER_EXTENSION_ENDPOINT || 'http://localhost:20003/browser',
-      tabsEndpoint: process.env.BROWSER_TABS_ENDPOINT || 'http://localhost:20003/browser/tabs',
-      bookmarksEndpoint: process.env.BROWSER_BOOKMARKS_ENDPOINT || 'http://localhost:20003/browser/bookmarks',
-      historyEndpoint: process.env.BROWSER_HISTORY_ENDPOINT || 'http://localhost:20003/browser/history'
+      extensionEndpoint: EnvValidator.endpoint('BROWSER_EXTENSION_ENDPOINT', 'http://localhost:20003/browser'),
+      tabsEndpoint: EnvValidator.endpoint('BROWSER_TABS_ENDPOINT', 'http://localhost:20003/browser/tabs'),
+      bookmarksEndpoint: EnvValidator.endpoint('BROWSER_BOOKMARKS_ENDPOINT', 'http://localhost:20003/browser/bookmarks'),
+      historyEndpoint: EnvValidator.endpoint('BROWSER_HISTORY_ENDPOINT', 'http://localhost:20003/browser/history')
     },
     ai: {
-      conversationsEndpoint: process.env.AI_CONVERSATIONS_ENDPOINT || 'http://localhost:20004/ai/conversations',
-      contextEndpoint: process.env.AI_CONTEXT_ENDPOINT || 'http://localhost:20004/ai/context',
-      modelsEndpoint: process.env.AI_MODELS_ENDPOINT || 'http://localhost:20004/ai/models'
+      conversationsEndpoint: EnvValidator.endpoint('AI_CONVERSATIONS_ENDPOINT', 'http://localhost:20004/ai/conversations'),
+      contextEndpoint: EnvValidator.endpoint('AI_CONTEXT_ENDPOINT', 'http://localhost:20004/ai/context'),
+      modelsEndpoint: EnvValidator.endpoint('AI_MODELS_ENDPOINT', 'http://localhost:20004/ai/models')
     },
     notifications: {
-      serviceUrl: process.env.NOTIFICATION_SERVICE_URL || 'http://localhost:20005/notifications',
-      apiKey: process.env.NOTIFICATION_SERVICE_API_KEY || 'notification-key',
+      serviceUrl: EnvValidator.endpoint('NOTIFICATION_SERVICE_URL', 'http://localhost:20005/notifications'),
+      apiKey: EnvValidator.apiKey('NOTIFICATION_SERVICE_API_KEY', 'notification-key'),
       channels: ['email', 'in_app', 'slack']
     }
   },
@@ -269,7 +271,7 @@ export const integrationRoutes = new Elysia({ prefix: '/integration' })
     async ({ body }) => {
       try {
         const webhook = {
-          id: `webhook_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+          id: generateSecureUrlId('webhook'),
           name: body.name,
           url: body.url,
           events: body.events,
@@ -417,7 +419,7 @@ export const integrationRoutes = new Elysia({ prefix: '/integration' })
       try {
         // This would typically be called by other services to publish events
         const event = {
-          id: `event_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+          id: generateSecureUrlId('event'),
           type: body.type,
           source: body.source || 'external',
           userId: body.userId,

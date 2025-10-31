@@ -1,5 +1,10 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
+
+// Test environment detection
+const isTestEnvironment =
+  (typeof process !== 'undefined' && process.env?.NODE_ENV === 'test') ||
+  (typeof window !== 'undefined' && window.__vitest__ !== undefined);
 
 interface TourState {
   // Tour active state
@@ -113,6 +118,21 @@ function createTourStore(set: (fn: (state: TourState) => Partial<TourState>) => 
 export const useTourStore = create<TourState>()(
   persist((set, _get) => createTourStore(set), {
     name: 'tour-storage', // localStorage key
+    storage: isTestEnvironment
+      ? createJSONStorage(() => {
+          // In test environment, use memory storage
+          const memoryStorage: Record<string, string> = {};
+          return {
+            getItem: (key: string) => memoryStorage[key] || null,
+            setItem: (key: string, value: string) => {
+              memoryStorage[key] = value;
+            },
+            removeItem: (key: string) => {
+              delete memoryStorage[key];
+            }
+          };
+        })
+      : undefined, // Use default localStorage in production
     partialize: state => ({
       hasCompletedTour: state.hasCompletedTour,
       isActive: state.isActive,

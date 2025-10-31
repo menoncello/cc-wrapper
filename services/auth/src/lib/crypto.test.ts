@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'bun:test';
 
-import { generateTestPassword } from '../../../../test-utils/password-generator.js';
+import { generateTestPassword } from '../test-utils/password-helper';
 import {
   generateJWT,
   generateRandomToken,

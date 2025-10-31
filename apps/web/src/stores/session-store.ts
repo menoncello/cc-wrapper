@@ -2,6 +2,11 @@ import * as React from 'react';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
+// Test environment detection
+const isTestEnvironment =
+  (typeof process !== 'undefined' && process.env?.NODE_ENV === 'test') ||
+  (typeof window !== 'undefined' && window.__vitest__ !== undefined);
+
 import {
   deleteCheckpointApi,
   loadCheckpointsApi,
@@ -313,6 +318,7 @@ const createSessionActions = (
 
 /**
  * Creates and exports the session store with persistence
+ * Uses different storage strategies for test vs production environments
  */
 export const useSessionStore = create<SessionState>()(
   persist(
@@ -345,7 +351,21 @@ export const useSessionStore = create<SessionState>()(
       }) as SessionState,
     {
       name: 'session-store',
-      storage: createJSONStorage(() => localStorage),
+      storage: isTestEnvironment
+        ? createJSONStorage(() => {
+            // In test environment, use memory storage
+            const memoryStorage: Record<string, string> = {};
+            return {
+              getItem: (key: string) => memoryStorage[key] || null,
+              setItem: (key: string, value: string) => {
+                memoryStorage[key] = value;
+              },
+              removeItem: (key: string) => {
+                delete memoryStorage[key];
+              }
+            };
+          })
+        : createJSONStorage(() => localStorage),
       partialize: state => ({
         autoSaveEnabled: state.autoSaveEnabled,
         autoSaveInterval: state.autoSaveInterval,
