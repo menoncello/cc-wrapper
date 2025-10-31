@@ -12,10 +12,11 @@
 
 import { test as base } from '@playwright/test';
 import { PrismaClient } from '@prisma/client';
+
 import type { User, UserProfile, Workspace } from '../factories/user.factory';
 
 // Extend Playwright test with database cleanup fixtures
-type DatabaseFixtures = {
+interface DatabaseFixtures {
   /**
    * Cleanup function to manually delete created resources
    * Automatically called in teardown
@@ -41,7 +42,7 @@ type DatabaseFixtures = {
    * Delete workspace by ID
    */
   deleteWorkspace: (workspaceId: string) => Promise<void>;
-};
+}
 
 /**
  * Database fixture with auto-cleanup

@@ -47,7 +47,7 @@ export const createUser = (overrides: Partial<User> = {}): User => ({
   role: 'user',
   createdAt: new Date(),
   isActive: true,
-  ...overrides
+  ...overrides,
 });
 
 // test-utils/factories/product-factory.ts
@@ -65,7 +65,7 @@ export const createProduct = (overrides: Partial<Product> = {}): Product => ({
   price: parseFloat(faker.commerce.price()),
   stock: faker.number.int({ min: 0, max: 100 }),
   category: faker.commerce.department(),
-  ...overrides
+  ...overrides,
 });
 
 // Usage in tests:
@@ -128,7 +128,7 @@ export const createOrderItem = (overrides: Partial<OrderItem> = {}): OrderItem =
     product,
     quantity,
     price: product.price * quantity,
-    ...overrides
+    ...overrides,
   };
 };
 
@@ -143,7 +143,7 @@ export const createOrder = (overrides: Partial<Order> = {}): Order => {
     total,
     status: 'pending',
     createdAt: new Date(),
-    ...overrides
+    ...overrides,
   };
 };
 
@@ -158,8 +158,8 @@ test('user can view order details', async ({ page, apiRequest }) => {
     user,
     items: [
       createOrderItem({ product: product1, quantity: 2 }), // $20
-      createOrderItem({ product: product2, quantity: 1 }) // $15
-    ]
+      createOrderItem({ product: product2, quantity: 1 }), // $15
+    ],
   });
 
   // Seed via API
@@ -195,14 +195,11 @@ import { APIRequestContext } from '@playwright/test';
 import { User, createUser } from '../../test-utils/factories/user-factory';
 import { Product, createProduct } from '../../test-utils/factories/product-factory';
 
-export async function seedUser(
-  request: APIRequestContext,
-  overrides: Partial<User> = {}
-): Promise<User> {
+export async function seedUser(request: APIRequestContext, overrides: Partial<User> = {}): Promise<User> {
   const user = createUser(overrides);
 
   const response = await request.post('/api/users', {
-    data: user
+    data: user,
   });
 
   if (!response.ok()) {
@@ -212,14 +209,11 @@ export async function seedUser(
   return user;
 }
 
-export async function seedProduct(
-  request: APIRequestContext,
-  overrides: Partial<Product> = {}
-): Promise<Product> {
+export async function seedProduct(request: APIRequestContext, overrides: Partial<Product> = {}): Promise<Product> {
   const product = createProduct(overrides);
 
   const response = await request.post('/api/products', {
-    data: product
+    data: product,
   });
 
   if (!response.ok()) {
@@ -242,7 +236,7 @@ async function globalSetup(config: FullConfig) {
   // Seed admin user for all tests
   const admin = await seedUser(context.request, {
     email: 'admin@example.com',
-    role: 'admin'
+    role: 'admin',
   });
 
   // Save auth state for reuse
@@ -342,7 +336,7 @@ export const createUser = (overrides: Partial<User> = {}): User => ({
   name: faker.person.fullName(),
   phoneNumber: faker.phone.number(), // NEW field, all tests get it automatically
   role: 'user',
-  ...overrides
+  ...overrides,
 });
 ```
 
@@ -368,18 +362,15 @@ export const createUser = (overrides: Partial<User> = {}): User => ({
   role: 'user',
   createdAt: new Date(),
   isActive: true,
-  ...overrides
+  ...overrides,
 });
 
 // Compose specialized factories
-export const createAdminUser = (overrides: Partial<User> = {}): User =>
-  createUser({ role: 'admin', ...overrides });
+export const createAdminUser = (overrides: Partial<User> = {}): User => createUser({ role: 'admin', ...overrides });
 
-export const createModeratorUser = (overrides: Partial<User> = {}): User =>
-  createUser({ role: 'moderator', ...overrides });
+export const createModeratorUser = (overrides: Partial<User> = {}): User => createUser({ role: 'moderator', ...overrides });
 
-export const createInactiveUser = (overrides: Partial<User> = {}): User =>
-  createUser({ isActive: false, ...overrides });
+export const createInactiveUser = (overrides: Partial<User> = {}): User => createUser({ isActive: false, ...overrides });
 
 // Account-level factories with feature flags
 type Account = {
@@ -396,7 +387,7 @@ export const createAccount = (overrides: Partial<Account> = {}): Account => ({
   plan: 'free',
   features: [],
   maxUsers: 1,
-  ...overrides
+  ...overrides,
 });
 
 export const createProAccount = (overrides: Partial<Account> = {}): Account =>
@@ -404,7 +395,7 @@ export const createProAccount = (overrides: Partial<Account> = {}): Account =>
     plan: 'pro',
     features: ['advanced-analytics', 'priority-support'],
     maxUsers: 10,
-    ...overrides
+    ...overrides,
   });
 
 export const createEnterpriseAccount = (overrides: Partial<Account> = {}): Account =>
@@ -412,7 +403,7 @@ export const createEnterpriseAccount = (overrides: Partial<Account> = {}): Accou
     plan: 'enterprise',
     features: ['advanced-analytics', 'priority-support', 'sso', 'audit-logs'],
     maxUsers: 100,
-    ...overrides
+    ...overrides,
   });
 
 // Usage in tests:
@@ -486,14 +477,14 @@ When working with feature flags, layer them into factories:
 ```typescript
 export const createUserWithFlags = (
   overrides: Partial<User> = {},
-  flags: Record<string, boolean> = {}
+  flags: Record<string, boolean> = {},
 ): User & { flags: Record<string, boolean> } => ({
   ...createUser(overrides),
   flags: {
     'new-dashboard': false,
     'beta-features': false,
-    ...flags
-  }
+    ...flags,
+  },
 });
 
 // Usage:
@@ -501,8 +492,8 @@ const user = createUserWithFlags(
   { email: 'test@example.com' },
   {
     'new-dashboard': true,
-    'beta-features': true
-  }
+    'beta-features': true,
+  },
 );
 ```
 

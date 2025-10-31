@@ -530,7 +530,7 @@ const test = base.extend({
     const user = createTestUser();
     await loginPage.login(user.email, user.password);
     await use(page);
-  }
+  },
 });
 
 test('user can access dashboard', async ({ authenticatedPage }) => {

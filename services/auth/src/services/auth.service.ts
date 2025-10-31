@@ -1,317 +1,131 @@
 import type {
   AuthResponse,
-  NotificationPreferences,
   ProfileUpdateRequest,
   RegisterRequest,
   User,
   UserProfile
 } from '@cc-wrapper/shared-types';
 
-import {
-  DEFAULT_JWT_EXPIRY,
-  JWT_SECRET_MIN_LENGTH,
-  REFRESH_TOKEN_SIZE
-} from '../constants/auth.constants.js';
-import { generateJWT, generateRandomToken, hashPassword, verifyPassword } from '../lib/crypto.js';
-import prisma from '../lib/prisma.js';
-import type { JWTPayload } from '../types/jwt.js';
+import { hashPassword } from '../lib/crypto.js';
+import { UserDatabaseOperations } from './database/user-operations.js';
+import { UserUtils } from './utils/user-utils.js';
+import { AuthValidation } from './validation/auth-validation.js';
 
+/**
+ * Authentication service for CC Wrapper
+ * Handles user registration, login, token management, and profile operations
+ */
 export class AuthService {
   private jwtSecret: string;
   private jwtExpiry: string;
 
-  constructor() {
-    const jwtSecret = process.env.JWT_SECRET;
-    if (!jwtSecret) {
-      throw new Error('JWT_SECRET environment variable is required');
-    }
-
-    if (jwtSecret.length < JWT_SECRET_MIN_LENGTH) {
-      throw new Error(`JWT_SECRET must be at least ${JWT_SECRET_MIN_LENGTH} characters`);
-    }
-
-    this.jwtSecret = jwtSecret;
-    this.jwtExpiry = process.env.JWT_EXPIRY || DEFAULT_JWT_EXPIRY;
+  /**
+   * Initialize the authentication service
+   * Validates JWT secret configuration and sets up token expiry settings
+   * @throws {Error} When JWT_SECRET environment variable is missing or too short
+   */
+  public constructor() {
+    this.jwtSecret = AuthValidation.validateJwtSecret();
+    this.jwtExpiry = AuthValidation.getJwtExpiry();
   }
 
   /**
    * Register a new user with email and password
+   * @param {RegisterRequest} data - User registration data including email, password, and optional name
+   * @returns {Promise<AuthResponse>} Authentication response containing user data and tokens
+   * @throws {Error} When email is already registered
    */
-  async register(data: RegisterRequest): Promise<AuthResponse> {
-    // Check if user already exists
-    const existingUser = await prisma.user.findUnique({
-      where: { email: data.email }
-    });
+  public async register(data: RegisterRequest): Promise<AuthResponse> {
+    await AuthValidation.validateUniqueEmail(data.email);
 
-    if (existingUser) {
-      throw new Error('Email already registered');
-    }
-
-    // Hash password using Bun's Argon2id
     const passwordHash = await hashPassword(data.password);
+    const user = await UserDatabaseOperations.createUserWithProfile(
+      data.email,
+      passwordHash,
+      data.name
+    );
 
-    // Create user and profile in a transaction
-    const user = await prisma.user.create({
-      data: {
-        email: data.email,
-        passwordHash,
-        name: data.name,
-        profile: {
-          create: {
-            onboardingCompleted: false,
-            tourCompleted: false
-          }
-        }
-      },
-      include: {
-        profile: true
-      }
-    });
-
-    // Generate JWT token
-    const token = await this.generateAccessToken(user);
-    const refreshToken = generateRandomToken(REFRESH_TOKEN_SIZE);
-
-    // Create session
-    await this.createSession(user.id, token, refreshToken);
-
-    return {
-      user: this.sanitizeUser(user),
-      token,
-      refreshToken
-    };
+    return UserUtils.createAuthResponse(user, this.jwtSecret, this.jwtExpiry);
   }
 
   /**
    * Login user with email and password
+   * @param {string} email - User email address
+   * @param {string} password - User password
+   * @returns {Promise<AuthResponse>} Authentication response containing user data and tokens
+   * @throws {Error} When email or password is invalid
    */
-  async login(email: string, password: string): Promise<AuthResponse> {
-    // Find user by email
-    const user = await prisma.user.findUnique({
-      where: { email },
-      include: {
-        profile: true
-      }
-    });
-
-    if (!user || !user.passwordHash) {
+  public async login(email: string, password: string): Promise<AuthResponse> {
+    const user = await UserDatabaseOperations.findUserByEmail(email);
+    if (!user) {
       throw new Error('Invalid email or password');
     }
 
-    // Verify password using Bun's Argon2id
-    const isValid = await verifyPassword(password, user.passwordHash);
-    if (!isValid) {
-      throw new Error('Invalid email or password');
-    }
+    await AuthValidation.validateUserCredentials(user, password);
 
-    // Generate JWT token
-    const token = await this.generateAccessToken(user);
-    const refreshToken = generateRandomToken(REFRESH_TOKEN_SIZE);
-
-    // Create session
-    await this.createSession(user.id, token, refreshToken);
-
-    return {
-      user: this.sanitizeUser(user),
-      token,
-      refreshToken
-    };
+    return UserUtils.createAuthResponse(user, this.jwtSecret, this.jwtExpiry);
   }
 
   /**
    * Logout user by invalidating session
+   * @param {string} token - JWT access token to invalidate
    */
-  async logout(token: string): Promise<void> {
-    await prisma.session.delete({
-      where: { token }
-    });
+  public async logout(token: string): Promise<void> {
+    await UserDatabaseOperations.deleteSession(token);
   }
 
   /**
    * Get user by ID
+   * @param {string} userId - Unique user identifier
+   * @returns {Promise<User | null>} User object or null if not found
    */
-  async getUserById(userId: string): Promise<User | null> {
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      include: {
-        profile: true
-      }
-    });
+  public async getUserById(userId: string): Promise<User | null> {
+    const user = await UserDatabaseOperations.getUserById(userId);
 
-    return user ? this.sanitizeUser(user) : null;
+    return user ? UserUtils.sanitizeUser(user) : null;
   }
 
   /**
    * Update user profile
+   * @param {string} userId - Unique user identifier
+   * @param {ProfileUpdateRequest} data - Profile update data
+   * @returns {Promise<UserProfile>} Updated user profile
    */
-  async updateProfile(userId: string, data: ProfileUpdateRequest): Promise<UserProfile> {
-    const profile = await prisma.userProfile.update({
-      where: { userId },
-      data: {
-        preferredAITools: data.preferredAITools,
-        notificationPreferences: data.notificationPreferences as never,
-        defaultWorkspaceId: data.defaultWorkspaceId
-      }
+  public async updateProfile(userId: string, data: ProfileUpdateRequest): Promise<UserProfile> {
+    return UserDatabaseOperations.updateUserProfile(userId, {
+      preferredAITools: data.preferredAITools,
+      notificationPreferences: data.notificationPreferences,
+      defaultWorkspaceId: data.defaultWorkspaceId
     });
-
-    return {
-      ...profile,
-      preferredAITools: profile.preferredAITools as string[],
-      notificationPreferences: profile.notificationPreferences as unknown as
-        | NotificationPreferences
-        | undefined
-    } as UserProfile;
   }
 
   /**
    * Create OAuth user account
+   * @param {string} email - User email address
+   * @param {string} oauthProvider - OAuth provider name (e.g., 'google', 'github')
+   * @param {string} oauthId - Provider-specific user identifier
+   * @param {string} [name] - Optional display name
+   * @returns {Promise<AuthResponse>} Authentication response containing user data and tokens
    */
-  async createOAuthUser(
+  public async createOAuthUser(
     email: string,
     oauthProvider: string,
     oauthId: string,
     name?: string
   ): Promise<AuthResponse> {
-    // Check if user exists with this OAuth provider
-    const existingUser = await prisma.user.findFirst({
-      where: {
-        email,
-        oauthProvider,
-        oauthId
-      },
-      include: {
-        profile: true
-      }
-    });
+    const existingUser = await UserDatabaseOperations.findOAuthUser(email, oauthProvider, oauthId);
 
     if (existingUser) {
-      // User exists, generate token
-      const token = await this.generateAccessToken(existingUser);
-      const refreshToken = generateRandomToken(64);
-
-      await this.createSession(existingUser.id, token, refreshToken);
-
-      return {
-        user: this.sanitizeUser(existingUser),
-        token,
-        refreshToken
-      };
+      return UserUtils.createAuthResponse(existingUser, this.jwtSecret, this.jwtExpiry);
     }
 
-    // Create new OAuth user
-    const user = await prisma.user.create({
-      data: {
-        email,
-        oauthProvider,
-        oauthId,
-        name,
-        profile: {
-          create: {
-            onboardingCompleted: false,
-            tourCompleted: false
-          }
-        }
-      },
-      include: {
-        profile: true
-      }
-    });
+    const newUser = await UserDatabaseOperations.createOAuthUserRecord(
+      email,
+      oauthProvider,
+      oauthId,
+      name
+    );
 
-    // Generate token
-    const token = await this.generateAccessToken(user);
-    const refreshToken = generateRandomToken(64);
-
-    await this.createSession(user.id, token, refreshToken);
-
-    return {
-      user: this.sanitizeUser(user),
-      token,
-      refreshToken
-    };
-  }
-
-  /**
-   * Create a new session for a user
-   */
-  private async createSession(userId: string, token: string, refreshToken: string): Promise<void> {
-    await prisma.session.create({
-      data: {
-        userId,
-        token,
-        refreshToken,
-        expiresAt: new Date(Date.now() + this.parseExpiry(this.jwtExpiry))
-      }
-    });
-  }
-
-  /**
-   * Generate access token (JWT)
-   */
-  private async generateAccessToken(user: {
-    id: string;
-    email: string;
-    role: string;
-  }): Promise<string> {
-    const payload: JWTPayload = {
-      userId: user.id,
-      email: user.email,
-      role: user.role as JWTPayload['role']
-    };
-
-    return await generateJWT(payload, this.jwtSecret, this.jwtExpiry);
-  }
-
-  /**
-   * Sanitize user object (remove sensitive data)
-   */
-  private sanitizeUser(user: unknown): User {
-    const u = user as {
-      id: string;
-      email: string;
-      name: string | null;
-      role: string;
-      userType: string | null;
-      oauthProvider: string | null;
-      createdAt: Date;
-      updatedAt: Date;
-    };
-
-    return {
-      id: u.id,
-      email: u.email,
-      name: u.name || undefined,
-      role: u.role as User['role'],
-      userType: u.userType as User['userType'],
-      oauthProvider: u.oauthProvider as User['oauthProvider'],
-      createdAt: u.createdAt,
-      updatedAt: u.updatedAt
-    };
-  }
-
-  /**
-   * Parse expiry string to milliseconds
-   */
-  private parseExpiry(expiry: string): number {
-    const match = expiry.match(/^(\d+)([smhd])$/);
-    if (!match || !match[1] || !match[2]) {
-      throw new Error(`Invalid expiry format: ${expiry}`);
-    }
-
-    const value = parseInt(match[1], 10);
-    const unit = match[2];
-
-    const multipliers: Record<string, number> = {
-      s: 1000,
-      m: 60 * 1000,
-      h: 60 * 60 * 1000,
-      d: 24 * 60 * 60 * 1000
-    };
-
-    const multiplier = multipliers[unit];
-    if (multiplier === undefined) {
-      throw new Error(`Invalid time unit: ${unit}`);
-    }
-
-    return value * multiplier;
+    return UserUtils.createAuthResponse(newUser, this.jwtSecret, this.jwtExpiry);
   }
 }

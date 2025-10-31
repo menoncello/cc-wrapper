@@ -1,0 +1,124 @@
+// CC Wrapper Session Service - Prisma Schema
+// Database: PostgreSQL 18.0
+// Purpose: Workspace session persistence and recovery
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+// Workspace session state table
+model WorkspaceSession {
+  id            String   @id @default(uuid()) @db.Uuid
+  userId        String   @map("user_id") @db.Uuid
+  workspaceId   String?  @map("workspace_id") @db.Uuid
+  name          String?  // User-defined session name
+  workspaceState Json    @map("workspace_state") // Encrypted/compressed workspace state
+  stateChecksum String   @map("state_checksum") // SHA-256 checksum for integrity validation
+  encryptedKey  String?  @map("encrypted_key") // User-derived encryption key (encrypted)
+  compression   String   @default("gzip") // Compression algorithm used
+  version       Int      @default(1) // Session state version for migration
+  isActive      Boolean  @default(true) @map("is_active") // Whether this is the active session
+  lastSavedAt   DateTime @default(now()) @map("last_saved_at")
+  expiresAt     DateTime @map("expires_at") // Session expiration for cleanup
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  checkpoints    SessionCheckpoint[]
+
+  @@index([userId])
+  @@index([workspaceId])
+  @@index([isActive])
+  @@index([expiresAt])
+  @@map("workspace_sessions")
+}
+
+// Manual session checkpoints table
+model SessionCheckpoint {
+  id              String   @id @default(uuid()) @db.Uuid
+  sessionId       String   @map("session_id") @db.Uuid
+  name            String   // User-defined checkpoint name
+  description     String?  // Optional checkpoint description
+  workspaceState  Json     @map("workspace_state") // Complete workspace state at checkpoint
+  stateChecksum   String   @map("state_checksum") // SHA-256 checksum for integrity
+  compressedSize  Int      @map("compressed_size") // Size in bytes
+  uncompressedSize Int     @map("uncompressed_size") // Original size in bytes
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  session         WorkspaceSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@index([createdAt])
+  @@map("session_checkpoints")
+}
+
+// Session metadata for quick queries
+model SessionMetadata {
+  id              String   @id @default(uuid()) @db.Uuid
+  sessionId       String   @unique @map("session_id") @db.Uuid
+  userId          String   @map("user_id") @db.Uuid
+  workspaceId     String?  @map("workspace_id") @db.Uuid
+  sessionName     String?  @map("session_name")
+  lastSavedAt     DateTime @map("last_saved_at")
+  checkpointCount Int      @default(0) @map("checkpoint_count")
+  totalSize       BigInt   @default(0) @map("total_size") // Total size in bytes
+  isActive        Boolean  @default(true) @map("is_active")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  @@index([userId])
+  @@index([workspaceId])
+  @@index([isActive])
+  @@index([lastSavedAt])
+  @@map("session_metadata")
+}
+
+// Session configuration
+model SessionConfig {
+  id                  String   @id @default(uuid()) @db.Uuid
+  userId              String   @unique @map("user_id") @db.Uuid
+  autoSaveInterval    Int      @default(30) @map("auto_save_interval") // Seconds
+  retentionDays       Int      @default(30) @map("retention_days") // Auto-saved sessions
+  checkpointRetention Int      @default(90) @map("checkpoint_retention") // Checkpoints in days
+  maxSessionSize      Int      @default(52428800) @map("max_session_size") // 50MB in bytes
+  compressionEnabled  Boolean  @default(true) @map("compression_enabled")
+  encryptionEnabled   Boolean  @default(true) @map("encryption_enabled")
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  @@map("session_configs")
+}
+
+// User encryption keys for session data
+model UserEncryptionKey {
+  id                String   @id @default(uuid()) @db.Uuid
+  userId            String   @map("user_id") @db.Uuid
+  keyId             String   @map("key_id") @unique
+  keyName           String   @map("key_name")
+  encryptedKey      String   @map("encrypted_key") // Session key encrypted with derived master key
+  salt              String   // Salt for key derivation
+  iv                String?  @map("iv") // Initialization vector
+  algorithm         String   // Encryption algorithm (e.g., AES-256-GCM)
+  iterations        Int      // Key derivation iterations
+  isActive          Boolean  @default(true) @map("is_active")
+  createdAt         DateTime @default(now()) @map("created_at")
+  lastUsedAt        DateTime? @map("last_used_at")
+  expiresAt         DateTime? @map("expires_at")
+  deactivatedAt      DateTime? @map("deactivated_at")
+  deactivatedReason  String?  @map("deactivated_reason")
+  description       String?  @map("description")
+  tags              String[] @default([])
+  metadata          Json     @default("{}")
+
+  @@unique([userId, keyId])
+  @@unique([userId, keyName, isActive])
+  @@index([userId, isActive])
+  @@index([expiresAt])
+  @@index([createdAt])
+  @@index([userId])
+  @@map("user_encryption_keys")
+}

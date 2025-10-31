@@ -1,12 +1,19 @@
 import type { OnboardingData, Workspace } from '@cc-wrapper/shared-types';
 
-import prisma from '../lib/prisma.js';
+import { prisma } from '../lib/prisma.js';
 
+/**
+ * Workspace service for CC Wrapper
+ * Handles workspace creation, retrieval, and user workspace associations
+ */
 export class WorkspaceService {
   /**
    * Create default workspace based on onboarding data
+   * @param {string} userId - Unique user identifier
+   * @param {OnboardingData} data - Onboarding data containing workspace configuration
+   * @returns {Promise<Workspace>} Created workspace object
    */
-  async createDefaultWorkspace(userId: string, data: OnboardingData): Promise<Workspace> {
+  public async createDefaultWorkspace(userId: string, data: OnboardingData): Promise<Workspace> {
     // Create workspace with template configuration
     const workspace = await prisma.workspace.create({
       data: {
@@ -37,31 +44,66 @@ export class WorkspaceService {
       data: {
         userType: data.userType
       }
-    });
+    } as unknown);
 
-    return workspace as Workspace;
+    return {
+      id: workspace.id,
+      name: workspace.name,
+      description: workspace.description || undefined,
+      template: workspace.template || undefined,
+      ownerId: workspace.ownerId,
+      config: workspace.config as Record<string, unknown> | undefined,
+      createdAt: workspace.createdAt,
+      updatedAt: workspace.updatedAt
+    };
   }
 
   /**
    * Get workspace by ID
+   * @param {string} workspaceId - Unique workspace identifier
+   * @returns {Promise<Workspace | null>} Workspace object or null if not found
    */
-  async getWorkspaceById(workspaceId: string): Promise<Workspace | null> {
+  public async getWorkspaceById(workspaceId: string): Promise<Workspace | null> {
     const workspace = await prisma.workspace.findUnique({
       where: { id: workspaceId }
     });
 
-    return workspace as Workspace | null;
+    if (!workspace) {
+      return null;
+    }
+
+    return {
+      id: workspace.id,
+      name: workspace.name,
+      description: workspace.description || undefined,
+      template: workspace.template || undefined,
+      ownerId: workspace.ownerId,
+      config: workspace.config as Record<string, unknown> | undefined,
+      createdAt: workspace.createdAt,
+      updatedAt: workspace.updatedAt
+    };
   }
 
   /**
    * Get user workspaces
+   * @param {string} userId - Unique user identifier
+   * @returns {Promise<Workspace[]>} Array of workspace objects owned by the user
    */
-  async getUserWorkspaces(userId: string): Promise<Workspace[]> {
+  public async getUserWorkspaces(userId: string): Promise<Workspace[]> {
     const workspaces = await prisma.workspace.findMany({
       where: { ownerId: userId },
       orderBy: { createdAt: 'desc' }
     });
 
-    return workspaces as Workspace[];
+    return workspaces.map(workspace => ({
+      id: workspace.id,
+      name: workspace.name,
+      description: workspace.description,
+      template: workspace.template,
+      ownerId: workspace.ownerId,
+      config: workspace.config,
+      createdAt: workspace.createdAt,
+      updatedAt: workspace.updatedAt
+    }));
   }
 }

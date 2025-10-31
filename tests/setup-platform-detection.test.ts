@@ -15,7 +15,7 @@ import { setupMockConsole, setupPlatformMock } from '../test-utils/fixtures/setu
 
 // Type definitions for test interfaces
 interface SetupEnvironmentInstance {
-  detectPlatform(): {
+  detectPlatform: () => {
     os: string;
     arch: string;
     packageManager: string;
@@ -109,7 +109,7 @@ describe('Platform Detection - P0 Critical Core Functionality', () => {
     test('should always return bun as package manager', () => {
       const platforms = ['darwin', 'linux', 'win32'];
 
-      platforms.forEach(platform => {
+      for (const platform of platforms) {
         const restorePlatform = setupPlatformMock(platform);
 
         try {
@@ -120,7 +120,7 @@ describe('Platform Detection - P0 Critical Core Functionality', () => {
         } finally {
           restorePlatform();
         }
-      });
+      }
     });
   });
 

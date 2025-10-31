@@ -59,7 +59,7 @@ test.describe('Security NFR: Authentication & Authorization', () => {
 
     // Token should be expired, API call should fail
     const response = await request.get('/api/user/profile', {
-      headers: { Authorization: `Bearer ${token}` }
+      headers: { Authorization: `Bearer ${token}` },
     });
 
     expect(response.status()).toBe(401);
@@ -75,7 +75,7 @@ test.describe('Security NFR: Authentication & Authorization', () => {
 
     // Monitor console for password leaks
     const consoleLogs: string[] = [];
-    page.on('console', msg => consoleLogs.push(msg.text()));
+    page.on('console', (msg) => consoleLogs.push(msg.text()));
 
     await page.getByRole('button', { name: 'Sign In' }).click();
 
@@ -94,7 +94,7 @@ test.describe('Security NFR: Authentication & Authorization', () => {
 
     // Try to access User B's order
     const response = await request.get('/api/orders/user-b-order-id', {
-      headers: { Authorization: `Bearer ${userAToken}` }
+      headers: { Authorization: `Bearer ${userAToken}` },
     });
 
     expect(response.status()).toBe(403); // Forbidden
@@ -138,7 +138,7 @@ test.describe('Security NFR: Authentication & Authorization', () => {
 // Helper
 async function login(request: any, email: string, password: string): Promise<string> {
   const response = await request.post('/api/auth/login', {
-    data: { email, password }
+    data: { email, password },
   });
   const body = await response.json();
   return body.token;
@@ -184,7 +184,7 @@ export const options = {
     { duration: '3m', target: 50 }, // Stay at 50 users for 3 minutes
     { duration: '1m', target: 100 }, // Spike to 100 users
     { duration: '3m', target: 100 }, // Stay at 100 users
-    { duration: '1m', target: 0 } // Ramp down
+    { duration: '1m', target: 0 }, // Ramp down
   ],
   thresholds: {
     // SLO: 95% of requests must complete in <500ms
@@ -192,26 +192,26 @@ export const options = {
     // SLO: Error rate must be <1%
     errors: ['rate<0.01'],
     // SLA: API endpoints must respond in <1s (99th percentile)
-    api_duration: ['p(99)<1000']
-  }
+    api_duration: ['p(99)<1000'],
+  },
 };
 
 export default function () {
   // Test 1: Homepage load performance
   const homepageResponse = http.get(`${__ENV.BASE_URL}/`);
   check(homepageResponse, {
-    'homepage status is 200': r => r.status === 200,
-    'homepage loads in <2s': r => r.timings.duration < 2000
+    'homepage status is 200': (r) => r.status === 200,
+    'homepage loads in <2s': (r) => r.timings.duration < 2000,
   });
   errorRate.add(homepageResponse.status !== 200);
 
   // Test 2: API endpoint performance
   const apiResponse = http.get(`${__ENV.BASE_URL}/api/products?limit=10`, {
-    headers: { Authorization: `Bearer ${__ENV.API_TOKEN}` }
+    headers: { Authorization: `Bearer ${__ENV.API_TOKEN}` },
   });
   check(apiResponse, {
-    'API status is 200': r => r.status === 200,
-    'API responds in <500ms': r => r.timings.duration < 500
+    'API status is 200': (r) => r.status === 200,
+    'API responds in <500ms': (r) => r.timings.duration < 500,
   });
   apiDuration.add(apiResponse.timings.duration);
   errorRate.add(apiResponse.status !== 200);
@@ -219,9 +219,9 @@ export default function () {
   // Test 3: Search endpoint under load
   const searchResponse = http.get(`${__ENV.BASE_URL}/api/search?q=laptop&limit=100`);
   check(searchResponse, {
-    'search status is 200': r => r.status === 200,
-    'search responds in <1s': r => r.timings.duration < 1000,
-    'search returns results': r => JSON.parse(r.body).results.length > 0
+    'search status is 200': (r) => r.status === 200,
+    'search responds in <1s': (r) => r.timings.duration < 1000,
+    'search returns results': (r) => JSON.parse(r.body).results.length > 0,
   });
   errorRate.add(searchResponse.status !== 200);
 
@@ -245,7 +245,7 @@ Performance NFR Results:
 - P95 request duration: ${p95Duration < 500 ? '✅ PASS' : '❌ FAIL'} (${p95Duration.toFixed(2)}ms / 500ms threshold)
 - P99 API duration: ${p99ApiDuration < 1000 ? '✅ PASS' : '❌ FAIL'} (${p99ApiDuration.toFixed(2)}ms / 1000ms threshold)
 - Error rate: ${errorRateValue < 0.01 ? '✅ PASS' : '❌ FAIL'} (${(errorRateValue * 100).toFixed(2)}% / 1% threshold)
-    `
+    `,
   };
 }
 ```
@@ -302,7 +302,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Reliability NFR: Error Handling & Recovery', () => {
   test('app remains functional when API returns 500 error', async ({ page, context }) => {
     // Mock API failure
-    await context.route('**/api/products', route => {
+    await context.route('**/api/products', (route) => {
       route.fulfill({ status: 500, body: JSON.stringify({ error: 'Internal Server Error' }) });
     });
 
@@ -320,7 +320,7 @@ test.describe('Reliability NFR: Error Handling & Recovery', () => {
   test('API client retries on transient failures (3 attempts)', async ({ page, context }) => {
     let attemptCount = 0;
 
-    await context.route('**/api/checkout', route => {
+    await context.route('**/api/checkout', (route) => {
       attemptCount++;
 
       // Fail first 2 attempts, succeed on 3rd
@@ -349,9 +349,7 @@ test.describe('Reliability NFR: Error Handling & Recovery', () => {
     await page.getByRole('button', { name: 'Refresh Data' }).click();
 
     // User sees offline indicator (not crash)
-    await expect(
-      page.getByText('You are offline. Changes will sync when reconnected.')
-    ).toBeVisible();
+    await expect(page.getByText('You are offline. Changes will sync when reconnected.')).toBeVisible();
 
     // Reconnect
     await context.setOffline(false);
@@ -385,7 +383,7 @@ test.describe('Reliability NFR: Error Handling & Recovery', () => {
   test('circuit breaker opens after 5 consecutive failures', async ({ page, context }) => {
     let failureCount = 0;
 
-    await context.route('**/api/recommendations', route => {
+    await context.route('**/api/recommendations', (route) => {
       failureCount++;
       route.fulfill({ status: 500, body: JSON.stringify({ error: 'Service Error' }) });
     });
@@ -393,9 +391,7 @@ test.describe('Reliability NFR: Error Handling & Recovery', () => {
     await page.goto('/product/123');
 
     // Wait for circuit breaker to open (fallback UI appears)
-    await expect(page.getByText('Recommendations temporarily unavailable')).toBeVisible({
-      timeout: 10000
-    });
+    await expect(page.getByText('Recommendations temporarily unavailable')).toBeVisible({ timeout: 10000 });
 
     // Verify circuit breaker stopped making requests after threshold (should be ≤5)
     expect(failureCount).toBeLessThanOrEqual(5);
@@ -404,7 +400,7 @@ test.describe('Reliability NFR: Error Handling & Recovery', () => {
   test('rate limiting gracefully handles 429 responses', async ({ page, context }) => {
     let requestCount = 0;
 
-    await context.route('**/api/search', route => {
+    await context.route('**/api/search', (route) => {
       requestCount++;
 
       if (requestCount > 10) {
@@ -412,7 +408,7 @@ test.describe('Reliability NFR: Error Handling & Recovery', () => {
         route.fulfill({
           status: 429,
           headers: { 'Retry-After': '5' },
-          body: JSON.stringify({ error: 'Rate limit exceeded' })
+          body: JSON.stringify({ error: 'Rate limit exceeded' }),
         });
       } else {
         route.fulfill({ status: 200, body: JSON.stringify({ results: [] }) });
@@ -542,22 +538,19 @@ test.describe('Maintainability NFR: Observability Validation', () => {
     await context.addInitScript(() => {
       (window as any).Sentry = {
         captureException: (error: Error) => {
-          console.log(
-            'SENTRY_CAPTURE:',
-            JSON.stringify({ message: error.message, stack: error.stack })
-          );
-        }
+          console.log('SENTRY_CAPTURE:', JSON.stringify({ message: error.message, stack: error.stack }));
+        },
       };
     });
 
-    page.on('console', msg => {
+    page.on('console', (msg) => {
       if (msg.text().includes('SENTRY_CAPTURE:')) {
         sentryEvents.push(JSON.parse(msg.text().replace('SENTRY_CAPTURE:', '')));
       }
     });
 
     // Trigger error by mocking API failure
-    await context.route('**/api/products', route => {
+    await context.route('**/api/products', (route) => {
       route.fulfill({ status: 500, body: JSON.stringify({ error: 'Database Error' }) });
     });
 
@@ -588,7 +581,7 @@ test.describe('Maintainability NFR: Observability Validation', () => {
   test('structured logging present in application', async ({ request }) => {
     // Make API call that generates logs
     const response = await request.post('/api/orders', {
-      data: { productId: '123', quantity: 2 }
+      data: { productId: '123', quantity: 2 },
     });
 
     expect(response.ok()).toBeTruthy();

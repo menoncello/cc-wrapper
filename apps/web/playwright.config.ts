@@ -1,18 +1,27 @@
 import { defineConfig, devices } from '@playwright/test';
 
+// Constants for configuration
+const CI_RETRIES = 2;
+const CI_WORKERS = 1;
+const BASE_PORT = 20000;
+
 /**
  * Playwright configuration for CC Wrapper E2E tests
  */
-export default defineConfig({
+export const config = defineConfig({
   testDir: './tests/e2e',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  retries: process.env.CI ? CI_RETRIES : 0,
+  workers: process.env.CI ? CI_WORKERS : undefined,
   reporter: 'list',
   use: {
-    baseURL: 'http://localhost:20000',
-    trace: 'on-first-retry'
+    baseURL: `http://localhost:${BASE_PORT}`,
+    trace: 'on-first-retry',
+    // Prevent browser from stealing focus during tests
+    launchOptions: {
+      args: ['--disable-focus-ring', '--disable-background-timer-throttling']
+    }
   },
   projects: [
     {

@@ -213,7 +213,7 @@ describe('Development Scripts (AC6) [P2]', () => {
     const scripts = packageJson.scripts || {};
     const invalidScripts = Object.keys(scripts).filter(scriptName => {
       // Script names should be lowercase with colons for namespacing and hyphens for kebab-case
-      return !/^[a-z][a-z0-9:-]*$/.test(scriptName);
+      return !/^[a-z][\d:a-z-]*$/.test(scriptName);
     });
 
     // THEN: All scripts should follow naming convention

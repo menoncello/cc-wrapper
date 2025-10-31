@@ -295,9 +295,7 @@ test('should display error for invalid credentials', async ({ page }) => {
   await page.click('[data-testid="login-button"]');
 
   // THEN: Error message is displayed
-  await expect(page.locator('[data-testid="error-message"]')).toHaveText(
-    'Invalid email or password'
-  );
+  await expect(page.locator('[data-testid="error-message"]')).toHaveText('Invalid email or password');
 });
 ```
 
@@ -330,7 +328,7 @@ export const createUser = (overrides = {}) => ({
   email: faker.internet.email(),
   name: faker.person.fullName(),
   createdAt: faker.date.recent().toISOString(),
-  ...overrides
+  ...overrides,
 });
 
 export const createUsers = (count: number) => Array.from({ length: count }, () => createUser());
@@ -366,7 +364,7 @@ export const test = base.extend({
 
     // Cleanup: Delete user (automatic)
     await deleteUser(user.id);
-  }
+  },
 });
 ```
 

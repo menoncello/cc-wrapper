@@ -41,19 +41,19 @@ export default defineConfig({
 
     // Timeout context
     actionTimeout: 15_000, // 15s for clicks/fills
-    navigationTimeout: 30_000 // 30s for page loads
+    navigationTimeout: 30_000, // 30s for page loads
   },
 
   // CI-specific artifact retention
   reporter: [
     ['html', { outputFolder: 'playwright-report', open: 'never' }],
     ['junit', { outputFile: 'results.xml' }],
-    ['list'] // Console output
+    ['list'], // Console output
   ],
 
   // Failure handling
   retries: process.env.CI ? 2 : 0, // Retry in CI to capture trace
-  workers: process.env.CI ? 1 : undefined
+  workers: process.env.CI ? 1 : undefined,
 });
 ```
 
@@ -101,7 +101,7 @@ test.describe('Checkout Flow with HAR Recording', () => {
     // Start HAR recording BEFORE navigation
     await context.routeFromHAR(path.join(__dirname, '../fixtures/checkout.har'), {
       url: '**/api/**', // Only capture API calls
-      update: true // Update HAR if file exists
+      update: true, // Update HAR if file exists
     });
 
     await page.goto('/checkout');
@@ -131,7 +131,7 @@ test('should replay checkout flow from HAR', async ({ page, context }) => {
   // Replay network from HAR (no real API calls)
   await context.routeFromHAR(path.join(__dirname, '../fixtures/checkout.har'), {
     url: '**/api/**',
-    update: false // Read-only mode
+    update: false, // Read-only mode
   });
 
   await page.goto('/checkout');
@@ -183,21 +183,21 @@ export const test = base.extend<DebugFixture>({
     const networkRequests: Array<{ url: string; status: number; method: string }> = [];
 
     // Capture console messages
-    page.on('console', msg => {
+    page.on('console', (msg) => {
       consoleLogs.push(`[${msg.type()}] ${msg.text()}`);
     });
 
     // Capture network requests
-    page.on('request', request => {
+    page.on('request', (request) => {
       networkRequests.push({
         url: request.url(),
         method: request.method(),
-        status: 0 // Will be updated on response
+        status: 0, // Will be updated on response
       });
     });
 
-    page.on('response', response => {
-      const req = networkRequests.find(r => r.url === response.url());
+    page.on('response', (response) => {
+      const req = networkRequests.find((r) => r.url === response.url());
       if (req) req.status = response.status();
     });
 
@@ -215,15 +215,11 @@ export const test = base.extend<DebugFixture>({
       fs.writeFileSync(path.join(artifactDir, 'console.log'), consoleLogs.join('\n'), 'utf-8');
 
       // Save network summary
-      fs.writeFileSync(
-        path.join(artifactDir, 'network.json'),
-        JSON.stringify(networkRequests, null, 2),
-        'utf-8'
-      );
+      fs.writeFileSync(path.join(artifactDir, 'network.json'), JSON.stringify(networkRequests, null, 2), 'utf-8');
 
       console.log(`Debug artifacts saved to: ${artifactDir}`);
     }
-  }
+  },
 });
 ```
 
@@ -233,10 +229,7 @@ export const test = base.extend<DebugFixture>({
 // tests/e2e/payment-with-debug.spec.ts
 import { test, expect } from '../support/fixtures/debug-fixture';
 
-test('payment flow captures debug artifacts on failure', async ({
-  page,
-  captureDebugArtifacts
-}) => {
+test('payment flow captures debug artifacts on failure', async ({ page, captureDebugArtifacts }) => {
   await page.goto('/checkout');
 
   // Test will automatically capture console + network on failure
@@ -314,7 +307,7 @@ export const test = base.extend<A11yFixture>({
       // Attach results to test report (visible in trace viewer)
       if (results.violations.length > 0) {
         console.log(`Found ${results.violations.length} accessibility violations:`);
-        results.violations.forEach(violation => {
+        results.violations.forEach((violation) => {
           console.log(`- [${violation.impact}] ${violation.id}: ${violation.description}`);
           console.log(`  Help: ${violation.helpUrl}`);
         });
@@ -322,7 +315,7 @@ export const test = base.extend<A11yFixture>({
         throw new Error(`Accessibility violations found: ${results.violations.length}`);
       }
     });
-  }
+  },
 });
 ```
 
@@ -363,10 +356,10 @@ import 'cypress-axe';
 
 Cypress.Commands.add('checkA11y', (context = null, options = {}) => {
   cy.injectAxe(); // Inject axe-core
-  cy.checkA11y(context, options, violations => {
+  cy.checkA11y(context, options, (violations) => {
     if (violations.length) {
       cy.task('log', `Found ${violations.length} accessibility violations`);
-      violations.forEach(violation => {
+      violations.forEach((violation) => {
         cy.task('log', `- [${violation.impact}] ${violation.id}: ${violation.description}`);
       });
     }

@@ -1,7 +1,10 @@
+---
+description: 'Technical specification workflow for Level 0 projects (single atomic changes). Creates focused tech spec for bug fixes, single endpoint additions, or small isolated changes. Tech-spec only - no PRD needed.'
+---
+
 # tech-spec-sm
 
-IT IS CRITICAL THAT YOU FOLLOW THESE STEPS - while staying in character as the
-current agent persona you may have loaded:
+IT IS CRITICAL THAT YOU FOLLOW THESE STEPS - while staying in character as the current agent persona you may have loaded:
 
 <steps CRITICAL="TRUE">
 1. Always LOAD the FULL {project-root}/bmad/core/tasks/workflow.xml

@@ -226,7 +226,7 @@ test.describe('UserService Integration', () => {
 
     // Direct API call (no UI)
     const response = await request.post('/api/users', {
-      data: userData
+      data: userData,
     });
 
     expect(response.status()).toBe(201);
@@ -402,7 +402,7 @@ describe('PriceCalculator', () => {
     it('should calculate total with discount and taxes', () => {
       const items = [
         { price: 50, quantity: 2 }, // 100
-        { price: 30, quantity: 1 } // 30
+        { price: 30, quantity: 1 }, // 30
       ];
       const discount = { type: 'percentage', value: 10 }; // -13
       const tax = { country: 'US', rate: 0.08 }; // +9.36

@@ -12,28 +12,42 @@
 
 <critical>DOCUMENT OUTPUT: Professional, specific, actionable UX design decisions WITH RATIONALE. User skill level ({user_skill_level}) affects conversation style ONLY, not document content.</critical>
 
-<step n="0" goal="Validate workflow and extract project configuration">
+<step n="0" goal="Validate workflow readiness" tag="workflow-status">
+<action>Check if {output_folder}/bmm-workflow-status.yaml exists</action>
 
-<invoke-workflow path="{project-root}/bmad/bmm/workflows/workflow-status">
-  <param>mode: data</param>
-  <param>data_request: project_config</param>
-</invoke-workflow>
-
-<check if="status_exists == false">
-  <output>**Note: No Workflow Status File Found**
-
-Create UX Design can run standalone or as part of the BMM planning workflow.
-
-For standalone use, we'll gather requirements as we go.
-For integrated use, run `workflow-init` first for better context.
-</output>
-<action>Set mode: standalone</action>
+<check if="status file not found">
+  <output>No workflow status file found. Create UX Design can run standalone or as part of BMM planning workflow.</output>
+  <output>For standalone use, we'll gather requirements as we go. For integrated use, run `workflow-init` first for better context.</output>
+  <action>Set standalone_mode = true</action>
 </check>
 
-<check if="status_exists == true">
-  <action>Store {{status_file_path}} for later updates</action>
-  <action>Store {{project_level}} for scoping decisions</action>
-  <action>Set mode: integrated</action>
+<check if="status file found">
+  <action>Load the FULL file: {output_folder}/bmm-workflow-status.yaml</action>
+  <action>Parse workflow_status section</action>
+  <action>Check status of "create-design" workflow</action>
+  <action>Get project_level from YAML metadata</action>
+  <action>Find first non-completed workflow (next expected workflow)</action>
+
+  <check if="create-design status is file path (already completed)">
+    <output>⚠️ UX Design already completed: {{create-design status}}</output>
+    <ask>Re-running will overwrite the existing UX design. Continue? (y/n)</ask>
+    <check if="n">
+      <output>Exiting. Use workflow-status to see your next step.</output>
+      <action>Exit workflow</action>
+    </check>
+  </check>
+
+  <check if="create-design is not the next expected workflow">
+    <output>⚠️ Next expected workflow: {{next_workflow}}. UX Design is out of sequence.</output>
+    <ask>Continue with UX Design anyway? (y/n)</ask>
+    <check if="n">
+      <output>Exiting. Run {{next_workflow}} instead.</output>
+      <action>Exit workflow</action>
+    </check>
+  </check>
+
+<action>Set standalone_mode = false</action>
+<action>Store {{project_level}} for scoping decisions</action>
 </check>
 </step>
 
@@ -1116,12 +1130,16 @@ Based on your deployment intent: {{recommendation}}
 
 <action>Save final document to {default_output_file}</action>
 
-  <check if="tracking_mode == true">
-    <invoke-workflow path="{project-root}/bmad/bmm/workflows/workflow-status">
-      <param>mode: update</param>
-      <param>action: complete_workflow</param>
-      <param>workflow_name: create-ux-design</param>
-    </invoke-workflow>
+  <check if="standalone_mode != true">
+    <action>Load the FULL file: {output_folder}/bmm-workflow-status.yaml</action>
+    <action>Find workflow_status key "create-design"</action>
+    <critical>ONLY write the file path as the status value - no other text, notes, or metadata</critical>
+    <action>Update workflow_status["create-design"] = "{default_output_file}"</action>
+    <action>Save file, preserving ALL comments and structure including STATUS DEFINITIONS</action>
+
+    <action>Find first non-completed workflow in workflow_status (next workflow to do)</action>
+    <action>Determine next agent from path file based on next workflow</action>
+
   </check>
 
 <ask>🎨 **One more thing!** Want to see your design come to life?
@@ -1256,32 +1274,26 @@ Open in browser to explore!</output>
 
 **Recommended Next Steps:**
 
-1. **Validate UX Specification** (Recommended first!) - Run the validation checklist with \*validate-design
-   - Ensures collaborative process was followed
-   - Validates visual artifacts were generated
-   - Confirms decision rationale is documented
-   - Verifies implementation readiness
+{{#if tracking_mode == true}}
 
-2. **Follow-Up Workflows** - This specification can serve as input to:
-   - **Wireframe Generation Workflow** - Create detailed wireframes from user flows
-   - **Figma Design Workflow** - Generate Figma files via MCP integration
-   - **Interactive Prototype Workflow** - Build clickable HTML prototypes
-   - **Component Showcase Workflow** - Create interactive component library
-   - **AI Frontend Prompt Workflow** - Generate prompts for v0, Lovable, Bolt
-   - **Solution Architecture Workflow** - Define technical architecture with UX context
+- **Next required:** {{next_workflow}} ({{next_agent}} agent)
+- **Optional:** Run validation with \*validate-design, or generate additional UX artifacts (wireframes, prototypes, etc.)
 
-As additional workflows are run, they will add their outputs to the "Optional Enhancement Deliverables" section of the UX specification.
-</output>
+Check status anytime with: `workflow-status`
+{{else}}
+Since no workflow is in progress:
 
-  <check if="tracking_mode == true">
-    <output>
+- Run validation checklist with \*validate-design (recommended)
+- Refer to the BMM workflow guide if unsure what to do next
+- Or run `workflow-init` to create a workflow path and get guided next steps
 
-**Planning Workflow Integration:**
+**Optional Follow-Up Workflows:**
 
-Status updated. Next suggested workflow: {{next_workflow_from_status}}
-Run with: workflow {{next_workflow_name}}
-</output>
-</check>
+- Wireframe Generation / Figma Design / Interactive Prototype workflows
+- Component Showcase / AI Frontend Prompt workflows
+- Solution Architecture workflow (with UX context)
+  {{/if}}
+  </output>
 
 <template-output>completion_summary</template-output>
 </step>

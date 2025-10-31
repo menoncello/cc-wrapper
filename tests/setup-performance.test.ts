@@ -20,8 +20,8 @@ import {
 
 // Type definitions for test interfaces
 interface SetupEnvironmentInstance {
-  run(): Promise<void>;
-  checkEnvironment(): Promise<{
+  run: () => Promise<void>;
+  checkEnvironment: () => Promise<{
     dependencies: Record<
       string,
       {
@@ -34,7 +34,7 @@ interface SetupEnvironmentInstance {
 }
 
 interface HealthCheckerInstance {
-  run(): Promise<HealthReport>;
+  run: () => Promise<HealthReport>;
   waitForServices?: () => Promise<void>;
 }
 
@@ -65,7 +65,7 @@ describe('Setup Performance - P0 Critical SLA Validation', () => {
 
     if (missingFiles.length > 0) {
       console.warn(`Skipping performance tests - missing files: ${missingFiles.join(', ')}`);
-      return;
+      
     }
   });
 
@@ -172,10 +172,10 @@ describe('Setup Performance - P0 Critical SLA Validation', () => {
       }
 
       // All measurements should be consistent
-      measurements.forEach(duration => {
+      for (const duration of measurements) {
         expect(duration).toBeGreaterThanOrEqual(50);
         expect(duration).toBeLessThan(100);
-      });
+      }
 
       // Variations should be minimal
       const maxDuration = Math.max(...measurements);
@@ -236,9 +236,9 @@ describe('Setup Performance - P0 Critical SLA Validation', () => {
       }
 
       // All service checks should complete quickly
-      Object.entries(measurements).forEach(([method, duration]) => {
+      for (const [method, duration] of Object.entries(measurements)) {
         expect(duration).toBeLessThan(2000, `${method} should complete within 2 seconds`);
-      });
+      }
     });
   });
 
@@ -302,21 +302,21 @@ describe('Setup Performance - P0 Critical SLA Validation', () => {
 
       const duration = await timer.measure(async () => {
         // Create multiple files
-        testFiles.forEach(file => {
+        for (const file of testFiles) {
           fs.writeFileSync(file, `test content for ${file}`);
-        });
+        }
 
         // Read them back
-        testFiles.forEach(file => {
+        for (const file of testFiles) {
           fs.readFileSync(file, 'utf8');
-        });
+        }
 
         // Clean up
-        testFiles.forEach(file => {
+        for (const file of testFiles) {
           if (fs.existsSync(file)) {
             fs.unlinkSync(file);
           }
-        });
+        }
       });
 
       // File operations should be fast
@@ -328,21 +328,21 @@ describe('Setup Performance - P0 Critical SLA Validation', () => {
 
       const duration = await timer.measure(async () => {
         // Create directories
-        testDirs.forEach(dir => {
+        for (const dir of testDirs) {
           fs.mkdirSync(dir, { recursive: true });
-        });
+        }
 
         // Create files in directories
-        testDirs.forEach(dir => {
+        for (const dir of testDirs) {
           fs.writeFileSync(path.join(dir, 'test.txt'), 'content');
-        });
+        }
 
         // Clean up
-        testDirs.forEach(dir => {
+        for (const dir of testDirs) {
           if (fs.existsSync(dir)) {
             fs.rmSync(dir, { recursive: true, force: true });
           }
-        });
+        }
       });
 
       // Directory operations should be efficient

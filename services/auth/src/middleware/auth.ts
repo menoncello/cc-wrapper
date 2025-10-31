@@ -2,8 +2,11 @@ import { JWT_SECRET_MIN_LENGTH } from '../constants/auth.constants.js';
 import { verifyJWT } from '../lib/crypto.js';
 import type { JWTPayload } from '../types/jwt.js';
 
+const BEARER_PREFIX_LENGTH = 7;
+
 /**
  * Get and validate JWT_SECRET from environment
+ * @returns {string} The validated JWT secret
  */
 function getJwtSecret(): string {
   const jwtSecret = process.env.JWT_SECRET;
@@ -22,6 +25,10 @@ function getJwtSecret(): string {
 /**
  * Authentication middleware for protected routes
  * Verifies JWT token from Authorization header
+ * @param {object} root0 - The middleware context object
+ * @param {Request} root0.request - The incoming request object
+ * @param {Record<string, unknown>} root0.set - Response status setter
+ * @returns {Promise<JWTPayload>} The JWT payload if authentication succeeds
  */
 export async function authMiddleware({
   request,
@@ -38,7 +45,7 @@ export async function authMiddleware({
     throw new Error('Missing or invalid authorization header');
   }
 
-  const token = authHeader.substring(7); // Remove 'Bearer ' prefix
+  const token = authHeader.substring(BEARER_PREFIX_LENGTH); // Remove 'Bearer ' prefix
 
   // Verify JWT token
   const payload = await verifyJWT(token, getJwtSecret());

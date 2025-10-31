@@ -220,7 +220,7 @@ describe('Code Quality Tools (AC4) [P2]', () => {
     const files = fs.readdirSync(srcDir, { recursive: true });
     const violations: string[] = [];
 
-    files.forEach(file => {
+    for (const file of files) {
       const filePath = path.join(srcDir, file.toString());
       if (fs.statSync(filePath).isFile() && filePath.endsWith('.ts')) {
         const content = fs.readFileSync(filePath, 'utf-8');
@@ -228,7 +228,7 @@ describe('Code Quality Tools (AC4) [P2]', () => {
           violations.push(filePath);
         }
       }
-    });
+    }
 
     // THEN: No files should have eslint-disable comments
     expect(violations).toEqual([]);

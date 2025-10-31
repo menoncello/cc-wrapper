@@ -295,7 +295,7 @@ const test = base.extend({
     const user = createTestUser();
     const authedPage = await createAuthenticatedPage(page, user);
     await use(authedPage);
-  }
+  },
 });
 ```
 
@@ -349,7 +349,7 @@ await page.fill('[name="phone"]', '555-1234');
 
 ```typescript
 // ✅ Good: Intercept before navigation
-await page.route('**/api/users', route => route.fulfill({ json: mockUsers }));
+await page.route('**/api/users', (route) => route.fulfill({ json: mockUsers }));
 await page.goto('/users'); // Navigate after route setup
 ```
 
@@ -358,7 +358,7 @@ await page.goto('/users'); // Navigate after route setup
 ```typescript
 // ❌ Bad: Navigate before intercept
 await page.goto('/users');
-await page.route('**/api/users', route => route.fulfill({ json: mockUsers })); // Too late!
+await page.route('**/api/users', (route) => route.fulfill({ json: mockUsers })); // Too late!
 ```
 
 **Knowledge**: network-first.md

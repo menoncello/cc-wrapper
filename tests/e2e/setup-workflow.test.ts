@@ -21,18 +21,18 @@ interface ToolVersion {
 }
 
 interface SetupEnvironmentInstance {
-  checkBun(): Promise<ToolVersion>;
-  checkTypeScript(): Promise<ToolVersion>;
-  checkDocker(): Promise<ToolVersion>;
-  checkPostgreSQL(): Promise<ToolVersion>;
-  checkRedis(): Promise<ToolVersion>;
-  installDependencies(): Promise<void>;
-  setupServices(): Promise<void>;
-  setupEditorIntegration(): Promise<void>;
-  configureEnvironment(): Promise<void>;
-  validateEnvironment(): Promise<void>;
-  detectPlatform(): string;
-  run(): Promise<void>;
+  checkBun: () => Promise<ToolVersion>;
+  checkTypeScript: () => Promise<ToolVersion>;
+  checkDocker: () => Promise<ToolVersion>;
+  checkPostgreSQL: () => Promise<ToolVersion>;
+  checkRedis: () => Promise<ToolVersion>;
+  installDependencies: () => Promise<void>;
+  setupServices: () => Promise<void>;
+  setupEditorIntegration: () => Promise<void>;
+  configureEnvironment: () => Promise<void>;
+  validateEnvironment: () => Promise<void>;
+  detectPlatform: () => string;
+  run: () => Promise<void>;
 }
 
 interface SetupEnvironmentConstructor {
@@ -48,10 +48,10 @@ interface SetupEnvironmentConstructor {
 }
 
 interface HealthCheckerInstance {
-  run(): Promise<HealthReport>;
-  checkPostgreSQL(): Promise<ToolVersion>;
-  checkRedis(): Promise<ToolVersion>;
-  waitForServices(): Promise<void>;
+  run: () => Promise<HealthReport>;
+  checkPostgreSQL: () => Promise<ToolVersion>;
+  checkRedis: () => Promise<ToolVersion>;
+  waitForServices: () => Promise<void>;
 }
 
 interface HealthReport {

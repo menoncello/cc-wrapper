@@ -251,7 +251,7 @@ export const assertions = {
       throw new Error(message || `Expected function to throw ${errorType.name}`);
     } catch (error) {
       if (!(error instanceof errorType)) {
-        throw new Error(message || `Expected ${errorType.name} but got ${error.constructor.name}`);
+        throw new TypeError(message || `Expected ${errorType.name} but got ${error.constructor.name}`);
       }
     }
   }

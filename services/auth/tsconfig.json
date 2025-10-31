@@ -3,8 +3,12 @@
   "compilerOptions": {
     "outDir": "./dist",
     "rootDir": "./src",
-    "types": ["bun-types"]
+    "types": ["bun-types"],
+    "baseUrl": "./node_modules",
+    "paths": {
+      "@prisma/client": ["./.prisma/client"]
+    }
   },
-  "include": ["src/**/*", "src/globals.d.ts"],
+  "include": ["src/**/*", "src/globals.d.ts", "node_modules/.prisma/client/**/*"],
   "exclude": ["node_modules", "dist", "**/*.test.ts"]
 }

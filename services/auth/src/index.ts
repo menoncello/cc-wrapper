@@ -4,15 +4,17 @@ import { authRoutes } from './routes/auth.routes.js';
 import { oauthRoutes } from './routes/oauth.routes.js';
 import { workspaceRoutes } from './routes/workspace.routes.js';
 
-const PORT = process.env.AUTH_PORT || 3001;
+const DEFAULT_AUTH_PORT = 3001;
+const PORT = process.env.AUTH_PORT || DEFAULT_AUTH_PORT;
 
 /**
- * CC Wrapper Authentication Service
- * Built with Elysia on Bun runtime
- * Uses Bun-native crypto for authentication (no external JWT libraries)
+ * CORS middleware to handle cross-origin requests
+ * @param {{set: {headers: Record<string, string | number>}}} root0 - The middleware context object
+ * @param {{headers: Record<string, string | number>}} root0.set - Response configuration object
+ * @param {Record<string, string | number>} root0.set.headers - Headers configuration for the response
+ * @returns {void} - This function modifies the response headers but doesn't return a value
  */
-// CORS middleware
-const corsMiddleware = ({ set }: { set: { headers: Record<string, string | number> } }) => {
+const corsMiddleware = ({ set }: { set: { headers: Record<string, string | number> } }): void => {
   set.headers['Access-Control-Allow-Origin'] = '*';
   set.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS';
   set.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization';
@@ -49,9 +51,6 @@ const app = new Elysia()
       };
     }
 
-    // Log error for debugging
-    console.error('Error:', error);
-
     set.status = 500;
     return {
       error: 'Internal server error'
@@ -59,12 +58,5 @@ const app = new Elysia()
   })
   .listen(PORT);
 
-console.log(`🚀 Authentication service running at http://localhost:${app.server?.port}`);
-console.log(`📝 API Health Check: http://localhost:${app.server?.port}/health`);
-console.log(`🔌 Auth endpoints available at: http://localhost:${app.server?.port}/api/auth`);
-console.log(
-  `💼 Workspace endpoints available at: http://localhost:${app.server?.port}/api/workspaces`
-);
-
-export default app;
+export { app };
 export type AuthApp = typeof app;

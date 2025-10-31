@@ -153,14 +153,12 @@ export const createWorkspaces = (
   count: number,
   overrides: Partial<Workspace> = {}
 ): Workspace[] => {
-  const workspaces = Array.from({ length: count }, (_, index) =>
+  return Array.from({ length: count }, (_, index) =>
     createWorkspace(userId, {
       is_default: index === 0, // First workspace is default
       ...overrides
     })
   );
-
-  return workspaces;
 };
 
 /**

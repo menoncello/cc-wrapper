@@ -268,9 +268,7 @@ Generates failing acceptance tests BEFORE implementation following TDD's red-gre
        await page.click('[data-testid="login-button"]');
 
        // THEN: Error message is displayed
-       await expect(page.locator('[data-testid="error-message"]')).toHaveText(
-         'Invalid email or password'
-       );
+       await expect(page.locator('[data-testid="error-message"]')).toHaveText('Invalid email or password');
      });
    });
    ```
@@ -289,11 +287,11 @@ Generates failing acceptance tests BEFORE implementation following TDD's red-gre
    ```typescript
    test('should load user dashboard after login', async ({ page }) => {
      // CRITICAL: Intercept routes BEFORE navigation
-     await page.route('**/api/user', route =>
+     await page.route('**/api/user', (route) =>
        route.fulfill({
          status: 200,
-         body: JSON.stringify({ id: 1, name: 'Test User' })
-       })
+         body: JSON.stringify({ id: 1, name: 'Test User' }),
+       }),
      );
 
      // NOW navigate
@@ -313,12 +311,12 @@ Generates failing acceptance tests BEFORE implementation following TDD's red-gre
        // GIVEN: Valid user data
        const userData = {
          email: 'newuser@example.com',
-         name: 'New User'
+         name: 'New User',
        };
 
        // WHEN: Creating user via API
        const response = await request.post('/api/users', {
-         data: userData
+         data: userData,
        });
 
        // THEN: User is created successfully
@@ -327,7 +325,7 @@ Generates failing acceptance tests BEFORE implementation following TDD's red-gre
        expect(body).toMatchObject({
          email: userData.email,
          name: userData.name,
-         id: expect.any(Number)
+         id: expect.any(Number),
        });
      });
    });
@@ -384,7 +382,7 @@ Generates failing acceptance tests BEFORE implementation following TDD's red-gre
      email: faker.internet.email(),
      name: faker.person.fullName(),
      createdAt: faker.date.recent().toISOString(),
-     ...overrides
+     ...overrides,
    });
 
    export const createUsers = (count: number) => Array.from({ length: count }, () => createUser());
@@ -419,7 +417,7 @@ Generates failing acceptance tests BEFORE implementation following TDD's red-gre
 
        // Cleanup: Delete user
        await deleteUser(user.id);
-     }
+     },
    });
    ```
 

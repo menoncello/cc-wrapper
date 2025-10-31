@@ -17,11 +17,11 @@ import { setupFileSystemFixture, setupMockConsole } from '../test-utils/fixtures
 
 // Type definitions for test interfaces
 interface SetupEnvironmentInstance {
-  configureEnvironment(): Promise<void>;
-  validateEnvironment(): Promise<void>;
-  createDockerComposeFile(): Promise<void>;
-  setupEditorIntegration(): Promise<void>;
-  checkEnvironment(): Promise<{
+  configureEnvironment: () => Promise<void>;
+  validateEnvironment: () => Promise<void>;
+  createDockerComposeFile: () => Promise<void>;
+  setupEditorIntegration: () => Promise<void>;
+  checkEnvironment: () => Promise<{
     dependencies: Record<
       string,
       {
@@ -96,9 +96,9 @@ describe('Environment Configuration - P0 Critical Setup Validation', () => {
         .filter(line => !line.trim().startsWith('#'));
       expect(lines.length).toBeGreaterThan(0);
 
-      lines.forEach(line => {
-        expect(line).toMatch(/^[A-Z_][A-Z0-9_]*=.+$/);
-      });
+      for (const line of lines) {
+        expect(line).toMatch(/^[A-Z_][\dA-Z_]*=.+$/);
+      }
 
       // Cleanup
       if (fs.existsSync('.env.local')) {
@@ -116,11 +116,11 @@ describe('Environment Configuration - P0 Critical Setup Validation', () => {
 
       await (setup as SetupEnvironmentInstance).validateEnvironment();
 
-      dirs.forEach(dir => {
+      for (const dir of dirs) {
         expect(fs.existsSync(dir)).toBe(true);
         const stats = fs.statSync(dir);
         expect(stats.isDirectory()).toBe(true);
-      });
+      }
 
       // No cleanup - these are git-tracked directories
     });
@@ -133,14 +133,14 @@ describe('Environment Configuration - P0 Critical Setup Validation', () => {
       // Directories should already exist (git-tracked)
       await (setup as SetupEnvironmentInstance).validateEnvironment();
 
-      dirs.forEach(dir => {
+      for (const dir of dirs) {
         expect(fs.existsSync(dir)).toBe(true);
 
         // Should be readable and writable
         expect(() => {
           fs.accessSync(dir, fs.constants.R_OK | fs.constants.W_OK);
         }).not.toThrow();
-      });
+      }
 
       // No cleanup - these are git-tracked directories
     });
@@ -262,7 +262,7 @@ describe('Environment Configuration - P0 Critical Setup Validation', () => {
       const setup = new SetupEnvironment();
 
       // Clean up any existing files
-      ['.env.local', 'docker-compose.dev.yml', '.vscode'].forEach(path => {
+      for (const path of ['.env.local', 'docker-compose.dev.yml', '.vscode']) {
         if (fs.existsSync(path)) {
           if (fs.statSync(path).isDirectory()) {
             fs.rmSync(path, { recursive: true, force: true });
@@ -270,7 +270,7 @@ describe('Environment Configuration - P0 Critical Setup Validation', () => {
             fs.unlinkSync(path);
           }
         }
-      });
+      }
 
       // Run complete configuration
       await (setup as SetupEnvironmentInstance).configureEnvironment();
@@ -287,7 +287,7 @@ describe('Environment Configuration - P0 Critical Setup Validation', () => {
       expect(fs.existsSync('services')).toBe(true);
 
       // Cleanup - keep workspace directories as they are git-tracked
-      ['.env.local', 'docker-compose.dev.yml', '.vscode'].forEach(path => {
+      for (const path of ['.env.local', 'docker-compose.dev.yml', '.vscode']) {
         if (fs.existsSync(path)) {
           if (fs.statSync(path).isDirectory()) {
             fs.rmSync(path, { recursive: true, force: true });
@@ -295,7 +295,7 @@ describe('Environment Configuration - P0 Critical Setup Validation', () => {
             fs.unlinkSync(path);
           }
         }
-      });
+      }
     });
   });
 });

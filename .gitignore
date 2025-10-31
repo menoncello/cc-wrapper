@@ -163,3 +163,6 @@ azure/secrets/
 docker-compose.override.yml
 secrets.yml
 .secrets.yml
+
+# Performance test setup directories
+setup-perf-test-*/

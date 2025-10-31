@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'bun:test';
 
+import { generateTestPassword } from '../test-utils/password-helper';
 import {
   generateJWT,
   generateRandomToken,
@@ -8,10 +9,10 @@ import {
   verifyPassword
 } from './crypto.js';
 
-describe('Crypto utilities', () => {
+describe('Password hashing', () => {
   describe('hashPassword', () => {
     it('should hash a password using Argon2id', async () => {
-      const password = 'TestPassword123!';
+      const password = generateTestPassword('hash');
       const hash = await hashPassword(password);
 
       expect(hash).toBeDefined();
@@ -20,7 +21,7 @@ describe('Crypto utilities', () => {
     });
 
     it('should generate different hashes for the same password', async () => {
-      const password = 'TestPassword123!';
+      const password = generateTestPassword('unique');
       const hash1 = await hashPassword(password);
       const hash2 = await hashPassword(password);
 
@@ -30,7 +31,7 @@ describe('Crypto utilities', () => {
 
   describe('verifyPassword', () => {
     it('should verify correct password', async () => {
-      const password = 'TestPassword123!';
+      const password = generateTestPassword('verify');
       const hash = await hashPassword(password);
 
       const isValid = await verifyPassword(password, hash);
@@ -39,15 +40,18 @@ describe('Crypto utilities', () => {
     });
 
     it('should reject incorrect password', async () => {
-      const password = 'TestPassword123!';
+      const password = generateTestPassword('correct');
+      const wrongPassword = generateTestPassword('wrong');
       const hash = await hashPassword(password);
 
-      const isValid = await verifyPassword('WrongPassword123!', hash);
+      const isValid = await verifyPassword(wrongPassword, hash);
 
       expect(isValid).toBe(false);
     });
   });
+});
 
+describe('Token generation', () => {
   describe('generateRandomToken', () => {
     it('should generate a random token of specified length', () => {
       const token = generateRandomToken(32);
@@ -63,115 +67,137 @@ describe('Crypto utilities', () => {
       expect(token1).not.toBe(token2);
     });
   });
+});
 
-  describe('JWT operations', () => {
-    const secret = process.env.JWT_SECRET || 'test-secret-placeholder-for-jwt-environment';
+describe('JWT token operations - Generation and verification', () => {
+  const secret =
+    process.env.JWT_SECRET ||
+    generateTestPassword('jwt-secret')
+      .replace(/[^\dA-Za-z]/g, '')
+      .substring(0, 32);
 
-    it('should generate and verify valid JWT', async () => {
-      const payload = {
-        userId: '123',
-        email: 'test@example.com',
-        role: 'DEVELOPER' as const
-      };
+  it('should generate and verify valid JWT', async () => {
+    const payload = {
+      userId: '123',
+      email: 'test@example.com',
+      role: 'DEVELOPER' as const
+    };
 
-      const token = await generateJWT(payload, secret, '15m');
+    const token = await generateJWT(payload, secret, '15m');
 
-      expect(token).toBeDefined();
-      expect(token.split('.')).toHaveLength(3);
+    expect(token).toBeDefined();
+    expect(token.split('.')).toHaveLength(3);
 
-      const decoded = await verifyJWT(token, secret);
+    const decoded = await verifyJWT(token, secret);
 
-      expect(decoded).toBeDefined();
-      expect(decoded?.userId).toBe(payload.userId);
-      expect(decoded?.email).toBe(payload.email);
-      expect(decoded?.role).toBe(payload.role);
-    });
+    expect(decoded).toBeDefined();
+    expect(decoded?.userId).toBe(payload.userId);
+    expect(decoded?.email).toBe(payload.email);
+    expect(decoded?.role).toBe(payload.role);
+  });
 
-    it('should reject JWT with invalid signature', async () => {
-      const payload = {
-        userId: '123',
-        email: 'test@example.com',
-        role: 'DEVELOPER' as const
-      };
+  it('should reject JWT with invalid signature', async () => {
+    const payload = {
+      userId: '123',
+      email: 'test@example.com',
+      role: 'DEVELOPER' as const
+    };
 
-      const token = await generateJWT(payload, secret, '15m');
-      const wrongSecret = 'different-secret-for-jwt-testing-purposes';
+    const token = await generateJWT(payload, secret, '15m');
+    const wrongSecret = generateTestPassword('wrong-jwt')
+      .replace(/[^\dA-Za-z]/g, '')
+      .substring(0, 32);
 
-      const decoded = await verifyJWT(token, wrongSecret);
+    const decoded = await verifyJWT(token, wrongSecret);
 
-      expect(decoded).toBeNull();
-    });
+    expect(decoded).toBeNull();
+  });
 
-    it('should reject expired JWT', async () => {
-      const payload = {
-        userId: '123',
-        email: 'test@example.com',
-        role: 'DEVELOPER' as const
-      };
+  it('should reject expired JWT', async () => {
+    const payload = {
+      userId: '123',
+      email: 'test@example.com',
+      role: 'DEVELOPER' as const
+    };
 
-      // Generate token with 1 second expiry
-      const token = await generateJWT(payload, secret, '1s');
+    // Generate token with 1 second expiry
+    const token = await generateJWT(payload, secret, '1s');
 
-      // Wait for token to expire (add extra buffer for safe expiry)
-      await new Promise(resolve => setTimeout(resolve, 2000));
+    // Wait for token to expire (add extra buffer for safe expiry)
+    await new Promise(resolve => setTimeout(resolve, 2000));
 
-      const decoded = await verifyJWT(token, secret);
+    const decoded = await verifyJWT(token, secret);
 
-      expect(decoded).toBeNull();
-    });
+    expect(decoded).toBeNull();
+  });
+});
 
-    it('should reject malformed JWT', async () => {
-      const malformedToken = 'not.a.valid.jwt';
+describe('JWT token operations - Validation errors', () => {
+  const secret =
+    process.env.JWT_SECRET ||
+    generateTestPassword('jwt-secret')
+      .replace(/[^\dA-Za-z]/g, '')
+      .substring(0, 32);
 
-      const decoded = await verifyJWT(malformedToken, secret);
+  it('should reject malformed JWT', async () => {
+    const malformedToken = 'not.a.valid.jwt';
 
-      expect(decoded).toBeNull();
-    });
+    const decoded = await verifyJWT(malformedToken, secret);
 
-    it('should reject JWT with missing parts', async () => {
-      const incompleteTok = 'header.payload'; // Missing signature
+    expect(decoded).toBeNull();
+  });
 
-      const decoded = await verifyJWT(incompleteTok, secret);
+  it('should reject JWT with missing parts', async () => {
+    const incompleteTok = 'header.payload'; // Missing signature
 
-      expect(decoded).toBeNull();
-    });
+    const decoded = await verifyJWT(incompleteTok, secret);
 
-    it('should reject JWT with empty parts', async () => {
-      const emptyPartsToken = '.payload.signature'; // Empty header
+    expect(decoded).toBeNull();
+  });
 
-      const decoded = await verifyJWT(emptyPartsToken, secret);
+  it('should reject JWT with empty parts', async () => {
+    const emptyPartsToken = '.payload.signature'; // Empty header
 
-      expect(decoded).toBeNull();
-    });
+    const decoded = await verifyJWT(emptyPartsToken, secret);
 
-    it('should reject JWT with corrupted payload', async () => {
-      // Create a JWT with invalid base64 in payload that will fail JSON.parse
-      const invalidPayloadToken = 'header.!!!invalid-base64!!.signature';
+    expect(decoded).toBeNull();
+  });
 
-      const decoded = await verifyJWT(invalidPayloadToken, secret);
+  it('should reject JWT with corrupted payload', async () => {
+    // Create a JWT with invalid base64 in payload that will fail JSON.parse
+    const invalidPayloadToken = 'header.!!!invalid-base64!!.signature';
 
-      expect(decoded).toBeNull();
-    });
+    const decoded = await verifyJWT(invalidPayloadToken, secret);
 
-    it('should throw error for invalid expiry format', async () => {
-      const payload = {
-        userId: '123',
-        email: 'test@example.com',
-        role: 'DEVELOPER' as const
-      };
+    expect(decoded).toBeNull();
+  });
+});
 
-      // Test invalid expiry formats
-      await expect(async () => {
-        await generateJWT(payload, secret, 'invalid');
-      }).toThrow('Invalid expiry format');
+describe('JWT token operations - Generation errors', () => {
+  const secret =
+    process.env.JWT_SECRET ||
+    generateTestPassword('jwt-secret')
+      .replace(/[^\dA-Za-z]/g, '')
+      .substring(0, 32);
 
-      await expect(async () => {
-        await generateJWT(payload, secret, '15');
-      }).toThrow('Invalid expiry format');
+  it('should throw error for invalid expiry format', async () => {
+    const payload = {
+      userId: '123',
+      email: 'test@example.com',
+      role: 'DEVELOPER' as const
+    };
 
-      await expect(async () => {
-        await generateJWT(payload, secret, 'x15m');
-      }).toThrow('Invalid expiry format');
-    });
+    // Test invalid expiry formats
+    await expect(async () => {
+      await generateJWT(payload, secret, 'invalid');
+    }).toThrow('Invalid expiry format');
+
+    await expect(async () => {
+      await generateJWT(payload, secret, '15');
+    }).toThrow('Invalid expiry format');
+
+    await expect(async () => {
+      await generateJWT(payload, secret, 'x15m');
+    }).toThrow('Invalid expiry format');
   });
 });

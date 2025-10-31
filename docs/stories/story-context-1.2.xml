@@ -1,0 +1,159 @@
+<story-context id="bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>1</epicId>
+    <storyId>2</storyId>
+    <title>Session Persistence & Recovery</title>
+    <status>ContextReadyDraft</status>
+    <generatedAt>2025-10-28</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/stories/story-1.2.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>developer</asA>
+    <iWant>my work sessions to be automatically saved and recoverable with encrypted storage</iWant>
+    <soThat>I can resume work exactly where I left off after restarts or interruptions while maintaining data security and privacy</soThat>
+    <tasks>Database schema for session persistence, Session state serialization service, Session recovery and restoration service, Manual checkpoint system, Security and encryption layer, Real-time session synchronization, Testing and quality assurance</tasks>
+  </story>
+
+  <acceptanceCriteria>1. System automatically saves workspace state every 30 seconds with encrypted storage
+2. Session captures terminal state, browser tabs, AI conversation history, and open files using established state patterns
+3. User can resume work exactly where left off after restart using Zustand state restoration
+4. System detects and recovers from corrupted sessions with minimal data loss using validation patterns
+5. User can manually create session checkpoints and restore from any checkpoint via API endpoints
+6. Session data encrypted at rest with user-controlled encryption keys using Bun Web Crypto API</acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/tech-spec-epic-1.md</path>
+        <title>Epic 1 Technical Specification</title>
+        <section>Real-time Sync Service</section>
+        <snippet>Defines state synchronization with sub-100ms latency, conflict resolution for concurrent edits, offline mode with automatic sync, and session management with WebSocket-based real-time communication.</snippet>
+      </doc>
+      <doc>
+        <path>docs/solution-architecture.md</path>
+        <title>Solution Architecture</title>
+        <section>API Design - REST + WebSocket Hybrid</section>
+        <snippet>Establishes REST for CRUD operations and WebSocket for real-time updates, state synchronization, and service coordination patterns for session management.</snippet>
+      </doc>
+      <doc>
+        <path>docs/stories/story-1.1b.md</path>
+        <title>Story 1.1b Implementation</title>
+        <section>Learnings from Previous Story</section>
+        <snippet>Provides established patterns for Zustand state management, Bun Web Crypto API integration, Elysia framework API patterns, React island architecture, and performance testing frameworks.</snippet>
+      </doc>
+      <doc>
+        <path>docs/stories/story-context-1.1b.xml</path>
+        <title>Story 1.1b Context</title>
+        <section>Dependencies and Frameworks</section>
+        <snippet>Documents the complete technology stack including Zustand 5.0.8, Bun 1.3.0, Elysia 1.4.12, React 19.2.0, and testing frameworks for session implementation reference.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <code>
+        <path>apps/web/src/stores/onboardingStore.ts</path>
+        <kind>store</kind>
+        <symbol>OnboardingState</symbol>
+        <lines>6-38</lines>
+        <reason>Zustand store pattern for state management - adapt for session state with similar structure (state, actions, validation)</reason>
+      </code>
+      <code>
+        <path>apps/web/src/stores/tourStore.ts</path>
+        <kind>store</kind>
+        <symbol>TourState</symbol>
+        <lines>1-40</lines>
+        <reason>Another Zustand pattern showing persistence and state management - reference for session persistence patterns</reason>
+      </code>
+      <code>
+        <path>services/auth/src/lib/crypto.ts</path>
+        <kind>crypto</kind>
+        <symbol>generateRandomToken, generateJWT, verifyJWT</symbol>
+        <lines>28-112</lines>
+        <reason>Bun Web Crypto API patterns for session encryption - adapt generateRandomToken for session keys, use similar signing patterns for data integrity</reason>
+      </code>
+      <code>
+        <path>services/auth/src/services/auth.service.ts</path>
+        <kind>service</kind>
+        <symbol>AuthService</symbol>
+        <lines>1-50</lines>
+        <reason>Elysia service structure pattern - follow same API design, middleware patterns, validation schemas for session service</reason>
+      </code>
+    </code>
+    <dependencies>
+      <ecosystem name="bun">
+        <package name="bun" version=">=1.3.0">Runtime environment</package>
+        <package name="zustand" version="^5.0.8">State management for session store</package>
+        <package name="elysia" version="^1.4.12">Web framework for session API</package>
+        <package name="@prisma/client" version="^6.17.1">Database ORM for session storage</package>
+        <package name="zod" version="^4.1.12">Schema validation for session data</package>
+      </ecosystem>
+      <ecosystem name="frontend">
+        <package name="react" version="^19.2.0">UI components for session management</package>
+        <package name="react-dom" version="^19.2.0">DOM rendering</package>
+      </ecosystem>
+      <ecosystem name="testing">
+        <package name="@playwright/test" version="^1.56.0">E2E testing for session workflows</package>
+        <package name="@stryker-mutator/core" version="^9.2.0">Mutation testing for session logic</package>
+      </ecosystem>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint type="architecture">Follow established monorepo structure with services/session/ mirroring services/auth/ patterns</constraint>
+    <constraint type="state">Use Zustand 5.0.8 for client-side session state management with persistence and validation patterns</constraint>
+    <constraint type="security">Implement session encryption using Bun Web Crypto API with user-derived keys (AES-256-GCM)</constraint>
+    <constraint type="performance">Session save &lt;100ms, restore &lt;500ms with incremental updates and compression</constraint>
+    <constraint type="storage">Session size limit 50MB compressed, 30-day retention for auto-saved, 90-day for checkpoints</constraint>
+    <constraint type="api">Follow Elysia REST API patterns with Zod validation matching auth service structure</constraint>
+    <constraint type="testing">Use Bun Test for unit/integration, Playwright for E2E, follow established test patterns</constraint>
+  </constraints>
+  <interfaces>
+    <interface name="Session State API" kind="REST">
+      <signature>POST /api/sessions/create - Create new session
+GET /api/sessions/:id - Retrieve session state
+PUT /api/sessions/:id - Update session state
+POST /api/sessions/:id/checkpoints - Create manual checkpoint
+GET /api/sessions/:id/checkpoints - List available checkpoints</signature>
+      <path>services/session/src/routes/session.routes.ts</path>
+    </interface>
+    <interface name="Session Store" kind="Zustand">
+      <signature>interface SessionState {
+  sessionId: string;
+  workspaceState: WorkspaceState;
+  lastSaved: Date;
+  isDirty: boolean;
+  saveSession: () => Promise&lt;void&gt;;
+  restoreSession: (sessionId: string) => Promise&lt;boolean&gt;;
+  createCheckpoint: (name: string) => Promise&lt;string&gt;;
+}</signature>
+      <path>apps/web/src/stores/sessionStore.ts</path>
+    </interface>
+    <interface name="Encryption Service" kind="Service">
+      <signature>interface SessionEncryption {
+  encryptSession: (data: any, key: string) => Promise&lt;EncryptedData&gt;;
+  decryptSession: (encrypted: EncryptedData, key: string) => Promise&lt;any&gt;;
+  deriveKey: (password: string, salt: string) => Promise&lt;string&gt;;
+}</signature>
+      <path>services/session/src/services/encryption.service.ts</path>
+    </interface>
+  </interfaces>
+  <tests>
+    <standards>Use Bun Test for unit/integration tests with 90% coverage threshold, Playwright 1.56.0 for E2E testing with network-first patterns, follow established test factory patterns from tests/factories/, use BDD structure with data-testid attributes, implement mutation testing with Stryker for critical session logic</standards>
+    <locations>
+      <location pattern="services/session/src/**/*.test.ts">Unit and integration tests for session service</location>
+      <location pattern="apps/web/src/stores/**/*.test.ts">Store tests for session state management</location>
+      <location pattern="tests/e2e/session-*.spec.ts">E2E tests for session workflows</location>
+      <location pattern="tests/factories/session.factory.ts">Test data factories for session testing</location>
+    </locations>
+    <ideas>
+      <test idea="Session auto-save every 30 seconds" ac="1">Test that workspace state is automatically saved at 30-second intervals with proper encryption</test>
+      <test idea="Session restore after restart" ac="3">Test complete workspace restoration including terminal state, browser tabs, AI conversations, and open files</test>
+      <test idea="Corrupted session recovery" ac="4">Test system detects corrupted sessions and recovers with minimal data loss using validation patterns</test>
+      <test idea="Manual checkpoint system" ac="5">Test checkpoint creation, listing, selection, and restoration workflows via API endpoints</test>
+      <test idea="Session encryption security" ac="6">Test session data encryption at rest with user-controlled keys and secure key derivation</test>
+      <test idea="Performance targets" ac="1,3">Test session save &lt;100ms and restore &lt;500ms with large workspace states</test>
+      <test idea="Concurrent session handling" ac="2">Test multiple simultaneous sessions with proper isolation and state management</test>
+    </ideas>
+  </tests>
+</story-context>

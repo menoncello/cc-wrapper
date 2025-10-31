@@ -31,7 +31,7 @@ test.describe('API Error Handling', () => {
   test('should display error message when API returns 500', async ({ page }) => {
     // Scope error handling to THIS test only
     const consoleErrors: string[] = [];
-    page.on('pageerror', error => {
+    page.on('pageerror', (error) => {
       // Only swallow documented NetworkError
       if (error.message.includes('NetworkError: Failed to fetch')) {
         consoleErrors.push(error.message);
@@ -42,15 +42,15 @@ test.describe('API Error Handling', () => {
     });
 
     // Arrange: Mock 500 error response
-    await page.route('**/api/users', route =>
+    await page.route('**/api/users', (route) =>
       route.fulfill({
         status: 500,
         contentType: 'application/json',
         body: JSON.stringify({
           error: 'Internal server error',
-          code: 'INTERNAL_ERROR'
-        })
-      })
+          code: 'INTERNAL_ERROR',
+        }),
+      }),
     );
 
     // Act: Navigate to page that fetches users
@@ -70,7 +70,7 @@ test.describe('API Error Handling', () => {
   test('should NOT swallow unexpected errors', async ({ page }) => {
     let unexpectedError: Error | null = null;
 
-    page.on('pageerror', error => {
+    page.on('pageerror', (error) => {
       // Capture but don't swallow - test should fail
       unexpectedError = error;
       throw error;
@@ -103,7 +103,7 @@ test.describe('API Error Handling', () => {
 describe('API Error Handling', () => {
   it('should display error message when API returns 500', () => {
     // Scoped to this test only
-    cy.on('uncaught:exception', err => {
+    cy.on('uncaught:exception', (err) => {
       // Only swallow documented NetworkError
       if (err.message.includes('NetworkError')) {
         return false; // Prevent test failure
@@ -117,8 +117,8 @@ describe('API Error Handling', () => {
       statusCode: 500,
       body: {
         error: 'Internal server error',
-        code: 'INTERNAL_ERROR'
-      }
+        code: 'INTERNAL_ERROR',
+      },
     }).as('getUsers');
 
     // Act
@@ -137,7 +137,7 @@ describe('API Error Handling', () => {
     cy.visit('/dashboard');
 
     // Trigger unexpected error
-    cy.window().then(win => {
+    cy.window().then((win) => {
       // This should fail the test
       win.eval('throw new Error("UNEXPECTED BUG")');
     });
@@ -180,7 +180,7 @@ test.describe('Network Retry Logic', () => {
     const attemptTimestamps: number[] = [];
 
     // Mock API: Fail twice, succeed on third attempt
-    await page.route('**/api/products', route => {
+    await page.route('**/api/products', (route) => {
       attemptCount++;
       attemptTimestamps.push(Date.now());
 
@@ -188,14 +188,14 @@ test.describe('Network Retry Logic', () => {
         // First 2 attempts: 500 error
         route.fulfill({
           status: 500,
-          body: JSON.stringify({ error: 'Server error' })
+          body: JSON.stringify({ error: 'Server error' }),
         });
       } else {
         // 3rd attempt: Success
         route.fulfill({
           status: 200,
           contentType: 'application/json',
-          body: JSON.stringify({ products: [{ id: 1, name: 'Product 1' }] })
+          body: JSON.stringify({ products: [{ id: 1, name: 'Product 1' }] }),
         });
       }
     });
@@ -227,14 +227,14 @@ test.describe('Network Retry Logic', () => {
       expect.objectContaining({
         event: 'api_retry',
         attempt: 1,
-        endpoint: '/api/products'
-      })
+        endpoint: '/api/products',
+      }),
     );
     expect(telemetryEvents).toContainEqual(
       expect.objectContaining({
         event: 'api_retry',
-        attempt: 2
-      })
+        attempt: 2,
+      }),
     );
   });
 
@@ -242,11 +242,11 @@ test.describe('Network Retry Logic', () => {
     let attemptCount = 0;
 
     // Mock API: Always fail (test retry limit)
-    await page.route('**/api/products', route => {
+    await page.route('**/api/products', (route) => {
       attemptCount++;
       route.fulfill({
         status: 500,
-        body: JSON.stringify({ error: 'Persistent server error' })
+        body: JSON.stringify({ error: 'Persistent server error' }),
       });
     });
 
@@ -258,9 +258,7 @@ test.describe('Network Retry Logic', () => {
 
     // Assert: Error UI displayed after exhausting retries
     await expect(page.getByTestId('error-message')).toBeVisible();
-    await expect(page.getByTestId('error-message')).toContainText(
-      /unable.*load|failed.*after.*retries/i
-    );
+    await expect(page.getByTestId('error-message')).toContainText(/unable.*load|failed.*after.*retries/i);
 
     // Assert: Data not displayed
     await expect(page.getByTestId('product-list')).not.toBeVisible();
@@ -270,11 +268,11 @@ test.describe('Network Retry Logic', () => {
     let attemptCount = 0;
 
     // Mock API: 404 error (should NOT retry)
-    await page.route('**/api/products/999', route => {
+    await page.route('**/api/products/999', (route) => {
       attemptCount++;
       route.fulfill({
         status: 404,
-        body: JSON.stringify({ error: 'Product not found' })
+        body: JSON.stringify({ error: 'Product not found' }),
       });
     });
 
@@ -297,7 +295,7 @@ describe('Network Retry Logic', () => {
   it('should retry on 500 and succeed on 3rd attempt', () => {
     let attemptCount = 0;
 
-    cy.intercept('GET', '**/api/products', req => {
+    cy.intercept('GET', '**/api/products', (req) => {
       attemptCount++;
 
       if (attemptCount <= 2) {
@@ -368,7 +366,7 @@ test.describe('Error Telemetry', () => {
     const errorLogs: ErrorLog[] = [];
 
     // Capture console errors
-    page.on('console', msg => {
+    page.on('console', (msg) => {
       if (msg.type() === 'error') {
         try {
           const log = JSON.parse(msg.text());
@@ -380,11 +378,11 @@ test.describe('Error Telemetry', () => {
     });
 
     // Mock failing API
-    await page.route('**/api/orders', route =>
+    await page.route('**/api/orders', (route) =>
       route.fulfill({
         status: 500,
-        body: JSON.stringify({ error: 'Payment processor unavailable' })
-      })
+        body: JSON.stringify({ error: 'Payment processor unavailable' }),
+      }),
     );
 
     // Act: Trigger error
@@ -403,9 +401,9 @@ test.describe('Error Telemetry', () => {
           endpoint: '/api/orders',
           method: 'POST',
           statusCode: 500,
-          userId: expect.any(String)
-        })
-      })
+          userId: expect.any(String),
+        }),
+      }),
     );
 
     // Assert: Sensitive data NOT logged
@@ -426,20 +424,18 @@ test.describe('Error Telemetry', () => {
           (window as any).__SENTRY_EVENTS__.push({
             error: error.message,
             context,
-            timestamp: Date.now()
+            timestamp: Date.now(),
           });
         },
         addBreadcrumb: (breadcrumb: any) => {
           (window as any).__SENTRY_BREADCRUMBS__ = (window as any).__SENTRY_BREADCRUMBS__ || [];
           (window as any).__SENTRY_BREADCRUMBS__.push(breadcrumb);
-        }
+        },
       };
     });
 
     // Mock failing API
-    await page.route('**/api/users', route =>
-      route.fulfill({ status: 403, body: { error: 'Forbidden' } })
-    );
+    await page.route('**/api/users', (route) => route.fulfill({ status: 403, body: { error: 'Forbidden' } }));
 
     // Act
     await page.goto('/users');
@@ -451,8 +447,8 @@ test.describe('Error Telemetry', () => {
       error: expect.stringContaining('403'),
       context: expect.objectContaining({
         endpoint: '/api/users',
-        statusCode: 403
-      })
+        statusCode: 403,
+      }),
     });
 
     // Assert: Breadcrumbs include user actions
@@ -460,8 +456,8 @@ test.describe('Error Telemetry', () => {
     expect(breadcrumbs).toContainEqual(
       expect.objectContaining({
         category: 'navigation',
-        message: '/users'
-      })
+        message: '/users',
+      }),
     );
   });
 });
@@ -476,8 +472,8 @@ describe('Error Telemetry', () => {
     const errorLogs = [];
 
     // Capture console errors
-    cy.on('window:before:load', win => {
-      cy.stub(win.console, 'error').callsFake(msg => {
+    cy.on('window:before:load', (win) => {
+      cy.stub(win.console, 'error').callsFake((msg) => {
         errorLogs.push(msg);
       });
     });
@@ -485,7 +481,7 @@ describe('Error Telemetry', () => {
     // Mock failing API
     cy.intercept('POST', '**/api/orders', {
       statusCode: 500,
-      body: { error: 'Payment failed' }
+      body: { error: 'Payment failed' },
     });
 
     // Act
@@ -529,7 +525,7 @@ function redactSensitiveData(obj: any): any {
   const redacted = { ...obj };
 
   for (const key of Object.keys(redacted)) {
-    if (SENSITIVE_KEYS.some(sensitive => key.toLowerCase().includes(sensitive))) {
+    if (SENSITIVE_KEYS.some((sensitive) => key.toLowerCase().includes(sensitive))) {
       redacted[key] = '[REDACTED]';
     } else if (typeof redacted[key] === 'object') {
       redacted[key] = redactSensitiveData(redacted[key]);
@@ -550,7 +546,7 @@ export function logError(error: Error, context?: ErrorContext) {
     message: error.message,
     stack: error.stack,
     context: safeContext,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   };
 
   // Console (development)
@@ -559,7 +555,7 @@ export function logError(error: Error, context?: ErrorContext) {
   // Sentry (production)
   if (typeof window !== 'undefined' && (window as any).Sentry) {
     (window as any).Sentry.captureException(error, {
-      contexts: { custom: safeContext }
+      contexts: { custom: safeContext },
     });
   }
 }
@@ -602,17 +598,17 @@ test.describe('Service Unavailability', () => {
         JSON.stringify({
           data: [
             { id: 1, name: 'Cached Product 1' },
-            { id: 2, name: 'Cached Product 2' }
+            { id: 2, name: 'Cached Product 2' },
           ],
-          timestamp: Date.now()
-        })
+          timestamp: Date.now(),
+        }),
       );
     });
 
     // Mock API unavailable
     await page.route(
       '**/api/products',
-      route => route.abort('connectionrefused') // Simulate server down
+      (route) => route.abort('connectionrefused'), // Simulate server down
     );
 
     // Act
@@ -632,9 +628,7 @@ test.describe('Service Unavailability', () => {
 
   test('should show fallback UI when analytics service fails', async ({ page }) => {
     // Mock analytics service down (non-critical)
-    await page.route('**/analytics/track', route =>
-      route.fulfill({ status: 503, body: 'Service unavailable' })
-    );
+    await page.route('**/analytics/track', (route) => route.fulfill({ status: 503, body: 'Service unavailable' }));
 
     // Act: Navigate normally
     await page.goto('/dashboard');
@@ -644,7 +638,7 @@ test.describe('Service Unavailability', () => {
 
     // Assert: Analytics error logged but not shown to user
     const consoleErrors = [];
-    page.on('console', msg => {
+    page.on('console', (msg) => {
       if (msg.type() === 'error') consoleErrors.push(msg.text());
     });
 
@@ -660,11 +654,11 @@ test.describe('Service Unavailability', () => {
 
   test('should fallback to local validation when API is slow', async ({ page }) => {
     // Mock slow API (> 5 seconds)
-    await page.route('**/api/validate-email', async route => {
-      await new Promise(resolve => setTimeout(resolve, 6000)); // 6 second delay
+    await page.route('**/api/validate-email', async (route) => {
+      await new Promise((resolve) => setTimeout(resolve, 6000)); // 6 second delay
       route.fulfill({
         status: 200,
-        body: JSON.stringify({ valid: true })
+        body: JSON.stringify({ valid: true }),
       });
     });
 
@@ -682,8 +676,8 @@ test.describe('Service Unavailability', () => {
 
   test('should maintain functionality with third-party script failure', async ({ page }) => {
     // Block third-party scripts (Google Analytics, Intercom, etc.)
-    await page.route('**/*.google-analytics.com/**', route => route.abort());
-    await page.route('**/*.intercom.io/**', route => route.abort());
+    await page.route('**/*.google-analytics.com/**', (route) => route.abort());
+    await page.route('**/*.intercom.io/**', (route) => route.abort());
 
     // Act
     await page.goto('/');

@@ -1,19 +1,33 @@
 import { z } from 'zod';
 
+import { VALIDATION_CONSTANTS } from '../constants/auth.constants.js';
+
 // Email validation with proper RFC 5322 compliance
 const emailSchema = z
   .string()
   .email('Invalid email format')
-  .min(5, 'Email must be at least 5 characters')
-  .max(255, 'Email must not exceed 255 characters')
+  .min(
+    VALIDATION_CONSTANTS.MIN_EMAIL_LENGTH,
+    `Email must be at least ${VALIDATION_CONSTANTS.MIN_EMAIL_LENGTH} characters`
+  )
+  .max(
+    VALIDATION_CONSTANTS.MAX_EMAIL_LENGTH,
+    `Email must not exceed ${VALIDATION_CONSTANTS.MAX_EMAIL_LENGTH} characters`
+  )
   .toLowerCase()
   .trim();
 
 // Password validation with security requirements
 const passwordSchema = z
   .string()
-  .min(8, 'Password must be at least 8 characters')
-  .max(128, 'Password must not exceed 128 characters')
+  .min(
+    VALIDATION_CONSTANTS.MIN_PASSWORD_LENGTH,
+    `Password must be at least ${VALIDATION_CONSTANTS.MIN_PASSWORD_LENGTH} characters`
+  )
+  .max(
+    VALIDATION_CONSTANTS.MAX_PASSWORD_LENGTH,
+    `Password must not exceed ${VALIDATION_CONSTANTS.MAX_PASSWORD_LENGTH} characters`
+  )
   .regex(
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
     'Password must contain at least one uppercase letter, one lowercase letter, and one number'
@@ -22,8 +36,14 @@ const passwordSchema = z
 // Name validation
 const nameSchema = z
   .string()
-  .min(1, 'Name must be at least 1 character')
-  .max(100, 'Name must not exceed 100 characters')
+  .min(
+    VALIDATION_CONSTANTS.MIN_NAME_LENGTH,
+    `Name must be at least ${VALIDATION_CONSTANTS.MIN_NAME_LENGTH} character`
+  )
+  .max(
+    VALIDATION_CONSTANTS.MAX_NAME_LENGTH,
+    `Name must not exceed ${VALIDATION_CONSTANTS.MAX_NAME_LENGTH} characters`
+  )
   .trim()
   .optional();
 
@@ -70,8 +90,14 @@ export const onboardingDataSchema = z.object({
   workspaceName: z
     .string()
     .min(1, 'Workspace name is required')
-    .max(100, 'Workspace name must not exceed 100 characters'),
-  workspaceDescription: z.string().max(500).optional(),
+    .max(
+      VALIDATION_CONSTANTS.MAX_WORKSPACE_NAME_LENGTH,
+      `Workspace name must not exceed ${VALIDATION_CONSTANTS.MAX_WORKSPACE_NAME_LENGTH} characters`
+    ),
+  workspaceDescription: z
+    .string()
+    .max(VALIDATION_CONSTANTS.MAX_WORKSPACE_DESCRIPTION_LENGTH)
+    .optional(),
   workspaceTemplate: z.enum(['React', 'Node.js', 'Python', 'Custom']).optional()
 });
 
