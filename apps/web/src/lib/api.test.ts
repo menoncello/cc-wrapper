@@ -10,7 +10,7 @@ import './api.request.headers.test';
 import './api.request.errors.test';
 import './api.workspaces.create-basic.test';
 import './api.workspaces.create-with-data.test';
-import './api.workspaces.create-with-auth.test';
+import './api.workspaces.create-authenticated.test';
 import './api.workspaces.list.test';
 import './api.profile.update.test';
 import './api.profile.notifications-basic.test';
