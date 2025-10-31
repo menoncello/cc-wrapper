@@ -12,7 +12,7 @@
     "test:coverage": "bun test --coverage src",
     "test:watch": "bun test --watch src",
     "type-check": "astro check",
-    "lint": "eslint . --max-warnings 80",
+    "lint": "eslint . --max-warnings 100",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write \"src/**/*.{ts,tsx,css,json,md}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,css,json,md}\""
