@@ -6,6 +6,7 @@
 import { setupPrismaMock, cleanupPrismaMock, clearAllMocks, resetAllMocks } from './prisma.mock';
 import { setupCryptoMock, cleanupCryptoMock } from './crypto.mock';
 import { setupServiceMocks, cleanupServiceMocks, clearAllServiceMocks } from './services.mock';
+import { setupHttpMocks, cleanupHttpMocks } from './http.mock';
 
 /**
  * Setup all mocks for testing
@@ -14,6 +15,7 @@ export const setupTestMocks = () => {
   setupPrismaMock();
   setupCryptoMock();
   setupServiceMocks();
+  setupHttpMocks();
 };
 
 /**
@@ -23,6 +25,7 @@ export const cleanupTestMocks = () => {
   cleanupPrismaMock();
   cleanupCryptoMock();
   cleanupServiceMocks();
+  cleanupHttpMocks();
 };
 
 /**
