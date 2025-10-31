@@ -1,6 +1,9 @@
 import type { UserProfile } from '@cc-wrapper/shared-types';
 
 import { prisma } from '../../lib/prisma.js';
+import { createSafePrisma } from '../../lib/prisma-helpers.js';
+
+const safePrisma = createSafePrisma(prisma);
 
 /**
  * Interface for user with profile from database
@@ -12,26 +15,28 @@ interface UserWithProfile {
   role: string;
   userType?: string | null;
   oauthProvider?: string | null;
+  oauthId?: string | null;
+  passwordHash?: string | null;
   createdAt: Date;
   updatedAt: Date;
   profile: {
     id: string;
     userId: string;
-    onboardingCompleted: boolean;
-    tourCompleted: boolean;
     preferredAITools?: string[] | null;
     notificationPreferences?: unknown;
     defaultWorkspaceId?: string | null;
+    onboardingCompleted: boolean;
+    tourCompleted: boolean;
     createdAt: Date;
     updatedAt: Date;
   };
 }
 
 /**
- * Interface for user with profile and password hash from database
+ * Interface for user with profile and password from database
  */
 interface UserWithProfileAndPassword extends UserWithProfile {
-  passwordHash?: string | null;
+  passwordHash: string;
 }
 
 /**
@@ -51,11 +56,12 @@ export class UserDatabaseOperations {
     passwordHash: string,
     name?: string
   ): Promise<UserWithProfile> {
-    return prisma.user.create({
+    const result = await safePrisma.user.create({
       data: {
         email,
         passwordHash,
         name,
+        role: 'DEVELOPER',
         profile: {
           create: {
             onboardingCompleted: false,
@@ -67,6 +73,12 @@ export class UserDatabaseOperations {
         profile: true
       }
     });
+
+    if (!result.profile) {
+      throw new Error('Failed to create user profile');
+    }
+
+    return result as UserWithProfile;
   }
 
   /**
@@ -83,12 +95,13 @@ export class UserDatabaseOperations {
     oauthId: string,
     name?: string
   ): Promise<UserWithProfile> {
-    return prisma.user.create({
+    const result = await safePrisma.user.create({
       data: {
         email,
         oauthProvider,
         oauthId,
         name,
+        role: 'DEVELOPER',
         profile: {
           create: {
             onboardingCompleted: false,
@@ -100,6 +113,12 @@ export class UserDatabaseOperations {
         profile: true
       }
     });
+
+    if (!result.profile) {
+      throw new Error('Failed to create user profile');
+    }
+
+    return result as UserWithProfile;
   }
 
   /**
@@ -108,12 +127,18 @@ export class UserDatabaseOperations {
    * @returns {Promise<UserWithProfileAndPassword | null>} User object with profile or null if not found
    */
   public static async findUserByEmail(email: string): Promise<UserWithProfileAndPassword | null> {
-    return prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: { email },
       include: {
         profile: true
       }
     });
+
+    if (!user || !user.passwordHash) {
+      return null;
+    }
+
+    return user as unknown as UserWithProfileAndPassword;
   }
 
   /**
@@ -128,7 +153,7 @@ export class UserDatabaseOperations {
     oauthProvider: string,
     oauthId: string
   ): Promise<UserWithProfile | null> {
-    return prisma.user.findFirst({
+    const user = await prisma.user.findFirst({
       where: {
         email,
         oauthProvider,
@@ -138,6 +163,12 @@ export class UserDatabaseOperations {
         profile: true
       }
     });
+
+    if (!user) {
+      return null;
+    }
+
+    return user as unknown as UserWithProfile;
   }
 
   /**
@@ -146,12 +177,18 @@ export class UserDatabaseOperations {
    * @returns {Promise<UserWithProfile | null>} User object or null if not found
    */
   public static async getUserById(userId: string): Promise<UserWithProfile | null> {
-    return prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: { id: userId },
       include: {
         profile: true
       }
     });
+
+    if (!user) {
+      return null;
+    }
+
+    return user as unknown as UserWithProfile;
   }
 
   /**
@@ -174,19 +211,20 @@ export class UserDatabaseOperations {
     const profile = await prisma.userProfile.update({
       where: { userId },
       data: {
-        preferredAITools: data.preferredAITools,
-        notificationPreferences: data.notificationPreferences as never,
-        defaultWorkspaceId: data.defaultWorkspaceId
+        preferredAITools: data.preferredAITools as any,
+        notificationPreferences: data.notificationPreferences as any,
+        defaultWorkspaceId: data.defaultWorkspaceId || undefined
       }
     });
 
     return {
       ...profile,
-      preferredAITools: profile.preferredAITools as string[],
+      preferredAITools: profile.preferredAITools as string[] | undefined,
       notificationPreferences: profile.notificationPreferences as unknown as
         | import('@cc-wrapper/shared-types').NotificationPreferences
-        | undefined
-    } as UserProfile;
+        | undefined,
+      defaultWorkspaceId: profile.defaultWorkspaceId || undefined
+    };
   }
 
   /**

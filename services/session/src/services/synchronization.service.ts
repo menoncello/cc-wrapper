@@ -3,9 +3,9 @@
  * Handles real-time updates and conflict resolution for collaborative sessions
  */
 
-import { SessionCheckpoint,WorkspaceSession } from '@prisma/client';
 import { EventEmitter } from 'events';
 import prisma from '../lib/prisma.js';
+import { generateSecureUrlId, generateSubscriptionId } from '../lib/crypto-utils.js';
 
 export interface SyncEvent {
   id: string;
@@ -61,7 +61,7 @@ export class SessionSynchronizationService extends EventEmitter {
   private conflicts: Map<string, SyncConflict> = new Map();
   private metrics: SyncMetrics;
   private isProcessing = false;
-  private processingInterval: NodeJS.Timeout | null = null;
+  private processingInterval: ReturnType<typeof setInterval> | null = null;
 
   /**
    *
@@ -96,7 +96,7 @@ export class SessionSynchronizationService extends EventEmitter {
     eventTypes?: string[];
   }): Promise<SyncSubscription> {
     const subscription: SyncSubscription = {
-      id: `sub_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+      id: generateSubscriptionId('sub'),
       userId: request.userId,
       sessionId: request.sessionId,
       workspaceId: request.workspaceId,
@@ -137,7 +137,7 @@ export class SessionSynchronizationService extends EventEmitter {
    */
   async publishEvent(event: Omit<SyncEvent, 'id' | 'timestamp' | 'version'>): Promise<SyncEvent> {
     const syncEvent: SyncEvent = {
-      id: `event_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+      id: generateSecureUrlId('event'),
       timestamp: new Date(),
       version: await this.getNextVersion(event.sessionId),
       ...event
@@ -296,7 +296,7 @@ export class SessionSynchronizationService extends EventEmitter {
       // Check if there's a version mismatch
       if (event.version < currentSession.version) {
         const conflict: SyncConflict = {
-          id: `conflict_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+          id: generateSecureUrlId('conflict'),
           sessionId: event.sessionId,
           conflictType: 'version_mismatch',
           localVersion: event.version,

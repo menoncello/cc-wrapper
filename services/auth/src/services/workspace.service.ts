@@ -15,7 +15,7 @@ export class WorkspaceService {
    */
   public async createDefaultWorkspace(userId: string, data: OnboardingData): Promise<Workspace> {
     // Create workspace with template configuration
-    const workspace = await prisma.workspace.create({
+    const workspace: any = await prisma.workspace.create({
       data: {
         name: data.workspaceName,
         description: data.workspaceDescription,
@@ -44,9 +44,18 @@ export class WorkspaceService {
       data: {
         userType: data.userType
       }
-    });
+    } as any);
 
-    return workspace as Workspace;
+    return {
+      id: workspace.id,
+      name: workspace.name,
+      description: workspace.description || undefined,
+      template: workspace.template || undefined,
+      ownerId: workspace.ownerId,
+      config: workspace.config as Record<string, unknown> | undefined,
+      createdAt: workspace.createdAt,
+      updatedAt: workspace.updatedAt
+    };
   }
 
   /**
@@ -59,7 +68,20 @@ export class WorkspaceService {
       where: { id: workspaceId }
     });
 
-    return workspace as Workspace | null;
+    if (!workspace) {
+      return null;
+    }
+
+    return {
+      id: workspace.id,
+      name: workspace.name,
+      description: workspace.description || undefined,
+      template: workspace.template || undefined,
+      ownerId: workspace.ownerId,
+      config: workspace.config as Record<string, unknown> | undefined,
+      createdAt: workspace.createdAt,
+      updatedAt: workspace.updatedAt
+    };
   }
 
   /**
@@ -68,11 +90,20 @@ export class WorkspaceService {
    * @returns {Promise<Workspace[]>} Array of workspace objects owned by the user
    */
   public async getUserWorkspaces(userId: string): Promise<Workspace[]> {
-    const workspaces = await prisma.workspace.findMany({
+    const workspaces: any[] = await prisma.workspace.findMany({
       where: { ownerId: userId },
       orderBy: { createdAt: 'desc' }
     });
 
-    return workspaces as Workspace[];
+    return workspaces.map(workspace => ({
+      id: workspace.id,
+      name: workspace.name,
+      description: workspace.description,
+      template: workspace.template,
+      ownerId: workspace.ownerId,
+      config: workspace.config,
+      createdAt: workspace.createdAt,
+      updatedAt: workspace.updatedAt
+    }));
   }
 }
