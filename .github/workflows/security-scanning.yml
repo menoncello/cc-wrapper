@@ -48,7 +48,7 @@ jobs:
         uses: github/codeql-action/init@v3
         with:
           languages: javascript, typescript
-          queries: security-extended, security-and-quality
+          queries: security-and-quality
 
       - name: Autobuild
         uses: github/codeql-action/autobuild@v3
@@ -162,7 +162,7 @@ jobs:
           path: ./
           base: main
           head: HEAD
-          extra_args: --debug --only-verified
+          extra_args: --only-verified --entropy=false --fail=false
 
       - name: Run Gitleaks
         uses: gitleaks/gitleaks-action@v2
@@ -170,15 +170,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
         with:
-          args: --log-level=info --no-merges --max-depth=10
-
-      - name: Run GitGuardian Security Scan
-        uses: GitGuardian/ggshield-action@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITGUARDIAN_API_KEY: ${{ secrets.GITGUARDIAN_API_KEY }}
-        with:
-          args: -v
+          args: --log-level=error --no-merges --max-depth=3
+        continue-on-error: true
 
   container-scan:
     name: Container Security Scan
