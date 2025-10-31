@@ -16,41 +16,41 @@ import { SetupEnvironment } from '../setup';
 
 // Type definitions for test interfaces
 interface SetupEnvironmentInstance {
-  detectPlatform(): {
+  detectPlatform: () => {
     os: string;
     arch: string;
     packageManager: string;
   };
-  checkBun(): Promise<{
+  checkBun: () => Promise<{
     installed: boolean;
     version?: string;
     required: string;
   }>;
-  checkTypeScript(): Promise<{
+  checkTypeScript: () => Promise<{
     installed: boolean;
     version?: string;
     required: string;
   }>;
-  checkDocker(): Promise<{
+  checkDocker: () => Promise<{
     installed: boolean;
     version?: string;
     required: string;
   }>;
-  checkPostgreSQL(): Promise<{
+  checkPostgreSQL: () => Promise<{
     installed: boolean;
     version?: string;
     required: string;
   }>;
-  checkRedis(): Promise<{
+  checkRedis: () => Promise<{
     installed: boolean;
     version?: string;
     required: string;
   }>;
-  configureEnvironment(): Promise<void>;
-  validateEnvironment(): Promise<void>;
-  createDockerComposeFile(): Promise<void>;
-  setupEditorIntegration(): Promise<void>;
-  checkEnvironment(): Promise<{
+  configureEnvironment: () => Promise<void>;
+  validateEnvironment: () => Promise<void>;
+  createDockerComposeFile: () => Promise<void>;
+  setupEditorIntegration: () => Promise<void>;
+  checkEnvironment: () => Promise<{
     dependencies: Record<
       string,
       {
@@ -268,11 +268,11 @@ describe('Development Environment Setup - P0 Critical Setup Validation', () => {
 
       await (setup as SetupEnvironmentInstance).validateEnvironment();
 
-      dirs.forEach(dir => {
+      for (const dir of dirs) {
         expect(fs.existsSync(dir)).toBe(true);
         const stats = fs.statSync(dir);
         expect(stats.isDirectory()).toBe(true);
-      });
+      }
 
       // No cleanup - these are git-tracked directories
     });
@@ -379,10 +379,10 @@ describe('Development Environment Setup - P0 Critical Setup Validation', () => {
       const status = await (setup as SetupEnvironmentInstance).checkEnvironment();
 
       expect(status.dependencies).toBeDefined();
-      Object.values(status.dependencies).forEach(dep => {
+      for (const dep of Object.values(status.dependencies)) {
         expect(typeof dep.installed).toBe('boolean');
         expect(typeof dep.required).toBe('string');
-      });
+      }
     });
   });
 });
@@ -392,14 +392,14 @@ describe('Setup Script Integration - P1 High Priority Validation', () => {
     const stats = fs.statSync('setup.ts');
     // Note: On Windows, executable permissions work differently
     if (process.platform !== 'win32') {
-      expect(stats.mode & parseInt('111', 8)).toBeGreaterThan(0);
+      expect(stats.mode & Number.parseInt('111', 8)).toBeGreaterThan(0);
     }
   });
 
   test('1.8-E2E-002: health check script should be executable', () => {
     const stats = fs.statSync('scripts/health-check.ts');
     if (process.platform !== 'win32') {
-      expect(stats.mode & parseInt('111', 8)).toBeGreaterThan(0);
+      expect(stats.mode & Number.parseInt('111', 8)).toBeGreaterThan(0);
     }
   });
 

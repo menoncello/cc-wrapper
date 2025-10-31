@@ -36,15 +36,24 @@ interface ValidationReport {
   };
 }
 
+/**
+ *
+ */
 class ConfigValidator {
   private rules: ValidationRule[] = [];
   private envLoaded = false;
 
+  /**
+   *
+   */
   constructor() {
     this.loadEnvironment();
     this.setupValidationRules();
   }
 
+  /**
+   *
+   */
   private loadEnvironment(): void {
     try {
       // Load .env.local if it exists
@@ -57,6 +66,9 @@ class ConfigValidator {
     }
   }
 
+  /**
+   *
+   */
   private setupValidationRules(): void {
     // Environment variable validations
     this.rules.push({
@@ -104,6 +116,9 @@ class ConfigValidator {
     });
   }
 
+  /**
+   *
+   */
   private async validateDatabaseUrl(): Promise<ValidationResult> {
     const databaseUrl = process.env.DATABASE_URL;
 
@@ -158,6 +173,9 @@ class ConfigValidator {
     }
   }
 
+  /**
+   *
+   */
   private async validateRedisUrl(): Promise<ValidationResult> {
     const redisUrl = process.env.REDIS_URL;
 
@@ -202,6 +220,9 @@ class ConfigValidator {
     }
   }
 
+  /**
+   *
+   */
   private async validateNodeEnvironment(): Promise<ValidationResult> {
     const nodeEnv = process.env.NODE_ENV;
     const validEnvironments = ['development', 'production', 'test'];
@@ -229,6 +250,9 @@ class ConfigValidator {
     };
   }
 
+  /**
+   *
+   */
   private async validatePortConfiguration(): Promise<ValidationResult> {
     const port = process.env.PORT;
     const defaultPort = 3000;
@@ -241,7 +265,7 @@ class ConfigValidator {
       };
     }
 
-    const portNumber = parseInt(port, 10);
+    const portNumber = Number.parseInt(port, 10);
 
     if (isNaN(portNumber) || portNumber < 1 || portNumber > 65535) {
       return {
@@ -258,6 +282,9 @@ class ConfigValidator {
     };
   }
 
+  /**
+   *
+   */
   private async validateRequiredDirectories(): Promise<ValidationResult> {
     const requiredDirs = ['apps', 'packages', 'services'];
     const missingDirs: string[] = [];
@@ -286,6 +313,9 @@ class ConfigValidator {
     };
   }
 
+  /**
+   *
+   */
   private async validateConfigurationFiles(): Promise<ValidationResult> {
     const requiredFiles = [
       'package.json',
@@ -320,6 +350,9 @@ class ConfigValidator {
     };
   }
 
+  /**
+   *
+   */
   private async validateRequiredDependencies(): Promise<ValidationResult> {
     const requiredCommands = [
       { name: 'Bun', command: 'bun --version' },
@@ -354,6 +387,9 @@ class ConfigValidator {
     };
   }
 
+  /**
+   *
+   */
   async run(): Promise<ValidationReport> {
     console.log('🔧 CC Wrapper Configuration Validation');
     console.log('━'.repeat(50));
@@ -393,6 +429,10 @@ class ConfigValidator {
     return report;
   }
 
+  /**
+   *
+   * @param results
+   */
   private generateReport(results: ValidationResult[]): ValidationReport {
     const summary = {
       total: results.length,
@@ -416,6 +456,10 @@ class ConfigValidator {
     };
   }
 
+  /**
+   *
+   * @param report
+   */
   private displayReport(report: ValidationReport): void {
     console.log('\n📊 Validation Summary:');
     console.log(`  Total checks: ${report.summary.total}`);

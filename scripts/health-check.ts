@@ -29,9 +29,15 @@ interface HealthReport {
   };
 }
 
+/**
+ *
+ */
 class HealthChecker {
   private checks: HealthCheck[] = [];
 
+  /**
+   *
+   */
   async run(): Promise<HealthReport> {
     console.log('🏥 CC Wrapper Development Environment Health Check');
     console.log('━'.repeat(50));
@@ -54,6 +60,9 @@ class HealthChecker {
     return report;
   }
 
+  /**
+   *
+   */
   async checkBun(): Promise<HealthCheck> {
     const start = Date.now();
     try {
@@ -80,6 +89,9 @@ class HealthChecker {
     }
   }
 
+  /**
+   *
+   */
   async checkTypeScript(): Promise<HealthCheck> {
     const start = Date.now();
     try {
@@ -106,6 +118,9 @@ class HealthChecker {
     }
   }
 
+  /**
+   *
+   */
   async checkDocker(): Promise<HealthCheck[]> {
     const start = Date.now();
     const results: HealthCheck[] = [];
@@ -145,6 +160,9 @@ class HealthChecker {
     return results;
   }
 
+  /**
+   *
+   */
   async checkPostgreSQL(): Promise<HealthCheck> {
     const start = Date.now();
     try {
@@ -186,6 +204,9 @@ class HealthChecker {
     }
   }
 
+  /**
+   *
+   */
   async checkRedis(): Promise<HealthCheck> {
     const start = Date.now();
     try {
@@ -227,6 +248,9 @@ class HealthChecker {
     }
   }
 
+  /**
+   *
+   */
   async checkEnvironmentVariables(): Promise<HealthCheck> {
     const start = Date.now();
     const requiredEnvVars = ['DATABASE_URL', 'REDIS_URL', 'NODE_ENV', 'PORT'];
@@ -253,7 +277,7 @@ class HealthChecker {
       };
       this.checks.push(healthCheck);
       return healthCheck;
-    } else {
+    } 
       const healthCheck: HealthCheck = {
         name: 'Environment Variables',
         status: 'degraded',
@@ -262,9 +286,12 @@ class HealthChecker {
       };
       this.checks.push(healthCheck);
       return healthCheck;
-    }
+    
   }
 
+  /**
+   *
+   */
   generateReport(): HealthReport {
     const summary = {
       total: this.checks.length,
@@ -289,18 +316,22 @@ class HealthChecker {
     };
   }
 
+  /**
+   *
+   * @param report
+   */
   private displayReport(report: HealthReport): void {
     console.log(`\n📊 Overall Status: ${report.overall.toUpperCase()}`);
     console.log(`📅 Checked: ${new Date(report.timestamp).toLocaleString()}`);
     console.log(`⏱️  Total Checks: ${report.summary.total}`);
 
     console.log('\n📋 Service Details:');
-    report.checks.forEach(check => {
+    for (const check of report.checks) {
       const statusIcon = this.getStatusIcon(check.status);
       const responseTime = check.responseTime ? ` (${check.responseTime}ms)` : '';
       const message = check.message ? ` - ${check.message}` : '';
       console.log(`  ${statusIcon} ${check.name}${responseTime}${message}`);
-    });
+    }
 
     console.log('\n📈 Summary:');
     console.log(`  ✅ Healthy: ${report.summary.healthy}`);
@@ -317,6 +348,10 @@ class HealthChecker {
     }
   }
 
+  /**
+   *
+   * @param status
+   */
   private getStatusIcon(status: HealthCheck['status']): string {
     switch (status) {
       case 'healthy':

@@ -15,9 +15,9 @@ import { setupMockConsole, setupPlatformMock } from '../test-utils/fixtures/setu
 
 // Type definitions for test interfaces
 interface SetupEnvironmentInstance {
-  detectPlatform(): string;
-  run(): Promise<void>;
-  checkEnvironment(): Promise<{
+  detectPlatform: () => string;
+  run: () => Promise<void>;
+  checkEnvironment: () => Promise<{
     dependencies: Record<
       string,
       {

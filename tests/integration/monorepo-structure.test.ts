@@ -117,18 +117,18 @@ describe('Monorepo Structure (AC1) [P0]', () => {
 
     // WHEN: Checking each package for package.json
     const invalidPackages: string[] = [];
-    packages.forEach(pkg => {
+    for (const pkg of packages) {
       const packageJsonPath = `packages/${pkg}/package.json`;
-      if (!project.hasFile(packageJsonPath)) {
-        invalidPackages.push(pkg);
-      } else {
+      if (project.hasFile(packageJsonPath)) {
         try {
           JSON.parse(project.readFile(packageJsonPath));
         } catch {
           invalidPackages.push(pkg);
         }
+      } else {
+        invalidPackages.push(pkg);
       }
-    });
+    }
 
     // THEN: All packages should have valid package.json
     expect(invalidPackages).toEqual([]);

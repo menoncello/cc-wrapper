@@ -1,0 +1,121 @@
+<story-context id="bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>1</epicId>
+    <storyId>1.2</storyId>
+    <title>Session Persistence & Recovery</title>
+    <status>Draft</status>
+    <generatedAt>2025-10-28</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>/Users/menoncello/repos/dev/ccwrapper/main/docs/stories/story-1.2.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>developer</asA>
+    <iWant>my work sessions to be automatically saved and recoverable</iWant>
+    <soThat>I never lose progress during system restarts or unexpected interruptions</soThat>
+    <tasks>Database schema for session persistence (AC: 1, 2)
+- Create sessions table with workspace state JSONB columns
+- Create session_checkpoints table for manual checkpoints
+- Add indexes for efficient session queries
+- Implement data migration scripts
+
+Session state serialization service (AC: 1, 2)
+- Implement workspace state capture (terminal, browser, AI conversations)
+- Create state compression and optimization algorithms
+- Implement incremental state updates (delta saving)
+- Add session cleanup and retention policies
+
+Session recovery and restoration service (AC: 3, 4)
+- Implement session restoration logic
+- Create corruption detection and repair algorithms
+- Add fallback mechanisms for damaged sessions
+- Implement session merge conflicts resolution
+
+Manual checkpoint system (AC: 5)
+- Create checkpoint creation API endpoints
+- Implement checkpoint listing and selection UI
+- Add checkpoint deletion and management features
+- Create checkpoint restoration workflows
+
+Security and encryption layer (AC: 6)
+- Implement user-controlled encryption keys
+- Add data encryption at rest using Bun crypto
+- Create key rotation and management system
+- Implement secure key derivation from user credentials
+
+Real-time session synchronization (Integration with existing services)
+- Integrate with authentication service for user session linking
+- Connect to AI orchestration service for conversation persistence
+- Sync with workspace service for project state management
+- Implement WebSocket notifications for session updates
+
+Testing and quality assurance (All ACs)
+- Unit tests for session serialization/deserialization
+- Integration tests for complete session workflows
+- Performance tests for large session state handling
+- Security tests for encryption and data protection
+- Recovery tests for corruption scenarios</tasks>
+  </story>
+
+  <acceptanceCriteria>1. System automatically saves workspace state every 30 seconds
+2. Session includes terminal state, browser tabs, AI conversation history, and open files
+3. User can resume work exactly where left off after restart
+4. System detects and recovers from corrupted sessions with minimal data loss
+5. User can manually create session checkpoints and restore from any checkpoint
+6. Session data encrypted at rest with user-controlled encryption keys</acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+  <doc path="docs/tech-spec-epic-1.md" title="Tech Spec - Epic 1: Core Value Delivery & Wait-Time Optimization" section="Real-time Sync Service" snippet="WebSocket-based state synchronization service for sub-100ms latency with conflict resolution and cross-device sync capabilities"/>
+  <doc path="docs/tech-spec-epic-1.md" title="Tech Spec - Epic 1: Core Value Delivery & Wait-Time Optimization" section="Story 1.6: Session Persistence" snippet="As a developer, I want to automatically save and restore my AI conversations and workspace state so that I can continue working seamlessly across sessions and devices"/>
+  <doc path="docs/solution-architecture.md" title="CC Wrapper Solution Architecture Document" section="Real-time Synchronization Strategy" snippet="WebSocket + Redis Pub/Sub Architecture with sub-100ms latency for terminal-web interface updates, conflict resolution with operational transforms"/>
+  <doc path="docs/PRD.md" title="CC Wraper Product Requirements Document (PRD)" section="FR004" snippet="Session persistence and recovery capabilities for seamless workflow continuation across restarts and interruptions"/>
+</docs>
+    <code>
+  <code path="services/auth/src/services/auth.service.ts" kind="service" symbol="AuthService" lines="19-50" reason="Authentication service pattern to follow - Bun crypto usage, dependency injection, error handling"/>
+  <code path="services/auth/src/index.ts" kind="app" symbol="Elysia App" lines="21-36" reason="Service structure pattern - CORS middleware, error handling, health endpoints, route organization"/>
+  <code path="services/auth/prisma/schema.prisma" kind="schema" symbol="Session Model" lines="71-86" reason="Existing session table structure to extend for workspace session persistence"/>
+  <code path="packages/shared-types/src/auth/types.ts" kind="types" symbol="Session Interface" lines="65-73" reason="Shared session type definition to extend with workspace state fields"/>
+  <code path="packages/shared-types/src/auth/types.ts" kind="types" symbol="User Interface" lines="21-30" reason="User identification for session ownership and metadata"/>
+</code>
+    <dependencies>
+  <runtime name="bun" version=">=1.3.0" purpose="Primary runtime with native crypto and WebSocket support"/>
+  <backend name="elysia" version="1.4.12" purpose="Web framework built on Bun for performance"/>
+  <database name="prisma" version="6.17.0" purpose="ORM for database schema and migrations"/>
+  <database_client name="@prisma/client" version="6.17.0" purpose="Database client for PostgreSQL"/>
+  <validation name="zod" version="4.1.12" purpose="Schema validation for API endpoints"/>
+  <crypto name="bun-native" version="builtin" purpose="AES-256-GCM encryption and Argon2id key derivation"/>
+  <websocket name="bun-native" version="builtin" purpose="Real-time session synchronization and notifications"/>
+</dependencies>
+  </artifacts>
+
+  <constraints>
+  <constraint type="architecture" description="Follow monorepo structure with services/session/ aligned to services/auth/ pattern"/>
+  <constraint type="framework" description="Use Bun + Elysia stack for consistency with existing services"/>
+  <constraint type="database" description="Extend existing Prisma schema with session models, reuse database connection patterns"/>
+  <constraint type="api" description="Follow same REST API patterns, error handling, and Zod validation as auth service"/>
+  <constraint type="testing" description="Use Bun Test with same patterns as auth service for unit and integration tests"/>
+  <constraint type="performance" description="Session size limit: 50MB per session (compressed), auto-save interval: 30 seconds"/>
+  <constraint type="security" description="Session encryption using AES-256-GCM with user-derived keys via Argon2id"/>
+  <constraint type="state" description="Use immutable state patterns with JSON serialization and diff-based saving"/>
+</constraints>
+  <interfaces>
+  <interface name="SessionService" kind="service" signature="interface SessionService { saveSession(sessionId: string, state: WorkspaceState): Promise<void>; restoreSession(sessionId: string): Promise<WorkspaceState>; createCheckpoint(userId: string, name: string): Promise<Checkpoint>; listCheckpoints(userId: string): Promise<Checkpoint[]>; }" path="services/session/src/services/session.service.ts"/>
+  <interface name="Session API" kind="REST" signature="POST /api/sessions/save, GET /api/sessions/:sessionId, POST /api/sessions/checkpoints, GET /api/sessions/checkpoints" path="services/session/src/routes/session.routes.ts"/>
+  <interface name="WebSocket Events" kind="WebSocket" signature="session:saved, session:restored, checkpoint:created, session:corrupted" path="services/session/src/lib/websocket.ts"/>
+</interfaces>
+  <tests>
+    <standards>Use Bun Test for unit and integration tests following the same patterns as auth service. Structure tests with describe/it/expect from Bun test. Mock database calls for unit tests, use test database for integration tests. Include setup and teardown hooks for test isolation. Follow AAA pattern (Arrange, Act, Assert) in test organization.</standards>
+    <locations>services/session/src/**/*.test.ts for unit tests, tests/integration/session/ for integration tests, tests/e2e/session/ for end-to-end tests. Test files should be co-located with source files or in appropriate test directories.</locations>
+    <ideas>
+      <test idea="session-serialization" acceptanceCriteria="1,2" description="Test workspace state serialization and compression with various terminal, browser, and AI conversation states"/>
+      <test idea="auto-save-interval" acceptanceCriteria="1" description="Verify automatic saving every 30 seconds with configurable timing"/>
+      <test idea="session-restoration" acceptanceCriteria="3" description="Test complete session restoration after restart with all components (terminal, browser tabs, AI conversations)"/>
+      <test idea="corruption-recovery" acceptanceCriteria="4" description="Test corruption detection algorithms and recovery mechanisms with damaged session data"/>
+      <test idea="checkpoint-system" acceptanceCriteria="5" description="Test manual checkpoint creation, listing, selection, and restoration workflows"/>
+      <test idea="encryption-security" acceptanceCriteria="6" description="Test AES-256-GCM encryption with user-derived keys via Argon2id"/>
+      <test idea="performance-targets" acceptanceCriteria="1,3" description="Verify <100ms session save and <500ms session restore performance targets"/>
+      <test idea="size-limits" acceptanceCriteria="all" description="Test 50MB session size limits with compression and optimization"/>
+    </ideas>
+  </tests>
+</story-context>

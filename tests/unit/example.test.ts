@@ -36,7 +36,7 @@ class StringUtils {
     return str
       .toLowerCase()
       .trim()
-      .replace(/[^\w\s-]/g, '')
+      .replace(/[^\s\w-]/g, '')
       .replace(/[\s_-]+/g, '-')
       .replace(/^-+|-+$/g, '');
   }
@@ -142,8 +142,8 @@ class UserService {
 }
 
 interface ApiClient {
-  fetch(_url: string): Promise<User>;
-  post(_url: string, _data: unknown): Promise<User>;
+  fetch: (_url: string) => Promise<User>;
+  post: (_url: string, _data: unknown) => Promise<User>;
 }
 
 interface User {

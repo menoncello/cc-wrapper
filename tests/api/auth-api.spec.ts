@@ -9,8 +9,8 @@
  * Reference: bmad/bmm/testarch/knowledge/data-factories.md
  */
 
-import { test, expect } from '../fixtures/merged.fixture';
 import { createRegistrationData } from '../factories/user.factory';
+import { expect,test } from '../fixtures/merged.fixture';
 
 test.describe('POST /api/auth/register - User Registration', () => {
   test('should create new user with valid email and password', async ({ request }) => {
@@ -379,7 +379,7 @@ test.describe('Rate Limiting on Authentication Endpoints', () => {
     request
   }) => {
     // GIVEN: Rate limit is configured for 100 requests/minute
-    const requests: Promise<any>[] = [];
+    const requests: Array<Promise<any>> = [];
 
     // WHEN: Making 101 registration requests
     // NOTE: Each request uses unique data from factory to avoid caching
@@ -406,7 +406,7 @@ test.describe('Rate Limiting on Authentication Endpoints', () => {
     request
   }) => {
     // GIVEN: Rate limit is configured
-    const requests: Promise<any>[] = [];
+    const requests: Array<Promise<any>> = [];
 
     // WHEN: Making 101 login requests
     for (let i = 0; i < 101; i++) {
@@ -460,7 +460,7 @@ test.describe('JWT Token Security', () => {
     const body = await response.json();
 
     // THEN: Token is a valid JWT (3 parts separated by dots)
-    expect(body.token).toMatch(/^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/);
+    expect(body.token).toMatch(/^(?:[\w-]+\.){2}[\w-]+$/);
   });
 
   test('should include user ID in JWT payload', async ({ request }) => {

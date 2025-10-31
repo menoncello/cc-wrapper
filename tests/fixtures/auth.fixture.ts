@@ -6,7 +6,8 @@
  * Reference: bmad/bmm/testarch/knowledge/fixture-architecture.md
  */
 
-import { test as base, type APIRequestContext, type Page } from '@playwright/test';
+import { type APIRequestContext, type Page,test as base } from '@playwright/test';
+
 import {
   createUser,
   createUserWithProfile,

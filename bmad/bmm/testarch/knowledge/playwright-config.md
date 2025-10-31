@@ -23,14 +23,14 @@ import path from 'path';
 
 // Load .env from project root
 dotenvConfig({
-  path: path.resolve(__dirname, '../../.env')
+  path: path.resolve(__dirname, '../../.env'),
 });
 
 // Central environment config map
 const envConfigMap = {
   local: require('./playwright/config/local.config').default,
   staging: require('./playwright/config/staging.config').default,
-  production: require('./playwright/config/production.config').default
+  production: require('./playwright/config/production.config').default,
 };
 
 const environment = process.env.TEST_ENV || 'local';
@@ -62,18 +62,18 @@ export const baseConfig = defineConfig({
   reporter: [
     ['html', { outputFolder: 'playwright-report', open: 'never' }],
     ['junit', { outputFile: 'test-results/results.xml' }],
-    ['list']
+    ['list'],
   ],
   use: {
     actionTimeout: 15000,
     navigationTimeout: 30000,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
-    video: 'retain-on-failure'
+    video: 'retain-on-failure',
   },
   globalSetup: path.resolve(__dirname, '../support/global-setup.ts'),
   timeout: 60000,
-  expect: { timeout: 10000 }
+  expect: { timeout: 10000 },
 });
 ```
 
@@ -87,14 +87,14 @@ export default defineConfig({
   use: {
     ...baseConfig.use,
     baseURL: 'http://localhost:3000',
-    video: 'off' // No video locally for speed
+    video: 'off', // No video locally for speed
   },
   webServer: {
     command: 'npm run dev',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
-    timeout: 120000
-  }
+    timeout: 120000,
+  },
 });
 ```
 
@@ -108,8 +108,8 @@ export default defineConfig({
   use: {
     ...baseConfig.use,
     baseURL: 'https://staging.example.com',
-    ignoreHTTPSErrors: true // Allow self-signed certs in staging
-  }
+    ignoreHTTPSErrors: true, // Allow self-signed certs in staging
+  },
 });
 ```
 
@@ -124,8 +124,8 @@ export default defineConfig({
   use: {
     ...baseConfig.use,
     baseURL: 'https://example.com',
-    video: 'on' // Always record production failures
-  }
+    video: 'on', // Always record production failures
+  },
 });
 ```
 
@@ -164,13 +164,13 @@ export default defineConfig({
     actionTimeout: 15000,
 
     // Navigation timeout: 30 seconds (page.goto, page.reload)
-    navigationTimeout: 30000
+    navigationTimeout: 30000,
   },
 
   // Expect timeout: 10 seconds (all assertions)
   expect: {
-    timeout: 10000
-  }
+    timeout: 10000,
+  },
 });
 ```
 
@@ -192,7 +192,7 @@ export const test = base.extend<TimeoutOptions>({
 
     // Restore original timeout after test
     testInfo.setTimeout(originalTimeout);
-  }
+  },
 });
 
 export { expect } from '@playwright/test';
@@ -224,7 +224,7 @@ test('slow data processing operation', async ({ page, extendedTimeout }) => {
 
   // Wait for long-running operation
   await expect(page.getByText('Processing complete')).toBeVisible({
-    timeout: 120000 // 2 minutes for assertion
+    timeout: 120000, // 2 minutes for assertion
   });
 });
 ```
@@ -273,7 +273,7 @@ export default defineConfig({
     video: 'retain-on-failure',
 
     // Trace recording on first retry (best debugging data)
-    trace: 'on-first-retry'
+    trace: 'on-first-retry',
   },
 
   reporter: [
@@ -282,21 +282,21 @@ export default defineConfig({
       'html',
       {
         outputFolder: 'playwright-report',
-        open: 'never' // Don't auto-open in CI
-      }
+        open: 'never', // Don't auto-open in CI
+      },
     ],
 
     // JUnit XML (CI integration)
     [
       'junit',
       {
-        outputFile: 'test-results/results.xml'
-      }
+        outputFile: 'test-results/results.xml',
+      },
     ],
 
     // List reporter (console output)
-    ['list']
-  ]
+    ['list'],
+  ],
 });
 ```
 
@@ -311,7 +311,7 @@ export const test = base.extend({
   page: async ({ page }, use, testInfo) => {
     const logs: string[] = [];
 
-    page.on('console', msg => {
+    page.on('console', (msg) => {
       logs.push(`[${msg.type()}] ${msg.text()}`);
     });
 
@@ -324,10 +324,10 @@ export const test = base.extend({
       testInfo.attachments.push({
         name: 'console-logs',
         contentType: 'text/plain',
-        path: logsPath
+        path: logsPath,
       });
     }
-  }
+  },
 });
 ```
 
@@ -386,7 +386,7 @@ test('capture screenshot on specific error', async ({ page }) => {
     // Capture custom screenshot with timestamp
     await page.screenshot({
       path: `test-results/payment-error-${Date.now()}.png`,
-      fullPage: true
+      fullPage: true,
     });
     throw error;
   }
@@ -434,9 +434,9 @@ export default defineConfig({
     process.env.SHARD_INDEX && process.env.SHARD_TOTAL
       ? {
           current: parseInt(process.env.SHARD_INDEX, 10),
-          total: parseInt(process.env.SHARD_TOTAL, 10)
+          total: parseInt(process.env.SHARD_TOTAL, 10),
         }
-      : undefined
+      : undefined,
 });
 ```
 
@@ -489,7 +489,7 @@ export default defineConfig({
 
   // Disable parallel execution
   fullyParallel: false,
-  workers: 1
+  workers: 1,
 
   // Used for: authentication flows, database-dependent tests, feature flag tests
 });
@@ -552,33 +552,33 @@ export default defineConfig({
     // Desktop browsers
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] }
+      use: { ...devices['Desktop Chrome'] },
     },
     {
       name: 'firefox',
-      use: { ...devices['Desktop Firefox'] }
+      use: { ...devices['Desktop Firefox'] },
     },
     {
       name: 'webkit',
-      use: { ...devices['Desktop Safari'] }
+      use: { ...devices['Desktop Safari'] },
     },
 
     // Mobile browsers
     {
       name: 'mobile-chrome',
-      use: { ...devices['Pixel 5'] }
+      use: { ...devices['Pixel 5'] },
     },
     {
       name: 'mobile-safari',
-      use: { ...devices['iPhone 13'] }
+      use: { ...devices['iPhone 13'] },
     },
 
     // Tablet
     {
       name: 'tablet',
-      use: { ...devices['iPad Pro'] }
-    }
-  ]
+      use: { ...devices['iPad Pro'] },
+    },
+  ],
 });
 ```
 
@@ -592,7 +592,7 @@ export default defineConfig({
     // Setup project (runs first, creates auth state)
     {
       name: 'setup',
-      testMatch: /global-setup\.ts/
+      testMatch: /global-setup\.ts/,
     },
 
     // Authenticated tests (reuse auth state)
@@ -600,17 +600,17 @@ export default defineConfig({
       name: 'authenticated',
       dependencies: ['setup'],
       use: {
-        storageState: path.resolve(__dirname, './playwright/.auth/user.json')
+        storageState: path.resolve(__dirname, './playwright/.auth/user.json'),
       },
-      testMatch: /.*authenticated\.spec\.ts/
+      testMatch: /.*authenticated\.spec\.ts/,
     },
 
     // Unauthenticated tests (public pages)
     {
       name: 'unauthenticated',
-      testMatch: /.*unauthenticated\.spec\.ts/
-    }
-  ]
+      testMatch: /.*unauthenticated\.spec\.ts/,
+    },
+  ],
 });
 ```
 
@@ -634,7 +634,7 @@ async function globalSetup(config: FullConfig) {
 
   // Save authentication state
   await page.context().storageState({
-    path: path.resolve(__dirname, '../.auth/user.json')
+    path: path.resolve(__dirname, '../.auth/user.json'),
   });
 
   await browser.close();

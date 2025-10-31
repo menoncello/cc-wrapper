@@ -1,5 +1,6 @@
 import { Elysia, t } from 'elysia';
 
+import { VALIDATION_CONSTANTS } from '../constants/auth.constants.js';
 import { authMiddleware } from '../middleware/auth.js';
 import { rateLimitMiddleware } from '../middleware/rate-limit.js';
 import { loginSchema, profileUpdateSchema, registerSchema } from '../schemas/auth.js';
@@ -53,9 +54,7 @@ export const authRoutes = new Elysia({ prefix: '/api/auth' })
         const validatedData = loginSchema.parse(body);
 
         // Login user
-        const result = await authService.login(validatedData.email, validatedData.password);
-
-        return result;
+        return await authService.login(validatedData.email, validatedData.password);
       } catch (error) {
         set.status = 401;
         return {
@@ -78,7 +77,9 @@ export const authRoutes = new Elysia({ prefix: '/api/auth' })
       await authMiddleware({ request, set });
 
       // Extract token
-      const token = request.headers.get('Authorization')?.substring(7);
+      const token = request.headers
+        .get('Authorization')
+        ?.substring(VALIDATION_CONSTANTS.BEARER_PREFIX_LENGTH);
       if (!token) {
         throw new Error('Token not found');
       }

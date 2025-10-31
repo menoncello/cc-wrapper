@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import TourOverlay from '../components/tour/TourOverlay';
+import { TourOverlay } from '../components/tour/tour-overlay';
 
 const url = new URL(Astro.request.url);
 const onboardingSkipped = url.searchParams.get('onboarding') === 'skipped';

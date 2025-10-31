@@ -1,5 +1,6 @@
-import { describe, expect, it, beforeEach, afterEach } from 'bun:test';
-import { createRegistrationData, createLoginCredentials } from '../../factories/user.factory';
+import { afterEach,beforeEach, describe, expect, it } from 'bun:test';
+
+import { createLoginCredentials,createRegistrationData } from '../../factories/user.factory';
 
 /**
  * Integration tests for authentication flows
@@ -26,7 +27,7 @@ afterEach(async () => {
         },
         body: JSON.stringify({ email })
       });
-    } catch (error) {
+    } catch {
       // Ignore cleanup errors
     }
   }

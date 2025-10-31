@@ -129,14 +129,14 @@ export function listFiles(dirPath: string, extension?: string): string[] {
   const files: string[] = [];
   const items = fs.readdirSync(dirPath, { recursive: true });
 
-  items.forEach(item => {
+  for (const item of items) {
     const fullPath = path.join(dirPath, item.toString());
     if (fs.statSync(fullPath).isFile()) {
       if (!extension || fullPath.endsWith(extension)) {
         files.push(fullPath);
       }
     }
-  });
+  }
 
   return files;
 }

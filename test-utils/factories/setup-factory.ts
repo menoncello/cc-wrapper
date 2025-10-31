@@ -49,6 +49,7 @@ export interface ToolVersion {
 
 /**
  * Creates a mock setup environment configuration with sensible defaults
+ * @param overrides
  */
 export const createMockSetupEnvironment = (
   overrides: Partial<SetupEnvironmentConfig> = {}
@@ -73,6 +74,7 @@ export const createMockSetupEnvironment = (
 
 /**
  * Creates a mock environment configuration for testing
+ * @param overrides
  */
 export const createMockEnvironmentConfig = (
   overrides: Partial<EnvironmentConfig> = {}
@@ -91,6 +93,7 @@ export const createMockEnvironmentConfig = (
 
 /**
  * Creates a mock health check result
+ * @param overrides
  */
 export const createMockHealthCheck = (
   overrides: Partial<HealthCheckResult> = {}
@@ -104,6 +107,7 @@ export const createMockHealthCheck = (
 
 /**
  * Creates a mock tool version check result
+ * @param overrides
  */
 export const createMockToolVersion = (overrides: Partial<ToolVersion> = {}): ToolVersion => ({
   installed: true,
@@ -182,6 +186,7 @@ export const createMockHealthChecksWithErrors = (): HealthCheckResult[] => [
 
 /**
  * Creates platform-specific test data
+ * @param platform
  */
 export const createPlatformTestData = (platform: 'macos' | 'linux' | 'windows' | 'unsupported') => {
   const platformMap = {

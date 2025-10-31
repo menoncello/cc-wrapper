@@ -104,7 +104,7 @@ Initialize a production-ready test framework architecture (Playwright or Cypress
 
      timeout: 60 * 1000, // Test timeout: 60s
      expect: {
-       timeout: 15 * 1000 // Assertion timeout: 15s
+       timeout: 15 * 1000, // Assertion timeout: 15s
      },
 
      use: {
@@ -113,20 +113,16 @@ Initialize a production-ready test framework architecture (Playwright or Cypress
        screenshot: 'only-on-failure',
        video: 'retain-on-failure',
        actionTimeout: 15 * 1000, // Action timeout: 15s
-       navigationTimeout: 30 * 1000 // Navigation timeout: 30s
+       navigationTimeout: 30 * 1000, // Navigation timeout: 30s
      },
 
-     reporter: [
-       ['html', { outputFolder: 'test-results/html' }],
-       ['junit', { outputFile: 'test-results/junit.xml' }],
-       ['list']
-     ],
+     reporter: [['html', { outputFolder: 'test-results/html' }], ['junit', { outputFile: 'test-results/junit.xml' }], ['list']],
 
      projects: [
        { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
        { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
-       { name: 'webkit', use: { ...devices['Desktop Safari'] } }
-     ]
+       { name: 'webkit', use: { ...devices['Desktop Safari'] } },
+     ],
    });
    ```
 
@@ -145,18 +141,18 @@ Initialize a production-ready test framework architecture (Playwright or Cypress
 
        setupNodeEvents(on, config) {
          // implement node event listeners here
-       }
+       },
      },
 
      retries: {
        runMode: 2,
-       openMode: 0
+       openMode: 0,
      },
 
      defaultCommandTimeout: 15000,
      requestTimeout: 30000,
      responseTimeout: 30000,
-     pageLoadTimeout: 60000
+     pageLoadTimeout: 60000,
    });
    ```
 
@@ -210,7 +206,7 @@ Initialize a production-ready test framework architecture (Playwright or Cypress
        const factory = new UserFactory();
        await use(factory);
        await factory.cleanup(); // Auto-cleanup
-     }
+     },
    });
 
    export { expect } from '@playwright/test';
@@ -233,14 +229,14 @@ Initialize a production-ready test framework architecture (Playwright or Cypress
          email: faker.internet.email(),
          name: faker.person.fullName(),
          password: faker.internet.password({ length: 12 }),
-         ...overrides
+         ...overrides,
        };
 
        // API call to create user
        const response = await fetch(`${process.env.API_URL}/users`, {
          method: 'POST',
          headers: { 'Content-Type': 'application/json' },
-         body: JSON.stringify(user)
+         body: JSON.stringify(user),
        });
 
        const created = await response.json();
@@ -252,7 +248,7 @@ Initialize a production-ready test framework architecture (Playwright or Cypress
        // Delete all created users
        for (const userId of this.createdUsers) {
          await fetch(`${process.env.API_URL}/users/${userId}`, {
-           method: 'DELETE'
+           method: 'DELETE',
          });
        }
        this.createdUsers = [];

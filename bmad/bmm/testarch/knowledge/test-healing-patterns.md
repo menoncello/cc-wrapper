@@ -45,10 +45,10 @@ export function isSelectorFailure(error: Error): boolean {
     /element not found/i,
     /waiting for locator.*to be visible/i,
     /selector.*did not match any elements/i,
-    /unable to find element/i
+    /unable to find element/i,
   ];
 
-  return patterns.some(pattern => pattern.test(error.message));
+  return patterns.some((pattern) => pattern.test(error.message));
 }
 
 /**
@@ -100,11 +100,7 @@ export function suggestBetterSelector(badSelector: string): string {
 ```typescript
 // tests/healing/selector-healing.spec.ts
 import { test, expect } from '@playwright/test';
-import {
-  isSelectorFailure,
-  extractSelector,
-  suggestBetterSelector
-} from '../../src/testing/healing/selector-healing';
+import { isSelectorFailure, extractSelector, suggestBetterSelector } from '../../src/testing/healing/selector-healing';
 
 test('heal stale selector failures automatically', async ({ page }) => {
   await page.goto('/dashboard');
@@ -165,24 +161,19 @@ export function isTimingFailure(error: Error): boolean {
     /element is not attached to the dom/i,
     /waiting for element to be visible.*exceeded/i,
     /timed out retrying/i,
-    /waitForLoadState.*timeout/i
+    /waitForLoadState.*timeout/i,
   ];
 
-  return patterns.some(pattern => pattern.test(error.message));
+  return patterns.some((pattern) => pattern.test(error.message));
 }
 
 /**
  * Detect hard wait anti-pattern
  */
 export function hasHardWait(testCode: string): boolean {
-  const hardWaitPatterns = [
-    /page\.waitForTimeout\(/,
-    /cy\.wait\(\d+\)/,
-    /await.*sleep\(/,
-    /setTimeout\(/
-  ];
+  const hardWaitPatterns = [/page\.waitForTimeout\(/, /cy\.wait\(\d+\)/, /await.*sleep\(/, /setTimeout\(/];
 
-  return hardWaitPatterns.some(pattern => pattern.test(testCode));
+  return hardWaitPatterns.some((pattern) => pattern.test(testCode));
 }
 
 /**
@@ -229,18 +220,14 @@ await responsePromise
 ```typescript
 // tests/healing/timing-healing.spec.ts
 import { test, expect } from '@playwright/test';
-import {
-  isTimingFailure,
-  hasHardWait,
-  suggestDeterministicWait
-} from '../../src/testing/healing/timing-healing';
+import { isTimingFailure, hasHardWait, suggestDeterministicWait } from '../../src/testing/healing/timing-healing';
 
 test('heal race condition with network-first pattern', async ({ page, context }) => {
   // Setup interception BEFORE navigation (prevent race)
-  await context.route('**/api/products', route => {
+  await context.route('**/api/products', (route) => {
     route.fulfill({
       status: 200,
-      body: JSON.stringify({ products: [{ id: 1, name: 'Product A' }] })
+      body: JSON.stringify({ products: [{ id: 1, name: 'Product A' }] }),
     });
   });
 
@@ -301,10 +288,10 @@ export function isDynamicDataFailure(error: Error): boolean {
     /expected.*\d{4}-\d{2}-\d{2}.*received/i, // Date mismatches
     /expected.*user.*\d+/i, // Dynamic user IDs
     /expected.*order.*\d+/i, // Dynamic order IDs
-    /expected.*to.*contain.*\d+/i // Numeric assertions
+    /expected.*to.*contain.*\d+/i, // Numeric assertions
   ];
 
-  return patterns.some(pattern => pattern.test(error.message));
+  return patterns.some((pattern) => pattern.test(error.message));
 }
 
 /**
@@ -385,7 +372,7 @@ test('heal timestamp assertion with dynamic generation', async ({ page }) => {
 test('heal order ID assertion with capture', async ({ page, request }) => {
   // Create order via API (dynamic ID)
   const response = await request.post('/api/orders', {
-    data: { productId: '123', quantity: 1 }
+    data: { productId: '123', quantity: 1 },
   });
   const { orderId } = await response.json();
 
@@ -430,10 +417,10 @@ export function isNetworkFailure(error: Error): boolean {
     /network.*error/i,
     /500.*internal server error/i,
     /503.*service unavailable/i,
-    /fetch.*failed/i
+    /fetch.*failed/i,
   ];
 
-  return patterns.some(pattern => pattern.test(error.message));
+  return patterns.some((pattern) => pattern.test(error.message));
 }
 
 /**
@@ -471,16 +458,16 @@ import { test, expect } from '@playwright/test';
 
 test('heal network failure with route mocking', async ({ page, context }) => {
   // ✅ Healed: Mock API to prevent real network calls
-  await context.route('**/api/products', route => {
+  await context.route('**/api/products', (route) => {
     route.fulfill({
       status: 200,
       contentType: 'application/json',
       body: JSON.stringify({
         products: [
           { id: 1, name: 'Product A', price: 29.99 },
-          { id: 2, name: 'Product B', price: 49.99 }
-        ]
-      })
+          { id: 2, name: 'Product B', price: 49.99 },
+        ],
+      }),
     });
   });
 
@@ -493,7 +480,7 @@ test('heal network failure with route mocking', async ({ page, context }) => {
 
 test('heal 500 error with error state mocking', async ({ page, context }) => {
   // Mock API failure scenario
-  await context.route('**/api/products', route => {
+  await context.route('**/api/products', (route) => {
     route.fulfill({ status: 500, body: JSON.stringify({ error: 'Internal Server Error' }) });
   });
 
@@ -531,12 +518,7 @@ export function detectHardWaits(testCode: string): Array<{ line: number; code: s
   const violations: Array<{ line: number; code: string }> = [];
 
   lines.forEach((line, index) => {
-    if (
-      line.includes('page.waitForTimeout(') ||
-      /cy\.wait\(\d+\)/.test(line) ||
-      line.includes('sleep(') ||
-      line.includes('setTimeout(')
-    ) {
+    if (line.includes('page.waitForTimeout(') || /cy\.wait\(\d+\)/.test(line) || line.includes('sleep(') || line.includes('setTimeout(')) {
       violations.push({ line: index + 1, code: line.trim() });
     }
   });
@@ -593,7 +575,7 @@ test('heal hard wait with deterministic wait', async ({ page }) => {
   await page.getByTestId('loading-spinner').waitFor({ state: 'detached' });
 
   // OR wait for specific network response
-  await page.waitForResponse(resp => resp.url().includes('/api/dashboard') && resp.ok());
+  await page.waitForResponse((resp) => resp.url().includes('/api/dashboard') && resp.ok());
 
   await expect(page.getByText('Dashboard ready')).toBeVisible();
 });

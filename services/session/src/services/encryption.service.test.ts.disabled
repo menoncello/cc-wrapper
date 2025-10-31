@@ -1,0 +1,1152 @@
+/**
+ * Encryption Service Tests
+ * Comprehensive test suite for encryption service functionality
+ */
+
+import { describe, test, expect, beforeEach, afterEach } from 'bun:test';
+import { EncryptionKey } from '../types/key-management';
+import { EncryptionService } from './encryption.service';
+
+// Mock the key management service module to avoid Prisma dependency
+const mockEncryptWithUserKey = async (userId: string, keyId: string, password: string, data: string): Promise<EncryptionKey> => ({
+  data: 'encrypted',
+  iv: 'iv',
+  algorithm: 'AES-256-GCM'
+});
+
+const mockDecryptWithUserKey = async (userId: string, keyId: string, password: string, encryptedData: EncryptionKey): Promise<string> => 'Decrypted data';
+
+// Mock the entire key management module for Bun
+const mockKeyManagementService = {
+  encryptWithUserKey: mockEncryptWithUserKey,
+  decryptWithUserKey: mockDecryptWithUserKey
+};
+
+describe('EncryptionService', () => {
+  let encryptionService: EncryptionService;
+
+  beforeEach(() => {
+    encryptionService = new EncryptionService();
+  });
+
+  afterEach(() => {
+    // Clear any timers or state
+  });
+
+  describe('Constructor', () => {
+    test('should create encryption service with key management service', () => {
+      expect(encryptionService).toBeInstanceOf(EncryptionService);
+    });
+  });
+
+  describe('encryptSessionData', () => {
+    test('should encrypt session data successfully', async () => {
+      // Arrange
+      const request = {
+        userId: 'user123',
+        keyId: 'key123',
+        password: 'TestPassword123!',
+        data: 'Sensitive session data',
+        metadata: { type: 'session' }
+      };
+
+      const mockEncryptedKey: EncryptionKey = {
+        data: 'encryptedData123',
+        iv: 'iv123',
+        algorithm: 'AES-256-GCM'
+      };
+
+      // Mock the key management service method
+      const mockMethod = jest.spyOn(encryptionService['keyManagementService'], 'encryptWithUserKey');
+      mockMethod.mockResolvedValue(mockEncryptedKey);
+
+      // Act
+      const result = await encryptionService.encryptSessionData(request);
+
+      // Assert
+      expect(mockMethod).toHaveBeenCalledWith(
+        request.userId,
+        request.keyId,
+        request.password,
+        request.data
+      );
+      expect(result).toEqual({
+        encryptedData: mockEncryptedKey,
+        keyId: request.keyId,
+        algorithm: mockEncryptedKey.algorithm,
+        encryptedAt: expect.any(Date)
+      });
+
+      mockMethod.mockRestore();
+    });
+
+    test('should handle encryption errors', async () => {
+      // Arrange
+      const request = {
+        userId: 'user123',
+        keyId: 'key123',
+        password: 'TestPassword123!',
+        data: 'Sensitive session data'
+      };
+
+      const errorMessage = 'Encryption failed';
+      const mockMethod = jest.spyOn(encryptionService['keyManagementService'], 'encryptWithUserKey');
+      mockMethod.mockRejectedValue(new Error(errorMessage));
+
+      // Act & Assert
+      await expect(encryptionService.encryptSessionData(request)).rejects.toThrow(`Encryption failed: ${errorMessage}`);
+      expect(mockMethod).toHaveBeenCalledTimes(1);
+
+      mockMethod.mockRestore();
+    });
+
+    test('should update metrics after successful encryption', async () => {
+      // Arrange
+      const request = {
+        userId: 'user123',
+        keyId: 'key123',
+        password: 'TestPassword123!',
+        data: 'Test data'
+      };
+
+      const mockEncryptedKey: EncryptionKey = {
+        data: 'encrypted',
+        iv: 'iv',
+        algorithm: 'AES-256-GCM'
+      };
+
+      const mockMethod = jest.spyOn(encryptionService['keyManagementService'], 'encryptWithUserKey');
+      mockMethod.mockResolvedValue(mockEncryptedKey);
+
+      // Act
+      await encryptionService.encryptSessionData(request);
+
+      // Assert
+      const metrics = encryptionService.getEncryptionMetrics(request.userId);
+      expect(metrics).toBeDefined();
+      expect(metrics?.totalEncrypted).toBe(1);
+      expect(metrics?.totalDecrypted).toBe(0);
+
+      mockMethod.mockRestore();
+    });
+
+    test('should handle encryption with metadata', async () => {
+      // Arrange
+      const request = {
+        userId: 'user123',
+        keyId: 'key123',
+        password: 'TestPassword123!',
+        data: 'Test data',
+        metadata: { type: 'test', priority: 'high' }
+      };
+
+      const mockEncryptedKey: EncryptionKey = {
+        data: 'encrypted',
+        iv: 'iv',
+        algorithm: 'AES-256-GCM'
+      };
+
+      const mockMethod = jest.spyOn(encryptionService['keyManagementService'], 'encryptWithUserKey');
+      mockMethod.mockResolvedValue(mockEncryptedKey);
+
+      // Act
+      const result = await encryptionService.encryptSessionData(request);
+
+      // Assert
+      expect(result.encryptedData).toEqual(mockEncryptedKey);
+      expect(mockMethod).toHaveBeenCalledWith(
+        request.userId,
+        request.keyId,
+        request.password,
+        request.data
+      );
+
+      mockMethod.mockRestore();
+    });
+  });
+
+  describe('decryptSessionData', () => {
+    test('should decrypt session data successfully', async () => {
+      // Arrange
+      const request = {
+        userId: 'user123',
+        keyId: 'key123',
+        password: 'TestPassword123!',
+        encryptedData: {
+          encryptedData: 'encryptedData123',
+          iv: 'iv123',
+          algorithm: 'AES-256-GCM'
+        }
+      };
+
+      const decryptedData = 'Decrypted data';
+      const mockMethod = jest.spyOn(encryptionService['keyManagementService'], 'decryptWithUserKey');
+      mockMethod.mockResolvedValue(decryptedData);
+
+      // Act
+      const result = await encryptionService.decryptSessionData(request);
+
+      // Assert
+      expect(mockMethod).toHaveBeenCalledWith(
+        request.userId,
+        request.keyId,
+        request.password,
+        request.encryptedData
+      );
+      expect(result).toEqual({
+        data: decryptedData,
+        keyId: request.keyId,
+        decryptedAt: expect.any(Date),
+        integrityVerified: true
+      });
+
+      mockMethod.mockRestore();
+    });
+
+    test('should handle decryption errors', async () => {
+      // Arrange
+      const request = {
+        userId: 'user123',
+        keyId: 'key123',
+        password: 'TestPassword123!',
+        encryptedData: {
+          encryptedData: 'encryptedData123',
+          iv: 'iv123',
+          algorithm: 'AES-256-GCM'
+        }
+      };
+
+      const errorMessage = 'Decryption failed';
+      const mockMethod = jest.spyOn(encryptionService['keyManagementService'], 'decryptWithUserKey');
+      mockMethod.mockRejectedValue(new Error(errorMessage));
+
+      // Act & Assert
+      await expect(encryptionService.decryptSessionData(request)).rejects.toThrow(`Decryption failed: ${errorMessage}`);
+      expect(mockMethod).toHaveBeenCalledTimes(1);
+
+      mockMethod.mockRestore();
+    });
+
+    test('should update metrics after successful decryption', async () => {
+      // Arrange
+      const request = {
+        userId: 'user123',
+        keyId: 'key123',
+        password: 'TestPassword123!',
+        encryptedData: {
+          encryptedData: 'encrypted',
+          iv: 'iv',
+          algorithm: 'AES-256-GCM'
+        }
+      };
+
+      const mockMethod = jest.spyOn(encryptionService['keyManagementService'], 'decryptWithUserKey');
+      mockMethod.mockResolvedValue('Decrypted data');
+
+      // Act
+      await encryptionService.decryptSessionData(request);
+
+      // Assert
+      const metrics = encryptionService.getEncryptionMetrics(request.userId);
+      expect(metrics).toBeDefined();
+      expect(metrics?.totalDecrypted).toBe(1);
+      expect(metrics?.totalEncrypted).toBe(0);
+
+      mockMethod.mockRestore();
+    });
+  });
+
+  describe('encryptBatch', () => {
+    test('should encrypt multiple items successfully', async () => {
+      // Arrange
+      const request = {
+        userId: 'user123',
+        keyId: 'key123',
+        password: 'TestPassword123!',
+        items: [
+          { id: 'item1', data: 'Data 1', metadata: { type: 'test' } },
+          { id: 'item2', data: 'Data 2' },
+          { id: 'item3', data: 'Data 3' }
+        ]
+      };
+
+      const mockEncryptedKey: EncryptionKey = {
+        data: 'encrypted',
+        iv: 'iv',
+        algorithm: 'AES-256-GCM'
+      };
+
+      const mockMethod = jest.spyOn(encryptionService['keyManagementService'], 'encryptWithUserKey');
+      mockMethod.mockResolvedValue(mockEncryptedKey);
+
+      // Act
+      const result = await encryptionService.encryptBatch(request);
+
+      // Assert
+      expect(mockMethod).toHaveBeenCalledTimes(3);
+      expect(result.items).toHaveLength(3);
+      expect(result.summary).toEqual({
+        total: 3,
+        successful: 3,
+        failed: 0,
+        totalTime: expect.any(Number)
+      });
+
+      for (const [index, item] of result.items.entries()) {
+        expect(item.id).toBe(request.items[index].id);
+        expect(item.encryptedData).toEqual(mockEncryptedKey);
+        expect(item.encryptedAt).toBeInstanceOf(Date);
+      }
+
+      mockMethod.mockRestore();
+    });
+
+    test('should handle partial failures in batch encryption', async () => {
+      // Arrange
+      const request = {
+        userId: 'user123',
+        keyId: 'key123',
+        password: 'TestPassword123!',
+        items: [
+          { id: 'item1', data: 'Data 1' },
+          { id: 'item2', data: 'Data 2' },
+          { id: 'item3', data: 'Data 3' }
+        ]
+      };
+
+      const mockEncryptedKey: EncryptionKey = {
+        data: 'encrypted',
+        iv: 'iv',
+        algorithm: 'AES-256-GCM'
+      };
+
+      const mockMethod = jest.spyOn(encryptionService['keyManagementService'], 'encryptWithUserKey');
+      mockMethod
+        .mockResolvedValueOnce(mockEncryptedKey)
+        .mockRejectedValueOnce(new Error('Encryption error'))
+        .mockResolvedValueOnce(mockEncryptedKey);
+
+      // Act
+      const result = await encryptionService.encryptBatch(request);
+
+      // Assert
+      expect(result.summary).toEqual({
+        total: 3,
+        successful: 2,
+        failed: 1,
+        totalTime: expect.any(Number)
+      });
+
+      expect(result.items[0].id).toBe('item1');
+      expect(result.items[0].encryptedData.data).toBe('encrypted');
+
+      expect(result.items[1].id).toBe('item2');
+      expect(result.items[1].encryptedData.data).toBe('');
+      expect(result.items[1].metadata?.error).toBe('Encryption error');
+
+      expect(result.items[2].id).toBe('item3');
+      expect(result.items[2].encryptedData.data).toBe('encrypted');
+
+      mockMethod.mockRestore();
+    });
+
+    test('should handle empty batch', async () => {
+      // Arrange
+      const request = {
+        userId: 'user123',
+        keyId: 'key123',
+        password: 'TestPassword123!',
+        items: []
+      };
+
+      // Act
+      const result = await encryptionService.encryptBatch(request);
+
+      // Assert
+      expect(result.items).toHaveLength(0);
+      expect(result.summary).toEqual({
+        total: 0,
+        successful: 0,
+        failed: 0,
+        totalTime: expect.any(Number)
+      });
+    });
+  });
+
+  describe('decryptBatch', () => {
+    test('should decrypt multiple items successfully', async () => {
+      // Arrange
+      const request = {
+        userId: 'user123',
+        keyId: 'key123',
+        password: 'TestPassword123!',
+        encryptedItems: [
+          { id: 'item1', encryptedData: { encryptedData: 'encrypted1', iv: 'iv1', algorithm: 'AES-256-GCM' } },
+          { id: 'item2', encryptedData: { encryptedData: 'encrypted2', iv: 'iv2', algorithm: 'AES-256-GCM' } },
+          { id: 'item3', encryptedData: { encryptedData: 'encrypted3', iv: 'iv3', algorithm: 'AES-256-GCM' } }
+        ]
+      };
+
+      const mockMethod = jest.spyOn(encryptionService['keyManagementService'], 'decryptWithUserKey');
+      mockMethod
+        .mockResolvedValueOnce('Decrypted 1')
+        .mockResolvedValueOnce('Decrypted 2')
+        .mockResolvedValueOnce('Decrypted 3');
+
+      // Act
+      const result = await encryptionService.decryptBatch(request);
+
+      // Assert
+      expect(mockMethod).toHaveBeenCalledTimes(3);
+      expect(result.items).toHaveLength(3);
+      expect(result.summary).toEqual({
+        total: 3,
+        successful: 3,
+        failed: 0,
+        totalTime: expect.any(Number)
+      });
+
+      for (const [index, item] of result.items.entries()) {
+        expect(item.id).toBe(request.encryptedItems[index].id);
+        expect(item.data).toBe(`Decrypted ${index + 1}`);
+        expect(item.decryptedAt).toBeInstanceOf(Date);
+        expect(item.metadata?.integrityVerified).toBe(true);
+      }
+
+      mockMethod.mockRestore();
+    });
+
+    test('should handle partial failures in batch decryption', async () => {
+      // Arrange
+      const request = {
+        userId: 'user123',
+        keyId: 'key123',
+        password: 'TestPassword123!',
+        encryptedItems: [
+          { id: 'item1', encryptedData: { encryptedData: 'encrypted1', iv: 'iv1', algorithm: 'AES-256-GCM' } },
+          { id: 'item2', encryptedData: { encryptedData: 'encrypted2', iv: 'iv2', algorithm: 'AES-256-GCM' } },
+          { id: 'item3', encryptedData: { encryptedData: 'encrypted3', iv: 'iv3', algorithm: 'AES-256-GCM' } }
+        ]
+      };
+
+      const mockMethod = jest.spyOn(encryptionService['keyManagementService'], 'decryptWithUserKey');
+      mockMethod
+        .mockResolvedValueOnce('Decrypted 1')
+        .mockRejectedValueOnce(new Error('Decryption error'))
+        .mockResolvedValueOnce('Decrypted 3');
+
+      // Act
+      const result = await encryptionService.decryptBatch(request);
+
+      // Assert
+      expect(result.summary).toEqual({
+        total: 3,
+        successful: 2,
+        failed: 1,
+        totalTime: expect.any(Number)
+      });
+
+      expect(result.items[0].id).toBe('item1');
+      expect(result.items[0].data).toBe('Decrypted 1');
+
+      expect(result.items[1].id).toBe('item2');
+      expect(result.items[1].data).toBe('');
+      expect(result.items[1].metadata?.error).toBe('Decryption error');
+
+      expect(result.items[2].id).toBe('item3');
+      expect(result.items[2].data).toBe('Decrypted 3');
+
+      mockMethod.mockRestore();
+    });
+
+    test('should handle empty decryption batch', async () => {
+      // Arrange
+      const request = {
+        userId: 'user123',
+        keyId: 'key123',
+        password: 'TestPassword123!',
+        encryptedItems: []
+      };
+
+      // Act
+      const result = await encryptionService.decryptBatch(request);
+
+      // Assert
+      expect(result.items).toHaveLength(0);
+      expect(result.summary).toEqual({
+        total: 0,
+        successful: 0,
+        failed: 0,
+        totalTime: expect.any(Number)
+      });
+    });
+  });
+
+  describe('rotateEncryption', () => {
+    test('should rotate encryption for multiple items successfully', async () => {
+      // Arrange
+      const userId = 'user123';
+      const currentKeyId = 'key123';
+      const currentPassword = 'OldPassword123!';
+      const newKeyId = 'key456';
+      const newPassword = 'NewPassword123!';
+
+      const encryptedItems = [
+        { id: 'item1', encryptedData: { encryptedData: 'encrypted1', iv: 'iv1', algorithm: 'AES-256-GCM' } },
+        { id: 'item2', encryptedData: { encryptedData: 'encrypted2', iv: 'iv2', algorithm: 'AES-256-GCM' } }
+      ];
+
+      const mockEncryptedKey: EncryptionKey = {
+        data: 'newEncrypted',
+        iv: 'newIv',
+        algorithm: 'AES-256-GCM'
+      };
+
+      const mockDecrypt = jest.spyOn(encryptionService['keyManagementService'], 'decryptWithUserKey');
+      const mockEncrypt = jest.spyOn(encryptionService['keyManagementService'], 'encryptWithUserKey');
+
+      mockDecrypt
+        .mockResolvedValueOnce('Decrypted 1')
+        .mockResolvedValueOnce('Decrypted 2');
+
+      mockEncrypt
+        .mockResolvedValueOnce(mockEncryptedKey)
+        .mockResolvedValueOnce(mockEncryptedKey);
+
+      // Act
+      const result = await encryptionService.rotateEncryption(
+        userId,
+        currentKeyId,
+        currentPassword,
+        newKeyId,
+        newPassword,
+        encryptedItems
+      );
+
+      // Assert
+      expect(mockDecrypt).toHaveBeenCalledTimes(2);
+      expect(mockEncrypt).toHaveBeenCalledTimes(2);
+      expect(result.items).toHaveLength(2);
+      expect(result.summary).toEqual({
+        total: 2,
+        successful: 2,
+        failed: 0
+      });
+
+      mockDecrypt.mockRestore();
+      mockEncrypt.mockRestore();
+    });
+
+    test('should handle partial failures during rotation', async () => {
+      // Arrange
+      const encryptedItems = [
+        { id: 'item1', encryptedData: { encryptedData: 'encrypted1', iv: 'iv1', algorithm: 'AES-256-GCM' } },
+        { id: 'item2', encryptedData: { encryptedData: 'encrypted2', iv: 'iv2', algorithm: 'AES-256-GCM' } }
+      ];
+
+      const mockDecrypt = jest.spyOn(encryptionService['keyManagementService'], 'decryptWithUserKey');
+      mockDecrypt
+        .mockResolvedValueOnce('Decrypted 1')
+        .mockRejectedValueOnce(new Error('Decryption failed'));
+
+      // Act
+      const result = await encryptionService.rotateEncryption(
+        'user123',
+        'key123',
+        'OldPassword123!',
+        'key456',
+        'NewPassword123!',
+        encryptedItems
+      );
+
+      // Assert
+      expect(result.summary).toEqual({
+        total: 2,
+        successful: 1,
+        failed: 1
+      });
+      expect(result.items).toHaveLength(1); // Only successful items
+
+      mockDecrypt.mockRestore();
+    });
+
+    test('should handle empty rotation request', async () => {
+      // Arrange
+      const encryptedItems: Array<{ id: string; encryptedData: EncryptionKey }> = [];
+
+      // Act
+      const result = await encryptionService.rotateEncryption(
+        'user123',
+        'key123',
+        'OldPassword123!',
+        'key456',
+        'NewPassword123!',
+        encryptedItems
+      );
+
+      // Assert
+      expect(result.items).toHaveLength(0);
+      expect(result.summary).toEqual({
+        total: 0,
+        successful: 0,
+        failed: 0
+      });
+    });
+  });
+
+  describe('Metrics Management', () => {
+    test('should get encryption metrics for user', async () => {
+      // Arrange
+      const userId = 'user123';
+
+      const mockEncryptedKey: EncryptionKey = {
+        data: 'encrypted',
+        iv: 'iv',
+        algorithm: 'AES-256-GCM'
+      };
+
+      const mockMethod = jest.spyOn(encryptionService['keyManagementService'], 'encryptWithUserKey');
+      mockMethod.mockResolvedValue(mockEncryptedKey);
+
+      // Act
+      await encryptionService.encryptSessionData({
+        userId,
+        keyId: 'key123',
+        password: 'TestPassword123!',
+        data: 'Test data'
+      });
+
+      const metrics = encryptionService.getEncryptionMetrics(userId);
+
+      // Assert
+      expect(metrics).toBeDefined();
+      expect(metrics?.totalEncrypted).toBe(1);
+      expect(metrics?.totalDecrypted).toBe(0);
+      expect(metrics?.averageEncryptionTime).toBeGreaterThan(0);
+      expect(metrics?.averageDecryptionTime).toBe(0);
+      expect(metrics?.throughputBytesPerSecond).toBeGreaterThan(0);
+
+      mockMethod.mockRestore();
+    });
+
+    test('should return null for user with no metrics', () => {
+      // Act
+      const metrics = encryptionService.getEncryptionMetrics('nonexistent');
+
+      // Assert
+      expect(metrics).toBeNull();
+    });
+
+    test('should reset encryption metrics for user', async () => {
+      // Arrange
+      const userId = 'user123';
+
+      const mockEncryptedKey: EncryptionKey = {
+        data: 'encrypted',
+        iv: 'iv',
+        algorithm: 'AES-256-GCM'
+      };
+
+      const mockMethod = jest.spyOn(encryptionService['keyManagementService'], 'encryptWithUserKey');
+      mockMethod.mockResolvedValue(mockEncryptedKey);
+
+      // Generate some metrics
+      await encryptionService.encryptSessionData({
+        userId,
+        keyId: 'key123',
+        password: 'TestPassword123!',
+        data: 'Test data'
+      });
+
+      // Verify metrics exist
+      expect(encryptionService.getEncryptionMetrics(userId)).toBeDefined();
+
+      // Act
+      encryptionService.resetEncryptionMetrics(userId);
+
+      // Assert
+      expect(encryptionService.getEncryptionMetrics(userId)).toBeNull();
+
+      mockMethod.mockRestore();
+    });
+
+    test('should get overall encryption statistics', async () => {
+      // Arrange
+      const userId1 = 'user1';
+      const userId2 = 'user2';
+
+      const mockEncryptedKey: EncryptionKey = {
+        data: 'encrypted',
+        iv: 'iv',
+        algorithm: 'AES-256-GCM'
+      };
+
+      const mockEncrypt = jest.spyOn(encryptionService['keyManagementService'], 'encryptWithUserKey');
+      const mockDecrypt = jest.spyOn(encryptionService['keyManagementService'], 'decryptWithUserKey');
+
+      mockEncrypt.mockResolvedValue(mockEncryptedKey);
+      mockDecrypt.mockResolvedValue('Decrypted');
+
+      // Generate metrics for multiple users
+      await encryptionService.encryptSessionData({
+        userId: userId1,
+        keyId: 'key1',
+        password: 'TestPassword123!',
+        data: 'Test data'
+      });
+
+      await encryptionService.encryptSessionData({
+        userId: userId2,
+        keyId: 'key2',
+        password: 'TestPassword123!',
+        data: 'Test data'
+      });
+
+      await encryptionService.decryptSessionData({
+        userId: userId1,
+        keyId: 'key1',
+        password: 'TestPassword123!',
+        encryptedData: { encryptedData: 'encrypted', iv: 'iv', algorithm: 'AES-256-GCM' }
+      });
+
+      // Act
+      const stats = encryptionService.getEncryptionStats();
+
+      // Assert
+      expect(stats.totalUsers).toBe(2);
+      expect(stats.totalEncryptions).toBe(2);
+      expect(stats.totalDecryptions).toBe(1);
+      expect(stats.averageLatency).toBeGreaterThan(0);
+
+      mockEncrypt.mockRestore();
+      mockDecrypt.mockRestore();
+    });
+
+    test('should return empty stats for no activity', () => {
+      // Act
+      const stats = encryptionService.getEncryptionStats();
+
+      // Assert
+      expect(stats.totalUsers).toBe(0);
+      expect(stats.totalEncryptions).toBe(0);
+      expect(stats.totalDecryptions).toBe(0);
+      expect(stats.averageLatency).toBe(0);
+    });
+  });
+
+  describe('testEncryption', () => {
+    test('should successfully test encryption functionality', async () => {
+      // Arrange
+      const userId = 'user123';
+      const keyId = 'key123';
+      const password = 'TestPassword123!';
+
+      const mockEncryptedKey: EncryptionKey = {
+        data: 'encrypted',
+        iv: 'iv',
+        algorithm: 'AES-256-GCM'
+      };
+
+      const mockEncrypt = jest.spyOn(encryptionService['keyManagementService'], 'encryptWithUserKey');
+      const mockDecrypt = jest.spyOn(encryptionService['keyManagementService'], 'decryptWithUserKey');
+
+      mockEncrypt.mockResolvedValue(mockEncryptedKey);
+      mockDecrypt.mockResolvedValue('Decrypted test data');
+
+      // Act
+      const result = await encryptionService.testEncryption(userId, keyId, password);
+
+      // Assert
+      expect(result.success).toBe(true);
+      expect(result.testResult.encrypted).toBe(true);
+      expect(result.testResult.decrypted).toBe(true);
+      expect(result.testResult.dataIntegrity).toBe(true);
+      expect(result.testResult.latencyMs).toBeGreaterThan(0);
+      expect(result.testResult.testData).toContain('Test data for encryption validation');
+      expect(result.error).toBeUndefined();
+
+      mockEncrypt.mockRestore();
+      mockDecrypt.mockRestore();
+    });
+
+    test('should handle test encryption failure', async () => {
+      // Arrange
+      const userId = 'user123';
+      const keyId = 'key123';
+      const password = 'TestPassword123!';
+
+      const mockMethod = jest.spyOn(encryptionService['keyManagementService'], 'encryptWithUserKey');
+      mockMethod.mockRejectedValue(new Error('Test encryption failed'));
+
+      // Act
+      const result = await encryptionService.testEncryption(userId, keyId, password);
+
+      // Assert
+      expect(result.success).toBe(false);
+      expect(result.testResult.encrypted).toBe(false);
+      expect(result.testResult.decrypted).toBe(false);
+      expect(result.testResult.dataIntegrity).toBe(false);
+      expect(result.error).toBe('Test encryption failed');
+
+      mockMethod.mockRestore();
+    });
+
+    test('should handle test decryption failure', async () => {
+      // Arrange
+      const userId = 'user123';
+      const keyId = 'key123';
+      const password = 'TestPassword123!';
+
+      const mockEncryptedKey: EncryptionKey = {
+        data: 'encrypted',
+        iv: 'iv',
+        algorithm: 'AES-256-GCM'
+      };
+
+      const mockEncrypt = jest.spyOn(encryptionService['keyManagementService'], 'encryptWithUserKey');
+      const mockDecrypt = jest.spyOn(encryptionService['keyManagementService'], 'decryptWithUserKey');
+
+      mockEncrypt.mockResolvedValue(mockEncryptedKey);
+      mockDecrypt.mockRejectedValue(new Error('Test decryption failed'));
+
+      // Act
+      const result = await encryptionService.testEncryption(userId, keyId, password);
+
+      // Assert
+      expect(result.success).toBe(false);
+      expect(result.testResult.encrypted).toBe(true);
+      expect(result.testResult.decrypted).toBe(false);
+      expect(result.testResult.dataIntegrity).toBe(false);
+      expect(result.error).toBe('Test decryption failed');
+
+      mockEncrypt.mockRestore();
+      mockDecrypt.mockRestore();
+    });
+  });
+
+  describe('validateEncryptionParameters', () => {
+    test('should validate correct AES-256-GCM parameters', () => {
+      // Act
+      const result = encryptionService.validateEncryptionParameters('AES-256-GCM', 256);
+
+      // Assert
+      expect(result.isValid).toBe(true);
+      expect(result.supportedAlgorithms).toContain('AES-256-GCM');
+      expect(result.recommendedKeySize).toBe(256);
+      expect(result.issues).toHaveLength(0);
+    });
+
+    test('should validate AES-192-GCM parameters', () => {
+      // Act
+      const result = encryptionService.validateEncryptionParameters('AES-192-GCM', 192);
+
+      // Assert
+      expect(result.isValid).toBe(true);
+      expect(result.supportedAlgorithms).toContain('AES-192-GCM');
+      expect(result.recommendedKeySize).toBe(256);
+      expect(result.issues).toHaveLength(0);
+    });
+
+    test('should validate AES-128-GCM parameters', () => {
+      // Act
+      const result = encryptionService.validateEncryptionParameters('AES-128-GCM', 128);
+
+      // Assert
+      expect(result.isValid).toBe(true);
+      expect(result.supportedAlgorithms).toContain('AES-128-GCM');
+      expect(result.recommendedKeySize).toBe(256);
+      expect(result.issues).toHaveLength(0);
+    });
+
+    test('should reject unsupported algorithm', () => {
+      // Act
+      const result = encryptionService.validateEncryptionParameters('DES-CBC', 256);
+
+      // Assert
+      expect(result.isValid).toBe(false);
+      expect(result.issues).toContain('Unsupported algorithm: DES-CBC');
+    });
+
+    test('should reject key size too small', () => {
+      // Act
+      const result = encryptionService.validateEncryptionParameters('AES-256-GCM', 64);
+
+      // Assert
+      expect(result.isValid).toBe(false);
+      expect(result.issues).toContain('Key size too small: 64 bits (minimum 128)');
+    });
+
+    test('should warn about key size larger than recommended', () => {
+      // Act
+      const result = encryptionService.validateEncryptionParameters('AES-256-GCM', 512);
+
+      // Assert
+      expect(result.isValid).toBe(true); // Still valid but with warning
+      expect(result.issues).toContain('Key size larger than recommended: 512 bits (recommended 256)');
+    });
+
+    test('should return supported algorithms', () => {
+      // Act
+      const result = encryptionService.validateEncryptionParameters('AES-256-GCM');
+
+      // Assert
+      expect(result.supportedAlgorithms).toEqual(['AES-256-GCM', 'AES-192-GCM', 'AES-128-GCM']);
+    });
+
+    test('should handle algorithm validation without key size', () => {
+      // Act
+      const result = encryptionService.validateEncryptionParameters('AES-256-GCM');
+
+      // Assert
+      expect(result.isValid).toBe(true);
+      expect(result.issues).toHaveLength(0);
+    });
+  });
+
+  describe('updateMetrics (private method behavior)', () => {
+    test('should update metrics with exponential moving average', async () => {
+      // Arrange
+      const userId = 'user123';
+
+      const mockEncryptedKey: EncryptionKey = {
+        data: 'encrypted',
+        iv: 'iv',
+        algorithm: 'AES-256-GCM'
+      };
+
+      const mockMethod = jest.spyOn(encryptionService['keyManagementService'], 'encryptWithUserKey');
+      mockMethod.mockResolvedValue(mockEncryptedKey);
+
+      // Act - First encryption
+      await encryptionService.encryptSessionData({
+        userId,
+        keyId: 'key123',
+        password: 'TestPassword123!',
+        data: 'Test data'
+      });
+
+      let metrics = encryptionService.getEncryptionMetrics(userId);
+      const firstTime = metrics?.averageEncryptionTime || 0;
+
+      // Act - Second encryption
+      await encryptionService.encryptSessionData({
+        userId,
+        keyId: 'key123',
+        password: 'TestPassword123!',
+        data: 'Test data'
+      });
+
+      // Assert
+      metrics = encryptionService.getEncryptionMetrics(userId);
+      expect(metrics?.totalEncrypted).toBe(2);
+      // With EMA (alpha=0.1), the average should be smoothed
+      expect(metrics?.averageEncryptionTime).toBeGreaterThan(0);
+      expect(metrics?.averageEncryptionTime).not.toBe(firstTime);
+
+      mockMethod.mockRestore();
+    });
+
+    test('should track throughput metrics', async () => {
+      // Arrange
+      const userId = 'user123';
+      const data = 'x'.repeat(1000); // 1KB of data
+
+      const mockEncryptedKey: EncryptionKey = {
+        data: 'encrypted',
+        iv: 'iv',
+        algorithm: 'AES-256-GCM'
+      };
+
+      const mockMethod = jest.spyOn(encryptionService['keyManagementService'], 'encryptWithUserKey');
+      mockMethod.mockResolvedValue(mockEncryptedKey);
+
+      // Act
+      await encryptionService.encryptSessionData({
+        userId,
+        keyId: 'key123',
+        password: 'TestPassword123!',
+        data
+      });
+
+      // Assert
+      const metrics = encryptionService.getEncryptionMetrics(userId);
+      expect(metrics?.throughputBytesPerSecond).toBeGreaterThan(0);
+
+      mockMethod.mockRestore();
+    });
+
+    test('should maintain separate metrics for different users', async () => {
+      // Arrange
+      const user1Data = {
+        userId: 'user1',
+        keyId: 'key1',
+        password: 'TestPassword123!',
+        data: 'User 1 data'
+      };
+
+      const user2Data = {
+        userId: 'user2',
+        keyId: 'key2',
+        password: 'TestPassword123!',
+        data: 'User 2 data'
+      };
+
+      const mockEncryptedKey: EncryptionKey = {
+        data: 'encrypted',
+        iv: 'iv',
+        algorithm: 'AES-256-GCM'
+      };
+
+      const mockMethod = jest.spyOn(encryptionService['keyManagementService'], 'encryptWithUserKey');
+      mockMethod.mockResolvedValue(mockEncryptedKey);
+
+      // Act
+      await encryptionService.encryptSessionData(user1Data);
+      await encryptionService.encryptSessionData(user2Data);
+      await encryptionService.encryptSessionData(user1Data); // User 1 encrypts again
+
+      // Assert
+      const user1Metrics = encryptionService.getEncryptionMetrics('user1');
+      const user2Metrics = encryptionService.getEncryptionMetrics('user2');
+
+      expect(user1Metrics?.totalEncrypted).toBe(2);
+      expect(user2Metrics?.totalEncrypted).toBe(1);
+
+      mockMethod.mockRestore();
+    });
+  });
+
+  describe('Edge Cases and Error Handling', () => {
+    test('should handle very large data encryption', async () => {
+      // Arrange
+      const largeData = 'x'.repeat(1000000); // 1MB of data
+
+      const mockEncryptedKey: EncryptionKey = {
+        data: 'encrypted',
+        iv: 'iv',
+        algorithm: 'AES-256-GCM'
+      };
+
+      const mockMethod = jest.spyOn(encryptionService['keyManagementService'], 'encryptWithUserKey');
+      mockMethod.mockResolvedValue(mockEncryptedKey);
+
+      // Act
+      const result = await encryptionService.encryptSessionData({
+        userId: 'user123',
+        keyId: 'key123',
+        password: 'TestPassword123!',
+        data: largeData
+      });
+
+      // Assert
+      expect(result.encryptedData).toEqual(mockEncryptedKey);
+
+      const metrics = encryptionService.getEncryptionMetrics('user123');
+      expect(metrics?.throughputBytesPerSecond).toBeGreaterThan(0);
+
+      mockMethod.mockRestore();
+    });
+
+    test('should handle special characters in data', async () => {
+      // Arrange
+      const specialData = 'Special chars: éñçryption 🚀 with emojis and unicode: 你好, مرحبا, हिन्दी';
+
+      const mockEncryptedKey: EncryptionKey = {
+        data: 'encrypted',
+        iv: 'iv',
+        algorithm: 'AES-256-GCM'
+      };
+
+      const mockMethod = jest.spyOn(encryptionService['keyManagementService'], 'encryptWithUserKey');
+      mockMethod.mockResolvedValue(mockEncryptedKey);
+
+      // Act
+      const result = await encryptionService.encryptSessionData({
+        userId: 'user123',
+        keyId: 'key123',
+        password: 'TestPassword123!',
+        data: specialData
+      });
+
+      // Assert
+      expect(result.encryptedData).toEqual(mockEncryptedKey);
+
+      mockMethod.mockRestore();
+    });
+
+    test('should handle empty string encryption', async () => {
+      // Arrange
+      const emptyData = '';
+
+      const mockEncryptedKey: EncryptionKey = {
+        data: 'encrypted',
+        iv: 'iv',
+        algorithm: 'AES-256-GCM'
+      };
+
+      const mockMethod = jest.spyOn(encryptionService['keyManagementService'], 'encryptWithUserKey');
+      mockMethod.mockResolvedValue(mockEncryptedKey);
+
+      // Act
+      const result = await encryptionService.encryptSessionData({
+        userId: 'user123',
+        keyId: 'key123',
+        password: 'TestPassword123!',
+        data: emptyData
+      });
+
+      // Assert
+      expect(result.encryptedData).toEqual(mockEncryptedKey);
+
+      mockMethod.mockRestore();
+    });
+
+    test('should handle batch with mixed success and failure', async () => {
+      // Arrange
+      const request = {
+        userId: 'user123',
+        keyId: 'key123',
+        password: 'TestPassword123!',
+        items: [
+          { id: 'item1', data: 'Data 1' },
+          { id: 'item2', data: 'Data 2' },
+          { id: 'item3', data: 'Data 3' },
+          { id: 'item4', data: 'Data 4' }
+        ]
+      };
+
+      const mockEncryptedKey: EncryptionKey = {
+        data: 'encrypted',
+        iv: 'iv',
+        algorithm: 'AES-256-GCM'
+      };
+
+      const mockMethod = jest.spyOn(encryptionService['keyManagementService'], 'encryptWithUserKey');
+      mockMethod
+        .mockResolvedValueOnce(mockEncryptedKey)
+        .mockRejectedValueOnce(new Error('Error 1'))
+        .mockResolvedValueOnce(mockEncryptedKey)
+        .mockRejectedValueOnce(new Error('Error 2'));
+
+      // Act
+      const result = await encryptionService.encryptBatch(request);
+
+      // Assert
+      expect(result.summary).toEqual({
+        total: 4,
+        successful: 2,
+        failed: 2,
+        totalTime: expect.any(Number)
+      });
+
+      expect(result.items[0].encryptedData.data).toBe('encrypted');
+      expect(result.items[1].encryptedData.data).toBe('');
+      expect(result.items[1].metadata?.error).toBe('Error 1');
+      expect(result.items[2].encryptedData.data).toBe('encrypted');
+      expect(result.items[3].encryptedData.data).toBe('');
+      expect(result.items[3].metadata?.error).toBe('Error 2');
+
+      mockMethod.mockRestore();
+    });
+  });
+});

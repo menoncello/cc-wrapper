@@ -1,7 +1,10 @@
+---
+description: 'Marks a drafted story as ready for development and moves it from TODO → IN PROGRESS in the status file. Simple status-update workflow with no searching required.'
+---
+
 # story-ready
 
-IT IS CRITICAL THAT YOU FOLLOW THESE STEPS - while staying in character as the
-current agent persona you may have loaded:
+IT IS CRITICAL THAT YOU FOLLOW THESE STEPS - while staying in character as the current agent persona you may have loaded:
 
 <steps CRITICAL="TRUE">
 1. Always LOAD the FULL {project-root}/bmad/core/tasks/workflow.xml

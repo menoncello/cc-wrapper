@@ -19,14 +19,43 @@ interface OAuthUserInfo {
   id: string;
 }
 
+/**
+ * OAuth service for handling social authentication (Google, GitHub)
+ * Manages OAuth flows, token exchange, and user creation from social providers
+ */
 export class OAuthService {
   private authService: AuthService;
   private configs: Record<string, OAuthConfig>;
 
-  constructor() {
+  /**
+   * Initialize OAuth service with provider configurations
+   * Validates required environment variables and sets up OAuth provider settings
+   * @throws {Error} When required OAuth environment variables are missing
+   */
+  public constructor() {
     this.authService = new AuthService();
+    this.configs = this.initializeProviderConfigs();
+  }
 
-    // Validate required OAuth environment variables
+  /**
+   * Initialize OAuth provider configurations
+   * @returns {Record<string, OAuthConfig>} Provider configuration object
+   * @throws {Error} When required environment variables are missing
+   */
+  private initializeProviderConfigs(): Record<string, OAuthConfig> {
+    this.validateRequiredEnvVars();
+
+    return {
+      google: this.createGoogleConfig(),
+      github: this.createGithubConfig()
+    };
+  }
+
+  /**
+   * Validate required OAuth environment variables
+   * @throws {Error} When required environment variables are missing
+   */
+  private validateRequiredEnvVars(): void {
     const requiredEnvVars = [
       'GOOGLE_CLIENT_ID',
       'GOOGLE_CLIENT_SECRET',
@@ -40,36 +69,60 @@ export class OAuthService {
     if (missing.length > 0) {
       throw new Error(`Missing required OAuth environment variables: ${missing.join(', ')}`);
     }
+  }
 
-    // Initialize OAuth provider configurations
-    this.configs = {
-      google: {
-        clientId: process.env.GOOGLE_CLIENT_ID!,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-        redirectUri: process.env.GOOGLE_REDIRECT_URI!,
-        authorizationUrl: 'https://accounts.google.com/o/oauth2/v2/auth',
-        tokenUrl: 'https://oauth2.googleapis.com/token',
-        userInfoUrl: 'https://www.googleapis.com/oauth2/v2/userinfo'
-      },
-      github: {
-        clientId: process.env.GITHUB_CLIENT_ID!,
-        clientSecret: process.env.GITHUB_CLIENT_SECRET!,
-        redirectUri: process.env.GITHUB_REDIRECT_URI!,
-        authorizationUrl: 'https://github.com/login/oauth/authorize',
-        tokenUrl: 'https://github.com/login/oauth/access_token',
-        userInfoUrl: 'https://api.github.com/user'
-      }
+  /**
+   * Create Google OAuth configuration
+   * @returns {OAuthConfig} Google OAuth configuration
+   */
+  private createGoogleConfig(): OAuthConfig {
+    return {
+      clientId: this.getRequiredEnvVar('GOOGLE_CLIENT_ID'),
+      clientSecret: this.getRequiredEnvVar('GOOGLE_CLIENT_SECRET'),
+      redirectUri: this.getRequiredEnvVar('GOOGLE_REDIRECT_URI'),
+      authorizationUrl: 'https://accounts.google.com/o/oauth2/v2/auth',
+      tokenUrl: 'https://oauth2.googleapis.com/token',
+      userInfoUrl: 'https://www.googleapis.com/oauth2/v2/userinfo'
     };
   }
 
   /**
-   * Generate OAuth authorization URL
+   * Create GitHub OAuth configuration
+   * @returns {OAuthConfig} GitHub OAuth configuration
    */
-  getAuthorizationUrl(provider: string): { url: string; state: string } {
-    const config = this.configs[provider];
-    if (!config) {
-      throw new Error(`Unsupported OAuth provider: ${provider}`);
+  private createGithubConfig(): OAuthConfig {
+    return {
+      clientId: this.getRequiredEnvVar('GITHUB_CLIENT_ID'),
+      clientSecret: this.getRequiredEnvVar('GITHUB_CLIENT_SECRET'),
+      redirectUri: this.getRequiredEnvVar('GITHUB_REDIRECT_URI'),
+      authorizationUrl: 'https://github.com/login/oauth/authorize',
+      tokenUrl: 'https://github.com/login/oauth/access_token',
+      userInfoUrl: 'https://api.github.com/user'
+    };
+  }
+
+  /**
+   * Get required environment variable or throw error
+   * @param {string} key - Environment variable name
+   * @returns {string} Environment variable value
+   * @throws {Error} When environment variable is missing
+   */
+  private getRequiredEnvVar(key: string): string {
+    const value = process.env[key];
+    if (!value) {
+      throw new Error(`Missing required environment variable: ${key}`);
     }
+    return value;
+  }
+
+  /**
+   * Generate OAuth authorization URL
+   * @param {string} provider - OAuth provider name ('google' or 'github')
+   * @returns {{url: string, state: string}} Object containing authorization URL and CSRF state token
+   * @throws {Error} When provider is not supported
+   */
+  public getAuthorizationUrl(provider: string): { url: string; state: string } {
+    const config = this.getProviderConfig(provider);
 
     // Generate state token for CSRF protection
     const state = generateRandomToken(OAUTH_STATE_TOKEN_SIZE);
@@ -90,36 +143,32 @@ export class OAuthService {
 
   /**
    * Handle OAuth callback and create/login user
+   * @param {string} provider - OAuth provider name
+   * @param {string} code - Authorization code from OAuth provider
+   * @param {string} _state - State parameter for CSRF protection (unused after validation)
+   * @returns {Promise<AuthResponse>} Authentication response containing user data and tokens
+   * @throws {Error} When provider is not supported or callback fails
    */
-  async handleCallback(provider: string, code: string, _state: string): Promise<AuthResponse> {
-    const config = this.configs[provider];
-    if (!config) {
-      throw new Error(`Unsupported OAuth provider: ${provider}`);
-    }
-
-    // Exchange authorization code for access token
+  public async handleCallback(
+    provider: string,
+    code: string,
+    _state: string
+  ): Promise<AuthResponse> {
     const accessToken = await this.exchangeCodeForToken(provider, code);
-
-    // Get user information from OAuth provider
     const userInfo = await this.getUserInfo(provider, accessToken);
 
-    // Create or login OAuth user
-    return await this.authService.createOAuthUser(
-      userInfo.email,
-      provider,
-      userInfo.id,
-      userInfo.name
-    );
+    return this.authService.createOAuthUser(userInfo.email, provider, userInfo.id, userInfo.name);
   }
 
   /**
    * Exchange authorization code for access token
+   * @param {string} provider - OAuth provider name
+   * @param {string} code - Authorization code from OAuth provider
+   * @returns {Promise<string>} Access token string
+   * @throws {Error} When token exchange fails
    */
   private async exchangeCodeForToken(provider: string, code: string): Promise<string> {
-    const config = this.configs[provider];
-    if (!config) {
-      throw new Error(`Unsupported OAuth provider: ${provider}`);
-    }
+    const config = this.getProviderConfig(provider);
 
     const params = new URLSearchParams({
       client_id: config.clientId,
@@ -148,12 +197,13 @@ export class OAuthService {
 
   /**
    * Get user information from OAuth provider
+   * @param {string} provider - OAuth provider name
+   * @param {string} accessToken - OAuth access token
+   * @returns {Promise<OAuthUserInfo>} User information from provider
+   * @throws {Error} When user info fetch fails or provider is unsupported
    */
   private async getUserInfo(provider: string, accessToken: string): Promise<OAuthUserInfo> {
-    const config = this.configs[provider];
-    if (!config) {
-      throw new Error(`Unsupported OAuth provider: ${provider}`);
-    }
+    const config = this.getProviderConfig(provider);
 
     const response = await fetch(config.userInfoUrl, {
       headers: {
@@ -167,19 +217,30 @@ export class OAuthService {
     }
 
     const data = await response.json();
+    return this.parseUserInfo(provider, data);
+  }
 
-    // Parse user info based on provider
+  /**
+   * Parse user info response based on provider
+   * @param {string} provider - OAuth provider name
+   * @param {unknown} data - Raw response data from provider
+   * @returns {OAuthUserInfo} Standardized user information
+   * @throws {Error} When provider is not supported
+   */
+  private parseUserInfo(provider: string, data: unknown): OAuthUserInfo {
     if (provider === 'google') {
+      const googleData = data as { id: string; email: string; name?: string };
       return {
-        id: (data as { id: string }).id,
-        email: (data as { email: string }).email,
-        name: (data as { name?: string }).name
+        id: googleData.id,
+        email: googleData.email,
+        name: googleData.name
       };
     } else if (provider === 'github') {
+      const githubData = data as { id: number; email: string; name?: string };
       return {
-        id: String((data as { id: number }).id),
-        email: (data as { email: string }).email,
-        name: (data as { name?: string }).name
+        id: String(githubData.id),
+        email: githubData.email,
+        name: githubData.name
       };
     }
 
@@ -188,6 +249,8 @@ export class OAuthService {
 
   /**
    * Get OAuth scope based on provider
+   * @param {string} provider - OAuth provider name
+   * @returns {string} OAuth scope string for the provider
    */
   private getScope(provider: string): string {
     const scopes: Record<string, string> = {
@@ -201,8 +264,25 @@ export class OAuthService {
   /**
    * Validate OAuth state token (CSRF protection)
    * In production, store states in Redis with expiration
+   * @param {string} state - State parameter from OAuth callback
+   * @param {string} expectedState - Original state parameter stored in cookie
+   * @returns {boolean} True if state tokens match
    */
-  validateState(state: string, expectedState: string): boolean {
+  public validateState(state: string, expectedState: string): boolean {
     return state === expectedState;
+  }
+
+  /**
+   * Get provider configuration or throw error
+   * @param {string} provider - OAuth provider name
+   * @returns {OAuthConfig} Provider configuration object
+   * @throws {Error} When provider is not supported
+   */
+  private getProviderConfig(provider: string): OAuthConfig {
+    const config = this.configs[provider];
+    if (!config) {
+      throw new Error(`Unsupported OAuth provider: ${provider}`);
+    }
+    return config;
   }
 }

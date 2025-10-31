@@ -544,11 +544,11 @@ test('[P0] should display user info', async ({ page }) => {
 ```typescript
 test('should load user dashboard after login', async ({ page }) => {
   // CRITICAL: Intercept routes BEFORE navigation
-  await page.route('**/api/user', route =>
+  await page.route('**/api/user', (route) =>
     route.fulfill({
       status: 200,
-      body: JSON.stringify({ id: 1, name: 'Test User' })
-    })
+      body: JSON.stringify({ id: 1, name: 'Test User' }),
+    }),
   );
 
   // NOW navigate
@@ -584,7 +584,7 @@ export const test = base.extend({
 
     // Cleanup: Delete user automatically
     await deleteUser(user.id);
-  }
+  },
 });
 ```
 
@@ -610,7 +610,7 @@ export const createUser = (overrides = {}) => ({
   name: faker.person.fullName(),
   role: 'user',
   createdAt: faker.date.recent().toISOString(),
-  ...overrides
+  ...overrides,
 });
 
 export const createUsers = (count: number) => Array.from({ length: count }, () => createUser());

@@ -60,6 +60,7 @@ export const setupMockConsole = (): MockConsole => {
 
 /**
  * Platform mocking fixture for cross-platform testing
+ * @param platform
  */
 export const setupPlatformMock = (platform: string): (() => void) => {
   const originalPlatform = process.platform;
@@ -108,7 +109,7 @@ export const setupFileSystemFixture = (): FileSystemFixtures & { cleanup: () => 
 
   const cleanup = (): void => {
     // Clean up files first
-    fixtures.createdFiles.forEach(filePath => {
+    for (const filePath of fixtures.createdFiles) {
       try {
         if (fs.existsSync(filePath)) {
           fs.unlinkSync(filePath);
@@ -116,10 +117,10 @@ export const setupFileSystemFixture = (): FileSystemFixtures & { cleanup: () => 
       } catch (error) {
         console.warn(`Failed to clean up file: ${filePath}`, error);
       }
-    });
+    }
 
     // Clean up directories (reverse order)
-    fixtures.createdDirs.reverse().forEach(dirPath => {
+    for (const dirPath of fixtures.createdDirs.reverse()) {
       try {
         if (fs.existsSync(dirPath)) {
           fs.rmSync(dirPath, { recursive: true, force: true });
@@ -127,7 +128,7 @@ export const setupFileSystemFixture = (): FileSystemFixtures & { cleanup: () => 
       } catch (error) {
         console.warn(`Failed to clean up directory: ${dirPath}`, error);
       }
-    });
+    }
 
     // Clear tracking arrays
     fixtures.createdFiles.length = 0;
@@ -160,13 +161,13 @@ export const setupEnvironmentFixture = (): {
   const get = (key: string): string | undefined => process.env[key];
 
   const cleanup = (): void => {
-    Object.entries(originalValues).forEach(([key, value]) => {
-      if (value !== undefined) {
-        process.env[key] = value;
-      } else {
+    for (const [key, value] of Object.entries(originalValues)) {
+      if (value === undefined) {
         delete process.env[key];
+      } else {
+        process.env[key] = value;
       }
-    });
+    }
   };
 
   return { set, get, cleanup };
@@ -174,6 +175,7 @@ export const setupEnvironmentFixture = (): {
 
 /**
  * Temporary directory fixture for isolated test environments
+ * @param baseName
  */
 export const setupTemporaryDirectory = (
   baseName = 'temp-test'
@@ -237,7 +239,7 @@ export const setupVSCodeFixture = (): {
   };
 
   const cleanup = (): void => {
-    createdFiles.forEach(filePath => {
+    for (const filePath of createdFiles) {
       try {
         if (fs.existsSync(filePath)) {
           fs.unlinkSync(filePath);
@@ -245,7 +247,7 @@ export const setupVSCodeFixture = (): {
       } catch (error) {
         console.warn(`Failed to clean up VS Code file: ${filePath}`, error);
       }
-    });
+    }
 
     try {
       if (fs.existsSync(vscodeDir) && fs.readdirSync(vscodeDir).length === 0) {

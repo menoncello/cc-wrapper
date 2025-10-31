@@ -21,6 +21,7 @@
  */
 
 import { mergeTests } from '@playwright/test';
+
 import { test as authTest } from './auth.fixture';
 import { test as workspaceTest } from './workspace.fixture';
 

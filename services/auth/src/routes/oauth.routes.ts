@@ -5,7 +5,79 @@ import { rateLimitMiddleware } from '../middleware/rate-limit.js';
 import { oauthCallbackSchema } from '../schemas/auth.js';
 import { OAuthService } from '../services/oauth.service.js';
 
+// HTTP status constants
+const HTTP_STATUS_BAD_REQUEST = 400;
+const HTTP_STATUS_FOUND = 302;
+const HTTP_STATUS_INTERNAL_SERVER_ERROR = 500;
+
 const oauthService = new OAuthService();
+
+/**
+ * Extract OAuth state from cookie headers
+ * @param {string} cookies - Cookie header string
+ * @returns {string} The extracted state token or empty string if not found
+ */
+function extractStateFromCookie(cookies: string): string {
+  const stateCookie = cookies.split(';').find(c => c.trim().startsWith('oauth_state='));
+  const cookieParts = stateCookie?.split('=');
+  return cookieParts && cookieParts.length > 1 ? cookieParts[1] || '' : '';
+}
+
+/**
+ * Validate OAuth provider
+ * @param {string} provider - OAuth provider name
+ * @returns {boolean} Whether the provider is supported
+ */
+function validateProvider(provider: string): boolean {
+  return provider === 'google' || provider === 'github';
+}
+
+/**
+ * Create error response for invalid provider
+ * @param {object} set - Elysia response setter
+ * @param {number | string} set.status - HTTP status code
+ * @returns {object} Error response
+ */
+function createInvalidProviderResponse(set: { status?: number | string }): { error: string } {
+  set.status = HTTP_STATUS_BAD_REQUEST;
+  return { error: 'Unsupported OAuth provider' };
+}
+
+/**
+ * Validate OAuth state from cookies
+ * @param {string} cookieHeader - Cookie header from request
+ * @param {string} providedState - State parameter from OAuth callback
+ * @returns {string | null} Validated state or null if invalid
+ */
+function validateOAuthState(cookieHeader: string | null, providedState: string): string | null {
+  if (!cookieHeader) {
+    return null;
+  }
+
+  const expectedState = extractStateFromCookie(cookieHeader);
+  if (!expectedState) {
+    return null;
+  }
+
+  return oauthService.validateState(providedState, expectedState) ? expectedState : null;
+}
+
+/**
+ * Create state cookie header
+ * @param {string} state - OAuth state token
+ * @returns {string} Set-Cookie header value
+ */
+function createStateCookie(state: string): string {
+  return `oauth_state=${state}; HttpOnly; SameSite=Lax; Path=/; Max-Age=${OAUTH_STATE_COOKIE_MAX_AGE}`;
+}
+
+/**
+ * Create clear state cookie header
+ * @returns {string} Set-Cookie header to clear state
+ */
+function createClearStateCookie(): string {
+  return 'oauth_state=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0';
+}
 
 /**
  * OAuth routes for social login (Google, GitHub)
@@ -20,9 +92,8 @@ export const oauthRoutes = new Elysia({ prefix: '/api/auth/oauth' })
       try {
         const { provider } = params;
 
-        if (provider !== 'google' && provider !== 'github') {
-          set.status = 400;
-          return { error: 'Unsupported OAuth provider' };
+        if (!validateProvider(provider)) {
+          return createInvalidProviderResponse(set);
         }
 
         // Generate authorization URL with state token
@@ -31,16 +102,16 @@ export const oauthRoutes = new Elysia({ prefix: '/api/auth/oauth' })
         // Store state in cookie for validation (simple approach)
         // Production should use secure session storage
         set.headers = {
-          'Set-Cookie': `oauth_state=${state}; HttpOnly; SameSite=Lax; Path=/; Max-Age=${OAUTH_STATE_COOKIE_MAX_AGE}`
+          'Set-Cookie': createStateCookie(state)
         };
 
         // Redirect to OAuth provider
-        set.status = 302;
-        set.redirect = url;
+        set.status = HTTP_STATUS_FOUND;
+        set.headers['Location'] = url;
 
         return { redirectUrl: url };
       } catch (error) {
-        set.status = 500;
+        set.status = HTTP_STATUS_INTERNAL_SERVER_ERROR;
         return {
           error: error instanceof Error ? error.message : 'OAuth initialization failed'
         };
@@ -60,47 +131,37 @@ export const oauthRoutes = new Elysia({ prefix: '/api/auth/oauth' })
       try {
         const { provider } = params;
 
-        if (provider !== 'google' && provider !== 'github') {
-          set.status = 400;
-          return { error: 'Unsupported OAuth provider' };
+        if (!validateProvider(provider)) {
+          return createInvalidProviderResponse(set);
         }
 
         // Validate query parameters
         const validatedQuery = oauthCallbackSchema.parse(query);
 
-        // Get state from cookie
-        const cookies = request.headers.get('Cookie') || '';
-        const stateCookie = cookies.split(';').find(c => c.trim().startsWith('oauth_state='));
-        const cookieParts = stateCookie?.split('=');
-        const expectedState = cookieParts && cookieParts.length > 1 ? cookieParts[1] : '';
+        // Extract and validate state from cookie
+        const cookieHeader = request.headers.get('Cookie');
+        const validatedState = validateOAuthState(cookieHeader, validatedQuery.state);
 
-        // Ensure state is present
-        if (!expectedState) {
-          set.status = 400;
-          return { error: 'Missing state cookie' };
-        }
-
-        // Validate state token (CSRF protection)
-        if (!oauthService.validateState(validatedQuery.state, expectedState)) {
-          set.status = 400;
-          return { error: 'Invalid state parameter' };
+        if (!validatedState) {
+          set.status = HTTP_STATUS_BAD_REQUEST;
+          return { error: 'Invalid or missing state parameter' };
         }
 
         // Handle OAuth callback (state already validated above)
         const result = await oauthService.handleCallback(
           provider,
           validatedQuery.code,
-          expectedState
+          validatedState
         );
 
         // Clear state cookie
         set.headers = {
-          'Set-Cookie': 'oauth_state=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0'
+          'Set-Cookie': createClearStateCookie()
         };
 
         return result;
       } catch (error) {
-        set.status = 400;
+        set.status = HTTP_STATUS_BAD_REQUEST;
         return {
           error: error instanceof Error ? error.message : 'OAuth callback failed'
         };

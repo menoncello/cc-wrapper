@@ -1,12 +1,19 @@
 import type { OnboardingData, Workspace } from '@cc-wrapper/shared-types';
 
-import prisma from '../lib/prisma.js';
+import { prisma } from '../lib/prisma.js';
 
+/**
+ * Workspace service for CC Wrapper
+ * Handles workspace creation, retrieval, and user workspace associations
+ */
 export class WorkspaceService {
   /**
    * Create default workspace based on onboarding data
+   * @param {string} userId - Unique user identifier
+   * @param {OnboardingData} data - Onboarding data containing workspace configuration
+   * @returns {Promise<Workspace>} Created workspace object
    */
-  async createDefaultWorkspace(userId: string, data: OnboardingData): Promise<Workspace> {
+  public async createDefaultWorkspace(userId: string, data: OnboardingData): Promise<Workspace> {
     // Create workspace with template configuration
     const workspace = await prisma.workspace.create({
       data: {
@@ -44,8 +51,10 @@ export class WorkspaceService {
 
   /**
    * Get workspace by ID
+   * @param {string} workspaceId - Unique workspace identifier
+   * @returns {Promise<Workspace | null>} Workspace object or null if not found
    */
-  async getWorkspaceById(workspaceId: string): Promise<Workspace | null> {
+  public async getWorkspaceById(workspaceId: string): Promise<Workspace | null> {
     const workspace = await prisma.workspace.findUnique({
       where: { id: workspaceId }
     });
@@ -55,8 +64,10 @@ export class WorkspaceService {
 
   /**
    * Get user workspaces
+   * @param {string} userId - Unique user identifier
+   * @returns {Promise<Workspace[]>} Array of workspace objects owned by the user
    */
-  async getUserWorkspaces(userId: string): Promise<Workspace[]> {
+  public async getUserWorkspaces(userId: string): Promise<Workspace[]> {
     const workspaces = await prisma.workspace.findMany({
       where: { ownerId: userId },
       orderBy: { createdAt: 'desc' }

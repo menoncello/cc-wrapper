@@ -116,13 +116,13 @@ export default defineConfig({
   e2e: {
     env: {
       grepTags: process.env.GREP_TAGS || '',
-      grepFilterSpecs: true
+      grepFilterSpecs: true,
     },
     setupNodeEvents(on, config) {
       require('@cypress/grep/src/plugin')(config);
       return config;
-    }
-  }
+    },
+  },
 });
 ```
 
@@ -215,24 +215,24 @@ export default defineConfig({
     {
       name: 'smoke',
       testMatch: /.*smoke.*\.spec\.ts/,
-      retries: 0
+      retries: 0,
     },
     {
       name: 'e2e',
       testMatch: /tests\/e2e\/.*\.spec\.ts/,
-      retries: 2
+      retries: 2,
     },
     {
       name: 'integration',
       testMatch: /tests\/integration\/.*\.spec\.ts/,
-      retries: 1
+      retries: 1,
     },
     {
       name: 'component',
       testMatch: /tests\/component\/.*\.spec\.ts/,
-      use: { ...devices['Desktop Chrome'] }
-    }
-  ]
+      use: { ...devices['Desktop Chrome'] },
+    },
+  ],
 });
 ```
 
@@ -256,7 +256,7 @@ if (components.length === 0) {
 }
 
 // Convert component names to glob patterns
-const patterns = components.map(comp => `**/*${comp}*.spec.ts`).join(' ');
+const patterns = components.map((comp) => `**/*${comp}*.spec.ts`).join(' ');
 
 console.log(`🧩 Running tests for components: ${components.join(', ')}`);
 console.log(`Patterns: ${patterns}`);
@@ -264,7 +264,7 @@ console.log(`Patterns: ${patterns}`);
 try {
   execSync(`npx playwright test ${patterns}`, {
     stdio: 'inherit',
-    env: { ...process.env, CI: 'false' }
+    env: { ...process.env, CI: 'false' },
   });
 } catch (error) {
   process.exit(1);
@@ -510,7 +510,7 @@ export const TEST_PROMOTION_RULES: Record<TestStage, TestPromotion> = {
     testCommand: 'npm run test:smoke',
     timebudget: '2',
     required: true,
-    failureAction: 'block'
+    failureAction: 'block',
   },
   'ci-pr': {
     stage: 'ci-pr',
@@ -518,7 +518,7 @@ export const TEST_PROMOTION_RULES: Record<TestStage, TestPromotion> = {
     testCommand: 'npm run test:changed && npm run test:p0-p1',
     timebudget: '10',
     required: true,
-    failureAction: 'block'
+    failureAction: 'block',
   },
   'ci-merge': {
     stage: 'ci-merge',
@@ -526,7 +526,7 @@ export const TEST_PROMOTION_RULES: Record<TestStage, TestPromotion> = {
     testCommand: 'npm run test:regression',
     timebudget: '30',
     required: true,
-    failureAction: 'block'
+    failureAction: 'block',
   },
   staging: {
     stage: 'staging',
@@ -534,7 +534,7 @@ export const TEST_PROMOTION_RULES: Record<TestStage, TestPromotion> = {
     testCommand: 'npm run test:e2e -- --grep "@smoke"',
     timebudget: '15',
     required: true,
-    failureAction: 'block'
+    failureAction: 'block',
   },
   production: {
     stage: 'production',
@@ -542,8 +542,8 @@ export const TEST_PROMOTION_RULES: Record<TestStage, TestPromotion> = {
     testCommand: 'npm run test:e2e:prod -- --grep "@smoke.*@p0"',
     timebudget: '5',
     required: false,
-    failureAction: 'alert'
-  }
+    failureAction: 'alert',
+  },
 };
 
 /**

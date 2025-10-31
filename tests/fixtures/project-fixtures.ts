@@ -46,7 +46,7 @@ export const projectFixture = () => {
       const tsconfigPath = path.join(PROJECT_ROOT, 'tsconfig.json');
       const content = fs.readFileSync(tsconfigPath, 'utf-8');
       // Strip comments using regex
-      const cleaned = content.replace(/\\"|"(?:\\"|[^"])*"|(\/\/.*|\/\*[\s\S]*?\*\/)/g, (m, g) =>
+      const cleaned = content.replace(/\\"|"(?:\\"|[^"])*"|(\/\/.*|\/\*[\S\s]*?\*\/)/g, (m, g) =>
         g ? '' : m
       );
       return JSON.parse(cleaned);

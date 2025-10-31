@@ -6,7 +6,8 @@
  * Reference: bmad/bmm/testarch/knowledge/fixture-architecture.md
  */
 
-import { test as base, type APIRequestContext } from '@playwright/test';
+import { type APIRequestContext,test as base } from '@playwright/test';
+
 import { createWorkspace, createWorkspaces, type Workspace } from '../factories/workspace.factory';
 
 /**

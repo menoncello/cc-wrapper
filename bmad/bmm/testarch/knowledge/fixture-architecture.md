@@ -124,7 +124,7 @@ export const test = base.extend({
     const interceptedRoutes = new Map();
 
     const interceptRoute = async (method: string, url: string, response: unknown) => {
-      await page.route(url, route => {
+      await page.route(url, (route) => {
         if (route.request().method() === method) {
           route.fulfill({ body: JSON.stringify(response) });
         }
@@ -136,7 +136,7 @@ export const test = base.extend({
 
     // Cleanup
     interceptedRoutes.clear();
-  }
+  },
 });
 
 // auth-fixture.ts
@@ -150,13 +150,13 @@ export const test = base.extend({
           name: 'auth_token',
           value: token,
           domain: 'localhost',
-          path: '/'
-        }
+          path: '/',
+        },
       ]);
     };
 
     await use({ loginAs });
-  }
+  },
 });
 ```
 
@@ -185,25 +185,18 @@ type HttpHelperParams = {
   token?: string;
 };
 
-export async function makeHttpRequest({
-  baseUrl,
-  endpoint,
-  method,
-  body,
-  headers = {},
-  token
-}: HttpHelperParams): Promise<unknown> {
+export async function makeHttpRequest({ baseUrl, endpoint, method, body, headers = {}, token }: HttpHelperParams): Promise<unknown> {
   const url = `${baseUrl}${endpoint}`;
   const requestHeaders = {
     'Content-Type': 'application/json',
     ...(token && { Authorization: `Bearer ${token}` }),
-    ...headers
+    ...headers,
   };
 
   const response = await fetch(url, {
     method,
     headers: requestHeaders,
-    body: body ? JSON.stringify(body) : undefined
+    body: body ? JSON.stringify(body) : undefined,
   });
 
   if (!response.ok) {
@@ -223,15 +216,15 @@ export const test = base.extend({
   httpHelper: async ({}, use) => {
     const baseUrl = process.env.API_BASE_URL || 'http://localhost:3000';
 
-    await use(params => makeHttpRequest({ baseUrl, ...params }));
-  }
+    await use((params) => makeHttpRequest({ baseUrl, ...params }));
+  },
 });
 
 // Cypress command wrapper
 // cypress/support/commands.ts
 import { makeHttpRequest } from '../../shared/helpers/http-helper';
 
-Cypress.Commands.add('apiRequest', params => {
+Cypress.Commands.add('apiRequest', (params) => {
   const baseUrl = Cypress.env('API_BASE_URL') || 'http://localhost:3000';
   return cy.wrap(makeHttpRequest({ baseUrl, ...params }));
 });
@@ -295,7 +288,7 @@ export const test = base.extend<DatabaseFixture>({
       await deleteRecord('orders', orderId);
     }
     createdOrders.length = 0;
-  }
+  },
 });
 
 // Example usage:
@@ -382,7 +375,7 @@ export const test = base.extend({
     await login(page, 'admin@example.com', 'admin123');
     await navigate(page, '/admin');
     await use(page);
-  }
+  },
 });
 
 // Tests import exactly what they need—no inheritance

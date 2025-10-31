@@ -15,27 +15,27 @@ import { setupMockConsole } from '../test-utils/fixtures/setup-fixtures';
 
 // Type definitions for test interfaces
 interface SetupEnvironmentInstance {
-  checkBun(): Promise<{
+  checkBun: () => Promise<{
     installed: boolean;
     version?: string;
     required: string;
   }>;
-  checkTypeScript(): Promise<{
+  checkTypeScript: () => Promise<{
     installed: boolean;
     version?: string;
     required: string;
   }>;
-  checkDocker(): Promise<{
+  checkDocker: () => Promise<{
     installed: boolean;
     version?: string;
     required: string;
   }>;
-  checkPostgreSQL(): Promise<{
+  checkPostgreSQL: () => Promise<{
     installed: boolean;
     version?: string;
     required: string;
   }>;
-  checkRedis(): Promise<{
+  checkRedis: () => Promise<{
     installed: boolean;
     version?: string;
     required: string;
@@ -187,11 +187,11 @@ describe('Dependency Version Checking - P0 Critical Setup Validation', () => {
       const results = await Promise.all(promises);
 
       // All results should have proper structure
-      results.forEach(result => {
+      for (const result of results) {
         expect(typeof result.installed).toBe('boolean');
         expect(typeof result.required).toBe('string');
         expect(result.required.length).toBeGreaterThan(0);
-      });
+      }
     });
   });
 
@@ -223,7 +223,7 @@ describe('Dependency Version Checking - P0 Critical Setup Validation', () => {
       if (result.installed && result.version) {
         // PostgreSQL typically uses major version (e.g., 18, 17, 16)
         expect(result.version).toMatch(/^\d+/);
-        const majorVersion = parseInt(result.version);
+        const majorVersion = Number.parseInt(result.version);
         expect(majorVersion).toBeGreaterThan(0);
         expect(majorVersion).toBeLessThan(100); // Reasonable upper bound
       }

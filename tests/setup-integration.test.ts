@@ -16,13 +16,13 @@ import { setupMockConsole, setupTemporaryDirectory } from '../test-utils/fixture
 
 // Type definitions for test interfaces
 interface SetupEnvironmentInstance {
-  run(): Promise<void>;
-  installDependencies?(): Promise<void>;
-  setupServices?(): Promise<void>;
-  setupEditorIntegration(): Promise<void>;
-  configureEnvironment(): Promise<void>;
-  validateEnvironment(): Promise<void>;
-  detectPlatform(): string;
+  run: () => Promise<void>;
+  installDependencies?: () => Promise<void>;
+  setupServices?: () => Promise<void>;
+  setupEditorIntegration: () => Promise<void>;
+  configureEnvironment: () => Promise<void>;
+  validateEnvironment: () => Promise<void>;
+  detectPlatform: () => string;
 }
 
 interface SetupEnvironmentConstructor {
@@ -335,7 +335,7 @@ describe.skip('Setup Integration - P0 Critical End-to-End Validation', () => {
     test('should create proper monorepo directory structure', () => {
       const expectedDirs = ['apps', 'packages', 'services'];
 
-      expectedDirs.forEach(dir => {
+      for (const dir of expectedDirs) {
         expect(fs.existsSync(dir)).toBe(true);
         const stats = fs.statSync(dir);
         expect(stats.isDirectory()).toBe(true);
@@ -344,16 +344,16 @@ describe.skip('Setup Integration - P0 Critical End-to-End Validation', () => {
         expect(() => {
           fs.accessSync(dir, fs.constants.R_OK | fs.constants.W_OK);
         }).not.toThrow();
-      });
+      }
     });
 
     test('should maintain proper directory permissions', () => {
       const dirs = ['apps', 'packages', 'services'];
 
-      dirs.forEach(dir => {
+      for (const dir of dirs) {
         const stats = fs.statSync(dir);
-        expect(stats.mode & parseInt('111', 8)).toBeGreaterThan(0); // Execute permission
-      });
+        expect(stats.mode & Number.parseInt('111', 8)).toBeGreaterThan(0); // Execute permission
+      }
     });
   });
 });

@@ -116,3 +116,118 @@ export interface TourStep {
   target: string; // CSS selector for highlighting
   position: 'top' | 'bottom' | 'left' | 'right';
 }
+
+// Session Management Types
+export interface Checkpoint {
+  id: string;
+  sessionId: string;
+  name: string;
+  description?: string;
+  createdAt: Date;
+  compressedSize: number;
+  uncompressedSize: number;
+  tags?: string[];
+  priority?: 'low' | 'medium' | 'high';
+  data: string; // Serialized state data
+  checksum: string;
+  isFull: boolean;
+  deltaSize?: number;
+}
+
+export interface SessionConfig {
+  autoSaveInterval: number; // in seconds
+  retentionDays: number;
+  maxCheckpoints?: number;
+  compressionEnabled?: boolean;
+  encryptionEnabled?: boolean;
+}
+
+export interface WorkspaceSession {
+  id: string;
+  name: string;
+  workspaceId: string;
+  userId: string;
+  config: SessionConfig;
+  createdAt: Date;
+  updatedAt: Date;
+  lastCheckpointAt?: Date;
+}
+
+export interface SessionCheckpoint {
+  id: string;
+  sessionId: string;
+  name: string;
+  description?: string;
+  data: string;
+  checksum: string;
+  size: number;
+  isFull: boolean;
+  deltaSize?: number;
+  createdAt: Date;
+}
+
+export interface AIConversation {
+  id: string;
+  messages: Array<{
+    role: string;
+    content: string;
+    timestamp: Date;
+  }>;
+  metadata?: Record<string, unknown>;
+}
+
+export interface OpenFile {
+  id: string;
+  path: string;
+  content: string;
+  language?: string;
+  lastModified: Date;
+  hasUnsavedChanges?: boolean;
+}
+
+// API Request/Response Types for Sessions
+export interface CreateSessionRequest {
+  name: string;
+  workspaceId: string;
+  config?: Partial<SessionConfig>;
+}
+
+export interface CreateCheckpointRequest {
+  sessionId: string;
+  name: string;
+  description?: string;
+  tags?: string[];
+  priority?: 'low' | 'medium' | 'high';
+  isFull?: boolean;
+}
+
+export interface UpdateSessionRequest {
+  name?: string;
+  config?: Partial<SessionConfig>;
+}
+
+export interface SessionResponse {
+  session: WorkspaceSession;
+  checkpointCount: number;
+  totalSize: number;
+}
+
+export interface CheckpointResponse {
+  checkpoint: SessionCheckpoint;
+  preview?: Partial<WorkspaceState>; // First few KB of state for preview
+}
+
+export interface SessionListResponse {
+  sessions: WorkspaceSession[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface WorkspaceState {
+  files: OpenFile[];
+  conversations: AIConversation[];
+  activeFileId?: string;
+  timestamp: Date;
+  metadata?: Record<string, unknown>;
+}

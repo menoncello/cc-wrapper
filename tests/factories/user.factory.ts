@@ -8,6 +8,8 @@
 
 import { faker } from '@faker-js/faker';
 
+import { generateTestPassword } from '../../test-utils/password-generator.js';
+
 export type UserType = 'solo' | 'team' | 'enterprise';
 export type OAuthProvider = 'google' | 'github' | null;
 
@@ -55,7 +57,7 @@ export const createUser = (overrides: Partial<User> = {}): User => {
   const defaultUser: User = {
     id: faker.string.uuid(),
     email: faker.internet.email(),
-    password: 'SecureP@ss123', // Default password for test users
+    password: generateTestPassword('user'), // Default password for test users
     oauth_provider: null,
     oauth_id: null,
     user_type: faker.helpers.arrayElement(['solo', 'team', 'enterprise'] as UserType[]),
@@ -189,7 +191,7 @@ export const createRegistrationData = (
     confirmPassword: string;
   }> = {}
 ) => {
-  const password = overrides.password || 'SecureP@ss123';
+  const password = overrides.password || generateTestPassword('registration');
 
   return {
     email: overrides.email || faker.internet.email(),
@@ -216,6 +218,6 @@ export const createLoginCredentials = (
 ) => {
   return {
     email: overrides.email || faker.internet.email(),
-    password: overrides.password || 'SecureP@ss123'
+    password: overrides.password || generateTestPassword('login')
   };
 };

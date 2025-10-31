@@ -10,3 +10,6 @@ export * from './factories/setup-factory';
 
 // Common test fixtures for setup and teardown
 export * from './fixtures/setup-fixtures';
+
+// Password generation utilities for testing
+export * from './password-generator';

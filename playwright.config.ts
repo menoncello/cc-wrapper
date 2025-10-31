@@ -19,7 +19,13 @@ export default defineConfig({
     baseURL: process.env.BASE_URL || 'http://localhost:5173',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
-    video: 'retain-on-failure'
+    video: 'retain-on-failure',
+    // Run tests in headless mode
+    headless: true,
+    // Prevent browser from stealing focus during tests
+    launchOptions: {
+      args: ['--disable-focus-ring', '--disable-background-timer-throttling']
+    }
   },
 
   projects: [

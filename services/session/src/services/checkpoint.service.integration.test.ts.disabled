@@ -1,0 +1,839 @@
+import { describe, expect, it, beforeAll, afterAll, beforeEach, afterEach } from 'bun:test';
+import prisma from '../lib/prisma.js';
+import type {
+  WorkspaceState,
+  CheckpointMetadata,
+  CreateCheckpointOptions,
+  CheckpointFilter
+} from '../types/session.js';
+import { SessionCheckpointService } from './checkpoint.service.js';
+
+// Test utilities
+const createMockWorkspaceState = (overrides = {}): WorkspaceState => ({
+  terminalState: [
+    { id: '1', command: 'ls', isActive: true },
+    { id: '2', command: 'cd /tmp', isActive: false }
+  ],
+  browserTabs: [
+    { url: 'https://example.com', title: 'Example', isActive: true },
+    { url: 'https://test.com', title: 'Test', isActive: false }
+  ],
+  aiConversations: [
+    { id: '1', messages: [], timestamp: new Date() }
+  ],
+  openFiles: [
+    { path: '/file.ts', language: 'typescript', hasUnsavedChanges: false }
+  ],
+  workspaceConfig: { theme: 'dark', fontSize: 14 },
+  metadata: { createdAt: new Date(), updatedAt: new Date() },
+  ...overrides
+});
+
+describe('SessionCheckpointService - Integration Tests', () => {
+  let service: SessionCheckpointService;
+  let testSessionId: string;
+  let testWorkspaceId: string;
+  let testUserId: string;
+
+  beforeAll(async () => {
+    // Setup test database connection
+    service = new SessionCheckpointService();
+
+    // Create test user and workspace
+    const testUser = await prisma.user.create({
+      data: {
+        email: 'test-user@example.com',
+        name: 'Test User',
+        passwordHash: 'dummy_hash'
+      }
+    });
+    testUserId = testUser.id;
+
+    const testWorkspace = await prisma.workspace.create({
+      data: {
+        name: 'Test Workspace',
+        description: 'Workspace for testing',
+        ownerId: testUserId
+      }
+    });
+    testWorkspaceId = testWorkspace.id;
+
+    const testSession = await prisma.workspaceSession.create({
+      data: {
+        name: 'Test Session',
+        userId: testUserId,
+        workspaceId: testWorkspaceId,
+        isActive: true,
+        workspaceState: createMockWorkspaceState() as any
+      }
+    });
+    testSessionId = testSession.id;
+  });
+
+  afterAll(async () => {
+    // Cleanup test data
+    await prisma.sessionCheckpoint.deleteMany({
+      where: { sessionId: testSessionId }
+    });
+    await prisma.workspaceSession.deleteMany({
+      where: { id: testSessionId }
+    });
+    await prisma.workspace.deleteMany({
+      where: { id: testWorkspaceId }
+    });
+    await prisma.user.deleteMany({
+      where: { id: testUserId }
+    });
+  });
+
+  beforeEach(async () => {
+    // Clean up checkpoints before each test
+    await prisma.sessionCheckpoint.deleteMany({
+      where: { sessionId: testSessionId }
+    });
+  });
+
+  afterEach(async () => {
+    // Additional cleanup if needed
+    await prisma.sessionCheckpoint.deleteMany({
+      where: { sessionId: testSessionId }
+    });
+  });
+
+  describe('restoreFromCheckpoint', () => {
+    it('should restore session from checkpoint successfully', async () => {
+      const workspaceState = createMockWorkspaceState();
+      const metadata: CheckpointMetadata = {
+        name: 'Test Restore Checkpoint',
+        description: 'Checkpoint for restore testing',
+        priority: 'high'
+      };
+
+      // Create checkpoint
+      const checkpoint = await service.createCheckpoint(testSessionId, workspaceState, metadata);
+      expect(checkpoint.id).toBeDefined();
+
+      // Restore from checkpoint
+      const restoreResult = await service.restoreFromCheckpoint(checkpoint.id);
+
+      expect(restoreResult.session.id).toBe(testSessionId);
+      expect(restoreResult.workspaceState).toBeDefined();
+      expect(restoreResult.backupCheckpoint).toBeUndefined(); // No backup requested
+
+      // Verify checkpoint restore metadata was updated
+      const updatedCheckpoint = await service.getCheckpoint(checkpoint.id);
+      expect(updatedCheckpoint.metadata.lastRestoredAt).toBeDefined();
+      expect((updatedCheckpoint.metadata as any).restoreCount).toBe(1);
+    });
+
+    it('should create backup when restoring checkpoint', async () => {
+      const originalState = createMockWorkspaceState({
+        terminalState: [{ id: '1', command: 'ls', isActive: true }]
+      });
+      const restoreState = createMockWorkspaceState({
+        terminalState: [{ id: '2', command: 'pwd', isActive: true }]
+      });
+
+      // Create original checkpoint
+      const originalCheckpoint = await service.createCheckpoint(
+        testSessionId,
+        originalState,
+        { name: 'Original State' }
+      );
+
+      // Update session with different state
+      await prisma.workspaceSession.update({
+        where: { id: testSessionId },
+        data: { workspaceState: restoreState as any }
+      });
+
+      // Create checkpoint for restore with backup
+      const restoreCheckpoint = await service.createCheckpoint(
+        testSessionId,
+        restoreState,
+        { name: 'Restore State' }
+      );
+
+      // Restore with backup creation
+      const restoreResult = await service.restoreFromCheckpoint(restoreCheckpoint.id, {
+        createBackup: true,
+        backupName: 'Backup before restore'
+      });
+
+      expect(restoreResult.backupCheckpoint).toBeDefined();
+      expect(restoreResult.backupCheckpoint?.name).toBe('Backup before restore');
+      expect(restoreResult.backupCheckpoint?.isAutoGenerated).toBe(true);
+      expect(restoreResult.backupCheckpoint?.priority).toBe('low');
+    });
+
+    it('should throw error for non-existent checkpoint restore', async () => {
+      await expect(
+        service.restoreFromCheckpoint('non-existent-checkpoint')
+      ).rejects.toThrow('Failed to restore from checkpoint: Checkpoint not found');
+    });
+
+    it('should handle restore with encryption key', async () => {
+      const workspaceState = createMockWorkspaceState();
+      const metadata: CheckpointMetadata = {
+        name: 'Encrypted Restore Checkpoint'
+      };
+      const options: CreateCheckpointOptions = {
+        encryptData: true,
+        encryptionKey: 'test_encryption_key_123'
+      };
+
+      // Create encrypted checkpoint
+      const checkpoint = await service.createCheckpoint(testSessionId, workspaceState, metadata, options);
+
+      // Restore with encryption key
+      const restoreResult = await service.restoreFromCheckpoint(checkpoint.id, {
+        encryptionKey: 'test_encryption_key_123'
+      });
+
+      expect(restoreResult.workspaceState).toBeDefined();
+      expect(restoreResult.workspaceState.terminalState).toHaveLength(2);
+    });
+
+    it('should handle restore failure without encryption key', async () => {
+      const workspaceState = createMockWorkspaceState();
+      const metadata: CheckpointMetadata = {
+        name: 'Encrypted Checkpoint'
+      };
+      const options: CreateCheckpointOptions = {
+        encryptData: true,
+        encryptionKey: 'test_encryption_key_123'
+      };
+
+      // Create encrypted checkpoint
+      const checkpoint = await service.createCheckpoint(testSessionId, workspaceState, metadata, options);
+
+      // Try to restore without encryption key
+      await expect(
+        service.restoreFromCheckpoint(checkpoint.id)
+      ).rejects.toThrow();
+    });
+  });
+
+  describe('getCheckpointStatistics', () => {
+    beforeEach(async () => {
+      // Create test checkpoints with different properties
+      const workspaceState = createMockWorkspaceState();
+
+      await service.createCheckpoint(testSessionId, workspaceState, {
+        name: 'High Priority Checkpoint',
+        priority: 'high',
+        tags: ['important', 'test']
+      });
+
+      await service.createCheckpoint(testSessionId, workspaceState, {
+        name: 'Low Priority Auto',
+        priority: 'low',
+        isAutoGenerated: true,
+        tags: ['auto']
+      });
+
+      await service.createCheckpoint(testSessionId, workspaceState, {
+        name: 'Medium Priority Checkpoint',
+        priority: 'medium',
+        tags: ['test', 'medium']
+      });
+    });
+
+    it('should calculate statistics for all checkpoints', async () => {
+      const stats = await service.getCheckpointStatistics();
+
+      expect(stats.totalCheckpoints).toBe(3);
+      expect(stats.totalSize).toBeGreaterThan(0);
+      expect(stats.averageSize).toBeGreaterThan(0);
+      expect(stats.oldestCheckpoint).toBeDefined();
+      expect(stats.newestCheckpoint).toBeDefined();
+
+      // Check priority distribution
+      expect(stats.checkpointsByPriority.low).toBe(1);
+      expect(stats.checkpointsByPriority.medium).toBe(1);
+      expect(stats.checkpointsByPriority.high).toBe(1);
+
+      // Check tag distribution
+      expect(stats.checkpointsByTag.test).toBe(2);
+      expect(stats.checkpointsByTag.important).toBe(1);
+      expect(stats.checkpointsByTag.auto).toBe(1);
+      expect(stats.checkpointsByTag.medium).toBe(1);
+
+      // Check storage usage
+      expect(stats.storageUsage.compressed).toBeGreaterThan(0);
+      expect(stats.storageUsage.uncompressed).toBeGreaterThan(0);
+      expect(stats.storageUsage.compressionRatio).toBeGreaterThan(0);
+    });
+
+    it('should calculate statistics for specific session', async () => {
+      // Create checkpoint in another session
+      const anotherSession = await prisma.workspaceSession.create({
+        data: {
+          name: 'Another Session',
+          userId: testUserId,
+          workspaceId: testWorkspaceId,
+          isActive: true
+        }
+      });
+
+      await service.createCheckpoint(anotherSession.id, createMockWorkspaceState(), {
+        name: 'Another Session Checkpoint'
+      });
+
+      const sessionStats = await service.getCheckpointStatistics(testSessionId);
+      expect(sessionStats.totalCheckpoints).toBe(3);
+
+      const allStats = await service.getCheckpointStatistics();
+      expect(allStats.totalCheckpoints).toBe(4);
+
+      // Cleanup
+      await prisma.workspaceSession.delete({ where: { id: anotherSession.id } });
+    });
+
+    it('should handle empty statistics', async () => {
+      // Clear all checkpoints
+      await prisma.sessionCheckpoint.deleteMany({
+        where: { sessionId: testSessionId }
+      });
+
+      const stats = await service.getCheckpointStatistics(testSessionId);
+
+      expect(stats.totalCheckpoints).toBe(0);
+      expect(stats.totalSize).toBe(0);
+      expect(stats.averageSize).toBe(0);
+      expect(stats.oldestCheckpoint).toBeUndefined();
+      expect(stats.newestCheckpoint).toBeUndefined();
+      expect(stats.checkpointsByPriority.low).toBe(0);
+      expect(stats.checkpointsByPriority.medium).toBe(0);
+      expect(stats.checkpointsByPriority.high).toBe(0);
+    });
+  });
+
+  describe('cleanupOldCheckpoints', () => {
+    beforeEach(async () => {
+      const workspaceState = createMockWorkspaceState();
+      const now = new Date();
+
+      // Create checkpoints with different ages
+      await prisma.sessionCheckpoint.create({
+        data: {
+          sessionId: testSessionId,
+          name: 'Very Old Low Priority',
+          priority: 'low',
+          workspaceState: JSON.stringify(workspaceState),
+          stateChecksum: 'dummy_checksum',
+          compressedSize: 1024,
+          uncompressedSize: 2048,
+          createdAt: new Date(now.getTime() - 100 * 24 * 60 * 60 * 1000), // 100 days ago
+          tags: ['old', 'low']
+        }
+      });
+
+      await prisma.sessionCheckpoint.create({
+        data: {
+          sessionId: testSessionId,
+          name: 'Old Medium Priority',
+          priority: 'medium',
+          workspaceState: JSON.stringify(workspaceState),
+          stateChecksum: 'dummy_checksum',
+          compressedSize: 1024,
+          uncompressedSize: 2048,
+          createdAt: new Date(now.getTime() - 50 * 24 * 60 * 60 * 1000), // 50 days ago
+          tags: ['old', 'medium']
+        }
+      });
+
+      await prisma.sessionCheckpoint.create({
+        data: {
+          sessionId: testSessionId,
+          name: 'Recent High Priority',
+          priority: 'high',
+          workspaceState: JSON.stringify(workspaceState),
+          stateChecksum: 'dummy_checksum',
+          compressedSize: 1024,
+          uncompressedSize: 2048,
+          createdAt: new Date(now.getTime() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
+          tags: ['recent', 'high']
+        }
+      });
+
+      await prisma.sessionCheckpoint.create({
+        data: {
+          sessionId: testSessionId,
+          name: 'Very Recent Low Priority',
+          priority: 'low',
+          workspaceState: JSON.stringify(workspaceState),
+          stateChecksum: 'dummy_checksum',
+          compressedSize: 1024,
+          uncompressedSize: 2048,
+          createdAt: new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
+          tags: ['recent', 'low']
+        }
+      });
+    });
+
+    it('should perform dry run cleanup', async () => {
+      const result = await service.cleanupOldCheckpoints({
+        retentionDays: 30,
+        priority: ['low'],
+        dryRun: true
+      });
+
+      expect(result.deletedCount).toBe(2); // 2 low priority checkpoints older than 30 days
+      expect(result.freedSpace).toBeGreaterThan(0);
+      expect(result.deletedCheckpoints).toHaveLength(2);
+      expect(result.deletedCheckpoints[0].name).toBe('Very Old Low Priority');
+
+      // Verify checkpoints still exist (dry run)
+      const remainingCheckpoints = await service.getCheckpoints({ sessionId: testSessionId });
+      expect(remainingCheckpoints.checkpoints).toHaveLength(4);
+    });
+
+    it('should actually delete old checkpoints', async () => {
+      const result = await service.cleanupOldCheckpoints({
+        retentionDays: 30,
+        priority: ['low'],
+        dryRun: false
+      });
+
+      expect(result.deletedCount).toBe(2);
+      expect(result.freedSpace).toBeGreaterThan(0);
+
+      // Verify checkpoints were deleted
+      const remainingCheckpoints = await service.getCheckpoints({ sessionId: testSessionId });
+      expect(remainingCheckpoints.checkpoints).toHaveLength(2);
+
+      const names = remainingCheckpoints.checkpoints.map(cp => cp.name);
+      expect(names).toContain('Old Medium Priority');
+      expect(names).toContain('Recent High Priority');
+      expect(names).not.toContain('Very Old Low Priority');
+      expect(names).not.toContain('Very Recent Low Priority');
+    });
+
+    it('should respect keep count parameter', async () => {
+      const result = await service.cleanupOldCheckpoints({
+        retentionDays: 10,
+        priority: ['low', 'medium'],
+        keepCount: 1,
+        dryRun: false
+      });
+
+      // Should keep 1 most recent low/medium priority checkpoint
+      expect(result.deletedCount).toBe(2);
+
+      const remainingCheckpoints = await service.getCheckpoints({ sessionId: testSessionId });
+      expect(remainingCheckpoints.checkpoints).toHaveLength(2);
+
+      const names = remainingCheckpoints.checkpoints.map(cp => cp.name);
+      expect(names).toContain('Very Recent Low Priority'); // Keep most recent low priority
+      expect(names).toContain('Recent High Priority'); // Keep all high priority
+    });
+
+    it('should handle cleanup with multiple priorities', async () => {
+      const result = await service.cleanupOldCheckpoints({
+        retentionDays: 20,
+        priority: ['low', 'medium'],
+        dryRun: false
+      });
+
+      expect(result.deletedCount).toBe(2); // Old low and medium priority
+
+      const remainingCheckpoints = await service.getCheckpoints({ sessionId: testSessionId });
+      expect(remainingCheckpoints.checkpoints).toHaveLength(2);
+
+      const names = remainingCheckpoints.checkpoints.map(cp => cp.name);
+      expect(names).toContain('Recent High Priority');
+      expect(names).toContain('Very Recent Low Priority');
+    });
+
+    it('should handle empty cleanup result', async () => {
+      // Clear all checkpoints
+      await prisma.sessionCheckpoint.deleteMany({
+        where: { sessionId: testSessionId }
+      });
+
+      const result = await service.cleanupOldCheckpoints({
+        retentionDays: 30,
+        dryRun: false
+      });
+
+      expect(result.deletedCount).toBe(0);
+      expect(result.freedSpace).toBe(0);
+      expect(result.deletedCheckpoints).toHaveLength(0);
+    });
+  });
+
+  describe('Advanced Filtering and Edge Cases', () => {
+    beforeEach(async () => {
+      const workspaceState = createMockWorkspaceState();
+      const now = new Date();
+
+      // Create checkpoints with various properties for testing filters
+      await service.createCheckpoint(testSessionId, workspaceState, {
+        name: 'Alpha Checkpoint',
+        description: 'First checkpoint',
+        priority: 'high',
+        tags: ['alpha', 'test'],
+        isAutoGenerated: false
+      });
+
+      await service.createCheckpoint(testSessionId, workspaceState, {
+        name: 'Beta Checkpoint',
+        description: 'Second checkpoint',
+        priority: 'medium',
+        tags: ['beta', 'test'],
+        isAutoGenerated: true
+      });
+
+      await service.createCheckpoint(testSessionId, workspaceState, {
+        name: 'Gamma Checkpoint',
+        description: 'Third checkpoint',
+        priority: 'low',
+        tags: ['gamma', 'important'],
+        isAutoGenerated: false
+      });
+
+      // Create checkpoint with specific date
+      await prisma.sessionCheckpoint.create({
+        data: {
+          sessionId: testSessionId,
+          name: 'Old Checkpoint',
+          description: 'Very old checkpoint',
+          priority: 'low',
+          workspaceState: JSON.stringify(workspaceState),
+          stateChecksum: 'dummy_checksum',
+          compressedSize: 1024,
+          uncompressedSize: 2048,
+          createdAt: new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000), // 10 days ago
+          tags: ['old'],
+          isAutoGenerated: true
+        }
+      });
+    });
+
+    it('should filter by date range', async () => {
+      const now = new Date();
+      const dateFrom = new Date(now.getTime() - 5 * 24 * 60 * 60 * 1000); // 5 days ago
+      const dateTo = new Date();
+
+      const filter: CheckpointFilter = {
+        sessionId: testSessionId,
+        dateFrom,
+        dateTo
+      };
+
+      const result = await service.getCheckpoints(filter);
+      expect(result.checkpoints.length).toBeGreaterThanOrEqual(3); // Recent checkpoints
+      expect(result.checkpoints.every(cp => cp.createdAt >= dateFrom && cp.createdAt <= dateTo)).toBe(true);
+    });
+
+    it('should filter by multiple tags', async () => {
+      const result = await service.getCheckpoints({
+        sessionId: testSessionId,
+        tags: ['test'] // Should find checkpoints with 'test' tag
+      });
+
+      expect(result.checkpoints).toHaveLength(2);
+      expect(result.checkpoints.every(cp => cp.tags.includes('test'))).toBe(true);
+    });
+
+    it('should handle complex filtering with multiple criteria', async () => {
+      const result = await service.getCheckpoints({
+        sessionId: testSessionId,
+        priority: 'high',
+        isAutoGenerated: false,
+        tags: ['alpha']
+      });
+
+      expect(result.checkpoints).toHaveLength(1);
+      expect(result.checkpoints[0].name).toBe('Alpha Checkpoint');
+      expect(result.checkpoints[0].priority).toBe('high');
+      expect(result.checkpoints[0].isAutoGenerated).toBe(false);
+      expect(result.checkpoints[0].tags).toContain('alpha');
+    });
+
+    it('should handle sorting by different fields', async () => {
+      // Test sorting by name
+      const nameAsc = await service.getCheckpoints({
+        sessionId: testSessionId,
+        sortBy: 'name',
+        sortOrder: 'asc'
+      });
+      expect(nameAsc.checkpoints[0].name).toBe('Alpha Checkpoint');
+
+      const nameDesc = await service.getCheckpoints({
+        sessionId: testSessionId,
+        sortBy: 'name',
+        sortOrder: 'desc'
+      });
+      expect(nameDesc.checkpoints[0].name).toBe('Old Checkpoint');
+
+      // Test sorting by priority
+      const priorityDesc = await service.getCheckpoints({
+        sessionId: testSessionId,
+        sortBy: 'priority',
+        sortOrder: 'desc'
+      });
+      expect(priorityDesc.checkpoints[0].priority).toBe('medium'); // Alphabetical order
+    });
+
+    it('should handle pagination with complex filters', async () => {
+      const result = await service.getCheckpoints({
+        sessionId: testSessionId,
+        limit: 2,
+        offset: 1,
+        sortBy: 'name',
+        sortOrder: 'asc'
+      });
+
+      expect(result.checkpoints).toHaveLength(2);
+      expect(result.pagination.total).toBeGreaterThanOrEqual(4);
+      expect(result.pagination.offset).toBe(1);
+      expect(result.pagination.limit).toBe(2);
+      expect(result.pagination.hasMore).toBe(true);
+    });
+
+    it('should handle empty filter results', async () => {
+      const result = await service.getCheckpoints({
+        sessionId: testSessionId,
+        tags: ['nonexistent_tag'],
+        priority: 'high' as const,
+        isAutoGenerated: true
+      });
+
+      expect(result.checkpoints).toHaveLength(0);
+      expect(result.pagination.total).toBe(0);
+      expect(result.pagination.hasMore).toBe(false);
+    });
+  });
+
+  describe('Encryption and Security', () => {
+    it('should create and restore encrypted checkpoints', async () => {
+      const workspaceState = createMockWorkspaceState({
+        browserTabs: [
+          { url: 'https://secret.example.com', title: 'Secret Tab', isActive: true }
+        ]
+      });
+
+      const metadata: CheckpointMetadata = {
+        name: 'Encrypted Checkpoint',
+        description: 'Should be encrypted',
+        tags: ['secure', 'encrypted']
+      };
+
+      const encryptionKey = 'super_secret_encryption_key_123';
+
+      // Create encrypted checkpoint
+      const checkpoint = await service.createCheckpoint(testSessionId, workspaceState, metadata, {
+        encryptData: true,
+        encryptionKey
+      });
+
+      expect(checkpoint.id).toBeDefined();
+      expect(checkpoint.encryptedKey).toBe(encryptionKey);
+
+      // Restore encrypted checkpoint
+      const restoreResult = await service.restoreFromCheckpoint(checkpoint.id, {
+        encryptionKey
+      });
+
+      expect(restoreResult.workspaceState).toBeDefined();
+      expect(restoreResult.workspaceState.browserTabs).toHaveLength(1);
+      expect(restoreResult.workspaceState.browserTabs[0].url).toBe('https://secret.example.com');
+    });
+
+    it('should fail to restore encrypted checkpoint without key', async () => {
+      const workspaceState = createMockWorkspaceState();
+      const metadata: CheckpointMetadata = {
+        name: 'Encrypted Checkpoint No Key'
+      };
+
+      const checkpoint = await service.createCheckpoint(testSessionId, workspaceState, metadata, {
+        encryptData: true,
+        encryptionKey: 'secret_key'
+      });
+
+      // Try to restore without encryption key
+      await expect(
+        service.restoreFromCheckpoint(checkpoint.id)
+      ).rejects.toThrow();
+    });
+
+    it('should fail to restore with wrong encryption key', async () => {
+      const workspaceState = createMockWorkspaceState();
+      const metadata: CheckpointMetadata = {
+        name: 'Encrypted Checkpoint Wrong Key'
+      };
+
+      const checkpoint = await service.createCheckpoint(testSessionId, workspaceState, metadata, {
+        encryptData: true,
+        encryptionKey: 'correct_key'
+      });
+
+      // Try to restore with wrong key
+      await expect(
+        service.restoreFromCheckpoint(checkpoint.id, {
+          encryptionKey: 'wrong_key'
+        })
+      ).rejects.toThrow();
+    });
+  });
+
+  describe('Error Handling and Validation', () => {
+    it('should validate workspace state structure', async () => {
+      const invalidState = {
+        // Missing required arrays
+        terminalState: 'invalid',
+        browserTabs: null,
+        aiConversations: undefined,
+        openFiles: 'not an array'
+      } as any;
+
+      const metadata: CheckpointMetadata = {
+        name: 'Invalid State Test'
+      };
+
+      await expect(
+        service.createCheckpoint(testSessionId, invalidState, metadata, {
+          validateState: true
+        })
+      ).rejects.toThrow('Workspace state missing required array');
+    });
+
+    it('should handle workspace state validation disabled', async () => {
+      const invalidState = {
+        terminalState: 'invalid',
+        browserTabs: null,
+        aiConversations: undefined,
+        openFiles: 'not an array'
+      } as any;
+
+      const metadata: CheckpointMetadata = {
+        name: 'Validation Disabled Test'
+      };
+
+      // Should succeed when validation is disabled
+      const checkpoint = await service.createCheckpoint(testSessionId, invalidState, metadata, {
+        validateState: false
+      });
+
+      expect(checkpoint.id).toBeDefined();
+      expect(checkpoint.name).toBe('Validation Disabled Test');
+    });
+
+    it('should enforce checkpoint limit per session', async () => {
+      const workspaceState = createMockWorkspaceState();
+
+      // Create many checkpoints to hit the limit
+      const checkpointPromises = [];
+      for (let i = 0; i < 55; i++) { // More than maxCheckpointsPerSession (50)
+        checkpointPromises.push(
+          service.createCheckpoint(testSessionId, workspaceState, {
+            name: `Limit Test Checkpoint ${i}`,
+            priority: i % 3 === 0 ? 'high' : (i % 2 === 0 ? 'medium' : 'low')
+          })
+        );
+      }
+
+      const checkpoints = await Promise.all(checkpointPromises);
+      expect(checkpoints).toHaveLength(55);
+
+      // Should only have 50 checkpoints (limit enforced)
+      const finalCheckpoints = await service.getCheckpoints({
+        sessionId: testSessionId,
+        limit: 100
+      });
+      expect(finalCheckpoints.checkpoints).toHaveLength(50);
+    });
+
+    it('should handle duplicate checkpoint detection', async () => {
+      const workspaceState = createMockWorkspaceState();
+      const metadata: CheckpointMetadata = {
+        name: 'Duplicate Test Checkpoint'
+      };
+
+      // Create first checkpoint
+      const checkpoint1 = await service.createCheckpoint(testSessionId, workspaceState, metadata);
+
+      // Try to create duplicate with skipDuplicates
+      await expect(
+        service.createCheckpoint(testSessionId, workspaceState, metadata, {
+          skipDuplicates: true
+        })
+      ).rejects.toThrow("Checkpoint with name 'Duplicate Test Checkpoint' already exists");
+
+      // Should succeed without skipDuplicates
+      const checkpoint2 = await service.createCheckpoint(testSessionId, workspaceState, metadata);
+      expect(checkpoint2.id).toBeDefined();
+      expect(checkpoint2.id).not.toBe(checkpoint1.id);
+    });
+
+    it('should handle very long names and descriptions', async () => {
+      const workspaceState = createMockWorkspaceState();
+
+      // Test name length validation
+      await expect(
+        service.createCheckpoint(testSessionId, workspaceState, {
+          name: 'a'.repeat(101) // Over 100 character limit
+        })
+      ).rejects.toThrow('Checkpoint name too long');
+
+      // Test description length validation
+      await expect(
+        service.updateCheckpoint('dummy_id', {
+          description: 'a'.repeat(501) // Over 500 character limit
+        })
+      ).rejects.toThrow('Checkpoint description too long');
+    });
+  });
+
+  describe('Concurrent Operations', () => {
+    it('should handle concurrent checkpoint creation', async () => {
+      const workspaceState = createMockWorkspaceState();
+
+      // Create multiple checkpoints concurrently
+      const concurrentPromises = Array.from({ length: 10 }, (_, i) =>
+        service.createCheckpoint(testSessionId, workspaceState, {
+          name: `Concurrent Checkpoint ${i}`,
+          priority: 'medium',
+          tags: [`concurrent`, `batch-${i}`]
+        })
+      );
+
+      const results = await Promise.all(concurrentPromises);
+      expect(results).toHaveLength(10);
+
+      // All checkpoints should have unique IDs
+      const ids = results.map(cp => cp.id);
+      const uniqueIds = new Set(ids);
+      expect(uniqueIds).toHaveLength(10);
+    });
+
+    it('should handle concurrent checkpoint deletion', async () => {
+      const workspaceState = createMockWorkspaceState();
+
+      // Create checkpoints first
+      const checkpoints = [];
+      for (let i = 0; i < 5; i++) {
+        checkpoints.push(
+          await service.createCheckpoint(testSessionId, workspaceState, {
+            name: `Delete Concurrent ${i}`
+          })
+        );
+      }
+
+      // Delete them concurrently
+      const deletePromises = checkpoints.map(cp =>
+        service.deleteCheckpoint(cp.id)
+      );
+
+      await Promise.all(deletePromises);
+
+      // Verify all are deleted
+      const remaining = await service.getCheckpoints({ sessionId: testSessionId });
+      expect(remaining.checkpoints.filter(cp =>
+        cp.name.startsWith('Delete Concurrent')
+      )).toHaveLength(0);
+    });
+  });
+});

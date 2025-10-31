@@ -48,9 +48,7 @@ test('user can view dashboard', async ({ page, apiRequest }) => {
   await apiRequest.post('/api/users', { data: user });
 
   // Network-first: Intercept BEFORE navigate
-  const dashboardPromise = page.waitForResponse(
-    resp => resp.url().includes('/api/dashboard') && resp.status() === 200
-  );
+  const dashboardPromise = page.waitForResponse((resp) => resp.url().includes('/api/dashboard') && resp.status() === 200);
 
   await page.goto('/dashboard');
 
@@ -80,7 +78,7 @@ describe('Dashboard', () => {
     cy.visit('/dashboard');
 
     // Deterministic wait for response
-    cy.wait('@getDashboard').then(interception => {
+    cy.wait('@getDashboard').then((interception) => {
       const dashboard = interception.response.body;
 
       // Explicit assertions
@@ -147,7 +145,7 @@ export const test = base.extend<DatabaseFixture>({
       await deleteRecord('users', userId);
     }
     createdUsers.length = 0;
-  }
+  },
 });
 
 // Use the fixture
@@ -155,7 +153,7 @@ test('admin can create user', async ({ page, seedUser }) => {
   // Create admin with unique data
   const admin = await seedUser({
     email: faker.internet.email(), // Unique each run
-    role: 'admin'
+    role: 'admin',
   });
 
   await page.goto('/admin/users');
@@ -180,7 +178,7 @@ describe('Admin User Management', () => {
 
   afterEach(() => {
     // Cleanup: Delete all users created during test
-    createdUserIds.forEach(userId => {
+    createdUserIds.forEach((userId) => {
       cy.task('db:delete', { table: 'users', id: userId });
     });
     createdUserIds.length = 0;
@@ -291,7 +289,7 @@ describe('User API', () => {
   it('should create user with explicit assertions', () => {
     const userData = createUser({ email: 'test@example.com' });
 
-    cy.request('POST', '/api/users', userData).then(response => {
+    cy.request('POST', '/api/users', userData).then((response) => {
       // All assertions visible in test
       expect(response.status).to.equal(201);
       expect(response.body.id).to.exist;
@@ -310,7 +308,7 @@ test.describe('User creation validation', () => {
     { field: 'email', value: 'test@example.com', expected: 'test@example.com' },
     { field: 'name', value: 'Test User', expected: 'Test User' },
     { field: 'role', value: 'admin', expected: 'admin' },
-    { field: 'isActive', value: true, expected: true }
+    { field: 'isActive', value: true, expected: true },
   ];
 
   for (const { field, value, expected } of testCases) {
@@ -391,7 +389,7 @@ export const test = base.extend({
     await use(page); // Provide logged-in page
 
     // Cleanup handled by fixture
-  }
+  },
 });
 
 // Test 1: User creation (50 lines)
@@ -519,10 +517,10 @@ test('user completes order', async ({ page, apiRequest }) => {
       .post('/api/users', {
         data: createUser({
           email: 'buyer@example.com',
-          emailVerified: true // Skip verification
-        })
+          emailVerified: true, // Skip verification
+        }),
       })
-      .then(r => r.json()),
+      .then((r) => r.json()),
 
     // Create product via API (fast)
     apiRequest
@@ -530,10 +528,10 @@ test('user completes order', async ({ page, apiRequest }) => {
         data: createProduct({
           name: 'Widget',
           price: 29.99,
-          stock: 10
-        })
+          stock: 10,
+        }),
       })
-      .then(r => r.json())
+      .then((r) => r.json()),
   ]);
 
   // Step 2: Auth setup via storage state (instant, 0 seconds)
@@ -542,8 +540,8 @@ test('user completes order', async ({ page, apiRequest }) => {
       name: 'auth_token',
       value: user.token,
       domain: 'localhost',
-      path: '/'
-    }
+      path: '/',
+    },
   ]);
 
   // Step 3: Network-first interception BEFORE navigation (10 seconds)

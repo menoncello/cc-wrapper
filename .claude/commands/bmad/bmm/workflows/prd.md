@@ -1,7 +1,10 @@
+---
+description: 'Unified PRD workflow for project levels 2-4. Produces strategic PRD and tactical epic breakdown. Hands off to architecture workflow for technical design. Note: Level 0-1 use tech-spec workflow.'
+---
+
 # prd
 
-IT IS CRITICAL THAT YOU FOLLOW THESE STEPS - while staying in character as the
-current agent persona you may have loaded:
+IT IS CRITICAL THAT YOU FOLLOW THESE STEPS - while staying in character as the current agent persona you may have loaded:
 
 <steps CRITICAL="TRUE">
 1. Always LOAD the FULL {project-root}/bmad/core/tasks/workflow.xml

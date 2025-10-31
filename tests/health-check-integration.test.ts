@@ -21,7 +21,7 @@ interface HealthCheckItem {
 
 interface HealthCheckerInstance {
   checks: HealthCheckItem[];
-  displayReport(): void;
+  displayReport: () => void;
 }
 
 // Mock console methods to avoid cluttering test output

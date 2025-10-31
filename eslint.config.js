@@ -34,7 +34,41 @@ export default [
         localStorage: 'readonly',
         fetch: 'readonly',
         RequestInit: 'readonly',
-        Element: 'readonly'
+        Element: 'readonly',
+        Bun: 'readonly',
+        Request: 'readonly',
+        TextEncoder: 'readonly',
+        TextDecoder: 'readonly',
+        URLSearchParams: 'readonly',
+        URL: 'readonly',
+        Headers: 'readonly',
+        Response: 'readonly',
+        FormData: 'readonly',
+        AbortController: 'readonly',
+        crypto: 'readonly',
+        Window: 'readonly',
+        DOMRectReadOnly: 'readonly',
+        MediaQueryList: 'readonly',
+        ResizeObserverOptions: 'readonly',
+        vi: 'readonly',
+        React: 'readonly',
+        HTMLInputElement: 'readonly',
+        HTMLDivElement: 'readonly',
+        HTMLButtonElement: 'readonly',
+        HTMLFormElement: 'readonly',
+        MouseEvent: 'readonly',
+        ChangeEvent: 'readonly',
+        FormEvent: 'readonly',
+        KeyboardEvent: 'readonly',
+        FocusEvent: 'readonly',
+        Event: 'readonly',
+        HTMLSelectElement: 'readonly',
+        DOMRect: 'readonly',
+        Location: 'readonly',
+        Document: 'readonly',
+        Navigator: 'readonly',
+        History: 'readonly',
+        Performance: 'readonly'
       }
     },
     plugins: {
@@ -78,7 +112,7 @@ export default [
     }
   },
   {
-    files: ['**/*.test.ts', '**/test-utils/**/*.ts', '**/tests/**/*.ts'],
+    files: ['**/*.test.ts', '**/*.test.tsx', '**/test-utils/**/*.ts', '**/tests/**/*.ts', '**/tests/**/*.tsx'],
     languageOptions: {
       globals: {
         mock: 'readonly',
@@ -94,7 +128,10 @@ export default [
         projectFixture: 'readonly',
         fs: 'readonly',
         path: 'readonly',
-        PROJECT_ROOT: 'readonly'
+        PROJECT_ROOT: 'readonly',
+        ResponseType: 'readonly',
+        Blob: 'readonly',
+        structuredClone: 'readonly'
       }
     },
     rules: {
